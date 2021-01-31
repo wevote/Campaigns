@@ -28,7 +28,7 @@ class HomePage extends Component {
             <PageStatement>America wins when more voters participate.</PageStatement>
             <PageSubStatement>Trying to win a race on election day? Running a voter registration drive?</PageSubStatement>
             <Button
-              classes={{ root: classes.ballotButtonRoot }}
+              classes={{ root: classes.buttonRoot }}
               color="primary"
               variant="contained"
               onClick={() => historyPush('/ballot')}
@@ -95,15 +95,7 @@ const WhatIsHappeningTitle = styled.h3`
 `;
 
 const styles = () => ({
-  ballotIconRoot: {
-    width: 150,
-    height: 150,
-    color: 'rgb(171, 177, 191)',
-  },
-  ballotButtonIconRoot: {
-    marginRight: 8,
-  },
-  ballotButtonRoot: {
+  buttonRoot: {
     width: 250,
   },
 });

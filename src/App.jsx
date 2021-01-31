@@ -13,6 +13,7 @@ const CommentsPage = React.lazy(() => import('./js/pages/CommentsPage'));
 const HomePage = React.lazy(() => import('./js/pages/HomePage'));
 const HomeTest = React.lazy(() => import('./js/pages/HomeTest'));
 const PageNotFound = React.lazy(() => import('./js/pages/PageNotFound'));
+const StyleGuidePage = React.lazy(() => import('./js/pages/StyleGuidePage'));
 const UpdatesPage = React.lazy(() => import('./js/pages/UpdatesPage'));
 
 
@@ -44,20 +45,20 @@ class App extends Component {
             <ThemeProvider theme={styledTheme}>
               <WeVoteRouter>
                 <Switch>
-                  <Route path="/details">
-                    <DetailsPage />
-                  </Route>
-                  <Route path="/comments">
+                  <Route exact path="/comments">
                     <CommentsPage />
                   </Route>
-                  <Route path="/updates">
-                    <UpdatesPage />
+                  <Route exact path="/details">
+                    <DetailsPage />
                   </Route>
-                  <Route path="/notfound">
-                    <PageNotFound />
-                  </Route>
-                  <Route path="/hometest">
+                  <Route exact path="/hometest">
                     <HomeTest />
+                  </Route>
+                  <Route exact path="/styles">
+                    <StyleGuidePage />
+                  </Route>
+                  <Route exact path="/updates">
+                    <UpdatesPage />
                   </Route>
                   <Route exact path="/">
                     <HomePage />
