@@ -52,15 +52,7 @@ const OneCampaignTitle = styled.h4`
 `;
 
 const styles = (theme) => ({
-  ballotIconRoot: {
-    width: 150,
-    height: 150,
-    color: 'rgb(171, 177, 191)',
-  },
-  ballotButtonIconRoot: {
-    marginRight: 8,
-  },
-  ballotButtonRoot: {
+  buttonRoot: {
     width: 250,
     [theme.breakpoints.down('md')]: {
       width: '100%',
