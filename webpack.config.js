@@ -41,7 +41,7 @@ module.exports = {
     extensions: ['*', '.js', '.jsx'],
   },
   output: {
-    path: path.resolve(__dirname, './dist'),
+    path: path.resolve(__dirname, './build'),
     filename: '[name].[contenthash].js',
     publicPath: '/',
   },
@@ -84,7 +84,7 @@ module.exports = {
     new MomentLocalesPlugin(),
   ],
   devServer: (isHTTPS ? {
-    contentBase: path.resolve(__dirname, './dist'),
+    contentBase: path.resolve(__dirname, './build'),
     https: {
       key: fs.readFileSync('./src/cert/server.key'),
       cert: fs.readFileSync('./src/cert/server.crt'),
@@ -95,7 +95,7 @@ module.exports = {
     historyApiFallback: true,
     open: true,
   } : {
-    contentBase: path.resolve(__dirname, './dist'),
+    contentBase: path.resolve(__dirname, './build'),
     host: 'localhost',
     port,
     public: `localhost:${port}`,

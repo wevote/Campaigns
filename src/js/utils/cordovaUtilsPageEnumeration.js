@@ -1,5 +1,5 @@
 import CordovaPageConstants from '../constants/CordovaPageConstants';
-import showBallotDecisionsTabs from '../utilsApi/showBallotDecisionsTabs'; // eslint-disable-line import/no-cycle
+// import { showBallotDecisionsTabs } from '../utilsApi/showBallotDecisionsTabs'; // eslint-disable-line import/no-cycle
 import { stringContains } from './textFormat';
 
 
@@ -53,11 +53,11 @@ export function pageEnumeration () {
   } else if (href.indexOf('/index.html#/wevoteintro/') > 0) {
     return CordovaPageConstants.wevoteintroWild;
   } else if (href.indexOf('/index.html#/ballot') > 0) {
-    if (showBallotDecisionsTabs()) {
-      return CordovaPageConstants.ballotLgHdrWild;
-    } else {
-      return CordovaPageConstants.ballotSmHdrWild;
-    }
+    // if (showBallotDecisionsTabs()) {
+    return CordovaPageConstants.ballotLgHdrWild;
+    // } else {
+    //   return CordovaPageConstants.ballotSmHdrWild;
+    // }
   } else if (href.indexOf('/index.html#/measure/') > 0) {
     return CordovaPageConstants.measureWild;
   } else if (href.indexOf('/showPublicFiguresFilter') > 0 ||  // /opinions/f/showPublicFiguresFilter

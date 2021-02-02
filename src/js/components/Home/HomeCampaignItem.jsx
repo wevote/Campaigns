@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { renderLog } from '../../utils/logging';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import { isCordova } from '../../utils/cordovaUtils';
 
 class HomeCampaignItem extends Component {
   static getProps () {
@@ -31,7 +31,7 @@ class HomeCampaignItem extends Component {
 }
 HomeCampaignItem.propTypes = {
   campaignWeVoteId: PropTypes.string,
-  classes: PropTypes.object,
+  // classes: PropTypes.object,
 };
 
 const Wrapper = styled.div`

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import CampaignHeader from '../components/Navigation/CampaignHeader';
 import CampaignPhoto from '../../img/global/photos/SamDavisFamily2020-800x450.jpg';
 import { renderLog } from '../utils/logging';
-import { historyPush, isCordova } from '../utils/cordovaUtils';
+import { isCordova } from '../utils/cordovaUtils';
 import SupportButtonFooter from '../components/Campaign/SupportButtonFooter';
 
 
@@ -20,7 +20,7 @@ class CampaignHomePage extends Component {
     if (isCordova()) {
       console.log(`CampaignHomePage window.location.href: ${window.location.href}`);
     }
-    const { classes } = this.props;
+    // const { classes } = this.props;
     return (
       <div>
         <Helmet title="Campaign Home - We Vote Campaigns" />
@@ -52,7 +52,7 @@ class CampaignHomePage extends Component {
   }
 }
 CampaignHomePage.propTypes = {
-  classes: PropTypes.object,
+  // classes: PropTypes.object,
 };
 
 const Wrapper = styled.div`
@@ -65,7 +65,7 @@ const Wrapper = styled.div`
 const DetailsSectionDesktopTablet = styled.div`
   display: flex;
   flex-flow: column;
-  align-items: left;
+  // 1/2/2021, invalid css: align-items: left;
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
   }
 `;
