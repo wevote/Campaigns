@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import PageHeader from '../components/Navigation/PageHeader';
-import iceland from '../../img/demo/Iceland.jpg';
-import { formatDateToYearMonthDay } from '../utils/dateFormat';
+import TestPageHeader from '../../components/Navigation/TestPageHeader';
+import iceland from '../../../img/demo/Iceland.jpg';
+import { formatDateToYearMonthDay } from '../../utils/dateFormat';
 
 export default class DetailsPage extends Component {
 
@@ -13,7 +13,7 @@ export default class DetailsPage extends Component {
 
     return (
       <div>
-        <PageHeader />
+        <TestPageHeader />
         <h1>This is the Details (Iceland) page!</h1>
         <h1>
           This is the date to prove lazy loading of moment.js:&nbsp;&nbsp;

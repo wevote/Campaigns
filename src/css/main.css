@@ -7,3 +7,30 @@ body {
   position: relative;
   z-index: 0;
 }
+
+/* Hide when 576px or greater
+   At 576px we see tablet and larger */
+@media (min-width: 576px) {
+  .u-show-mobile {
+    display: none !important;
+  }
+}
+
+/* Hide when 575px or less
+   At 575px we see mobile
+   At 576px we see tablet or larger */
+@media (max-width: 575px) {
+  .u-show-desktop-tablet {
+    display: none !important;
+  }
+}
+
+/* Used to drop SupportButtonFooter beneath Modals */
+.u-z-index-1000 {
+  z-index: 1000 !important;
+}
+
+/* Used to keep the mobile footer & header above Popovers */
+.u-z-index-9000 {
+  z-index: 9000 !important;
+}

@@ -8,20 +8,17 @@ import { renderLog } from './js/utils/logging';
 import styledTheme from './js/components/Widgets/styled-theme';
 import WeVoteRouter from './js/components/Widgets/WeVoteRouter';
 
-const DetailsPage = React.lazy(() => import('./js/pages/DetailsPage'));
-const CommentsPage = React.lazy(() => import('./js/pages/CommentsPage'));
+const CampaignHomePage = React.lazy(() => import('./js/pages/CampaignHomePage'));
+const CommentsTestPage = React.lazy(() => import('./js/pages/test/CommentsPage'));
+const DetailsTestPage = React.lazy(() => import('./js/pages/test/DetailsPage'));
 const HomePage = React.lazy(() => import('./js/pages/HomePage'));
-const HomeTest = React.lazy(() => import('./js/pages/HomeTest'));
+const HomeTestPage = React.lazy(() => import('./js/pages/test/HomeTest'));
 const PageNotFound = React.lazy(() => import('./js/pages/PageNotFound'));
 const StyleGuidePage = React.lazy(() => import('./js/pages/StyleGuidePage'));
-const UpdatesPage = React.lazy(() => import('./js/pages/UpdatesPage'));
+const UpdatesTestPage = React.lazy(() => import('./js/pages/test/UpdatesPage'));
 
 
 class App extends Component {
-  constructor (props) {
-    super(props);
-  }
-
   // See https://reactjs.org/docs/error-boundaries.html
   static getDerivedStateFromError (error) { // eslint-disable-line no-unused-vars
     // Update state so the next render will show the fallback UI, We should have a "Oh snap" page
@@ -45,20 +42,23 @@ class App extends Component {
             <ThemeProvider theme={styledTheme}>
               <WeVoteRouter>
                 <Switch>
-                  <Route exact path="/comments">
-                    <CommentsPage />
-                  </Route>
-                  <Route exact path="/details">
-                    <DetailsPage />
-                  </Route>
-                  <Route exact path="/hometest">
-                    <HomeTest />
+                  <Route exact path="/c/">
+                    <CampaignHomePage />
                   </Route>
                   <Route exact path="/styles">
                     <StyleGuidePage />
                   </Route>
-                  <Route exact path="/updates">
-                    <UpdatesPage />
+                  <Route exact path="/test/comments">
+                    <CommentsTestPage />
+                  </Route>
+                  <Route exact path="/test/details">
+                    <DetailsTestPage />
+                  </Route>
+                  <Route exact path="/test/home">
+                    <HomeTestPage />
+                  </Route>
+                  <Route exact path="/test/updates">
+                    <UpdatesTestPage />
                   </Route>
                   <Route exact path="/">
                     <HomePage />
