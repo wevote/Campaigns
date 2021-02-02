@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import home from '../../img/demo/home.png';
-import PageHeader from '../components/Navigation/PageHeader';
+import home from '../../../img/demo/home.png';
+import TestPageHeader from '../../components/Navigation/TestPageHeader';
 
 export default class HomeTest extends Component {
   render () {
@@ -9,7 +9,7 @@ export default class HomeTest extends Component {
 
     return (
       <div>
-        <PageHeader />
+        <TestPageHeader />
         <h1>This is the Home  page!</h1>
         <img src={home} alt="World" />
       </div>

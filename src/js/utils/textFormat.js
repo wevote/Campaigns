@@ -253,7 +253,7 @@ export function numberWithCommas (rawNumber) {
  * @returns {boolean}
  */
 export function startsWith (needle, incomingString) {
-  // IE 10 does not support the "string.startsWith" function.  DO NOT USE THIS FUNCTION
+  // IE 10 does not support the "string.startsWith" function.  DO NOT USE THAT FUNCTION
   // console.log("startsWith, needle:", needle, ", haystack: ", incomingString);
   if (incomingString) {
     return incomingString.indexOf(needle) === 0;

@@ -1,12 +1,12 @@
 import React from 'react';
 
-import AppActions from '../actions/AppActions';
-import AppStore from '../stores/AppStore';
-import cookies from '../utils/cookies';
-import japan from '../../img/demo/Japan.jpg';
-import PageHeader from '../components/Navigation/PageHeader';
-import VoterActions from '../actions/VoterActions';
-import VoterStore from '../stores/VoterStore';
+import AppActions from '../../actions/AppActions';
+import AppStore from '../../stores/AppStore';
+import cookies from '../../utils/cookies';
+import japan from '../../../img/demo/Japan.jpg';
+import TestPageHeader from '../../components/Navigation/TestPageHeader';
+import VoterActions from '../../actions/VoterActions';
+import VoterStore from '../../stores/VoterStore';
 
 export default class CommentsPage extends React.Component {
   constructor (props) {
@@ -66,7 +66,7 @@ export default class CommentsPage extends React.Component {
 
     return (
       <div>
-        <PageHeader />
+        <TestPageHeader />
         <h1>This is the Comments (Japan) page!</h1>
         <h2 style={{
           fontSize: 12,

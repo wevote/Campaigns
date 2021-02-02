@@ -3,7 +3,7 @@ import AppStore from './AppStore'; // eslint-disable-line import/no-cycle
 // import BallotActions from '../actions/BallotActions';
 import cookies from '../utils/cookies';
 import Dispatcher from '../components/Dispatcher/Dispatcher';
-import FacebookActions from '../actions/FacebookActions'; // eslint-disable-line import/no-cycle
+// import FacebookActions from '../actions/FacebookActions'; // eslint-disable-line import/no-cycle
 // import FriendActions from '../actions/FriendActions'; // eslint-disable-line import/no-cycle
 // import OrganizationActions from '../actions/OrganizationActions';
 import { stringContains } from '../utils/textFormat';
@@ -732,7 +732,7 @@ class VoterStore extends ReduceStore {
             // console.log("VoterStore, voterRetrieve, action.res: ", action.res);
 
             if (action.res.signed_in_facebook && (url === null || url === '') && facebookPhotoRetrieveLoopCount < 10) {
-              FacebookActions.getFacebookProfilePicture();
+              // FacebookActions.getFacebookProfilePicture();
             }
           } else {
             // console.log("voter_device_id not returned by voterRetrieve");

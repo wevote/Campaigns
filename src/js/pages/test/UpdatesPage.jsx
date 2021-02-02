@@ -1,9 +1,9 @@
 import React from 'react';
-import PageHeader from '../components/Navigation/PageHeader';
-import VoterActions from '../actions/VoterActions';
-import VoterStore from '../stores/VoterStore';
+import TestPageHeader from '../../components/Navigation/TestPageHeader';
+import VoterActions from '../../actions/VoterActions';
+import VoterStore from '../../stores/VoterStore';
 
-import thailand from '../../img/demo/Thailand.jpg';
+import thailand from '../../../img/demo/Thailand.jpg';
 
 export default class UpdatesPage extends React.Component {
   constructor (props) {
@@ -50,7 +50,7 @@ export default class UpdatesPage extends React.Component {
 
     return (
       <div>
-        <PageHeader />
+        <TestPageHeader />
         <h1>This is the Updates (Thailand) page!</h1>
         <h2 style={{
           fontSize: 12,

@@ -14,8 +14,9 @@ To join us, please [review our openings here](https://www.idealist.org/en/nonpro
 - **Keep the "Home" page very simple**, so that it gets to LCP (Largest Contentful Paint in (ideally) less than one second). 
 - **Keep Stores and Actions pure**.  To discuss: No calls to other actions or stores from within an action or store.
 - **Lazy load all Libraries** except on the "Home" page.  If a page is Lazy loaded, any imports from that page are that page will be in the page's bundle. 
-- **Copy Code Intentionally**.  Any code copied over from the WebApp should be trimmed down to the least amount of code necessary to 
+- **Don't Copy Code Blindly**.  Any code brought over from the WebApp should be trimmed down to the least amount of code necessary to 
 do what you wanted to, and no more. 
+  - New code should be atomic. It should do what it is supposed to, and not fire off queries that aren't related to the needs of the current code.
   - If you don't know what it does don't copy it.  Commenting out is ok in the beginning.
   - To discuss: Not used setters and getters in Stores/Actions are OK.
   - Not used utility functions are OK.
@@ -24,7 +25,6 @@ do what you wanted to, and no more.
     - sockjs.js and webpack-dev components are part of dev Webpack and "should not" end up in a production build.
   - Webpack minifies what it can when the cli option  "--mode production" is used, so compile with `npm run start-minified` to minify. 
 - **Follow styles defined on "/styles" page**.
-- **Do not check in "package-lock.json"**
 
 ## Webpack Bundle Analyzer
 Set `const isProduction = false;` in webpack.config.js to turn on the analyzer.

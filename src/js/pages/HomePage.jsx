@@ -26,12 +26,12 @@ class HomePage extends Component {
         <Wrapper cordova={isCordova()}>
           <IntroductionMessageSection>
             <PageStatement>America wins when more voters participate.</PageStatement>
-            <PageSubStatement>Trying to win a race on election day? Running a voter registration drive?</PageSubStatement>
+            <PageSubStatement>Trying to win a race on election day?</PageSubStatement>
             <Button
               classes={{ root: classes.buttonRoot }}
               color="primary"
               variant="contained"
-              onClick={() => historyPush('/ballot')}
+              onClick={() => historyPush('/c/')}
             >
               Start a campaign
             </Button>
