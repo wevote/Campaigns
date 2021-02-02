@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 
+import { Button } from '@material-ui/core';
 import TestPageHeader from '../../components/Navigation/TestPageHeader';
 import iceland from '../../../img/demo/Iceland.jpg';
 import { formatDateToYearMonthDay } from '../../utils/dateFormat';
+import { historyPush } from '../../utils/cordovaUtils';
 
 export default class DetailsPage extends Component {
-
   render () {
     console.log('Render DetailsPage.jsx');
     // const rawDateString = new Date().toString();
@@ -20,6 +21,16 @@ export default class DetailsPage extends Component {
           {fancyDate}
         </h1>
         <img src={iceland} alt="World" style={{ maxWidth: 500, height: 'auto', maxHeight: 600 }} />
+        <br />
+        <br />
+        <Button
+          // classes={{ root: classes.buttonRoot }}
+          color="primary"
+          variant="contained"
+          onClick={() => historyPush('/test/home')}
+        >
+          Go to /test/home
+        </Button>
       </div>
     );
   }
