@@ -16,10 +16,10 @@ export default class DetailsPage extends Component {
       <div>
         <TestPageHeader />
         <h1>This is the Details (Iceland) page!</h1>
-        <h1>
+        <h3 style={{ padding: 20 }}>
           This is the date to prove lazy loading of moment.js:&nbsp;&nbsp;
           {fancyDate}
-        </h1>
+        </h3>
         <img src={iceland} alt="World" style={{ maxWidth: 500, height: 'auto', maxHeight: 600 }} />
         <br />
         <br />

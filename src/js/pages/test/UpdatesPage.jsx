@@ -10,13 +10,13 @@ export default class UpdatesPage extends React.Component {
     super(props);
     this.state = {
       voter: {},
-      voterDeviceId: '',
+      // voterDeviceId: '',
     };
   }
 
   componentDidMount () {
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
-    import('jquery').then(({ default: jquery }) => {
+    import('jquery').then((jquery) => {
       window.jQuery = jquery;
       window.$ = jquery;
 
@@ -37,14 +37,14 @@ export default class UpdatesPage extends React.Component {
 
     this.setState({
       voter: VoterStore.getVoter(),
-      voterDeviceId,
+      // voterDeviceId,
     });
     console.log('onVoterStoreChange voterDeviceId: ', voterDeviceId);
   }
 
   render () {
     console.log('Render UpdatesPage.jsx');
-    let { voter: { full_name: voterFullName }} = this.state;
+    let { voter: { full_name: voterFullName } } = this.state;
     // eslint-disable-next-line no-bitwise
     voterFullName = voterFullName || '(loading)';
 

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import AppActions from '../../actions/AppActions';
 import webAppConfig from '../../config';
 import AppStore from '../../stores/AppStore';
-import VoterStore from '../../stores/VoterStore';
+// import VoterStore from '../../stores/VoterStore';
 import { dumpCssFromId } from '../../utils/appleSiliconUtils';
 import { getApplicationViewBooleans, weVoteBrandingOff } from '../../utils/applicationUtils';
 import { cordovaTopHeaderTopMargin } from '../../utils/cordovaOffsets';
@@ -218,6 +218,6 @@ export default class Header extends Component {
   }
 }
 Header.propTypes = {
-  params: PropTypes.object,
+  // params: PropTypes.object,
   pathname: PropTypes.string.isRequired,
 };

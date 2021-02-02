@@ -7,7 +7,7 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "build": "webpack --mode production",
+    "build": "node buildDateFile.js && webpack --mode production",
     "lint": "eslint --format stylish --ext .jsx --ext .js src/js",
     "start": "node buildDateFile.js  && PROTOCOL=HTTP webpack serve --mode development",
     "start-https": "node buildDateFile.js && PROTOCOL=HTTPS webpack serve --mode development",
@@ -38,14 +38,15 @@
     "stylelint": "^13.9.0",
     "stylelint-config-standard": "^20.0.0",
     "unused-webpack-plugin": "^2.4.0",
-    "webpack": "^5.3.2",
+    "webpack": "^5.19.0",
     "webpack-bundle-analyzer": "^4.4.0",
-    "webpack-cli": "^4.1.0",
+    "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
     "@material-ui/core": "~4.11.3",
     "@material-ui/icons": "~4.11.2",
+    "clsx": "^1.1.1",
     "flux": "~4.0.1",
     "jquery": "~3.5.1",
     "keymirror": "~0.1.1",
@@ -56,6 +57,7 @@
     "react-dom": "~17.0.1",
     "react-helmet": "~6.1.0",
     "react-router-dom": "~5.2.0",
+    "react-text-truncate": "^0.16.0",
     "styled-components": "~5.2.1"
   }
 }

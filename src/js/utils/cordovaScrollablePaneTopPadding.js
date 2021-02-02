@@ -1,6 +1,5 @@
 import CordovaPageConstants from '../constants/CordovaPageConstants';
 import VoterStore from '../stores/VoterStore';
-import showBallotDecisionsTabs from '../utilsApi/showBallotDecisionsTabs';
 import { cordovaOffsetLog } from './logging';
 import { pageEnumeration } from './cordovaUtilsPageEnumeration';
 import { getAndroidSize, hasAndroidNotch, hasIPhoneNotch,
@@ -22,9 +21,9 @@ export default function cordovaScrollablePaneTopPadding () {
 
   if (isSimulator()) {
     if (isAndroidSimulator()) {
-      cordovaOffsetLog(`cordovaScrollablePaneTopPadding android: ${window.location.href}, page: ${page}, showBallotDecisionsTabs(): ${showBallotDecisionsTabs()}`);
+      cordovaOffsetLog(`cordovaScrollablePaneTopPadding android: ${window.location.href}, page: ${page}`);
     } else {
-      cordovaOffsetLog(`cordovaScrollablePaneTopPadding iOS: ${window.location.href.slice(0, 40)}, page: ${page}, showBallotDecisionsTabs(): ${showBallotDecisionsTabs()}`);
+      cordovaOffsetLog(`cordovaScrollablePaneTopPadding iOS: ${window.location.href.slice(0, 40)}, page: ${page}}`);
       cordovaOffsetLog(`cordovaScrollablePaneTopPadding iOS: ${window.location.href.slice(window.location.href.length - 60)}`);
     }
   }
@@ -33,7 +32,7 @@ export default function cordovaScrollablePaneTopPadding () {
     if (isIPhone4in()) {
       cordovaOffsetLog(`cordovaScrollablePaneTopPadding: isIPhone4in, page: ${page}`);
       switch (page) {
-        case CordovaPageConstants.ballotLgHdrWild:       return showBallotDecisionsTabs() ? '48px' : '32px';
+        case CordovaPageConstants.ballotLgHdrWild:       return '32px';
         case CordovaPageConstants.ballotSmHdrWild:       return '141px';  // $body-padding-top-no-decision-tabs
         case CordovaPageConstants.ballotVote:            return '157px';
         case CordovaPageConstants.candidate:             return '42px';
@@ -54,7 +53,7 @@ export default function cordovaScrollablePaneTopPadding () {
     } else if (isIPhone4p7in()) {
       cordovaOffsetLog(`cordovaScrollablePaneTopPadding: isIPhone4p7in, page: ${page}`);
       switch (page) {
-        case CordovaPageConstants.ballotLgHdrWild:       return showBallotDecisionsTabs() ? '52px' : '36px';
+        case CordovaPageConstants.ballotLgHdrWild:       return '36px';
         case CordovaPageConstants.ballotSmHdrWild:       return '136px';
         case CordovaPageConstants.ballotVote:            return isSignedIn ? '149px' : '148px';
         case CordovaPageConstants.candidate:             return '42px';
@@ -81,7 +80,7 @@ export default function cordovaScrollablePaneTopPadding () {
     } else if (isIPhone5p5in()) {
       cordovaOffsetLog(`cordovaScrollablePaneTopPadding: isIPhone5p5in, page: ${page}`);
       switch (page) {
-        case CordovaPageConstants.ballotLgHdrWild:       return showBallotDecisionsTabs() ? '35px' : '19px';
+        case CordovaPageConstants.ballotLgHdrWild:       return '19px';
         case CordovaPageConstants.ballotSmHdrWild:       return '148px';
         case CordovaPageConstants.ballotVote:            return '157px';
         case CordovaPageConstants.candidate:             return '40px';
@@ -107,7 +106,7 @@ export default function cordovaScrollablePaneTopPadding () {
     } else if (isIPhone6p1in()) {  // XR  and maybe iPhone 11
       cordovaOffsetLog(`cordovaScrollablePaneTopPadding: isIPhone6p1in, page: ${page}`);
       switch (page) {
-        case CordovaPageConstants.ballotLgHdrWild:       return showBallotDecisionsTabs() ? '58px' : '41px';
+        case CordovaPageConstants.ballotLgHdrWild:       return '41px';
         case CordovaPageConstants.ballotSmHdrWild:       return '169px';
         case CordovaPageConstants.ballotVote:            return isSignedIn ? '163px' : '165px';
         case CordovaPageConstants.candidate:             return '56px';
@@ -135,7 +134,7 @@ export default function cordovaScrollablePaneTopPadding () {
     } else if (isIPhone6p5in()) {
       cordovaOffsetLog(`cordovaScrollablePaneTopPadding: isIPhone6p5in, page: ${page}`);
       switch (page) {
-        case CordovaPageConstants.ballotLgHdrWild:       return showBallotDecisionsTabs() ? '58px' : '42px';
+        case CordovaPageConstants.ballotLgHdrWild:       return '42px';
         case CordovaPageConstants.ballotSmHdrWild:       return '170px';
         case CordovaPageConstants.ballotVote:            return isSignedIn ? '165px' : '173px';
         case CordovaPageConstants.candidate:             return '56px';
@@ -163,7 +162,7 @@ export default function cordovaScrollablePaneTopPadding () {
     } else if (hasIPhoneNotch()) {  // defaults for X or 11 Pro (5.8")
       cordovaOffsetLog(`cordovaScrollablePaneTopPadding: hasIPhoneNotch -- signed in: ${isSignedIn}  page: ${page}`);
       switch (page) {
-        case CordovaPageConstants.ballotLgHdrWild:       return showBallotDecisionsTabs() ? '58px' : '42px';
+        case CordovaPageConstants.ballotLgHdrWild:       return '42px';
         case CordovaPageConstants.ballotSmHdrWild:       return '163px';
         case CordovaPageConstants.ballotVote:            return '162px';
         case CordovaPageConstants.candidate:             return '66px';
@@ -279,7 +278,7 @@ export default function cordovaScrollablePaneTopPadding () {
       }
     } else if (sizeString === '--xl') {
       switch (page) {
-        case CordovaPageConstants.ballotLgHdrWild:        return showBallotDecisionsTabs() ? '36px' : '42px';
+        case CordovaPageConstants.ballotLgHdrWild:        return '42px';
         case CordovaPageConstants.ballotSmHdrWild:        return '131px';
         case CordovaPageConstants.ballotVote:             return isSignedIn ? '149px' : '145px';
         case CordovaPageConstants.candidate:              return '64px';
@@ -318,7 +317,7 @@ export default function cordovaScrollablePaneTopPadding () {
       }
     } if (sizeString === '--md') {
       switch (page) {
-        case CordovaPageConstants.ballotLgHdrWild:       return showBallotDecisionsTabs() ? '58px' : '42px';
+        case CordovaPageConstants.ballotLgHdrWild:       return '42px';
         case CordovaPageConstants.ballotSmHdrWild:       return '124px';
         case CordovaPageConstants.ballotVote:            return isSignedIn ? '132px' : '131px';
         case CordovaPageConstants.candidate:             return '53px';
@@ -338,7 +337,7 @@ export default function cordovaScrollablePaneTopPadding () {
       }
     } else if (sizeString === '--sm') {
       switch (page) {
-        case CordovaPageConstants.ballotLgHdrWild:       return showBallotDecisionsTabs() ? '58px' : '42px';
+        case CordovaPageConstants.ballotLgHdrWild:       return '42px';
         case CordovaPageConstants.ballotSmHdrWild:       return '114px';
         case CordovaPageConstants.ballotVote:            return isSignedIn ? '131px' : '128px';
         case CordovaPageConstants.candidate:             return '24px';

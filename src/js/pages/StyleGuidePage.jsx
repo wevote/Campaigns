@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
-import { Button, Card } from '@material-ui/core';
+// import { Button, Card } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { renderLog } from '../utils/logging';
-import { historyPush, isCordova } from '../utils/cordovaUtils';
+import { isCordova } from '../utils/cordovaUtils';
 
 class StyleGuidePage extends Component {
-  static getProps () {
-    return {};
-  }
+  // static getProps () {
+  //   return {};
+  // }
 
   render () {
     renderLog('StyleGuidePage');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
       console.log(`StyleGuidePage window.location.href: ${window.location.href}`);
     }
-    const { classes } = this.props;
+    // const { classes } = this.props;
     return (
       <div>
         <Helmet title="Style Guide - We Vote Campaigns" />
@@ -71,9 +71,9 @@ class StyleGuidePage extends Component {
     );
   }
 }
-StyleGuidePage.propTypes = {
-  classes: PropTypes.object,
-};
+// StyleGuidePage.propTypes = {
+//   classes: PropTypes.object,
+// };
 
 const Wrapper = styled.div`
   margin: 0 15px;

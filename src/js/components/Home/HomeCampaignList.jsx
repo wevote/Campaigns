@@ -112,7 +112,7 @@ class HomeCampaignList extends Component {
   }
 }
 HomeCampaignList.propTypes = {
-  organizationWeVoteId: PropTypes.string,
+  // organizationWeVoteId: PropTypes.string,
   startingNumberOfPositionsToDisplay: PropTypes.number,
 };
 
