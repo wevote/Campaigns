@@ -7,10 +7,12 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "build": "webpack --config ./webpack.config.js --mode production",
-    "start": "webpack serve --config ./webpack.config.js --mode development",
-    "start-minified": "webpack serve --config ./webpack.config.js --mode production",
-    "start-https": "webpack serve --config ./webpack.config.js --https --mode development",
+    "build": "webpack --mode production",
+    "lint": "eslint --format stylish --ext .jsx --ext .js src/js",
+    "start": "node buildDateFile.js  && PROTOCOL=HTTP webpack serve --mode development",
+    "start-https": "node buildDateFile.js && PROTOCOL=HTTPS webpack serve --mode development",
+    "start-https-analysis": "node buildDateFile.js && PROTOCOL=HTTPS && ANALYSIS=1 webpack serve --mode development",
+    "start-minified": "webpack serve --mode production",
     "test": "echo \"No test specified\" && exit 0"
   },
   "devDependencies": {

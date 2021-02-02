@@ -10,8 +10,9 @@ const CopyPlugin = require('copy-webpack-plugin');
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-// Set isProduction to false, to enable the interactive bundle analyser and the Unused component analyzer
-const isProduction = true;   // Developers can set this to be false, but in git it should always be true
+const port = process.env.PORT || 3000;
+const isHTTPS = process.env.PROTOCOL && process.env.PROTOCOL === 'HTTPS';
+const bundleAnalysis = process.env.ANALYSIS || false;  // enable the interactive bundle analyser and the Unused component analyzer
 
 module.exports = {
   entry: path.resolve(__dirname, './src/index.jsx'),
@@ -52,8 +53,8 @@ module.exports = {
       title: 'We Vote Campaigns',
       template: path.resolve(__dirname, './src/index.html'),
     }),
-    ...(isProduction ? [] : [
-      new UnusedWebpackPlugin({  // Set isProduction to false to list (likely) unused files
+    ...(bundleAnalysis ? [
+      new UnusedWebpackPlugin({  // Set ANALYSIS to true to list (likely) unused files
         directories: [path.join(__dirname, 'src')],
         exclude: [
           '/**/cert/',
@@ -63,8 +64,8 @@ module.exports = {
         ],
         root: __dirname,
       }),
-      new BundleAnalyzerPlugin(),  // Set isProduction to false to start an (amazing) bundle size analyzer tool
-    ]),
+      new BundleAnalyzerPlugin(),
+    ] : []),
     new CopyPlugin({
       patterns: [
         { from: 'src/robots.txt', to: '.' },
@@ -72,7 +73,7 @@ module.exports = {
         {
           from: 'src/img',
           to: 'img/',
-          globOptions: { ignore: ['DO-NOT-BUNDLE/**/*'] },
+          globOptions: { ignore: ['DO-NOT-BUNDLE/**/*']},
         },
         {
           from: 'src/javascript/',
@@ -82,16 +83,24 @@ module.exports = {
     }),
     new MomentLocalesPlugin(),
   ],
-  devServer: {
+  devServer: (isHTTPS ? {
     contentBase: path.resolve(__dirname, './dist'),
-    hot: true,
-    port: 3000,
+    https: {
+      key: fs.readFileSync('./src/cert/server.key'),
+      cert: fs.readFileSync('./src/cert/server.crt'),
+    },
     host: 'localhost',
+    port,
+    public: `localhost:${port}`,
     historyApiFallback: true,
-    // https: true,
-    // key: fs.readFileSync('/Users/stevepodell/WebstormProjects/wevote-landing-page/src/cert/server.crt'),
-    // cert: fs.readFileSync('/Users/stevepodell/WebstormProjects/wevote-landing-page/src/cert/server.crt'),
-    // ca: fs.readFileSync('/Users/stevepodell/WebstormProjects/wevote-landing-page/src/cert/rootSSL.pem'),
-  },
+    open: true,
+  } : {
+    contentBase: path.resolve(__dirname, './dist'),
+    host: 'localhost',
+    port,
+    public: `localhost:${port}`,
+    historyApiFallback: true,
+    open: true,
+  }),
   devtool: 'source-map',
 };

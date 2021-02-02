@@ -2,20 +2,21 @@ import React from 'react';
 
 import AppActions from '../../actions/AppActions';
 import AppStore from '../../stores/AppStore';
-import cookies from '../../utils/cookies';
+// import cookies from '../../utils/cookies';
 import japan from '../../../img/demo/Japan.jpg';
 import TestPageHeader from '../../components/Navigation/TestPageHeader';
 import VoterActions from '../../actions/VoterActions';
 import VoterStore from '../../stores/VoterStore';
+import compileDate from '../../compileDate';
 
 export default class CommentsPage extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      googleCivicElectionId: 0,
-      locationGuessClosed: null,
-      textForMapSearch: null,
-      voter: {},
+      // googleCivicElectionId: 0,
+      // locationGuessClosed: null,
+      // textForMapSearch: null,
+      // voter: {},
       voterDeviceId: '',
     };
   }
@@ -47,10 +48,10 @@ export default class CommentsPage extends React.Component {
     console.log('===== VoterRetrieve from CommentsPage, voterDeviceId:', voterDeviceId);
 
     this.setState({
-      googleCivicElectionId: parseInt(VoterStore.electionId(), 10),
-      locationGuessClosed: cookies.getItem('location_guess_closed'),
-      textForMapSearch: VoterStore.getTextForMapSearch(),
-      voter: VoterStore.getVoter(),
+      // googleCivicElectionId: parseInt(VoterStore.electionId(), 10),
+      // locationGuessClosed: cookies.getItem('location_guess_closed'),
+      // textForMapSearch: VoterStore.getTextForMapSearch(),
+      // voter: VoterStore.getVoter(),
       voterDeviceId,
     });
     console.log('onVoterStoreChange voterDeviceId: ', voterDeviceId);
@@ -79,6 +80,10 @@ export default class CommentsPage extends React.Component {
         </h2>
         <h3 style={{ padding: 20 }}>(Proof that Flux and API fetching is working)</h3>
         <img src={japan} alt="World" style={{ maxWidth: 500, height: 'auto', maxHeight: 600 }} />
+        <p style={{ marginTop: 30 }}>
+          compile date:&nbsp;&nbsp;
+          {compileDate}
+        </p>
       </div>
     );
   }
