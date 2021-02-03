@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
@@ -16,10 +16,11 @@ class CampaignDetailsPage extends Component {
     return {};
   }
 
-  // componentDidMount () {
-  //   const { match: { params } } = this.props;
-  //   const { campaignIdentifier } = params;
-  // }
+  componentDidMount () {
+    const { match: { params } } = this.props;
+    const { oneCampaign } = params;
+    console.log('componentDidMount = ', oneCampaign);
+  }
 
   render () {
     renderLog('CampaignDetailsPage');  // Set LOG_RENDER_EVENTS to log all renders
@@ -77,10 +78,10 @@ class CampaignDetailsPage extends Component {
     );
   }
 }
-// CampaignDetailsPage.propTypes = {
-//   // classes: PropTypes.object,
-//   match: PropTypes.object,
-// };
+CampaignDetailsPage.propTypes = {
+  // classes: PropTypes.object,
+  match: PropTypes.object,
+};
 
 const styles = () => ({
   buttonRoot: {
