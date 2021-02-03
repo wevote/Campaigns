@@ -8,7 +8,7 @@ import { renderLog } from './js/utils/logging';
 import styledTheme from './js/components/Widgets/styled-theme';
 import WeVoteRouter from './js/components/Widgets/WeVoteRouter';
 
-const CampaignHomePage = React.lazy(() => import('./js/pages/CampaignHomePage'));
+const CampaignDetailsPage = React.lazy(() => import('./js/pages/CampaignDetailsPage'));
 const CommentsTestPage = React.lazy(() => import('./js/pages/test/CommentsPage'));
 const DetailsTestPage = React.lazy(() => import('./js/pages/test/DetailsPage'));
 const HomePage = React.lazy(() => import('./js/pages/HomePage'));
@@ -43,7 +43,7 @@ class App extends Component {
               <WeVoteRouter>
                 <Switch>
                   <Route exact path="/c/">
-                    <CampaignHomePage />
+                    <CampaignDetailsPage />
                   </Route>
                   <Route exact path="/styles">
                     <StyleGuidePage />

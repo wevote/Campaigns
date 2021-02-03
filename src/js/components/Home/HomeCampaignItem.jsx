@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { renderLog } from '../../utils/logging';
-import { isCordova } from '../../utils/cordovaUtils';
+import { historyPush, isCordova } from '../../utils/cordovaUtils';
 
 class HomeCampaignItem extends Component {
   static getProps () {
@@ -18,9 +18,9 @@ class HomeCampaignItem extends Component {
     const { campaignWeVoteId } = this.props;
     return (
       <Wrapper cordova={isCordova()}>
-        <OneCampaignContainer>
+        <OneCampaignContainer onClick={() => historyPush('/c/')}>
           <OneCampaignTitle>
-            Home Campaign Item -
+            Sam Davis for Oakland School Board -
             {' '}
             {campaignWeVoteId}
           </OneCampaignTitle>
@@ -34,13 +34,17 @@ HomeCampaignItem.propTypes = {
   // classes: PropTypes.object,
 };
 
-const Wrapper = styled.div`
-  @media (max-width: ${({ theme, cordova }) => (cordova ? undefined : theme.breakpoints.md)}) {
-    margin: 1em 0;
-  }
-`;
+const styles = (theme) => ({
+  buttonRoot: {
+    width: 250,
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
+    },
+  },
+});
 
 const OneCampaignContainer = styled.div`
+  cursor: pointer;
 `;
 
 const OneCampaignTitle = styled.h4`
@@ -51,13 +55,10 @@ const OneCampaignTitle = styled.h4`
   }
 `;
 
-const styles = (theme) => ({
-  buttonRoot: {
-    width: 250,
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
-  },
-});
+const Wrapper = styled.div`
+  @media (max-width: ${({ theme, cordova }) => (cordova ? undefined : theme.breakpoints.md)}) {
+    margin: 1em 0;
+  }
+`;
 
 export default withStyles(styles)(HomeCampaignItem);

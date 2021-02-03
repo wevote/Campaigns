@@ -31,7 +31,7 @@ export default function PageHeader () {
   };
 
   const { location: { pathname } } = window;
-  if (startsWith('/details', pathname) && value !== 0) {
+  if (startsWith('/c/', pathname) && value !== 0) {
     // console.log('Render CampaignHeader, initial value set to 0');
     setValue(0);
   } else if (startsWith('/comments', pathname) && value !== 1) {

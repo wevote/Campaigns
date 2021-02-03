@@ -6,15 +6,15 @@ import { withStyles } from '@material-ui/core/styles';
 import { renderLog } from '../../utils/logging';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 
-class SupportButtonFooter extends Component {
+class SupportButton extends Component {
   static getProps () {
     return {};
   }
 
   render () {
-    renderLog('SupportButtonFooter');  // Set LOG_RENDER_EVENTS to log all renders
+    renderLog('SupportButton');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
-      console.log(`SupportButtonFooter window.location.href: ${window.location.href}`);
+      console.log(`SupportButton window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
     const hideFooterBehindModal = false;
@@ -40,16 +40,20 @@ class SupportButtonFooter extends Component {
     );
   }
 }
-SupportButtonFooter.propTypes = {
+SupportButton.propTypes = {
   classes: PropTypes.object,
 };
 
-const styles = () => ({
+const styles = (theme) => ({
   buttonDefault: {
     padding: '0 12px',
     width: '100%',
     boxShadow: 'none !important',
     height: '45px !important',
+    [theme.breakpoints.down('md')]: {
+      fontSize: '12px',
+      padding: '0',
+    },
   },
   buttonDefaultCordova: {
     padding: '0 12px',
@@ -61,15 +65,12 @@ const styles = () => ({
 
 const ButtonPanel = styled.div`
   background-color: #fff;
-  border-top: 1px solid #ddd;
-  padding: 10px;
+  padding: 10px 0;
 `;
 
 const Wrapper = styled.div`
-  position: fixed;
   width: 100%;
-  bottom: 0;
   display: block;
 `;
 
-export default withStyles(styles)(SupportButtonFooter);
+export default withStyles(styles)(SupportButton);

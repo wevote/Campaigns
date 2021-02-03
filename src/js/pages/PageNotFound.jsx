@@ -44,6 +44,18 @@ PageNotFound.propTypes = {
   classes: PropTypes.object,
 };
 
+const styles = (theme) => ({
+  buttonIconRoot: {
+    marginRight: 8,
+  },
+  buttonRoot: {
+    width: 250,
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
+    },
+  },
+});
+
 const Wrapper = styled.div`
   @media (max-width: ${({ theme, cordova }) => (cordova ? undefined : theme.breakpoints.md)}) {
     margin: 1em 0;
@@ -65,17 +77,5 @@ const EmptyBallotText = styled.p`
     margin: 1em;
   }
 `;
-
-const styles = (theme) => ({
-  buttonIconRoot: {
-    marginRight: 8,
-  },
-  buttonRoot: {
-    width: 250,
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
-  },
-});
 
 export default withStyles(styles)(PageNotFound);

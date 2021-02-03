@@ -51,11 +51,11 @@ HomePage.propTypes = {
   classes: PropTypes.object,
 };
 
-const Wrapper = styled.div`
-  margin: 0 15px;
-  @media (max-width: ${({ theme, cordova }) => (cordova ? undefined : theme.breakpoints.md)}) {
-  }
-`;
+const styles = () => ({
+  buttonRoot: {
+    width: 250,
+  },
+});
 
 const IntroductionMessageSection = styled.div`
   padding: 3em 2em;
@@ -94,10 +94,10 @@ const WhatIsHappeningTitle = styled.h3`
   text-align: left;
 `;
 
-const styles = () => ({
-  buttonRoot: {
-    width: 250,
-  },
-});
+const Wrapper = styled.div`
+  margin: 0 15px;
+  @media (max-width: ${({ theme, cordova }) => (cordova ? undefined : theme.breakpoints.md)}) {
+  }
+`;
 
 export default withStyles(styles)(HomePage);
