@@ -75,6 +75,12 @@ class StyleGuidePage extends Component {
 //   classes: PropTypes.object,
 // };
 
+const styles = () => ({
+  buttonRoot: {
+    width: 250,
+  },
+});
+
 const Wrapper = styled.div`
   margin: 0 15px;
   @media (max-width: ${({ theme, cordova }) => (cordova ? undefined : theme.breakpoints.md)}) {
@@ -135,11 +141,5 @@ const TitleH3 = styled.h3`
   font-size: 22px;
   text-align: left;
 `;
-
-const styles = () => ({
-  buttonRoot: {
-    width: 250,
-  },
-});
 
 export default withStyles(styles)(StyleGuidePage);
