@@ -22,7 +22,7 @@ class App extends Component {
   // See https://reactjs.org/docs/error-boundaries.html
   static getDerivedStateFromError (error) { // eslint-disable-line no-unused-vars
     // Update state so the next render will show the fallback UI, We should have a "Oh snap" page
-    console.log('App caught error', error);
+    console.log("App caught error", error);
     return { hasError: true };
   }
 
@@ -43,9 +43,7 @@ class App extends Component {
             <ThemeProvider theme={styledTheme}>
               <WeVoteRouter>
                 <Switch>
-                  {/* 2/3/21: We are probably going to have to disable jsx-props-no-spreading for this file */}
-                  {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-                  <Route path="/campaignDetails/:oneCampaign" render={(props) => <CampaignDetailsPage {...props} />} />
+                  <Route path="/campaignDetails/:oneCampaign" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/styles">
                     <StyleGuidePage />
                   </Route>

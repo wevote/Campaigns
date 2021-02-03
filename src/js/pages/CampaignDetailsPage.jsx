@@ -17,6 +17,7 @@ class CampaignDetailsPage extends Component {
   }
 
   componentDidMount () {
+    console.log('componentDidMount = dd');
     const { match: { params } } = this.props;
     const { oneCampaign } = params;
     console.log('componentDidMount = ', oneCampaign);
