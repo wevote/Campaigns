@@ -4,15 +4,16 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import { renderLog } from '../utils/logging';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
+import MainHeader from '../components/Navigation/MainHeader';
+import { renderLog } from '../utils/logging';
 
 
-class StartCampaignIntro extends Component {
+class CampaignStartIntro extends Component {
   render () {
-    renderLog('StartCampaignIntro');  // Set LOG_RENDER_EVENTS to log all renders
+    renderLog('CampaignStartIntro');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
-      console.log(`StartCampaignIntro window.location.href: ${window.location.href}`);
+      console.log(`CampaignStartIntro window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
     const mobileButtonClasses = classes.buttonDefault; // isWebApp() ? classes.buttonDefault : classes.buttonDefaultCordova;
@@ -20,13 +21,14 @@ class StartCampaignIntro extends Component {
       <div>
         <Helmet title="Start a Campaign - We Vote Campaigns" />
         <Wrapper cordova={isCordova()}>
+          <MainHeader />
           <OuterWrapper>
             <InnerWrapper>
               <ContentTitle>
                 Here&apos;s how WeVote.US campaigns work:
               </ContentTitle>
-              <StartCampaignSectionWrapper>
-                <StartCampaignSection>
+              <CampaignStartSectionWrapper>
+                <CampaignStartSection>
                   <TitleRow>
                     <Dot><StepNumber>1</StepNumber></Dot>
                     <StepTitle>Create your campaign</StepTitle>
@@ -64,7 +66,7 @@ class StartCampaignIntro extends Component {
                       <Button
                         classes={{ root: mobileButtonClasses }}
                         color="primary"
-                        id="startCampaignButton"
+                        id="campaignStartButton"
                         onClick={() => historyPush('/start-a-campaign-title')}
                         variant="contained"
                       >
@@ -72,8 +74,8 @@ class StartCampaignIntro extends Component {
                       </Button>
                     </DesktopButtonPanel>
                   </DesktopButtonWrapper>
-                </StartCampaignSection>
-              </StartCampaignSectionWrapper>
+                </CampaignStartSection>
+              </CampaignStartSectionWrapper>
             </InnerWrapper>
           </OuterWrapper>
           <MobileButtonWrapper className="u-show-mobile">
@@ -81,7 +83,7 @@ class StartCampaignIntro extends Component {
               <Button
                 classes={{ root: mobileButtonClasses }}
                 color="primary"
-                id="startCampaignButtonFooter"
+                id="campaignStartButtonFooter"
                 onClick={() => historyPush('/start-a-campaign-title')}
                 variant="contained"
               >
@@ -94,7 +96,7 @@ class StartCampaignIntro extends Component {
     );
   }
 }
-StartCampaignIntro.propTypes = {
+CampaignStartIntro.propTypes = {
   classes: PropTypes.object,
 };
 
@@ -167,7 +169,7 @@ const OuterWrapper = styled.div`
   margin: 15px 15px;
 `;
 
-const StartCampaignSection = styled.div`
+const CampaignStartSection = styled.div`
   margin-bottom: 100px !important;
   max-width: 450px;
 `;
@@ -178,7 +180,7 @@ const ContentRow = styled.div`
   justify-content: flex-start;
 `;
 
-const StartCampaignSectionWrapper = styled.div`
+const CampaignStartSectionWrapper = styled.div`
   display: flex;
   justify-content: center;
 `;
@@ -244,4 +246,4 @@ const TitleRow = styled.div`
 const Wrapper = styled.div`
 `;
 
-export default withStyles(styles)(StartCampaignIntro);
+export default withStyles(styles)(CampaignStartIntro);

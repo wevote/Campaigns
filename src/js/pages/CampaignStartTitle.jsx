@@ -4,15 +4,43 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import { renderLog } from '../utils/logging';
+import CampaignStartActions from '../actions/CampaignStartActions';
+import CampaignStartStore from '../stores/CampaignStartStore';
+import CampaignTitleInputField from '../components/CampaignStart/CampaignTitleInputField';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
+import MainHeader from '../components/Navigation/MainHeader';
+import { renderLog } from '../utils/logging';
 
 
-class StartCampaignTitle extends Component {
+class CampaignStartTitle extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+    };
+  }
+
+  componentDidMount () {
+    // console.log('CampaignStartTitle, componentDidMount');
+    import('jquery').then(({ default: jquery }) => {
+      window.jQuery = jquery;
+      window.$ = jquery;
+      CampaignStartActions.campaignRetrieve('');
+      CampaignStartActions.campaignTitleQueuedToSave('');
+    }).catch((error) => console.error('An error occurred while loading jQuery', error));
+  }
+
+  submitCampaignTitle = () => {
+    const campaignTitleQueuedToSave = CampaignStartStore.getCampaignTitleQueuedToSave();
+    // console.log('CampaignTitleInputField, submitCampaignTitle');
+    CampaignStartActions.campaignTitleSave(campaignTitleQueuedToSave);
+    CampaignStartActions.campaignTitleQueuedToSave('');
+    historyPush('/who-do-you-want-to-see-elected');
+  }
+
   render () {
-    renderLog('StartCampaignTitle');  // Set LOG_RENDER_EVENTS to log all renders
+    renderLog('CampaignStartTitle');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
-      console.log(`StartCampaignTitle window.location.href: ${window.location.href}`);
+      console.log(`CampaignStartTitle window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
     const mobileButtonClasses = classes.buttonDefault; // isWebApp() ? classes.buttonDefault : classes.buttonDefaultCordova;
@@ -20,6 +48,7 @@ class StartCampaignTitle extends Component {
       <div>
         <Helmet title="Start a Campaign - We Vote Campaigns" />
         <Wrapper cordova={isCordova()}>
+          <MainHeader />
           <OuterWrapper>
             <InnerWrapper>
               <ContentTitle>
@@ -28,15 +57,16 @@ class StartCampaignTitle extends Component {
               <ContentIntroductionText>
                 This is the first thing people will see about your campaign. Get their attention with a short title that focuses on what the candidate you support will do to improve people&apos;s lives.
               </ContentIntroductionText>
-              <StartCampaignSectionWrapper>
-                <StartCampaignSection>
+              <CampaignStartSectionWrapper>
+                <CampaignStartSection>
+                  <CampaignTitleInputField />
                   <DesktopButtonWrapper className="u-show-desktop-tablet">
                     <DesktopButtonPanel>
                       <Button
                         classes={{ root: mobileButtonClasses }}
                         color="primary"
                         id="saveCampaignTitle"
-                        onClick={() => historyPush('/')}
+                        onClick={this.submitCampaignTitle}
                         variant="contained"
                       >
                         Continue
@@ -70,7 +100,7 @@ class StartCampaignTitle extends Component {
                         &nbsp;
                       </AdviceBoxText>
                       <AdviceBoxTitle>
-                        Communicate Urgency
+                        Communicate urgency
                       </AdviceBoxTitle>
                       <AdviceBoxText>
                         Example: &quot;&quot;
@@ -80,8 +110,8 @@ class StartCampaignTitle extends Component {
                       </AdviceBoxText>
                     </AdviceBox>
                   </AdviceBoxWrapper>
-                </StartCampaignSection>
-              </StartCampaignSectionWrapper>
+                </CampaignStartSection>
+              </CampaignStartSectionWrapper>
             </InnerWrapper>
           </OuterWrapper>
           <MobileButtonWrapper className="u-show-mobile">
@@ -90,7 +120,7 @@ class StartCampaignTitle extends Component {
                 classes={{ root: mobileButtonClasses }}
                 color="primary"
                 id="saveCampaignTitleFooter"
-                onClick={() => historyPush('/')}
+                onClick={this.submitCampaignTitle}
                 variant="contained"
               >
                 Continue
@@ -102,7 +132,7 @@ class StartCampaignTitle extends Component {
     );
   }
 }
-StartCampaignTitle.propTypes = {
+CampaignStartTitle.propTypes = {
   classes: PropTypes.object,
 };
 
@@ -148,6 +178,17 @@ const AdviceBoxWrapper = styled.div`
   border: 1px solid #ddd;
   border-radius: 5px;
   margin-top: 20px;
+`;
+
+const CampaignStartSection = styled.div`
+  margin-bottom: 100px !important;
+  max-width: 620px;
+  width: 100%;
+`;
+
+const CampaignStartSectionWrapper = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 const ContentIntroductionText = styled.div`
@@ -205,18 +246,7 @@ const OuterWrapper = styled.div`
   margin: 15px 15px;
 `;
 
-const StartCampaignSection = styled.div`
-  margin-bottom: 100px !important;
-  max-width: 620px;
-  width: 100%;
-`;
-
-const StartCampaignSectionWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
 const Wrapper = styled.div`
 `;
 
-export default withStyles(styles)(StartCampaignTitle);
+export default withStyles(styles)(CampaignStartTitle);

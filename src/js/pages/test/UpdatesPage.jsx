@@ -16,7 +16,7 @@ export default class UpdatesPage extends React.Component {
 
   componentDidMount () {
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
-    import('jquery').then((jquery) => {
+    import('jquery').then(({ default: jquery }) => {
       window.jQuery = jquery;
       window.$ = jquery;
 

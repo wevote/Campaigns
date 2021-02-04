@@ -5,8 +5,9 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import CampaignHeader from '../components/Navigation/CampaignHeader';
 import CampaignPhoto from '../../img/global/photos/SamDavisFamily2020-800x450.jpg';
-import { renderLog } from '../utils/logging';
 import { isCordova } from '../utils/cordovaUtils';
+import MainHeader from '../components/Navigation/MainHeader';
+import { renderLog } from '../utils/logging';
 import SupportButton from '../components/Campaign/SupportButton';
 import SupportButtonFooter from '../components/Campaign/SupportButtonFooter';
 
@@ -41,6 +42,7 @@ class CampaignDetailsPage extends Component {
       <div>
         <Helmet title="Campaign Home - We Vote Campaigns" />
         <Wrapper cordova={isCordova()}>
+          <MainHeader />
           <CampaignHeader campaignIdentifier={campaignIdentifier} />
           <DetailsSectionMobile className="u-show-mobile">
             <CampaignImageWrapper>
