@@ -31,7 +31,7 @@ class HomePage extends Component {
               classes={{ root: classes.buttonRoot }}
               color="primary"
               variant="contained"
-              onClick={() => historyPush('/c/')}
+              onClick={() => historyPush('/start-a-campaign')}
             >
               Start a campaign
             </Button>

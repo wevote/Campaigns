@@ -17,26 +17,31 @@ class CampaignDetailsPage extends Component {
   }
 
   componentDidMount () {
-    console.log('componentDidMount = dd');
-    const { match: { params } } = this.props;
-    const { oneCampaign } = params;
-    console.log('componentDidMount = ', oneCampaign);
+    // console.log('CampaignDetailsPage componentDidMount');
+    // const { match: { params } } = this.props;
+    // const { campaignIdentifier } = params;
+    // console.log('componentDidMount campaignIdentifier: ', campaignIdentifier);
+    // if (campaignIdentifier) {
+    //   this.setState({
+    //     campaignIdentifier,
+    //   });
+    // }
   }
 
   render () {
     renderLog('CampaignDetailsPage');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
-      console.log(`CampaignHomePage window.location.href: ${window.location.href}`);
+      console.log(`CampaignDetailsPage window.location.href: ${window.location.href}`);
     }
     // const { classes } = this.props;
-    // const { match: { params } } = this.props;
-    // const { campaignIdentifier } = params;
-    // console.log('campaignIdentifier: ', campaignIdentifier);
+    const { match: { params } } = this.props;
+    const { campaignIdentifier } = params;
+    // console.log('render campaignIdentifier: ', campaignIdentifier);
     return (
       <div>
         <Helmet title="Campaign Home - We Vote Campaigns" />
         <Wrapper cordova={isCordova()}>
-          <CampaignHeader />
+          <CampaignHeader campaignIdentifier={campaignIdentifier} />
           <DetailsSectionMobile className="u-show-mobile">
             <CampaignImageWrapper>
               <CampaignImage src={CampaignPhoto} alt="Campaign" />

@@ -632,7 +632,10 @@ export function polyfillFixes (file) {
     return;   // Only load them once
   }
   polyfillsLoaded = true;
-  console.log(`Polyfills have been installed from "${file}"`);
+  const printConsole = false;
+  if (printConsole) {
+    console.log(`Polyfills have been installed from "${file}"`);
+  }
   // November 2, 2018:  Polyfill for "Object.entries"
   //   react-bootstrap 1.0 (bootstrap 4) relies on Object.entries in splitComponentProps.js
   //   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries#Polyfill

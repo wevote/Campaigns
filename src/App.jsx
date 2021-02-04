@@ -9,12 +9,17 @@ import styledTheme from './js/components/Widgets/styled-theme';
 import WeVoteRouter from './js/components/Widgets/WeVoteRouter';
 
 const CampaignDetailsPage = React.lazy(() => import('./js/pages/CampaignDetailsPage'));
+const HomePage = React.lazy(() => import('./js/pages/HomePage'));
+const PageNotFound = React.lazy(() => import('./js/pages/PageNotFound'));
+const StartCampaignIntro = React.lazy(() => import('./js/pages/StartCampaignIntro'));
+const StartCampaignTitle = React.lazy(() => import('./js/pages/StartCampaignTitle'));
+const StyleGuidePage = React.lazy(() => import('./js/pages/StyleGuidePage'));
+
+// ////////////
+// Test Pages
 const CommentsTestPage = React.lazy(() => import('./js/pages/test/CommentsPage'));
 const DetailsTestPage = React.lazy(() => import('./js/pages/test/DetailsPage'));
-const HomePage = React.lazy(() => import('./js/pages/HomePage'));
 const HomeTestPage = React.lazy(() => import('./js/pages/test/HomeTest'));
-const PageNotFound = React.lazy(() => import('./js/pages/PageNotFound'));
-const StyleGuidePage = React.lazy(() => import('./js/pages/StyleGuidePage'));
 const UpdatesTestPage = React.lazy(() => import('./js/pages/test/UpdatesPage'));
 
 
@@ -22,7 +27,7 @@ class App extends Component {
   // See https://reactjs.org/docs/error-boundaries.html
   static getDerivedStateFromError (error) { // eslint-disable-line no-unused-vars
     // Update state so the next render will show the fallback UI, We should have a "Oh snap" page
-    console.log('App caught error', error);
+    console.log('App caught error ', error);
     return { hasError: true };
   }
 
@@ -43,25 +48,17 @@ class App extends Component {
             <ThemeProvider theme={styledTheme}>
               <WeVoteRouter>
                 <Switch>
-                  <Route path="/campaignDetails/:oneCampaign" render={(props) => <CampaignDetailsPage match={props.match} />} />
-                  <Route exact path="/styles">
-                    <StyleGuidePage />
-                  </Route>
-                  <Route exact path="/test/comments">
-                    <CommentsTestPage />
-                  </Route>
-                  <Route exact path="/test/details">
-                    <DetailsTestPage />
-                  </Route>
-                  <Route exact path="/test/home">
-                    <HomeTestPage />
-                  </Route>
-                  <Route exact path="/test/updates">
-                    <UpdatesTestPage />
-                  </Route>
-                  <Route exact path="/">
-                    <HomePage />
-                  </Route>
+                  <Route exact path="/c/:campaignIdentifier" render={(props) => <CampaignDetailsPage match={props.match} />} />
+                  <Route exact path="/c/:campaignIdentifier/comments" render={(props) => <CampaignDetailsPage match={props.match} />} />
+                  <Route exact path="/c/:campaignIdentifier/updates" render={(props) => <CampaignDetailsPage match={props.match} />} />
+                  <Route exact path="/start-a-campaign"><StartCampaignIntro /></Route>
+                  <Route exact path="/start-a-campaign-title"><StartCampaignTitle /></Route>
+                  <Route exact path="/styles"><StyleGuidePage /></Route>
+                  <Route exact path="/test/comments"><CommentsTestPage /></Route>
+                  <Route exact path="/test/details"><DetailsTestPage /></Route>
+                  <Route exact path="/test/home"><HomeTestPage /></Route>
+                  <Route exact path="/test/updates"><UpdatesTestPage /></Route>
+                  <Route exact path="/"><HomePage /></Route>
                   <Route path="*" component={PageNotFound} />
                 </Switch>
               </WeVoteRouter>
