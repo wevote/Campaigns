@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function PageHeader () {
+export default function CampaignHeader (incomingVariables) {
   const [value, setValue] = React.useState(0);
   const classes = useStyles();
   const history = useHistory();
@@ -26,6 +26,9 @@ export default function PageHeader () {
     },
   });
 
+  const { campaignIdentifier } = incomingVariables;
+  // console.log('incomingVariables:', incomingVariables);
+  // console.log('campaignIdentifier:', campaignIdentifier);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -42,7 +45,7 @@ export default function PageHeader () {
     setValue(2);
   }
 
-  console.log('Render CampaignHeader.jsx');
+  // console.log('Render CampaignHeader.jsx');
 
   return (
     <div className={classes.root}>
@@ -54,9 +57,9 @@ export default function PageHeader () {
         <ThemeProvider theme={theme}>
           <Toolbar className="header-toolbar" disableGutters>
             <Tabs value={value} onChange={handleChange} aria-label="Tab menu">
-              <Tab id="weTarget-0" label="Campaign details" onClick={() => history.push('/c/')} />
-              <Tab id="weTarget-1" label="Comments" onClick={() => history.push('/comments')} />
-              <Tab id="weTarget-2" label="Updates" onClick={() => history.push('/updates')} />
+              <Tab id="weTarget-0" label="Campaign details" onClick={() => history.push(`/c/${campaignIdentifier}`)} />
+              <Tab id="weTarget-1" label="Comments" onClick={() => history.push(`/c/${campaignIdentifier}/comments`)} />
+              <Tab id="weTarget-2" label="Updates" onClick={() => history.push(`/c/${campaignIdentifier}/updates`)} />
             </Tabs>
           </Toolbar>
         </ThemeProvider>

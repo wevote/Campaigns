@@ -18,7 +18,7 @@ class HomeCampaignItem extends Component {
     const { campaignWeVoteId } = this.props;
     return (
       <Wrapper cordova={isCordova()}>
-        <OneCampaignContainer onClick={() => historyPush('/c/')}>
+        <OneCampaignContainer onClick={() => historyPush('/c/sam-davis-for-oakland-school-board')}>
           <OneCampaignTitle>
             Sam Davis for Oakland School Board -
             {' '}

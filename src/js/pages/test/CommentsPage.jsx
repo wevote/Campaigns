@@ -7,7 +7,7 @@ import japan from '../../../img/demo/Japan.jpg';
 import TestPageHeader from '../../components/Navigation/TestPageHeader';
 import VoterActions from '../../actions/VoterActions';
 import VoterStore from '../../stores/VoterStore';
-import compileDate from '../../compileDate';
+import compiledDate from '../../compiledDate';
 
 export default class CommentsPage extends React.Component {
   constructor (props) {
@@ -82,7 +82,7 @@ export default class CommentsPage extends React.Component {
         <img src={japan} alt="World" style={{ maxWidth: 500, height: 'auto', maxHeight: 600 }} />
         <p style={{ marginTop: 30 }}>
           compile date:&nbsp;&nbsp;
-          {compileDate}
+          {compiledDate}
         </p>
       </div>
     );

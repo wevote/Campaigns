@@ -28,7 +28,7 @@ class SupportButton extends Component {
             <Button
               classes={{ root: supportButtonClasses }}
               color="primary"
-              id="supportButtonFooter"
+              id="supportButtonDesktop"
               onClick={() => historyPush('/c/')}
               variant="contained"
             >
