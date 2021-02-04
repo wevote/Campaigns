@@ -5,8 +5,9 @@ import styled from 'styled-components';
 import { Ballot } from '@material-ui/icons';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { renderLog } from '../utils/logging';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
+import MainHeader from '../components/Navigation/MainHeader';
+import { renderLog } from '../utils/logging';
 
 class PageNotFound extends Component {
   static getProps () {
@@ -23,6 +24,7 @@ class PageNotFound extends Component {
       <div>
         <Helmet title="Page Not Found - We Vote Campaigns" />
         <Wrapper cordova={isCordova()}>
+          <MainHeader />
           <EmptyBallotMessageContainer>
             <EmptyBallotText>Page not found.</EmptyBallotText>
             <Button
@@ -56,12 +58,6 @@ const styles = (theme) => ({
   },
 });
 
-const Wrapper = styled.div`
-  @media (max-width: ${({ theme, cordova }) => (cordova ? undefined : theme.breakpoints.md)}) {
-    margin: 1em 0;
-  }
-`;
-
 const EmptyBallotMessageContainer = styled.div`
   padding: 3em 2em;
   display: flex;
@@ -75,6 +71,12 @@ const EmptyBallotText = styled.p`
   margin: 1em 2em 3em;
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     margin: 1em;
+  }
+`;
+
+const Wrapper = styled.div`
+  @media (max-width: ${({ theme, cordova }) => (cordova ? undefined : theme.breakpoints.md)}) {
+    margin: 1em 0;
   }
 `;
 

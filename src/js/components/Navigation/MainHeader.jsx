@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CampaignHeaderBar () {
+export default function MainHeader () {
   const classes = useStyles();
   // const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -57,7 +57,7 @@ export default function CampaignHeaderBar () {
     opacity: '40%',
   };
 
-  renderLog('CampaignHeaderBar');
+  renderLog('MainHeader');
 
   return (
     <div className={classes.root}>
