@@ -1,4 +1,6 @@
 import React from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -7,20 +9,38 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import HeaderBarLogo from './HeaderBarLogo';
 // import AppStore from '../../stores/AppStore';
 import { renderLog } from '../../utils/logging';
+import { cordovaDot, isCordova } from '../../utils/cordovaUtils';
+import logoLight from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-200x66.svg';
+import logoDark from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-dark-141x46.svg';
 
 
 const useStyles = makeStyles((theme) => ({
+  appBarRoot: {
+    borderBottom: '1px solid #ddd',
+    boxShadow: 'none',
+    paddingBottom: '0',
+    paddingTop: '4px',
+  },
+  logoLinkRoot: {
+  },
+  menuButton: {
+    fontSize: '4px',
+    marginRight: theme.spacing(2),
+    padding: '0',
+  },
+  menuRoot: {
+    marginTop: '34px',
+  },
   root: {
     flexGrow: 1,
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
   title: {
     flexGrow: 1,
+  },
+  toolbarRoot: {
+    minHeight: '0 !important',
   },
 }));
 
@@ -59,16 +79,30 @@ export default function MainHeader () {
 
   renderLog('MainHeader');
 
+  const chosenSiteLogoUrl = '';  // {AppStore.getChosenSiteLogoUrl()}
+  const light = false;
   return (
     <div className={classes.root}>
-      <AppBar position="static" color="default">
-        <Toolbar>
+      <AppBar className={classes.appBarRoot} position="static" color="default">
+        <Toolbar className={classes.toolbarRoot} disableGutters>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <HeaderBarLogo
-              chosenSiteLogoUrl=""    // {AppStore.getChosenSiteLogoUrl()}
-              showFullNavigation
-              isBeta={false}
-            />
+            <HeaderBarWrapper>
+              {chosenSiteLogoUrl ? (
+                <img
+                  alt="Logo"
+                  src={chosenSiteLogoUrl}
+                />
+              ) : (
+                <WeVoteLogoWrapper>
+                  <Link className={classes.logoLinkRoot} to={`${isCordova() ? '/' : '/'}`} id="logoHeaderBar">
+                    <img
+                      alt="We Vote logo"
+                      src={light ? cordovaDot(logoLight) : cordovaDot(logoDark)}
+                    />
+                  </Link>
+                </WeVoteLogoWrapper>
+              )}
+            </HeaderBarWrapper>
           </IconButton>
           <Typography variant="h6" className={classes.title}>
             &nbsp;
@@ -90,6 +124,7 @@ export default function MainHeader () {
                 vertical: 'top',
                 horizontal: 'right',
               }}
+              className={classes.menuRoot}
               keepMounted
               transformOrigin={{
                 vertical: 'top',
@@ -118,3 +153,13 @@ export default function MainHeader () {
     </div>
   );
 }
+
+const HeaderBarWrapper = styled.div`
+  @media print{
+  }
+`;
+
+const WeVoteLogoWrapper = styled.div`
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  }
+`;

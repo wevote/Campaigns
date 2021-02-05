@@ -6,9 +6,16 @@ import { startsWith } from '../../utils/textFormat';
 
 
 const useStyles = makeStyles((theme) => ({
+  appBarRoot: {
+    borderBottom: '1px solid #ddd',
+    boxShadow: 'none',
+  },
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
+  },
+  toolbarRoot: {
+    minHeight: 0,
   },
 }));
 
@@ -52,10 +59,10 @@ export default function CampaignHeader (incomingVariables) {
       <AppBar
         position="relative"
         color="default"
-        className=""
+        className={classes.appBarRoot}
       >
         <ThemeProvider theme={theme}>
-          <Toolbar className="header-toolbar" disableGutters>
+          <Toolbar className={classes.toolbarRoot} disableGutters>
             <Tabs value={value} onChange={handleChange} aria-label="Tab menu">
               <Tab id="weTarget-0" label="Campaign details" onClick={() => history.push(`/c/${campaignIdentifier}`)} />
               <Tab id="weTarget-1" label="Comments" onClick={() => history.push(`/c/${campaignIdentifier}/comments`)} />
