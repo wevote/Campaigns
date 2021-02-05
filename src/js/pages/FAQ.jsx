@@ -18,6 +18,7 @@ export default class About extends Component {
       lazyLoader(library)
         .then((result) => {
           console.log('lazy loader for fontawesome returned: ', result);
+          // eslint-disable-next-line react/no-unused-state
           this.setState({ result }); // to force a reload
         });
     }
