@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
-import MainHeader from '../components/Navigation/MainHeader';
+import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
 
 
@@ -20,7 +20,7 @@ class CampaignStartIntro extends Component {
     return (
       <div>
         <Helmet title="Start a Campaign - We Vote Campaigns" />
-        <MainHeader />
+        <MainHeaderBar />
         <PageWrapper cordova={isCordova()}>
           <OuterWrapper>
             <InnerWrapper>
@@ -211,7 +211,7 @@ const StepNumber = styled.div`
   border-radius: 4px;
   color: ${(props) => props.theme.colors.brandBlue};
   font-size: 16px;
-  font-weight: 600px;
+  font-weight: 600;
   width: 22px;
   height: 22px;
   padding-top: 1px;

@@ -6,7 +6,7 @@ import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { renderLog } from '../utils/logging';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
-import MainHeader from '../components/Navigation/MainHeader';
+import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 
 const HomeCampaignList = React.lazy(() => import('../components/Home/HomeCampaignList'));
 
@@ -24,7 +24,7 @@ class HomePage extends Component {
     return (
       <div>
         <Helmet title="Home - We Vote Campaigns" />
-        <MainHeader />
+        <MainHeaderBar />
         <PageWrapper cordova={isCordova()}>
           <IntroductionMessageSection>
             <PageStatement>America wins when more voters participate.</PageStatement>
