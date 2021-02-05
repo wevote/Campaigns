@@ -8,7 +8,7 @@ import CampaignStartActions from '../actions/CampaignStartActions';
 import CampaignStartStore from '../stores/CampaignStartStore';
 import CampaignTitleInputField from '../components/CampaignStart/CampaignTitleInputField';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
-import MainHeader from '../components/Navigation/MainHeader';
+import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
 
 
@@ -48,7 +48,7 @@ class CampaignStartTitle extends Component {
       <div>
         <Helmet title="Start a Campaign - We Vote Campaigns" />
         <Wrapper cordova={isCordova()}>
-          <MainHeader />
+          <MainHeaderBar />
           <OuterWrapper>
             <InnerWrapper>
               <ContentTitle>

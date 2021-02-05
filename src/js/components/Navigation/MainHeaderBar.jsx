@@ -10,6 +10,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 // import AppStore from '../../stores/AppStore';
+import { historyPush } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 import { cordovaDot, isCordova } from '../../utils/cordovaUtils';
 import logoLight from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-200x66.svg';
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MainHeader () {
+export default function MainHeaderBar () {
   const classes = useStyles();
   // const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -58,8 +59,9 @@ export default function MainHeader () {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (destination) => {
     setAnchorEl(null);
+    historyPush(destination);
   };
 
   const extraItems = {
@@ -77,7 +79,7 @@ export default function MainHeader () {
     opacity: '40%',
   };
 
-  renderLog('MainHeader');
+  renderLog('MainHeaderBar');
 
   const chosenSiteLogoUrl = '';  // {AppStore.getChosenSiteLogoUrl()}
   const light = false;
@@ -136,16 +138,17 @@ export default function MainHeader () {
               <Typography variant="h6" className={classes.title} style={ourPromise}>
                 Our Promise: We&apos;ll never sell your email.
               </Typography>
-              <MenuItem onClick={handleClose}>Your campaigns</MenuItem>
-              <MenuItem onClick={handleClose}>Your ballot</MenuItem>
-              <MenuItem onClick={handleClose}>Settings</MenuItem>
-              <MenuItem onClick={handleClose}>Start a campaign</MenuItem>
-              <MenuItem onClick={handleClose}>Membership</MenuItem>
-              <MenuItem onClick={handleClose}>Search</MenuItem>
+              {/* The next 6 lines have a test url of '/', not for production! */}
+              <MenuItem onClick={() => handleClose('/')}>Your campaigns</MenuItem>
+              <MenuItem onClick={() => handleClose('/')}>Your ballot</MenuItem>
+              <MenuItem onClick={() => handleClose('/')}>Settings</MenuItem>
+              <MenuItem onClick={() => handleClose('/')}>Start a campaign</MenuItem>
+              <MenuItem onClick={() => handleClose('/')}>Membership</MenuItem>
+              <MenuItem onClick={() => handleClose('/')}>Search</MenuItem>
               <span style={{ lineHeight: '28px' }}>&nbsp;</span>
-              <MenuItem style={extraItems} onClick={handleClose}>Frequently asked questions</MenuItem>
-              <MenuItem style={extraItems} onClick={handleClose}>Terms of service</MenuItem>
-              <MenuItem style={extraItems} onClick={handleClose}>Privacy Policy</MenuItem>
+              <MenuItem style={extraItems} onClick={() => handleClose('/faq')}>Frequently asked questions</MenuItem>
+              <MenuItem style={extraItems} onClick={() => handleClose('/terms')}>Terms of service</MenuItem>
+              <MenuItem style={extraItems} onClick={() => handleClose('/privacy')}>Privacy Policy</MenuItem>
             </Menu>
           </div>
         </Toolbar>
