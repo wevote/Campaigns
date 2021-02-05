@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { cordovaDot, isCordova } from '../../utils/cordovaUtils';
 import logoLight from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-200x66.svg';
 import logoDark from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-dark-141x46.svg';
-import DelayedLoad from '../Widgets/DelayedLoad';
 
 const HeaderBarLogo = ({ chosenSiteLogoUrl, isBeta, light }) => (
   <HeaderBarWrapper>
@@ -17,19 +16,11 @@ const HeaderBarLogo = ({ chosenSiteLogoUrl, isBeta, light }) => (
       />
     ) : (
       <WeVoteLogoWrapper>
-        <Link to={`${isCordova() ? '/' : '/'}`} className="page-logo page-logo-full-size" id="logoHeaderBar">
+        <Link to={`${isCordova() ? '/' : '/'}`} id="logoHeaderBar">
           <img
-            className="header-logo-img"
             alt="We Vote logo"
             src={light ? cordovaDot(logoLight) : cordovaDot(logoDark)}
           />
-          {(isBeta && !isCordova()) && (
-            <span className="beta-marker">
-              <DelayedLoad waitBeforeShow={200}>
-                <BetaMarkerInner light={light}>beta</BetaMarkerInner>
-              </DelayedLoad>
-            </span>
-          )}
         </Link>
       </WeVoteLogoWrapper>
     )}
@@ -41,14 +32,6 @@ HeaderBarLogo.propTypes = {
   isBeta: PropTypes.bool,
   light: PropTypes.bool,
 };
-
-const BetaMarkerInner = styled.span`
-  position: absolute;
-  font-size: 10px;
-  right: 0;
-  top: 18px;
-  color: ${({ light }) => (light ? 'white' : '#2e3c5d')};
-`;
 
 const HeaderBarWrapper = styled.div`
   @media print{
