@@ -20,8 +20,8 @@ class CampaignStartIntro extends Component {
     return (
       <div>
         <Helmet title="Start a Campaign - We Vote Campaigns" />
-        <Wrapper cordova={isCordova()}>
-          <MainHeaderBar />
+        <MainHeaderBar />
+        <PageWrapper cordova={isCordova()}>
           <OuterWrapper>
             <InnerWrapper>
               <ContentTitle>
@@ -64,7 +64,7 @@ class CampaignStartIntro extends Component {
                   <DesktopButtonWrapper className="u-show-desktop-tablet">
                     <DesktopButtonPanel>
                       <Button
-                        classes={{ root: mobileButtonClasses }}
+                        classes={{ root: classes.buttonDesktop }}
                         color="primary"
                         id="campaignStartButton"
                         onClick={() => historyPush('/start-a-campaign-title')}
@@ -78,20 +78,20 @@ class CampaignStartIntro extends Component {
               </CampaignStartSectionWrapper>
             </InnerWrapper>
           </OuterWrapper>
-          <MobileButtonWrapper className="u-show-mobile">
-            <MobileButtonPanel>
-              <Button
-                classes={{ root: mobileButtonClasses }}
-                color="primary"
-                id="campaignStartButtonFooter"
-                onClick={() => historyPush('/start-a-campaign-title')}
-                variant="contained"
-              >
-                Got it! I&apos;m ready to create my campaign
-              </Button>
-            </MobileButtonPanel>
-          </MobileButtonWrapper>
-        </Wrapper>
+        </PageWrapper>
+        <MobileButtonWrapper className="u-show-mobile">
+          <MobileButtonPanel>
+            <Button
+              classes={{ root: mobileButtonClasses }}
+              color="primary"
+              id="campaignStartButtonFooter"
+              onClick={() => historyPush('/start-a-campaign-title')}
+              variant="contained"
+            >
+              Got it! I&apos;m ready to create my campaign
+            </Button>
+          </MobileButtonPanel>
+        </MobileButtonWrapper>
       </div>
     );
   }
@@ -100,18 +100,33 @@ CampaignStartIntro.propTypes = {
   classes: PropTypes.object,
 };
 
-const styles = () => ({
+const styles = (theme) => ({
   buttonDefault: {
-    padding: '0 12px',
-    width: '100%',
     boxShadow: 'none !important',
+    fontSize: '14px',
     height: '45px !important',
+    padding: '0 12px',
+    textTransform: 'none',
+    width: '100%',
+    [theme.breakpoints.up('xs')]: {
+      fontSize: '15px',
+    },
   },
   buttonDefaultCordova: {
-    padding: '0 12px',
-    width: '100%',
     boxShadow: 'none !important',
+    fontSize: '14px',
     height: '35px !important',
+    padding: '0 12px',
+    textTransform: 'none',
+    width: '100%',
+  },
+  buttonDesktop: {
+    boxShadow: 'none !important',
+    fontSize: '18px',
+    height: '45px !important',
+    padding: '0 12px',
+    textTransform: 'none',
+    width: '100%',
   },
   buttonRoot: {
     width: 250,
@@ -153,6 +168,7 @@ const InnerWrapper = styled.div`
 const MobileButtonPanel = styled.div`
   background-color: #fff;
   border-top: 1px solid #ddd;
+  margin: 0;
   padding: 10px;
 `;
 
@@ -183,6 +199,10 @@ const ContentRow = styled.div`
 const CampaignStartSectionWrapper = styled.div`
   display: flex;
   justify-content: center;
+`;
+
+const PageWrapper = styled.div`
+  margin: 0 15px;
 `;
 
 const StepNumber = styled.div`
@@ -241,9 +261,6 @@ const TitleRow = styled.div`
   flex-flow: row nowrap;
   justify-content: flex-start;
   padding-top: 14px;
-`;
-
-const Wrapper = styled.div`
 `;
 
 export default withStyles(styles)(CampaignStartIntro);

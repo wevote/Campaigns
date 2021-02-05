@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     fontSize: '4px',
+    marginLeft: 0,
     marginRight: theme.spacing(2),
     padding: '0',
   },

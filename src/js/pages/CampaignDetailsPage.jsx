@@ -41,9 +41,9 @@ class CampaignDetailsPage extends Component {
     return (
       <div>
         <Helmet title="Campaign Home - We Vote Campaigns" />
-        <Wrapper cordova={isCordova()}>
-          <MainHeaderBar />
-          <CampaignHeader campaignIdentifier={campaignIdentifier} />
+        <MainHeaderBar />
+        <CampaignHeader campaignIdentifier={campaignIdentifier} />
+        <PageWrapper cordova={isCordova()}>
           <DetailsSectionMobile className="u-show-mobile">
             <CampaignImageWrapper>
               <CampaignImage src={CampaignPhoto} alt="Campaign" />
@@ -59,7 +59,6 @@ class CampaignDetailsPage extends Component {
                 Etiam consectetur orci ac dui rhoncus sodales. Sed lectus neque, tincidunt vitae purus sit amet, malesuada dignissim augue. Nulla id gravida nisi, a convallis lectus. Etiam non erat a velit lacinia pellentesque id ut tortor. Morbi pulvinar id augue quis accumsan. Ut ut nisi in ante tristique maximus sed at nunc. Fusce faucibus eros vel ipsum sollicitudin, et consectetur elit hendrerit. Aenean venenatis eleifend eros, at mollis erat interdum a. Maecenas blandit orci sit amet mauris imperdiet, non mattis ex eleifend. Maecenas vehicula maximus est vitae tincidunt. Sed porta porttitor enim quis consequat.
               </CampaignDescription>
             </CampaignDescriptionWrapper>
-            <SupportButtonFooter />
           </DetailsSectionMobile>
           <DetailsSectionDesktopTablet className="u-show-desktop-tablet">
             <CampaignTitleDesktop>Sam Davis for Oakland School Board</CampaignTitleDesktop>
@@ -81,7 +80,10 @@ class CampaignDetailsPage extends Component {
               </ColumnOneThird>
             </ColumnsWrapper>
           </DetailsSectionDesktopTablet>
-        </Wrapper>
+        </PageWrapper>
+        <SupportButtonFooterWrapper className="u-show-mobile">
+          <SupportButtonFooter />
+        </SupportButtonFooterWrapper>
       </div>
     );
   }
@@ -181,15 +183,19 @@ const DetailsSectionDesktopTablet = styled.div`
 const DetailsSectionMobile = styled.div`
   display: flex;
   flex-flow: column;
+  margin-bottom: 80px;
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
   }
 `;
 
-const Wrapper = styled.div`
+const PageWrapper = styled.div`
   margin: 0 15px;
   @media (max-width: ${({ theme, cordova }) => (cordova ? undefined : theme.breakpoints.md)}) {
     margin: 0;
   }
+`;
+
+const SupportButtonFooterWrapper = styled.div`
 `;
 
 export default withStyles(styles)(CampaignDetailsPage);
