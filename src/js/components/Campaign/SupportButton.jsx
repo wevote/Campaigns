@@ -46,20 +46,23 @@ SupportButton.propTypes = {
 
 const styles = (theme) => ({
   buttonDefault: {
-    padding: '0 12px',
-    width: '100%',
     boxShadow: 'none !important',
+    fontSize: '18px',
     height: '45px !important',
+    padding: '0 12px',
+    textTransform: 'none',
+    width: '100%',
     [theme.breakpoints.down('md')]: {
-      fontSize: '12px',
+      fontSize: '16px',
       padding: '0',
     },
   },
   buttonDefaultCordova: {
-    padding: '0 12px',
-    width: '100%',
     boxShadow: 'none !important',
     height: '35px !important',
+    padding: '0 12px',
+    textTransform: 'none',
+    width: '100%',
   },
 });
 

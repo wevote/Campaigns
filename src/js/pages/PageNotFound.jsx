@@ -23,8 +23,8 @@ class PageNotFound extends Component {
     return (
       <div>
         <Helmet title="Page Not Found - We Vote Campaigns" />
-        <Wrapper cordova={isCordova()}>
-          <MainHeader />
+        <MainHeader />
+        <PageWrapper cordova={isCordova()}>
           <EmptyBallotMessageContainer>
             <EmptyBallotText>Page not found.</EmptyBallotText>
             <Button
@@ -37,7 +37,7 @@ class PageNotFound extends Component {
               Go to Home Page
             </Button>
           </EmptyBallotMessageContainer>
-        </Wrapper>
+        </PageWrapper>
       </div>
     );
   }
@@ -51,6 +51,7 @@ const styles = (theme) => ({
     marginRight: 8,
   },
   buttonRoot: {
+    textTransform: 'none',
     width: 250,
     [theme.breakpoints.down('md')]: {
       width: '100%',
@@ -74,10 +75,8 @@ const EmptyBallotText = styled.p`
   }
 `;
 
-const Wrapper = styled.div`
-  @media (max-width: ${({ theme, cordova }) => (cordova ? undefined : theme.breakpoints.md)}) {
-    margin: 1em 0;
-  }
+const PageWrapper = styled.div`
+  margin: 0 15px;
 `;
 
 export default withStyles(styles)(PageNotFound);

@@ -24,8 +24,8 @@ class HomePage extends Component {
     return (
       <div>
         <Helmet title="Home - We Vote Campaigns" />
-        <Wrapper cordova={isCordova()}>
-          <MainHeader />
+        <MainHeader />
+        <PageWrapper cordova={isCordova()}>
           <IntroductionMessageSection>
             <PageStatement>America wins when more voters participate.</PageStatement>
             <PageSubStatement>Trying to win a race on election day?</PageSubStatement>
@@ -44,7 +44,7 @@ class HomePage extends Component {
             </WhatIsHappeningTitle>
             <HomeCampaignList />
           </WhatIsHappeningSection>
-        </Wrapper>
+        </PageWrapper>
       </div>
     );
   }
@@ -55,6 +55,8 @@ HomePage.propTypes = {
 
 const styles = () => ({
   buttonRoot: {
+    fontSize: 18,
+    textTransform: 'none',
     width: 250,
   },
 });
@@ -87,6 +89,12 @@ const PageSubStatement = styled.div`
   }
 `;
 
+const PageWrapper = styled.div`
+  margin: 0 15px;
+  @media (max-width: ${({ theme, cordova }) => (cordova ? undefined : theme.breakpoints.md)}) {
+  }
+`;
+
 const WhatIsHappeningSection = styled.div`
   margin: 0 15px 25px 0;
 `;
@@ -94,12 +102,6 @@ const WhatIsHappeningSection = styled.div`
 const WhatIsHappeningTitle = styled.h3`
   font-size: 22px;
   text-align: left;
-`;
-
-const Wrapper = styled.div`
-  margin: 0 15px;
-  @media (max-width: ${({ theme, cordova }) => (cordova ? undefined : theme.breakpoints.md)}) {
-  }
 `;
 
 export default withStyles(styles)(HomePage);

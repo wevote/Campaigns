@@ -47,8 +47,8 @@ class CampaignStartTitle extends Component {
     return (
       <div>
         <Helmet title="Start a Campaign - We Vote Campaigns" />
-        <Wrapper cordova={isCordova()}>
-          <MainHeader />
+        <MainHeader />
+        <PageWrapper cordova={isCordova()}>
           <OuterWrapper>
             <InnerWrapper>
               <ContentTitle>
@@ -63,7 +63,7 @@ class CampaignStartTitle extends Component {
                   <DesktopButtonWrapper className="u-show-desktop-tablet">
                     <DesktopButtonPanel>
                       <Button
-                        classes={{ root: mobileButtonClasses }}
+                        classes={{ root: classes.buttonDesktop }}
                         color="primary"
                         id="saveCampaignTitle"
                         onClick={this.submitCampaignTitle}
@@ -114,20 +114,20 @@ class CampaignStartTitle extends Component {
               </CampaignStartSectionWrapper>
             </InnerWrapper>
           </OuterWrapper>
-          <MobileButtonWrapper className="u-show-mobile">
-            <MobileButtonPanel>
-              <Button
-                classes={{ root: mobileButtonClasses }}
-                color="primary"
-                id="saveCampaignTitleFooter"
-                onClick={this.submitCampaignTitle}
-                variant="contained"
-              >
-                Continue
-              </Button>
-            </MobileButtonPanel>
-          </MobileButtonWrapper>
-        </Wrapper>
+        </PageWrapper>
+        <MobileButtonWrapper className="u-show-mobile">
+          <MobileButtonPanel>
+            <Button
+              classes={{ root: mobileButtonClasses }}
+              color="primary"
+              id="saveCampaignTitleFooter"
+              onClick={this.submitCampaignTitle}
+              variant="contained"
+            >
+              Continue
+            </Button>
+          </MobileButtonPanel>
+        </MobileButtonWrapper>
       </div>
     );
   }
@@ -138,16 +138,28 @@ CampaignStartTitle.propTypes = {
 
 const styles = () => ({
   buttonDefault: {
-    padding: '0 12px',
-    width: '100%',
     boxShadow: 'none !important',
+    fontSize: '18px',
     height: '45px !important',
+    padding: '0 12px',
+    textTransform: 'none',
+    width: '100%',
   },
   buttonDefaultCordova: {
-    padding: '0 12px',
-    width: '100%',
     boxShadow: 'none !important',
+    fontSize: '18px',
     height: '35px !important',
+    padding: '0 12px',
+    textTransform: 'none',
+    width: '100%',
+  },
+  buttonDesktop: {
+    boxShadow: 'none !important',
+    fontSize: '18px',
+    height: '45px !important',
+    padding: '0 12px',
+    textTransform: 'none',
+    width: '100%',
   },
   buttonRoot: {
     width: 250,
@@ -243,10 +255,11 @@ const MobileButtonWrapper = styled.div`
 const OuterWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin: 15px 15px;
+  margin: 15px 0;
 `;
 
-const Wrapper = styled.div`
+const PageWrapper = styled.div`
+  margin: 0 15px;
 `;
 
 export default withStyles(styles)(CampaignStartTitle);
