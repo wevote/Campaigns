@@ -6,7 +6,7 @@ import { Ballot } from '@material-ui/icons';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
-import MainHeader from '../components/Navigation/MainHeader';
+import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
 
 class PageNotFound extends Component {
@@ -24,7 +24,7 @@ class PageNotFound extends Component {
       <div>
         <Helmet title="Page Not Found - We Vote Campaigns" />
         <Wrapper cordova={isCordova()}>
-          <MainHeader />
+          <MainHeaderBar />
           <EmptyBallotMessageContainer>
             <EmptyBallotText>Page not found.</EmptyBallotText>
             <Button

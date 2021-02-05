@@ -8,12 +8,16 @@ import { renderLog } from './js/utils/logging';
 import styledTheme from './js/components/Widgets/styled-theme';
 import WeVoteRouter from './js/components/Widgets/WeVoteRouter';
 
+// Root URL pages
 const CampaignDetailsPage = React.lazy(() => import('./js/pages/CampaignDetailsPage'));
 const CampaignStartIntro = React.lazy(() => import('./js/pages/CampaignStartIntro'));
 const CampaignStartTitle = React.lazy(() => import('./js/pages/CampaignStartTitle'));
+const FAQ = React.lazy(() => import('./js/pages/FAQ'));
 const HomePage = React.lazy(() => import('./js/pages/HomePage'));
 const PageNotFound = React.lazy(() => import('./js/pages/PageNotFound'));
+const Privacy = React.lazy(() => import('./js/pages/Privacy'));
 const StyleGuidePage = React.lazy(() => import('./js/pages/StyleGuidePage'));
+const TermsOfService = React.lazy(() => import('./js/pages/TermsOfService'));
 
 // ////////////
 // Test Pages
@@ -51,9 +55,12 @@ class App extends Component {
                   <Route exact path="/c/:campaignIdentifier" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/c/:campaignIdentifier/comments" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/c/:campaignIdentifier/updates" render={(props) => <CampaignDetailsPage match={props.match} />} />
+                  <Route exact path="/faq"><FAQ /></Route>
+                  <Route exact path="/privacy"><Privacy /></Route>
                   <Route exact path="/start-a-campaign"><CampaignStartIntro /></Route>
                   <Route exact path="/start-a-campaign-title"><CampaignStartTitle /></Route>
                   <Route exact path="/styles"><StyleGuidePage /></Route>
+                  <Route exact path="/terms"><TermsOfService /></Route>
                   <Route exact path="/test/comments"><CommentsTestPage /></Route>
                   <Route exact path="/test/details"><DetailsTestPage /></Route>
                   <Route exact path="/test/home"><HomeTestPage /></Route>
