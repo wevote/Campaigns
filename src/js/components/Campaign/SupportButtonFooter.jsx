@@ -46,16 +46,20 @@ SupportButtonFooter.propTypes = {
 
 const styles = () => ({
   buttonDefault: {
-    padding: '0 12px',
-    width: '100%',
     boxShadow: 'none !important',
+    fontSize: 20,
     height: '45px !important',
+    padding: '0 12px',
+    textTransform: 'none',
+    width: '100%',
   },
   buttonDefaultCordova: {
-    padding: '0 12px',
-    width: '100%',
     boxShadow: 'none !important',
+    fontSize: 20,
     height: '35px !important',
+    padding: '0 12px',
+    textTransform: 'none',
+    width: '100%',
   },
 });
 
