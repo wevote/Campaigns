@@ -10,9 +10,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 // import AppStore from '../../stores/AppStore';
-import { historyPush } from '../../utils/cordovaUtils';
+import { cordovaDot, historyPush, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
-import { cordovaDot, isCordova } from '../../utils/cordovaUtils';
 import logoLight from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-200x66.svg';
 import logoDark from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-dark-141x46.svg';
 
