@@ -6,7 +6,7 @@ import { cordovaDot, isCordova } from '../../utils/cordovaUtils';
 import logoLight from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-200x66.svg';
 import logoDark from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-dark-141x46.svg';
 
-const HeaderBarLogo = ({ chosenSiteLogoUrl, isBeta, light }) => (
+const HeaderBarLogo = ({ chosenSiteLogoUrl, light }) => (
   <HeaderBarWrapper>
     {chosenSiteLogoUrl ? (
       <img
@@ -29,7 +29,6 @@ const HeaderBarLogo = ({ chosenSiteLogoUrl, isBeta, light }) => (
 
 HeaderBarLogo.propTypes = {
   chosenSiteLogoUrl: PropTypes.string,
-  isBeta: PropTypes.bool,
   light: PropTypes.bool,
 };
 
