@@ -123,7 +123,7 @@ export default function MainHeaderBar () {
               <MenuItem onClick={() => handleClose('/')}>Your ballot</MenuItem>
               <MenuItem onClick={() => handleClose('/')}>Settings</MenuItem>
               <MenuItem onClick={() => handleClose('/')}>Start a campaign</MenuItem>
-              <MenuItem onClick={() => handleClose('/')}>Membership</MenuItem>
+              <MenuItem onClick={() => handleClose('/membership')}>Membership</MenuItem>
               <MenuItem onClick={() => handleClose('/')}>Search</MenuItem>
               <span style={{ lineHeight: '28px' }}>&nbsp;</span>
               <MenuItem style={extraItems} onClick={() => handleClose('/faq')}>Frequently asked questions</MenuItem>

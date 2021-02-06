@@ -9,11 +9,13 @@ import styledTheme from './js/components/Widgets/styled-theme';
 import WeVoteRouter from './js/components/Widgets/WeVoteRouter';
 
 // Root URL pages
+const Attributions = React.lazy(() => import('./js/pages/Attributions'));
 const CampaignDetailsPage = React.lazy(() => import('./js/pages/CampaignDetailsPage'));
 const CampaignStartIntro = React.lazy(() => import('./js/pages/CampaignStartIntro'));
 const CampaignStartTitle = React.lazy(() => import('./js/pages/CampaignStartTitle'));
 const FAQ = React.lazy(() => import('./js/pages/FAQ'));
 const HomePage = React.lazy(() => import('./js/pages/HomePage'));
+const Membership = React.lazy(() => import('./js/pages/Membership'));
 const PageNotFound = React.lazy(() => import('./js/pages/PageNotFound'));
 const Privacy = React.lazy(() => import('./js/pages/Privacy'));
 const StyleGuidePage = React.lazy(() => import('./js/pages/StyleGuidePage'));
@@ -52,11 +54,13 @@ class App extends Component {
             <ThemeProvider theme={styledTheme}>
               <WeVoteRouter>
                 <Switch>
+                  <Route exact path="/attributions"><Attributions /></Route>
                   <Route exact path="/c/:campaignIdentifier" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/c/:campaignIdentifier/comments" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/c/:campaignIdentifier/updates" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/faq"><FAQ /></Route>
                   <Route exact path="/privacy"><Privacy /></Route>
+                  <Route exact path="/membership"><Membership /></Route>
                   <Route exact path="/start-a-campaign"><CampaignStartIntro /></Route>
                   <Route exact path="/start-a-campaign-title"><CampaignStartTitle /></Route>
                   <Route exact path="/styles"><StyleGuidePage /></Route>

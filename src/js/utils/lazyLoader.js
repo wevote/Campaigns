@@ -32,6 +32,21 @@ export function lazyLoader (library) {
         window.lazyLoaderWe.push(library);
         resolve(`${library} has been loaded`);
       });
+    case 'stripe':
+      return new Promise((resolve) => {
+        const firstExistingScript = document.getElementsByTagName('script')[0];
+        const scriptElement1 = document.createElement('script');
+        scriptElement1.src = 'https://checkout.stripe.com/checkout.js';
+        scriptElement1.type = 'text/javascript';
+        firstExistingScript.parentNode.insertBefore(scriptElement1, firstExistingScript);
+
+        const scriptElement2 = document.createElement('script');
+        scriptElement2.src = 'https://js.stripe.com/v3/';
+        scriptElement2.type = 'text/javascript';
+        firstExistingScript.parentNode.insertBefore(scriptElement2, firstExistingScript);
+        window.lazyLoaderWe.push(library);
+        resolve(`${library} has been loaded`);
+      });
     default:
       return new Promise((resolve) => {
         console.error(`${library} has not been configured, and did not load`);
