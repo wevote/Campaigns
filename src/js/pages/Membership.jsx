@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
+import { Button } from '@material-ui/core';
 import { renderLog } from '../utils/logging';
 import { isCordova } from '../utils/cordovaUtils';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
@@ -14,6 +15,7 @@ class Membership extends Component {
   }
 
   render () {
+    const { classes } = this.props;
     renderLog('Membership');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
       console.log(`Membership window.location.href: ${window.location.href}`);
@@ -33,21 +35,76 @@ class Membership extends Component {
               Become a member today and fuel our mission to help EVERY American to vote.
             </PageSubStatement>
           </IntroductionMessageSection>
+          <ContributeGridWrapper>
+            <ContributeMonthlyText>
+              Contribute Monthly:
+            </ContributeMonthlyText>
+            <ContributeGridSection>
+              <ContributeGridItem>
+                <Button
+                  classes={{ root: classes.buttonRoot }}
+                  color="primary"
+                  variant="contained"
+                >
+                  $3
+                </Button>
+              </ContributeGridItem>
+              <ContributeGridItem>
+                <Button
+                  classes={{ root: classes.buttonRoot }}
+                  color="primary"
+                  variant="contained"
+                >
+                  $5
+                </Button>
+              </ContributeGridItem>
+              <ContributeGridItem>
+                <Button
+                  classes={{ root: classes.buttonRoot }}
+                  color="primary"
+                  variant="contained"
+                >
+                  $10
+                </Button>
+              </ContributeGridItem>
+              <ContributeGridItem>
+                <Button
+                  classes={{ root: classes.buttonRoot }}
+                  color="primary"
+                  variant="contained"
+                >
+                  $20
+                </Button>
+              </ContributeGridItem>
+              <ContributeGridItemJoin>
+                <Button
+                  classes={{ root: classes.buttonRoot }}
+                  color="primary"
+                  variant="contained"
+                  style={{ width: '100%', backgroundColor: 'darkblue', color: 'white' }}
+                >
+                  Join
+                </Button>
+              </ContributeGridItemJoin>
+            </ContributeGridSection>
+          </ContributeGridWrapper>
         </PageWrapper>
         <WelcomeFooter />
       </div>
     );
   }
 }
-// Membership.propTypes = {
-//   classes: PropTypes.object,
-// };
+Membership.propTypes = {
+  classes: PropTypes.object,
+};
 
 const styles = () => ({
   buttonRoot: {
     fontSize: 18,
     textTransform: 'none',
-    width: 250,
+    width: '100%',
+    color: 'black',
+    backgroundColor: 'white',
   },
 });
 
@@ -83,6 +140,39 @@ const PageWrapper = styled.div`
   }
 `;
 
+const ContributeGridWrapper = styled.div`
+  background-color: #ebebeb;
+  padding: 10px;
+  border: 1px solid darkgrey;
+  margin: auto auto 20px auto;
+  max-width: 500px;
+`;
 
+const ContributeGridSection = styled.div`
+  display: grid;
+  grid-template-columns: auto auto;
+  background-color: #ebebeb;
+  padding: 10px;
+`;
+
+const ContributeMonthlyText = styled.div`
+  font-weight: 600;
+  padding: 0 0 2px 18px;
+`;
+
+const ContributeGridItem = styled.div`
+  background-color: #ebebeb;
+  padding: 5px 10px;
+  font-size: 30px;
+  text-align: center;
+`;
+
+const ContributeGridItemJoin = styled.div`
+  background-color: #ebebeb;
+  padding: 5px 10px;
+  font-size: 30px;
+  text-align: center;
+  grid-column: auto / span 2;
+`;
 
 export default withStyles(styles)(Membership);
