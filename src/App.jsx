@@ -14,6 +14,7 @@ const CampaignStartIntro = React.lazy(() => import('./js/pages/CampaignStartIntr
 const CampaignStartTitle = React.lazy(() => import('./js/pages/CampaignStartTitle'));
 const FAQ = React.lazy(() => import('./js/pages/FAQ'));
 const HomePage = React.lazy(() => import('./js/pages/HomePage'));
+const Membership = React.lazy(() => import('./js/pages/Membership'));
 const PageNotFound = React.lazy(() => import('./js/pages/PageNotFound'));
 const Privacy = React.lazy(() => import('./js/pages/Privacy'));
 const StyleGuidePage = React.lazy(() => import('./js/pages/StyleGuidePage'));
@@ -57,6 +58,7 @@ class App extends Component {
                   <Route exact path="/c/:campaignIdentifier/updates" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/faq"><FAQ /></Route>
                   <Route exact path="/privacy"><Privacy /></Route>
+                  <Route exact path="/membership"><Membership /></Route>
                   <Route exact path="/start-a-campaign"><CampaignStartIntro /></Route>
                   <Route exact path="/start-a-campaign-title"><CampaignStartTitle /></Route>
                   <Route exact path="/styles"><StyleGuidePage /></Route>
