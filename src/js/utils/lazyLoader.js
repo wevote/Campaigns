@@ -3,7 +3,7 @@ export function libraryNeedsLoading (library) {
     window.lazyLoaderWe = [];
     return true;
   }
-  return !window.lazyLoaderWe.contains(library);
+  return !window.lazyLoaderWe.includes(library);
 }
 
 export function lazyLoader (library) {

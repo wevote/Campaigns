@@ -1,6 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -9,11 +7,9 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-// import AppStore from '../../stores/AppStore';
-import { cordovaDot, historyPush, isCordova } from '../../utils/cordovaUtils';
+import HeaderBarLogo from './HeaderBarLogo';
+import { historyPush } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
-import logoLight from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-200x66.svg';
-import logoDark from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-dark-141x46.svg';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -88,23 +84,7 @@ export default function MainHeaderBar () {
       <AppBar className={classes.appBarRoot} position="static" color="default">
         <Toolbar className={classes.toolbarRoot} disableGutters>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <HeaderBarWrapper>
-              {chosenSiteLogoUrl ? (
-                <img
-                  alt="Logo"
-                  src={chosenSiteLogoUrl}
-                />
-              ) : (
-                <WeVoteLogoWrapper>
-                  <Link className={classes.logoLinkRoot} to={`${isCordova() ? '/' : '/'}`} id="logoHeaderBar">
-                    <img
-                      alt="We Vote logo"
-                      src={light ? cordovaDot(logoLight) : cordovaDot(logoDark)}
-                    />
-                  </Link>
-                </WeVoteLogoWrapper>
-              )}
-            </HeaderBarWrapper>
+            <HeaderBarLogo classes={classes} light={light} logUrl={chosenSiteLogoUrl} />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
             &nbsp;
@@ -156,13 +136,3 @@ export default function MainHeaderBar () {
     </div>
   );
 }
-
-const HeaderBarWrapper = styled.div`
-  @media print{
-  }
-`;
-
-const WeVoteLogoWrapper = styled.div`
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-  }
-`;

@@ -7,6 +7,7 @@ import { Button } from '@material-ui/core';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
+import WelcomeFooter from '../components/Navigation/WelcomeFooter';
 
 
 class CampaignStartIntro extends Component {
@@ -92,6 +93,7 @@ class CampaignStartIntro extends Component {
             </Button>
           </MobileButtonPanel>
         </MobileButtonWrapper>
+        <WelcomeFooter />
       </div>
     );
   }
