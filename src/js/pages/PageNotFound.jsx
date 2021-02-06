@@ -8,6 +8,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
+import WelcomeFooter from '../components/Navigation/WelcomeFooter';
 
 class PageNotFound extends Component {
   static getProps () {
@@ -38,6 +39,7 @@ class PageNotFound extends Component {
             </Button>
           </EmptyBallotMessageContainer>
         </PageWrapper>
+        <WelcomeFooter />
       </div>
     );
   }

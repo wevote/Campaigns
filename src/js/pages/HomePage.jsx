@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { renderLog } from '../utils/logging';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
+import WelcomeFooter from '../components/Navigation/WelcomeFooter';
 
 const HomeCampaignList = React.lazy(() => import('../components/Home/HomeCampaignList'));
 
@@ -45,6 +46,7 @@ class HomePage extends Component {
             <HomeCampaignList />
           </WhatIsHappeningSection>
         </PageWrapper>
+        <WelcomeFooter />
       </div>
     );
   }
