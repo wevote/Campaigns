@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
-import appStoreIcon from '../../../img/global/logos/download_on_the_app_store_badge_us-uk_blk.svg';
-import { cordovaDot, historyPush, isWebApp } from '../../utils/cordovaUtils';
-import googlePlayIcon from '../../../img/global/logos/google-play-badge-cropped.png';
+// import { Button } from '@material-ui/core';
+// import appStoreIcon from '../../../img/global/logos/download_on_the_app_store_badge_us-uk_blk.svg';
+// import { isWebApp } from '../../utils/cordovaUtils';
+// import googlePlayIcon from '../../../img/global/logos/google-play-badge-cropped.png';
 import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
 
+/* eslint-disable spaced-comment */
 
 class WelcomeFooter extends Component {
   render () {
@@ -18,33 +19,21 @@ class WelcomeFooter extends Component {
         <Top>
           <LinksContainer>
             <Column>
-              <ColumnTitle>How it Works</ColumnTitle>
-              <Link id="footerLinkForVoters" className={classes.link} to="/how/for-voters">For Voters</Link>
-              <Link id="footerLinkForOrganizations" className={classes.link} to="/how/for-organizations">For Organizations</Link>
-              <Link id="footerLinkForCampaigns" className={classes.link} to="/how/for-campaigns">For Campaigns</Link>
-              <Link id="footerLinkForPricing" className={classes.link} to="/more/pricing">Pricing</Link>
-            </Column>
-            <Column>
-              <ColumnTitle>Elections</ColumnTitle>
-              <Link id="footerLinkSupportedElections" className={classes.link} to="/more/elections">Supported Elections</Link>
-              {isWebApp() ?
-                <Link id="footerLinkRegisterToVote" className={classes.link} to="/more/register">Register to Vote</Link> :
-                <OpenExternalWebSite linkIdAttribute="registerToVoter" className={classes.link} url="https://register.vote.org/?partner=111111&campaign=free-tools" target="_blank" body={(<span>Register to Vote</span>)} />}
-              {isWebApp() ?
-                <Link id="footerLinkGetYourAbsenteeBallot" className={classes.link} to="/more/absentee">Get Your Absentee Ballot</Link> :
-                <OpenExternalWebSite linkIdAttribute="getYourAbsenteeBallot" className={classes.link} url="https://absentee.vote.org/?partner=111111&campaign=free-tools" target="_blank" body={(<span>Get Your Absentee Ballot</span>)} />}
-              <Link id="footerLinkSeeYourBallot" className={classes.link} to="/ballot">See Your Ballot</Link>
-              <OpenExternalWebSite linkIdAttribute="pollingPlaceLocator" className={classes.link} url="https://gttp.votinginfoproject.org/" target="_blank" body={(<span>Polling Place Locator</span>)} />
-              <Link id="footerLinkFreeOnlineTools" className={classes.link} to="/settings/tools">Free Online Tools</Link>
-              <Link id="footerLinkPremiumOnlineTools" className={classes.link} to="/settings/tools">Premium Online Tools</Link>
-            </Column>
-            <Column>
               <ColumnTitle>About We Vote</ColumnTitle>
               <Link id="footerLinkAbout" className={classes.link} to="/more/about">About &amp; Team</Link>
               <Link id="footerLinkCredits" className={classes.link} to="/more/credits">Credits &amp; Thanks</Link>
-              {isWebApp() && (
-                <Link id="footerLinkDonate" className={classes.link} to="/more/donate">Donate</Link>
-              )}
+              <OpenExternalWebSite
+                linkIdAttribute="footerLinkCareers"
+                url="https://www.idealist.org/en/nonprofit/f917ce3db61a46cb8ad2b0d4e335f0af-we-vote-oakland#volops"
+                target="_blank"
+                body={(
+                  <span>Careers</span>
+                )}
+                className={classes.link}
+              />
+            </Column>
+            <Column>
+              <ColumnTitle>Community</ColumnTitle>
               <OpenExternalWebSite
                 linkIdAttribute="footerLinkBlog"
                 url="https://blog.wevote.us/"
@@ -63,15 +52,10 @@ class WelcomeFooter extends Component {
                 )}
                 className={classes.link}
               />
-              <OpenExternalWebSite
-                linkIdAttribute="footerLinkCareers"
-                url="https://www.idealist.org/en/nonprofit/f917ce3db61a46cb8ad2b0d4e335f0af-we-vote-oakland#volops"
-                target="_blank"
-                body={(
-                  <span>Careers</span>
-                )}
-                className={classes.link}
-              />
+              <Link id="footerLinkAttributions" className={classes.link} to="/attributions">Attributions</Link>
+            </Column>
+            <Column>
+              <ColumnTitle>Connect</ColumnTitle>
               <OpenExternalWebSite
                 linkIdAttribute="footerLinkJoinOurNewsletter"
                 url="http://eepurl.com/cx_frP"
@@ -110,7 +94,20 @@ class WelcomeFooter extends Component {
               />
             </Column>
             <Column>
+              <ColumnTitle>How it Works</ColumnTitle>
+              <Link id="footerLinkForVoters" className={classes.link} to="/how/for-voters">For Voters</Link>
+              <Link id="footerLinkForOrganizations" className={classes.link} to="/how/for-organizations">For Organizations</Link>
+              <Link id="footerLinkForCampaigns" className={classes.link} to="/how/for-campaigns">For Campaigns</Link>
+              <Link id="footerLinkForPricing" className={classes.link} to="/more/pricing">Pricing</Link>
+            </Column>
+            <Column>
+              <ColumnTitle>Products</ColumnTitle>
+              <Link id="footerLinkFreeOnlineTools" className={classes.link} to="/settings/tools">Free Online Tools</Link>
+              <Link id="footerLinkPremiumOnlineTools" className={classes.link} to="/settings/tools">Premium Online Tools</Link>
+            </Column>
+            <Column>
               <ColumnTitle>Support</ColumnTitle>
+              <Link id="footerLinkFaq" className={classes.link} to="/faq">Frequent Questions</Link>
               <OpenExternalWebSite
                 linkIdAttribute="footerLinkWeVoteHelp"
                 url="https://help.wevote.us/hc/en-us"
@@ -120,30 +117,10 @@ class WelcomeFooter extends Component {
                 )}
                 className={classes.link}
               />
-              <Link id="footerLinkPrivacy" className={classes.link} to="/more/privacy">Privacy</Link>
-              <Link id="footerLinkTermsOfUse" className={classes.link} to="/more/terms">Terms of Use</Link>
-              <Link id="footerLinkAttributions" className={classes.link} to="/more/attributions">Attributions</Link>
+              <Link id="footerLinkPrivacy" className={classes.link} to="/privacy">Privacy</Link>
+              <Link id="footerLinkTermsOfUse" className={classes.link} to="/terms">Terms of Use</Link>
             </Column>
           </LinksContainer>
-          <OptionsContainer>
-            <Button
-              color="default"
-              variant="outlined"
-              classes={{ root: classes.buttonOutlined }}
-              id="footerLinkGetStarted"
-              onClick={() => historyPush('/ready')}
-            >
-              Get Started
-            </Button>
-            <Button
-              color="default"
-              variant="outlined"
-              classes={{ root: classes.buttonOutlined }}
-              onClick={() => window.open('https://help.wevote.us/hc/en-us/requests/new', '_blank')}
-            >
-              Contact Sales
-            </Button>
-          </OptionsContainer>
         </Top>
         <Bottom>
           <Text>WeVote.US is brought to you by a partnership between two registered nonprofit organizations, one 501(c)(3) and one 501(c)(4). We do not support or oppose any political candidate or party.</Text>
@@ -159,44 +136,76 @@ class WelcomeFooter extends Component {
               )}
               className={classes.bottomLink}
             />
-            .
+
           </Text>
-          <BadgeContainer>
-            <span
-              role="presentation"
-            >
-              <OpenExternalWebSite
-                linkIdAttribute="googleBadge"
-                className={classes.link}
-                url="https://play.google.com/store/apps/details?id=org.wevote.cordova&hl=en_US"
-                target="_blank"
-                body={(
-                  <img
-                    alt="Google Play Store badge"
-                    src={cordovaDot(googlePlayIcon)}
-                    className={classes.badgeIcon}
-                  />
-                )}
-              />
-            </span>
-            <span
-              role="presentation"
-            >
-              <OpenExternalWebSite
-                linkIdAttribute="appleBadge"
-                className={classes.link}
-                url="https://apps.apple.com/us/app/we-vote-voter-guide/id1347335726"
-                target="_blank"
-                body={(
-                  <img
-                    alt="Apple App Store badge"
-                    src={cordovaDot(appStoreIcon)}
-                    className={classes.appleBadgeIcon}
-                  />
-                )}
-              />
-            </span>
-          </BadgeContainer>
+          {/*<BadgeContainer>*/}
+          {/*  <span*/}
+          {/*    role="presentation"*/}
+          {/*  >*/}
+          {/*    <OpenExternalWebSite*/}
+          {/*      linkIdAttribute="googleBadge"*/}
+          {/*      className={classes.link}*/}
+          {/*      url="https://play.google.com/store/apps/details?id=org.wevote.cordova&hl=en_US"*/}
+          {/*      target="_blank"*/}
+          {/*      body={(*/}
+          {/*        <img*/}
+          {/*          alt="Google Play Store badge"*/}
+          {/*          src={cordovaDot(googlePlayIcon)}*/}
+          {/*          className={classes.badgeIcon}*/}
+          {/*        />*/}
+          {/*      )}*/}
+          {/*    />*/}
+          {/*  </span>*/}
+          {/*  <span*/}
+          {/*    role="presentation"*/}
+          {/*  >*/}
+          {/*    <OpenExternalWebSite*/}
+          {/*      linkIdAttribute="appleBadge"*/}
+          {/*      className={classes.link}*/}
+          {/*      url="https://apps.apple.com/us/app/we-vote-voter-guide/id1347335726"*/}
+          {/*      target="_blank"*/}
+          {/*      body={(*/}
+          {/*        <img*/}
+          {/*          alt="Apple App Store badge"*/}
+          {/*          src={cordovaDot(appStoreIcon)}*/}
+          {/*          className={classes.appleBadgeIcon}*/}
+          {/*        />*/}
+          {/*      )}*/}
+          {/*    />*/}
+          {/*  </span>*/}
+          {/*</BadgeContainer>*/}
+          {/*{isWebApp() && (*/}
+          {/*  <Link id="footerLinkDonate" className={classes.link} to="/more/donate">Donate</Link>*/}
+          {/*)}*/}
+          {/*<OptionsContainer>*/}
+          {/*<Button*/}
+          {/*  color="default"*/}
+          {/*  variant="outlined"*/}
+          {/*  classes={{ root: classes.buttonOutlined }}*/}
+          {/*  id="footerLinkGetStarted"*/}
+          {/*  onClick={() => historyPush('/ready')}*/}
+          {/*>*/}
+          {/*  Get Started*/}
+          {/*</Button>*/}
+          {/*<Button*/}
+          {/*  color="default"*/}
+          {/*  variant="outlined"*/}
+          {/*  classes={{ root: classes.buttonOutlined }}*/}
+          {/*  onClick={() => window.open('https://help.wevote.us/hc/en-us/requests/new', '_blank')}*/}
+          {/*>*/}
+          {/*  Contact Sales*/}
+          {/*</Button>*/}
+          {/*</OptionsContainer>*/}
+          {/*<Link id="footerLinkSupportedElections" className={classes.link} to="/more/elections">Supported Elections</Link>*/}
+          {/*{isWebApp() ?*/}
+          {/*  <Link id="footerLinkRegisterToVote" className={classes.link} to="/more/register">Register to Vote</Link> :*/}
+          {/*  <OpenExternalWebSite linkIdAttribute="registerToVoter" className={classes.link} url="https://register.vote.org/?partner=111111&campaign=free-tools" target="_blank" body={(<span>Register to Vote</span>)} />}*/}
+          {/*{isWebApp() ?*/}
+          {/*  <Link id="footerLinkGetYourAbsenteeBallot" className={classes.link} to="/more/absentee">Get Your Absentee Ballot</Link> :*/}
+          {/*  <OpenExternalWebSite linkIdAttribute="getYourAbsenteeBallot" className={classes.link} url="https://absentee.vote.org/?partner=111111&campaign=free-tools" target="_blank" body={(<span>Get Your Absentee Ballot</span>)} />}*/}
+          {/*<Link id="footerLinkSeeYourBallot" className={classes.link} to="/ballot">See Your Ballot</Link>*/}
+          {/*<OpenExternalWebSite linkIdAttribute="pollingPlaceLocator" className={classes.link} url="https://gttp.votinginfoproject.org/" target="_blank" body={(<span>Polling Place Locator</span>)} />*/}
+
         </Bottom>
       </Wrapper>
     );
@@ -340,25 +349,25 @@ const ColumnTitle = styled.h3`
   margin: .8em 0;
 `;
 
-const OptionsContainer = styled.div`
-  width: 25%;
-  display: flex;
-  flex-flow: column;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    width: 100%;
-    flex-flow: row;
-    justify-content: space-between;
-  }
-`;
-
-const BadgeContainer = styled.div`
-  width: 100%;
-  margin-top: 4em;
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-  justify-content: center;
-`;
+// const OptionsContainer = styled.div`
+//   width: 25%;
+//   display: flex;
+//   flex-flow: column;
+//   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+//     width: 100%;
+//     flex-flow: row;
+//     justify-content: space-between;
+//   }
+// `;
+//
+// const BadgeContainer = styled.div`
+//   width: 100%;
+//   margin-top: 4em;
+//   display: flex;
+//   flex-flow: row;
+//   align-items: center;
+//   justify-content: center;
+// `;
 
 
 const Bottom = styled.div`
@@ -366,12 +375,15 @@ const Bottom = styled.div`
   max-width: 90vw;
   display: flex;
   flex-flow: column;
-  padding: 3em 0;
-  text-align: center;
+  //padding: 3em 0;
+  text-align: left;
+  border-top: 1px solid lightgray;
+  margin: 1em;
 `;
 
 const Text = styled.p`
   font-size: 12px;
+  margin-right: 0.5em;
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     font-size: 16px;
   }

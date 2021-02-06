@@ -9,6 +9,7 @@ import styledTheme from './js/components/Widgets/styled-theme';
 import WeVoteRouter from './js/components/Widgets/WeVoteRouter';
 
 // Root URL pages
+const Attributions = React.lazy(() => import('./js/pages/Attributions'));
 const CampaignDetailsPage = React.lazy(() => import('./js/pages/CampaignDetailsPage'));
 const CampaignStartIntro = React.lazy(() => import('./js/pages/CampaignStartIntro'));
 const CampaignStartTitle = React.lazy(() => import('./js/pages/CampaignStartTitle'));
@@ -53,6 +54,7 @@ class App extends Component {
             <ThemeProvider theme={styledTheme}>
               <WeVoteRouter>
                 <Switch>
+                  <Route exact path="/attributions"><Attributions /></Route>
                   <Route exact path="/c/:campaignIdentifier" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/c/:campaignIdentifier/comments" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/c/:campaignIdentifier/updates" render={(props) => <CampaignDetailsPage match={props.match} />} />

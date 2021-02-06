@@ -4,15 +4,38 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import { renderLog } from '../utils/logging';
-import { isCordova } from '../utils/cordovaUtils';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import WelcomeFooter from '../components/Navigation/WelcomeFooter';
+import { isCordova } from '../utils/cordovaUtils';
+import { lazyLoader, libraryNeedsLoading } from '../utils/lazyLoader';
+import { renderLog } from '../utils/logging';
+
 
 class Membership extends Component {
+  constructor (props) {
+    super(props);
+
+    const library = 'stripe';
+    this.state = {
+      stripeLoaded: !libraryNeedsLoading(library),
+    };
+  }
+
   static getProps () {
     return {};
   }
+
+  componentDidMount () {
+    const library = 'stripe';
+    if (!this.state.stripeLoaded) {
+      lazyLoader(library)
+        .then((result) => {
+          console.log('lazy loader for stripe returned: ', result);
+          this.setState({ stripeLoaded: true }); // to force a reload
+        });
+    }
+  }
+
 
   render () {
     const { classes } = this.props;
@@ -41,48 +64,27 @@ class Membership extends Component {
             </ContributeMonthlyText>
             <ContributeGridSection>
               <ContributeGridItem>
-                <Button
-                  classes={{ root: classes.buttonRoot }}
-                  color="primary"
-                  variant="contained"
-                >
+                <Button classes={{ root: classes.buttonRoot }} color="primary" variant="contained">
                   $3
                 </Button>
               </ContributeGridItem>
               <ContributeGridItem>
-                <Button
-                  classes={{ root: classes.buttonRoot }}
-                  color="primary"
-                  variant="contained"
-                >
+                <Button classes={{ root: classes.buttonRoot }} color="primary" variant="contained">
                   $5
                 </Button>
               </ContributeGridItem>
               <ContributeGridItem>
-                <Button
-                  classes={{ root: classes.buttonRoot }}
-                  color="primary"
-                  variant="contained"
-                >
+                <Button classes={{ root: classes.buttonRoot }} color="primary" variant="contained">
                   $10
                 </Button>
               </ContributeGridItem>
               <ContributeGridItem>
-                <Button
-                  classes={{ root: classes.buttonRoot }}
-                  color="primary"
-                  variant="contained"
-                >
+                <Button classes={{ root: classes.buttonRoot }} color="primary" variant="contained">
                   $20
                 </Button>
               </ContributeGridItem>
               <ContributeGridItemJoin>
-                <Button
-                  classes={{ root: classes.buttonRoot }}
-                  color="primary"
-                  variant="contained"
-                  style={{ width: '100%', backgroundColor: 'darkblue', color: 'white' }}
-                >
+                <Button classes={{ root: classes.buttonRoot }} color="primary" variant="contained" style={{ width: '100%', backgroundColor: 'darkblue', color: 'white' }}>
                   Join
                 </Button>
               </ContributeGridItemJoin>
@@ -152,7 +154,7 @@ const ContributeGridSection = styled.div`
   display: grid;
   grid-template-columns: auto auto;
   background-color: #ebebeb;
-  padding: 10px;
+  padding: 10px 10px 2px 10px;
 `;
 
 const ContributeMonthlyText = styled.div`
