@@ -58,19 +58,12 @@ export default function $ajax (options) {
     options.method = 'GET';
   }
   // Switch between master API server and CDN
-  if (options.endpoint === 'allBallotItemsRetrieve' ||
+  if (options.endpoint === 'campaignRetrieve' ||
       options.endpoint === 'candidateRetrieve' ||
       options.endpoint === 'candidatesRetrieve' ||
       options.endpoint === 'defaultPricing' ||
-      options.endpoint === 'electionsRetrieve' ||
-      options.endpoint === 'issueDescriptionsRetrieve' ||
-      options.endpoint === 'issuesUnderBallotItemsRetrieve' ||
       options.endpoint === 'measureRetrieve' ||
-      options.endpoint === 'officeRetrieve' ||
-      // options.endpoint === 'organizationRetrieve' || // Includes data a client can update, and needs to be fresh
-      options.endpoint === 'positionListForBallotItem' ||
-      options.endpoint === 'voterGuidesUpcomingRetrieve' ||
-      options.endpoint === 'voterGuidesRetrieve'
+      options.endpoint === 'officeRetrieve'
   ) {
     // Retrieve API data from CDN
     options.data = assign({}, options.data || {}); // Do not pass voter_device_id
