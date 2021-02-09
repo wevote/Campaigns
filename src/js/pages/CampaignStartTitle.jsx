@@ -25,17 +25,18 @@ class CampaignStartTitle extends Component {
     import('jquery').then(({ default: jquery }) => {
       window.jQuery = jquery;
       window.$ = jquery;
-      CampaignStartActions.campaignRetrieve('');
+      CampaignStartActions.campaignRetrieveAsOwner('');
       CampaignStartActions.campaignTitleQueuedToSave('');
     }).catch((error) => console.error('An error occurred while loading jQuery', error));
   }
 
   submitCampaignTitle = () => {
     const campaignTitleQueuedToSave = CampaignStartStore.getCampaignTitleQueuedToSave();
-    // console.log('CampaignTitleInputField, submitCampaignTitle');
-    CampaignStartActions.campaignTitleSave(campaignTitleQueuedToSave);
+    // console.log('CampaignStartTitle, campaignTitleQueuedToSave:', campaignTitleQueuedToSave);
+    const campaignWeVoteId = '';
+    CampaignStartActions.campaignTitleSave(campaignWeVoteId, campaignTitleQueuedToSave);
     CampaignStartActions.campaignTitleQueuedToSave('');
-    historyPush('/who-do-you-want-to-see-elected');
+    // historyPush('/who-do-you-want-to-see-elected');
   }
 
   render () {

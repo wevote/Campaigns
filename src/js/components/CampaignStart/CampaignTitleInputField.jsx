@@ -39,6 +39,7 @@ class CampaignTitleInputField extends Component {
     const campaignTitle = CampaignStartStore.getCampaignTitle();
     const campaignTitleQueuedToSave = CampaignStartStore.getCampaignTitleQueuedToSave();
     const campaignTitleAdjusted = campaignTitleQueuedToSave || campaignTitle;
+    // console.log('onCampaignStartStoreChange campaignTitle: ', campaignTitle, ', campaignTitleQueuedToSave: ', campaignTitleQueuedToSave, ', campaignTitleAdjusted:', campaignTitleAdjusted);
     this.setState({
       campaignTitle: campaignTitleAdjusted,
     });
@@ -46,8 +47,7 @@ class CampaignTitleInputField extends Component {
 
   updateCampaignTitle (event) {
     if (event.target.name === 'campaignTitle') {
-      const { campaignTitle } = this.state;
-      CampaignStartActions.campaignTitleQueuedToSave(campaignTitle);
+      CampaignStartActions.campaignTitleQueuedToSave(event.target.value);
       this.setState({
         campaignTitle: event.target.value,
       });
