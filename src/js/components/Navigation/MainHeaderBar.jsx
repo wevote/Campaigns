@@ -1,15 +1,14 @@
-import React from 'react';
+import React, { Suspense } from 'react';
+import loadable from '@loadable/component';
+import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import HeaderBarLogo from './HeaderBarLogo';
 import { historyPush } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
+import voterSignOut from '../../utils/voterSignOut';
+import HeaderBarLogo from './HeaderBarLogo';
+
+const SignInButton = loadable(() => import('./SignInButton'));
 
 
 const useStyles = makeStyles((theme) => ({
@@ -49,11 +48,7 @@ export default function MainHeaderBar () {
   const classes = useStyles();
   // const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-
-  // const handleChange = (event) => {
-  //   setAuth(event.target.checked);
-  // };
+  let open = Boolean(anchorEl);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -63,6 +58,12 @@ export default function MainHeaderBar () {
     setAnchorEl(null);
     historyPush(destination);
   };
+
+  const signOut = () => {
+    setAnchorEl(null);
+    voterSignOut();
+  };
+
 
   const extraItems = {
     fontSize: 12,
@@ -94,6 +95,9 @@ export default function MainHeaderBar () {
             <Typography variant="h6" className={classes.title}>
               &nbsp;
             </Typography>
+            <Suspense fallback={<span>ZzZzZzZ</span>}>
+              <SignInButton classes={classes} />
+            </Suspense>
             <div>
               <IconButton
                 edge="start"
@@ -130,6 +134,7 @@ export default function MainHeaderBar () {
                 <MenuItem onClick={() => handleClose('/start-a-campaign')}>Start a campaign</MenuItem>
                 <MenuItem onClick={() => handleClose('/membership')}>Membership</MenuItem>
                 <MenuItem onClick={() => handleClose('/')}>Search</MenuItem>
+                <MenuItem onClick={() => signOut()}>Sign out</MenuItem>
                 <span style={{ lineHeight: '28px' }}>&nbsp;</span>
                 <MenuItem style={extraItems} onClick={() => handleClose('/faq')}>Frequently asked questions</MenuItem>
                 <MenuItem style={extraItems} onClick={() => handleClose('/terms')}>Terms of service</MenuItem>

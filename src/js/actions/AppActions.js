@@ -123,4 +123,8 @@ export default {
   unsetStoreSignInStartFullUrl () {
     Dispatcher.dispatch({ type: 'unsetStoreSignInStartFullUrl', payload: false });
   },
+
+  signOutFromManyStores () {
+    Dispatcher.loadEndpoint('voterSignOut', { sign_out_all_devices: false });
+  },
 };
