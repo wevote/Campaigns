@@ -6,8 +6,8 @@ import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { renderLog } from '../utils/logging';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
+import MainFooter from '../components/Navigation/MainFooter';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
-import WelcomeFooter from '../components/Navigation/WelcomeFooter';
 
 const HomeCampaignList = React.lazy(() => import('../components/Home/HomeCampaignList'));
 
@@ -46,7 +46,7 @@ class HomePage extends Component {
             <HomeCampaignList />
           </WhatIsHappeningSection>
         </PageWrapper>
-        <WelcomeFooter />
+        <MainFooter />
       </div>
     );
   }
@@ -92,8 +92,11 @@ const PageSubStatement = styled.div`
 `;
 
 const PageWrapper = styled.div`
-  margin: 0 15px;
-  @media (max-width: ${({ theme, cordova }) => (cordova ? undefined : theme.breakpoints.md)}) {
+  margin: 0 auto;
+  max-width: 960px;
+  @media (max-width: 1005px) {
+    // Switch to 15px left/right margin when auto is too small
+    margin: 0 15px;
   }
 `;
 

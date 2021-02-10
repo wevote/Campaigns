@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CampaignHeader from '../components/Navigation/CampaignHeader';
 import CampaignPhoto from '../../img/global/photos/SamDavisFamily2020-800x450.jpg';
 import { isCordova } from '../utils/cordovaUtils';
+import MainFooter from '../components/Navigation/MainFooter';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
 import SupportButton from '../components/Campaign/SupportButton';
@@ -42,8 +43,8 @@ class CampaignDetailsPage extends Component {
       <div>
         <Helmet title="Campaign Home - We Vote Campaigns" />
         <MainHeaderBar />
-        <CampaignHeader campaignIdentifier={campaignIdentifier} />
         <PageWrapper cordova={isCordova()}>
+          <CampaignHeader campaignIdentifier={campaignIdentifier} />
           <DetailsSectionMobile className="u-show-mobile">
             <CampaignImageWrapper>
               <CampaignImage src={CampaignPhoto} alt="Campaign" />
@@ -84,6 +85,7 @@ class CampaignDetailsPage extends Component {
         <SupportButtonFooterWrapper className="u-show-mobile">
           <SupportButtonFooter />
         </SupportButtonFooterWrapper>
+        <MainFooter />
       </div>
     );
   }
@@ -162,8 +164,9 @@ const ColumnOneThird = styled.div`
 
 const ColumnsWrapper = styled.div`
   display: flex;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    margin: 15px;
+  @media (max-width: 1005px) {
+    // Switch to 15px left/right margin when auto is too small
+    margin: 0 15px;
   }
 `;
 
@@ -176,23 +179,16 @@ const ColumnTwoThirds = styled.div`
 const DetailsSectionDesktopTablet = styled.div`
   display: flex;
   flex-flow: column;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-  }
 `;
 
 const DetailsSectionMobile = styled.div`
   display: flex;
   flex-flow: column;
-  margin-bottom: 80px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-  }
 `;
 
 const PageWrapper = styled.div`
-  margin: 0 15px;
-  @media (max-width: ${({ theme, cordova }) => (cordova ? undefined : theme.breakpoints.md)}) {
-    margin: 0;
-  }
+  margin: 0 auto;
+  max-width: 960px;
 `;
 
 const SupportButtonFooterWrapper = styled.div`
