@@ -8,9 +8,9 @@ import CampaignStartActions from '../actions/CampaignStartActions';
 import CampaignStartStore from '../stores/CampaignStartStore';
 import CampaignTitleInputField from '../components/CampaignStart/CampaignTitleInputField';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
+import MainFooter from '../components/Navigation/MainFooter';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
-import WelcomeFooter from '../components/Navigation/WelcomeFooter';
 
 
 class CampaignStartTitle extends Component {
@@ -130,7 +130,7 @@ class CampaignStartTitle extends Component {
             </Button>
           </MobileButtonPanel>
         </MobileButtonWrapper>
-        <WelcomeFooter />
+        <MainFooter />
       </div>
     );
   }
@@ -262,7 +262,12 @@ const OuterWrapper = styled.div`
 `;
 
 const PageWrapper = styled.div`
-  margin: 0 15px;
+  margin: 0 auto;
+  max-width: 960px;
+  @media (max-width: 1005px) {
+    // Switch to 15px left/right margin when auto is too small
+    margin: 0 15px;
+  }
 `;
 
 export default withStyles(styles)(CampaignStartTitle);

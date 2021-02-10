@@ -6,9 +6,9 @@ import { Ballot } from '@material-ui/icons';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
+import MainFooter from '../components/Navigation/MainFooter';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
-import WelcomeFooter from '../components/Navigation/WelcomeFooter';
 
 class PageNotFound extends Component {
   static getProps () {
@@ -39,7 +39,7 @@ class PageNotFound extends Component {
             </Button>
           </EmptyBallotMessageContainer>
         </PageWrapper>
-        <WelcomeFooter />
+        <MainFooter />
       </div>
     );
   }

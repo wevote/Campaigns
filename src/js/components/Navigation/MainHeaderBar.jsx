@@ -14,10 +14,13 @@ import { renderLog } from '../../utils/logging';
 
 const useStyles = makeStyles((theme) => ({
   appBarRoot: {
-    borderBottom: '1px solid #ddd',
     boxShadow: 'none',
     paddingBottom: '0',
     paddingTop: '4px',
+  },
+  innerWrapper: {
+    margin: '0 auto',
+    maxWidth: '960px',
   },
   logoLinkRoot: {
   },
@@ -30,7 +33,8 @@ const useStyles = makeStyles((theme) => ({
   menuRoot: {
     marginTop: '34px',
   },
-  root: {
+  outerWrapper: {
+    borderBottom: '1px solid #ddd',
     flexGrow: 1,
   },
   title: {
@@ -80,59 +84,61 @@ export default function MainHeaderBar () {
   const chosenSiteLogoUrl = '';  // {AppStore.getChosenSiteLogoUrl()}
   const light = false;
   return (
-    <div className={classes.root}>
-      <AppBar className={classes.appBarRoot} position="static" color="default">
-        <Toolbar className={classes.toolbarRoot} disableGutters>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <HeaderBarLogo classes={classes} light={light} logUrl={chosenSiteLogoUrl} />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            &nbsp;
-          </Typography>
-          <div>
-            <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              onClick={handleMenu}
-              aria-label="menu"
-            >
-              <MenuIcon />
+    <div className={classes.outerWrapper}>
+      <div className={classes.innerWrapper}>
+        <AppBar className={classes.appBarRoot} position="static" color="default">
+          <Toolbar className={classes.toolbarRoot} disableGutters>
+            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+              <HeaderBarLogo classes={classes} light={light} logUrl={chosenSiteLogoUrl} />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              className={classes.menuRoot}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={open}
-              onClose={handleClose}
-            >
-              <Typography variant="h6" className={classes.title} style={ourPromise}>
-                Our Promise: We&apos;ll never sell your email.
-              </Typography>
-              {/* The next 6 lines have a test url of '/', not for production! */}
-              <MenuItem onClick={() => handleClose('/')}>Your campaigns</MenuItem>
-              <MenuItem onClick={() => handleClose('/')}>Your ballot</MenuItem>
-              <MenuItem onClick={() => handleClose('/')}>Settings</MenuItem>
-              <MenuItem onClick={() => handleClose('/start-a-campaign')}>Start a campaign</MenuItem>
-              <MenuItem onClick={() => handleClose('/membership')}>Membership</MenuItem>
-              <MenuItem onClick={() => handleClose('/')}>Search</MenuItem>
-              <span style={{ lineHeight: '28px' }}>&nbsp;</span>
-              <MenuItem style={extraItems} onClick={() => handleClose('/faq')}>Frequently asked questions</MenuItem>
-              <MenuItem style={extraItems} onClick={() => handleClose('/terms')}>Terms of service</MenuItem>
-              <MenuItem style={extraItems} onClick={() => handleClose('/privacy')}>Privacy Policy</MenuItem>
-            </Menu>
-          </div>
-        </Toolbar>
-      </AppBar>
+            <Typography variant="h6" className={classes.title}>
+              &nbsp;
+            </Typography>
+            <div>
+              <IconButton
+                edge="start"
+                className={classes.menuButton}
+                color="inherit"
+                onClick={handleMenu}
+                aria-label="menu"
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                className={classes.menuRoot}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={open}
+                onClose={handleClose}
+              >
+                <Typography variant="h6" className={classes.title} style={ourPromise}>
+                  Our Promise: We&apos;ll never sell your email.
+                </Typography>
+                {/* The next 6 lines have a test url of '/', not for production! */}
+                <MenuItem onClick={() => handleClose('/')}>Your campaigns</MenuItem>
+                <MenuItem onClick={() => handleClose('/')}>Your ballot</MenuItem>
+                <MenuItem onClick={() => handleClose('/')}>Settings</MenuItem>
+                <MenuItem onClick={() => handleClose('/start-a-campaign')}>Start a campaign</MenuItem>
+                <MenuItem onClick={() => handleClose('/membership')}>Membership</MenuItem>
+                <MenuItem onClick={() => handleClose('/')}>Search</MenuItem>
+                <span style={{ lineHeight: '28px' }}>&nbsp;</span>
+                <MenuItem style={extraItems} onClick={() => handleClose('/faq')}>Frequently asked questions</MenuItem>
+                <MenuItem style={extraItems} onClick={() => handleClose('/terms')}>Terms of service</MenuItem>
+                <MenuItem style={extraItems} onClick={() => handleClose('/privacy')}>Privacy Policy</MenuItem>
+              </Menu>
+            </div>
+          </Toolbar>
+        </AppBar>
+      </div>
     </div>
   );
 }

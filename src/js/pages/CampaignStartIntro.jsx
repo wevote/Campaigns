@@ -5,9 +5,9 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
+import MainFooter from '../components/Navigation/MainFooter';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
-import WelcomeFooter from '../components/Navigation/WelcomeFooter';
 
 
 class CampaignStartIntro extends Component {
@@ -93,7 +93,7 @@ class CampaignStartIntro extends Component {
             </Button>
           </MobileButtonPanel>
         </MobileButtonWrapper>
-        <WelcomeFooter />
+        <MainFooter />
       </div>
     );
   }
@@ -135,7 +135,23 @@ const styles = (theme) => ({
   },
 });
 
-const ContentTitle = styled.div`
+const CampaignStartSection = styled.div`
+  margin-bottom: 100px !important;
+  max-width: 450px;
+`;
+
+const CampaignStartSectionWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const ContentRow = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+`;
+
+const ContentTitle = styled.h1`
   font-size: 22px;
   font-weight: 600;
   margin: 20px 0;
@@ -187,24 +203,13 @@ const OuterWrapper = styled.div`
   margin: 15px 15px;
 `;
 
-const CampaignStartSection = styled.div`
-  margin-bottom: 100px !important;
-  max-width: 450px;
-`;
-
-const ContentRow = styled.div`
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: flex-start;
-`;
-
-const CampaignStartSectionWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
 const PageWrapper = styled.div`
-  margin: 0 15px;
+  margin: 0 auto;
+  max-width: 960px;
+  @media (max-width: 1005px) {
+    // Switch to 15px left/right margin when auto is too small
+    margin: 0 15px;
+  }
 `;
 
 const StepNumber = styled.div`
