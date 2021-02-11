@@ -396,17 +396,15 @@ class VoterPhoneVerificationEntry extends Component {
 
     const enterSMSPhoneNumberHtml = hideSignInWithPhoneForm ? null : (
       <div>
-        <div className="u-stack--sm u-tl">
-          <strong>
-            {enterSMSPhoneNumberTitle}
-          </strong>
+        <SignInSectionText>
+          {enterSMSPhoneNumberTitle}
           {showError ? (
             <Error>
               Please enter a valid phone number.
             </Error>
           ) : null}
           {' '}
-        </div>
+        </SignInSectionText>
         <form className="form-inline">
           <Paper className={classes.root} elevation={1} id="paperWrapperPhone">
             <Phone />
@@ -668,5 +666,13 @@ const Error = styled.div`
   color: rgb(255, 73, 34);
   font-size: 14px;
 `;
+
+const SignInSectionText = styled.div`
+  display: block;
+  text-align: left;
+  font-weight: 500;
+  margin-bottom: 6px;
+`;
+
 
 export default withStyles(styles)(VoterPhoneVerificationEntry);

@@ -383,13 +383,11 @@ class VoterEmailAddressEntry extends Component {
 
     const enterEmailHtml = hideSignInWithEmailForm ? null : (
       <div>
-        <div className="u-stack--sm u-tl">
-          <strong>
-            {enterEmailTitle}
-          </strong>
+        <SignInSectionText>
+          {enterEmailTitle}
           {' '}
           {/* enterEmailExplanation */}
-        </div>
+        </SignInSectionText>
         <form className="form-inline">
           <Paper className={classes.root} elevation={1}>
             <Mail />
@@ -632,6 +630,14 @@ const ButtonContainer = styled.div`
 const CancelButtonContainer = styled.div`
   width: fit-content;
 `;
+
+const SignInSectionText = styled.div`
+  display: block;
+  text-align: left;
+  font-weight: 500;
+  margin-bottom: 6px;
+`;
+
 
 const Wrapper = styled.div`
   margin-top: ${({ isWeb }) => (isWeb ? '32px;' : '0')};

@@ -374,10 +374,10 @@ export default class SettingsAccount extends Component {
                 {voterIsSignedIn ?
                   <div className="u-stack--sm">{yourAccountExplanation}</div> : (
                     <>
-                      <div className="u-show-mobile-bigger-than-iphone5">
-                        <div className="u-f3">{pleaseSignInTitle}</div>
-                        <SignInSubtitle className="u-stack--sm">{pleaseSignInSubTitle}</SignInSubtitle>
-                      </div>
+                      {/*<div className="u-show-mobile-bigger-than-iphone5">*/}
+                      {/*  <div className="u-f3">{pleaseSignInTitle}</div>*/}
+                      {/*  <SignInSubtitle className="u-stack--sm">{pleaseSignInSubTitle}</SignInSubtitle>*/}
+                      {/*</div>*/}
                       <div className="u-show-desktop-tablet">
                         <div className="u-f3">{pleaseSignInTitle}</div>
                         <SignInSubtitle className="u-stack--sm">{pleaseSignInSubTitle}</SignInSubtitle>
@@ -390,15 +390,15 @@ export default class SettingsAccount extends Component {
               <>
                 <div className="u-stack--md">
                   { !hideTwitterSignInButton && !voterIsSignedInTwitter && (isOnWeVoteRootUrl || isOnWeVoteSubdomainUrl) && (
-                    <span>
-                      <RecommendedText className="u-tl u-stack--sm">Recommended</RecommendedText>
+                    <div style={{ marginBottom: '16px' }}>
+                      <RecommendedText>Recommended</RecommendedText>
                       <TwitterSignIn
                         buttonText="Sign in with Twitter"
                         buttonSubmittedText="Signing in..."
                         inModal={inModal}
                         closeSignInModal={this.localCloseSignInModal}
                       />
-                    </span>
+                    </div>
                   )}
                 </div>
                 <div className="u-stack--md">
@@ -593,8 +593,10 @@ const SignInSubtitle = styled.p`
 const RecommendedText = styled.p`
   margin: 0;
   color: #333;
-  font-weight: bold;
+  font-weight: 500;
   font-size: 16px;
+  text-align: left;
+  margin-bottom: 4px;
 `;
 
 const TwitterContainer = styled.span`
