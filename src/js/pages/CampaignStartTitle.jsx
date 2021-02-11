@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import CampaignStartActions from '../actions/CampaignStartActions';
+import CampaignStartSteps from '../components/Navigation/CampaignStartSteps';
 import CampaignStartStore from '../stores/CampaignStartStore';
 import CampaignTitleInputField from '../components/CampaignStart/CampaignTitleInputField';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
@@ -53,6 +54,7 @@ class CampaignStartTitle extends Component {
         <PageWrapper cordova={isCordova()}>
           <OuterWrapper>
             <InnerWrapper>
+              <CampaignStartSteps step1NumberOn />
               <ContentTitle>
                 Write your campaign title
               </ContentTitle>
