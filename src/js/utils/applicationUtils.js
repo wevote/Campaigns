@@ -322,3 +322,15 @@ export function weVoteBrandingOff () {
   weVoteBrandingOffGlobal = weVoteBrandingOffFromUrl || weVoteBrandingOffFromCookie;
   return weVoteBrandingOffGlobal;
 }
+
+export function setVoterDeviceIdCookie (id) {
+  let { hostname } = window.location;
+  hostname = hostname || '';
+  console.log('VoterSessionActions setVoterDeviceIdCookie hostname:', hostname);
+  if (hostname && stringContains('wevote.us', hostname)) {
+    // If hanging off We Vote subdomain, store the cookie with top level domain
+    cookies.setItem('voter_device_id', id, Infinity, '/', 'wevote.us');
+  } else {
+    cookies.setItem('voter_device_id', id, Infinity, '/');
+  }
+}

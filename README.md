@@ -26,6 +26,10 @@ do what you wanted to, and no more.
   - Webpack minifies what it can when the cli option  "--mode production" is used, so compile with `npm run start-minified` to minify. 
 - **Follow styles defined on "/styles" page**.
 - **All pull requests must pass lint checks**  Run `npm run lint` before submitting your PR, and clear all errors and warnings.
+- **We are purposefully NOT bringing over:**
+  - Bootstrap/react-bootstrap.  Use Material-UI instead.
+  - sass, and most css files.  Use styled-components instead.
+  - The globally loaded Zendesk app, we will build a web link alternative
 
 ## Webpack Bundle Analyzer
 Set `const isProduction = false;` in webpack.config.js to turn on the analyzer.
