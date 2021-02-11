@@ -74,7 +74,8 @@ class AppStore extends ReduceStore {
   }
 
   getHostname () {
-    return this.getState().hostname || '';
+    const { hostname } = window.location;
+    return this.getState().hostname || hostname;
   }
 
   getScrolledDown () {

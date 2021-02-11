@@ -1,4 +1,6 @@
 import Dispatcher from '../components/Dispatcher/AppDispatcher';
+import DispatcherLoadEndpoint from '../components/Dispatcher/Dispatcher';
+
 
 export default {
   setActivityTidbitWeVoteIdForDrawer (activityTidbitWeVoteId) {
@@ -125,6 +127,6 @@ export default {
   },
 
   signOutFromManyStores () {
-    Dispatcher.loadEndpoint('voterSignOut', { sign_out_all_devices: false });
+    DispatcherLoadEndpoint.loadEndpoint('voterSignOut', { sign_out_all_devices: false });
   },
 };

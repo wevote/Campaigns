@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import Alert from 'react-bootstrap/Alert';
 import Alert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -326,7 +325,7 @@ class VoterEmailAddressEntry extends Component {
         (emailAddressStatus.email_address_already_owned_by_this_voter && !emailAddressStatus.email_address_deleted && !emailAddressStatus.make_primary_email && !secretCodeSystemLocked) ||
         (emailAddressStatus.email_address_already_owned_by_other_voter && !signInLinkOrCodeSent && !secretCodeSystemLocked) ||
         secretCodeSystemLocked ? (
-          <Alert variant="warning">
+          <Alert severity="warning">
             { emailAddressStatus.email_address_not_valid && (
               <div>Please enter a valid email address.</div>
             )}
@@ -359,7 +358,7 @@ class VoterEmailAddressEntry extends Component {
         emailAddressStatus.link_to_sign_in_email_sent ||
         (emailAddressStatus.make_primary_email && (emailAddressStatus.email_address_created || emailAddressStatus.email_address_found || emailAddressStatus.sign_in_code_email_sent) && !secretCodeSystemLocked) ||
         emailAddressStatus.sign_in_code_email_sent ? (
-          <Alert variant="success">
+          <Alert severity="success">
             { emailAddressStatus.email_address_created &&
             !emailAddressStatus.verification_email_sent ? <span>Your email address was saved. </span> : null }
             { emailAddressStatus.email_address_deleted ? <span>Your email address was deleted. </span> : null }

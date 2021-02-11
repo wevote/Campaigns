@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import VoterActions from '../../actions/VoterActions';
 import VoterStore from '../../stores/VoterStore';
-import { isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 import { shortenText } from '../../utils/textFormat';
 import SignInModal from '../Widgets/SignInModal';
@@ -25,8 +24,9 @@ class SignInButton extends Component {
       window.jQuery = jquery;
       window.$ = jquery;
       VoterActions.voterRetrieve();
-      console.log('SignInButton, componentDidMount voterRetrieve fired ');
+      // console.log('SignInButton, componentDidMount voterRetrieve fired ');
     });
+    // this.start = window.performance.now();
   }
 
   componentWillUnmount () {
@@ -34,41 +34,44 @@ class SignInButton extends Component {
   }
 
   onVoterStoreChange () {
-    console.log('SignInButton onVoterStoreChange');
+    // console.log('SignInButton onVoterStoreChange');
+    // eslint-disable-next-line react/no-unused-state
     this.setState({ voterLoaded: true });
   }
 
-  openSignInModal = () => {
-    // AppActions.setShowSignInModal(false);
-    console.log('openSignInModal -----------------------------');
-    this.setState({ showSignInModal: true });
-  };
+  // openSignInModal = () => {
+  //   // AppActions.setShowSignInModal(false);
+  //   // console.log('openSignInModal');
+  //   this.setState({ showSignInModal: true });
+  // };
 
   closeSignInModal = () => {
     // AppActions.setShowSignInModal(false);
-    console.log('closeSignInModal -----------------------------');
+    // console.log('closeSignInModal');
     this.setState({ showSignInModal: false });
   };
 
-  // signInModalLoader = () => {
-  //   console.log('signInModalLoader -----------------------------');
-  //   const { showSignInModal } = this.state;
-  //   return <SignInModal show={showSignInModal} closeFunction={this.closeSignInModal} />;
-  // }
-
   toggleSignInModal = () => {
     const { showSignInModal } = this.state;
-    console.log('toggleLoadedState -----------------------------', showSignInModal);
+    // console.log('toggleLoadedState showSignInModal:', showSignInModal);
     this.setState({ showSignInModal: !showSignInModal });
   }
 
   render () {
     renderLog('SignInButton');  // Set LOG_RENDER_EVENTS to log all renders
-    // const { showSignInModal } = this.state;
+    const { showSignInModal } = this.state;
+    // console.log('SignInButton voterLoaded at start of render: ', voterLoaded);
     const { classes } = this.props;
     const voter = VoterStore.getVoter();
-    const voterIsSignedIn = voter && voter.is_signed_in;
-    const voterPhotoUrlMedium = voter && voter.voter_photo_url_medium;
+    let voterIsSignedIn = false;
+    let voterPhotoUrlMedium;
+    if (voter) {
+      const { is_signed_in: signedIn, voter_photo_url_medium: photoURL  } = voter;
+      voterIsSignedIn  = signedIn;
+      voterPhotoUrlMedium = photoURL;
+    }
+    // const end = window.performance.now();
+    // console.log(`Execution time: ${end - this.start} ms, ${voterPhotoUrlMedium}`);
     const voterFirstName = VoterStore.getFirstName();
 
     return (
@@ -77,10 +80,10 @@ class SignInButton extends Component {
           <span>
             {voterPhotoUrlMedium ? (
               <span>
-                <div
+                <IconButton
+                  classes={{ root: classes.iconButtonRoot }}
                   id="profileAvatarHeaderBar"
-                  className={`header-nav__avatar-container ${isCordova() ? 'header-nav__avatar-cordova' : undefined}`}
-                  onClick={this.toggleProfilePopUp}
+                  onClick={this.toggleSignInModal}
                 >
                   <img
                     className="header-nav__avatar"
@@ -89,14 +92,14 @@ class SignInButton extends Component {
                     width={34}
                     alt="Your Settings"
                   />
-                </div>
+                </IconButton>
               </span>
             ) : (
               <span>
                 <IconButton
                   classes={{ root: classes.iconButtonRoot }}
                   id="profileAvatarHeaderBar"
-                  onClick={this.toggleProfilePopUp}
+                  onClick={this.toggleSignInModal}
                 >
                   <FirstNameWrapper>
                     {shortenText(voterFirstName, 9)}
@@ -115,9 +118,10 @@ class SignInButton extends Component {
             onClick={this.toggleSignInModal}
             variant="text"
           >
-            <span className="u-no-break">Sign In</span>
+            <SignInText>Sign In</SignInText>
           </Button>
         )}
+        {showSignInModal ? <SignInModal show={showSignInModal} closeFunction={this.closeSignInModal} /> : null}
       </div>
     );
   }
@@ -134,6 +138,13 @@ SignInButton.propTypes = {
 const FirstNameWrapper = styled.div`
   font-size: 14px;
   padding-right: 4px;
+`;
+
+const SignInText = styled.div`
+  font-size: 14px;
+  padding-right: 4px;
+  color: blue;
+  text-transform: none;
 `;
 
 
