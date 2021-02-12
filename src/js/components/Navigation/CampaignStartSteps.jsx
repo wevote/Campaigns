@@ -3,62 +3,120 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Done } from '@material-ui/icons';
-import { isCordova } from '../../utils/cordovaUtils';
+import CampaignStartStore from '../../stores/CampaignStartStore';
+import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 
 
 class CampaignStartSteps extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      step1Completed: false,
+      step2Completed: false,
+      step3Completed: false,
+      step4Completed: false,
+    };
+  }
+
+  componentDidMount () {
+    // console.log('CampaignStartSteps, componentDidMount');
+    this.campaignStartStoreListener = CampaignStartStore.addListener(this.onCampaignStartStoreChange.bind(this));
+    const step1Completed = CampaignStartStore.campaignTitleExists();
+    const step2Completed = CampaignStartStore.campaignCandidateListExists();
+    const step3Completed = CampaignStartStore.campaignDescriptionExists();
+    const step4Completed = CampaignStartStore.campaignPhotoExists();
+    this.setState({
+      step1Completed,
+      step2Completed,
+      step3Completed,
+      step4Completed,
+    });
+  }
+
+  componentWillUnmount () {
+    this.campaignStartStoreListener.remove();
+  }
+
+  onCampaignStartStoreChange () {
+    const step1Completed = CampaignStartStore.campaignTitleExists();
+    const step2Completed = CampaignStartStore.campaignCandidateListExists();
+    const step3Completed = CampaignStartStore.campaignDescriptionExists();
+    const step4Completed = CampaignStartStore.campaignPhotoExists();
+    // console.log('onCampaignStartStoreChange step1Completed: ', step1Completed, ', step2Completed: ', step2Completed, ', step3Completed:', step3Completed);
+    this.setState({
+      step1Completed,
+      step2Completed,
+      step3Completed,
+      step4Completed,
+    });
+  }
+
   render () {
     renderLog('CampaignStartSteps');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
       console.log(`CampaignStartSteps window.location.href: ${window.location.href}`);
     }
     const {
+      atStepNumber1, atStepNumber2, atStepNumber3, atStepNumber4,
       classes,
-      step1CheckMarkOn, step1NumberOn,
-      step2CheckMarkOn, step2NumberOn,
-      step3CheckMarkOn, step3NumberOn,
     } = this.props;
+    const {
+      step1Completed, step2Completed, step3Completed, step4Completed,
+    } = this.state;
     return (
       <div>
         <OuterWrapper>
           <InnerWrapper>
             <StepWrapper>
-              {step1CheckMarkOn ? (
-                <StepCircle inverseColor>
-                  <StepNumber inverseColor>
+              {step1Completed ? (
+                <StepCircle inverseColor={atStepNumber1} onClick={() => historyPush('/start-a-campaign-add-title')}>
+                  <StepNumber inverseColor={atStepNumber1}>
                     <Done classes={{ root: classes.doneIcon }} />
                   </StepNumber>
                 </StepCircle>
               ) : (
-                <StepCircle inverseColor={step1NumberOn}>
-                  <StepNumber inverseColor={step1NumberOn}>1</StepNumber>
+                <StepCircle inverseColor={atStepNumber1} onClick={() => historyPush('/start-a-campaign-add-title')}>
+                  <StepNumber inverseColor={atStepNumber1}>1</StepNumber>
                 </StepCircle>
               )}
             </StepWrapper>
             <StepWrapper>
-              {step2CheckMarkOn ? (
-                <StepCircle inverseColor>
-                  <StepNumber inverseColor>
+              {step2Completed ? (
+                <StepCircle inverseColor={atStepNumber2} onClick={() => historyPush('/who-do-you-want-to-see-elected')}>
+                  <StepNumber inverseColor={atStepNumber2}>
                     <Done classes={{ root: classes.doneIcon }} />
                   </StepNumber>
                 </StepCircle>
               ) : (
-                <StepCircle inverseColor={step2NumberOn}>
-                  <StepNumber inverseColor={step2NumberOn}>2</StepNumber>
+                <StepCircle inverseColor={atStepNumber2} onClick={() => historyPush('/who-do-you-want-to-see-elected')}>
+                  <StepNumber inverseColor={atStepNumber2}>2</StepNumber>
                 </StepCircle>
               )}
             </StepWrapper>
             <StepWrapper>
-              {step3CheckMarkOn ? (
-                <StepCircle inverseColor>
-                  <StepNumber inverseColor>
+              {step3Completed ? (
+                <StepCircle inverseColor={atStepNumber3} onClick={() => historyPush('/start-a-campaign-why-winning-matters')}>
+                  <StepNumber inverseColor={atStepNumber3}>
                     <Done classes={{ root: classes.doneIcon }} />
                   </StepNumber>
                 </StepCircle>
               ) : (
-                <StepCircle inverseColor={step3NumberOn}>
-                  <StepNumber inverseColor={step3NumberOn}>3</StepNumber>
+                <StepCircle inverseColor={atStepNumber3} onClick={() => historyPush('/start-a-campaign-why-winning-matters')}>
+                  <StepNumber inverseColor={atStepNumber3}>3</StepNumber>
+                </StepCircle>
+              )}
+            </StepWrapper>
+            <StepWrapper>
+              {step4Completed ? (
+                <StepCircle inverseColor={atStepNumber4} onClick={() => historyPush('/start-a-campaign-add-photo')}>
+                  <StepNumber inverseColor={atStepNumber4}>
+                    <Done classes={{ root: classes.doneIcon }} />
+                  </StepNumber>
+                </StepCircle>
+              ) : (
+                <StepCircle inverseColor={atStepNumber4} onClick={() => historyPush('/start-a-campaign-add-photo')}>
+                  <StepNumber inverseColor={atStepNumber4}>4</StepNumber>
                 </StepCircle>
               )}
             </StepWrapper>
@@ -70,12 +128,10 @@ class CampaignStartSteps extends Component {
 }
 CampaignStartSteps.propTypes = {
   classes: PropTypes.object,
-  step1CheckMarkOn: PropTypes.bool,
-  step1NumberOn: PropTypes.bool,
-  step2CheckMarkOn: PropTypes.bool,
-  step2NumberOn: PropTypes.bool,
-  step3CheckMarkOn: PropTypes.bool,
-  step3NumberOn: PropTypes.bool,
+  atStepNumber1: PropTypes.bool,
+  atStepNumber2: PropTypes.bool,
+  atStepNumber3: PropTypes.bool,
+  atStepNumber4: PropTypes.bool,
 };
 
 const styles = (theme) => ({

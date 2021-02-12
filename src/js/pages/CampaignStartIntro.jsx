@@ -68,7 +68,7 @@ class CampaignStartIntro extends Component {
                         classes={{ root: classes.buttonDesktop }}
                         color="primary"
                         id="campaignStartButton"
-                        onClick={() => historyPush('/start-a-campaign-title')}
+                        onClick={() => historyPush('/start-a-campaign-add-title')}
                         variant="contained"
                       >
                         Got it! I&apos;m ready to create my campaign
@@ -86,7 +86,7 @@ class CampaignStartIntro extends Component {
               classes={{ root: mobileButtonClasses }}
               color="primary"
               id="campaignStartButtonFooter"
-              onClick={() => historyPush('/start-a-campaign-title')}
+              onClick={() => historyPush('/start-a-campaign-add-title')}
               variant="contained"
             >
               Got it! I&apos;m ready to create my campaign
@@ -136,7 +136,7 @@ const styles = (theme) => ({
 });
 
 const CampaignStartSection = styled.div`
-  margin-bottom: 100px !important;
+  margin-bottom: 60px !important;
   max-width: 450px;
 `;
 

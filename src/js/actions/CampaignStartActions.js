@@ -15,6 +15,20 @@ export default {
       });
   },
 
+  campaignCandidateListQueuedToSave (campaignCandidateList) {
+    Dispatcher.dispatch({ type: 'campaignCandidateListQueuedToSave', payload: campaignCandidateList });
+  },
+
+  campaignCandidateListSave (campaignWeVoteId, campaignCandidateList) {
+    // console.log('campaignCandidateListSave: ', campaignCandidateList);
+    Dispatcher.loadEndpoint('campaignStartSave',
+      {
+        campaign_candidate_list: campaignCandidateList,
+        campaign_candidate_list_changed: true,
+        campaignx_we_vote_id: campaignWeVoteId,
+      });
+  },
+
   campaignTitleQueuedToSave (campaignTitle) {
     Dispatcher.dispatch({ type: 'campaignTitleQueuedToSave', payload: campaignTitle });
   },
