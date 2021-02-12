@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
@@ -46,11 +45,8 @@ class About extends Component {
     );
   }
 }
-About.propTypes = {
-  classes: PropTypes.object,
-};
 
-const styles = (theme) => ({
+const styles = () => ({
   buttonRoot: {
     width: 250,
   },

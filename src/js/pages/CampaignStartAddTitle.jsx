@@ -8,13 +8,13 @@ import CampaignStartActions from '../actions/CampaignStartActions';
 import CampaignStartSteps from '../components/Navigation/CampaignStartSteps';
 import CampaignStartStore from '../stores/CampaignStartStore';
 import CampaignTitleInputField from '../components/CampaignStart/CampaignTitleInputField';
-import { isCordova } from '../utils/cordovaUtils';
+import { historyPush, isCordova } from '../utils/cordovaUtils';
 import MainFooter from '../components/Navigation/MainFooter';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
 
 
-class CampaignStartTitle extends Component {
+class CampaignStartAddTitle extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -22,7 +22,7 @@ class CampaignStartTitle extends Component {
   }
 
   componentDidMount () {
-    // console.log('CampaignStartTitle, componentDidMount');
+    // console.log('CampaignStartAddTitle, componentDidMount');
     import('jquery').then(({ default: jquery }) => {
       window.jQuery = jquery;
       window.$ = jquery;
@@ -33,17 +33,17 @@ class CampaignStartTitle extends Component {
 
   submitCampaignTitle = () => {
     const campaignTitleQueuedToSave = CampaignStartStore.getCampaignTitleQueuedToSave();
-    // console.log('CampaignStartTitle, campaignTitleQueuedToSave:', campaignTitleQueuedToSave);
+    // console.log('CampaignStartAddTitle, campaignTitleQueuedToSave:', campaignTitleQueuedToSave);
     const campaignWeVoteId = '';
     CampaignStartActions.campaignTitleSave(campaignWeVoteId, campaignTitleQueuedToSave);
     CampaignStartActions.campaignTitleQueuedToSave('');
-    // historyPush('/who-do-you-want-to-see-elected');
+    historyPush('/who-do-you-want-to-see-elected');
   }
 
   render () {
-    renderLog('CampaignStartTitle');  // Set LOG_RENDER_EVENTS to log all renders
+    renderLog('CampaignStartAddTitle');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
-      console.log(`CampaignStartTitle window.location.href: ${window.location.href}`);
+      console.log(`CampaignStartAddTitle window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
     const mobileButtonClasses = classes.buttonDefault; // isWebApp() ? classes.buttonDefault : classes.buttonDefaultCordova;
@@ -54,7 +54,7 @@ class CampaignStartTitle extends Component {
         <PageWrapper cordova={isCordova()}>
           <OuterWrapper>
             <InnerWrapper>
-              <CampaignStartSteps step1NumberOn />
+              <CampaignStartSteps atStepNumber1 />
               <ContentTitle>
                 Write your campaign title
               </ContentTitle>
@@ -137,7 +137,7 @@ class CampaignStartTitle extends Component {
     );
   }
 }
-CampaignStartTitle.propTypes = {
+CampaignStartAddTitle.propTypes = {
   classes: PropTypes.object,
 };
 
@@ -198,7 +198,7 @@ const AdviceBoxWrapper = styled.div`
 `;
 
 const CampaignStartSection = styled.div`
-  margin-bottom: 100px !important;
+  margin-bottom: 60px !important;
   max-width: 620px;
   width: 100%;
 `;
@@ -272,4 +272,4 @@ const PageWrapper = styled.div`
   }
 `;
 
-export default withStyles(styles)(CampaignStartTitle);
+export default withStyles(styles)(CampaignStartAddTitle);

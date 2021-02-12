@@ -18,7 +18,7 @@ class MainFooter extends Component {
                 <ColumnTitle>About We Vote</ColumnTitle>
                 <Link id="footerLinkAbout" className={classes.link} to="/about">About &amp; Team</Link>
                 <Link id="footerLinkCredits" className={classes.link} to="/credits">Credits &amp; Thanks</Link>
-                <Link id="footerLinkImpact" className={classes.link} to="/impact">Impact</Link>
+                {/* <Link id="footerLinkImpact" className={classes.link} to="/impact">Impact</Link> */}
                 <OpenExternalWebSite
                   linkIdAttribute="footerLinkCareers"
                   url="https://www.idealist.org/en/nonprofit/f917ce3db61a46cb8ad2b0d4e335f0af-we-vote-oakland#volops"

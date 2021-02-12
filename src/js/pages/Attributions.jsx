@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
@@ -73,11 +72,8 @@ class Attributions extends Component {
     );
   }
 }
-Attributions.propTypes = {
-  classes: PropTypes.object,
-};
 
-const styles = (theme) => ({
+const styles = () => ({
   buttonRoot: {
     width: 250,
   },

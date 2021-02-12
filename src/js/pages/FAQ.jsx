@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -258,11 +257,8 @@ class FAQ extends Component {
     );
   }
 }
-FAQ.propTypes = {
-  classes: PropTypes.object,
-};
 
-const styles = (theme) => ({
+const styles = () => ({
   buttonRoot: {
     width: 250,
   },

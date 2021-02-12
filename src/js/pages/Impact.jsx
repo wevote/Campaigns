@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
-// import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { lazyLoader, libraryNeedsLoading } from '../utils/lazyLoader';
-// import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
 import MainFooter from '../components/Navigation/MainFooter';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
@@ -48,11 +45,8 @@ class Impact extends Component {
     );
   }
 }
-Impact.propTypes = {
-  classes: PropTypes.object,
-};
 
-const styles = (theme) => ({
+const styles = () => ({
   buttonRoot: {
     width: 250,
   },
