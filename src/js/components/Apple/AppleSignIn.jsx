@@ -263,7 +263,7 @@ const AppleSignInContainer  = styled.div`
   position: relative;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 100%;
+  // width: 100%;
 `;
 
 /*

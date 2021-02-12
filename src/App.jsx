@@ -23,6 +23,7 @@ const PageNotFound = React.lazy(() => import('./js/pages/PageNotFound'));
 const Privacy = React.lazy(() => import('./js/pages/Privacy'));
 const StyleGuidePage = React.lazy(() => import('./js/pages/StyleGuidePage'));
 const TermsOfService = React.lazy(() => import('./js/pages/TermsOfService'));
+const TwitterSignInProcess = React.lazy(() => import('./js/pages/TwitterSignInProcess'));
 
 // ////////////
 // Test Pages
@@ -75,6 +76,7 @@ class App extends Component {
                   <Route exact path="/test/details"><DetailsTestPage /></Route>
                   <Route exact path="/test/home"><HomeTestPage /></Route>
                   <Route exact path="/test/updates"><UpdatesTestPage /></Route>
+                  <Route path="/twitter_sign_in"><TwitterSignInProcess /></Route>
                   <Route exact path="/"><HomePage /></Route>
                   <Route path="*" component={PageNotFound} />
                 </Switch>

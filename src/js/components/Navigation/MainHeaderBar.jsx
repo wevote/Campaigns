@@ -48,7 +48,7 @@ export default function MainHeaderBar () {
   const classes = useStyles();
   // const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  let open = Boolean(anchorEl);
+  const open = Boolean(anchorEl);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -60,10 +60,10 @@ export default function MainHeaderBar () {
   };
 
   const signOut = () => {
+    // console.log('MainHeaderBar signOut');
     setAnchorEl(null);
     voterSignOut();
   };
-
 
   const extraItems = {
     fontSize: 12,

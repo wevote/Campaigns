@@ -1,9 +1,7 @@
 import { ReduceStore } from 'flux/utils';
-// import CandidateActions from '../actions/CandidateActions';
 import Dispatcher from '../components/Dispatcher/Dispatcher';
-// import OrganizationActions from '../actions/OrganizationActions';
-// import TwitterActions from '../actions/TwitterActions';
-// import VoterActions from '../actions/VoterActions';
+import TwitterActions from '../actions/TwitterActions';
+
 
 class TwitterStore extends ReduceStore {
   getInitialState () {
@@ -55,17 +53,17 @@ class TwitterStore extends ReduceStore {
     };
   }
 
-  resetState () {
-    return this.getInitialState();
-  }
-
-  get kindOfOwner () {
-    return this.getState().kind_of_owner;
-  }
-
-  get ownerWeVoteId () {
-    return this.getState().owner_we_vote_id;
-  }
+  // resetState () {
+  //   return this.getInitialState();
+  // }
+  //
+  // get kindOfOwner () {
+  //   return this.getState().kind_of_owner;
+  // }
+  //
+  // get ownerWeVoteId () {
+  //   return this.getState().owner_we_vote_id;
+  // }
 
   get twitterHandle () {
     return this.getState().twitter_handle;
@@ -144,9 +142,9 @@ class TwitterStore extends ReduceStore {
       case 'twitterNativeSignInSave':
         // Exit if we don't have a successful response (since we expect certain variables in a successful response below)
         if (!action.res || !action.res.success) return state;
-        // if (action.res.success) {
-        //   TwitterActions.twitterSignInRetrieve();
-        // }
+        if (action.res.success) {
+          TwitterActions.twitterSignInRetrieve();
+        }
 
         return {
           // ...state,
@@ -160,6 +158,7 @@ class TwitterStore extends ReduceStore {
       case 'twitterSignInRetrieve':
         // Exit if we don't have a successful response (since we expect certain variables in a successful response below)
         if (!action.res || !action.res.success) return state;
+        // 2/11/21:  Moved to TwitterSignInProcess.jsx (untangling app code from stores)
         // if (action.res.twitter_sign_in_verified) {
         //   VoterActions.voterRetrieve();
         //   VoterActions.twitterRetrieveIdsIfollow();

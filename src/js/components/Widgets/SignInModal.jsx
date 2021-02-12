@@ -4,6 +4,8 @@ import clsx from 'clsx';
 import { Dialog, DialogContent, DialogTitle, IconButton, Typography } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import { withStyles, withTheme } from '@material-ui/core/styles';
+import styled from 'styled-components';
+import { lazyLoader, libraryNeedsLoading } from '../../utils/lazyLoader';
 import { renderLog } from '../../utils/logging';
 import { isCordova, isAndroid, isIOS,
   isIPhone3p5in, isIPhone4in, isIPhone4p7in, isIPhone5p5in, isIPhone5p8in, isIPhone6p1in, isIPhone6p5in,
@@ -34,6 +36,15 @@ class SignInModal extends Component {
       window.$ = jquery;
       console.log('jquery loaded in SignInModal');
     });
+    const library = 'fontawesome';
+    if (libraryNeedsLoading(library)) {
+      lazyLoader(library)
+        .then((result) => {
+          // console.log('lazy loader for fontawesome returned: ', result);
+          // eslint-disable-next-line react/no-unused-state
+          this.setState({ result }); // to force a reload
+        });
+    }
   }
 
   componentDidUpdate () {
@@ -160,9 +171,9 @@ class SignInModal extends Component {
         onClose={() => { this.closeFunction(); }}
       >
         <DialogTitle>
-          <Typography className="text-center">
-            <span className="h2">Sign In</span>
-          </Typography>
+          <SignInText className="h2">
+            Sign In
+          </SignInText>
           <IconButton
             aria-label="Close"
             classes={{ root: classes.closeButton }}
@@ -305,6 +316,12 @@ const styles = (theme) => ({
     top: `${theme.spacing(1)}px`,
   },
 });
+
+const SignInText = styled.span`
+  display: block;
+  text-align: center;
+`;
+
 
 
 export default withTheme(withStyles(styles)(SignInModal));

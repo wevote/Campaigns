@@ -5,7 +5,6 @@ import { isValidPhoneNumber } from 'react-phone-number-input';
 import { withStyles } from '@material-ui/core/styles';
 import { Delete, Phone } from '@material-ui/icons';
 import { Paper, InputBase, Button } from '@material-ui/core';
-// import Alert from 'react-bootstrap/Alert';
 import Alert from '@material-ui/lab/Alert';
 import { isCordova, isWebApp } from '../../utils/cordovaUtils';
 import isMobileScreenSize from '../../utils/isMobileScreenSize';
@@ -340,7 +339,7 @@ class VoterPhoneVerificationEntry extends Component {
           (smsPhoneNumberStatus.sms_phone_number && !smsPhoneNumberStatus.sign_in_code_sms_sent && !secretCodeSystemLocked) ||
           (smsPhoneNumberStatus.sms_phone_number_already_owned_by_other_voter && !signInLinkOrCodeSent && !secretCodeSystemLocked) ||
           secretCodeSystemLocked ? (
-            <Alert variant="warning">
+            <Alert severity="warning">
               {(smsPhoneNumberStatus.sms_phone_number_already_owned_by_other_voter && !signInLinkOrCodeSent && !secretCodeSystemLocked) && (
                 <div>
                   That phone is already being used by another account.
@@ -377,7 +376,7 @@ class VoterPhoneVerificationEntry extends Component {
           smsPhoneNumberStatus.sms_ownership_is_verified ||
           smsPhoneNumberStatus.make_primary_sms ||
           smsPhoneNumberStatus.sign_in_code_sms_sent ? (
-            <Alert variant="success">
+            <Alert severity="success">
               { smsPhoneNumberStatus.sms_phone_number_created && !smsPhoneNumberStatus.verification_sms_sent && !secretCodeSystemLocked ? <span>Your phone number was saved. </span> : null }
               { smsPhoneNumberStatus.sms_phone_number_deleted ? <span>Your phone number was deleted. </span> : null }
               { smsPhoneNumberStatus.sms_ownership_is_verified ? <span>Your phone number was verified. </span> : null }
@@ -397,17 +396,15 @@ class VoterPhoneVerificationEntry extends Component {
 
     const enterSMSPhoneNumberHtml = hideSignInWithPhoneForm ? null : (
       <div>
-        <div className="u-stack--sm u-tl">
-          <strong>
-            {enterSMSPhoneNumberTitle}
-          </strong>
+        <SignInSectionText>
+          {enterSMSPhoneNumberTitle}
           {showError ? (
             <Error>
               Please enter a valid phone number.
             </Error>
           ) : null}
           {' '}
-        </div>
+        </SignInSectionText>
         <form className="form-inline">
           <Paper className={classes.root} elevation={1} id="paperWrapperPhone">
             <Phone />
@@ -669,5 +666,13 @@ const Error = styled.div`
   color: rgb(255, 73, 34);
   font-size: 14px;
 `;
+
+const SignInSectionText = styled.div`
+  display: block;
+  text-align: left;
+  font-weight: 500;
+  margin-bottom: 6px;
+`;
+
 
 export default withStyles(styles)(VoterPhoneVerificationEntry);

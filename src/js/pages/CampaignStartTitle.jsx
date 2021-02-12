@@ -8,7 +8,7 @@ import CampaignStartActions from '../actions/CampaignStartActions';
 import CampaignStartSteps from '../components/Navigation/CampaignStartSteps';
 import CampaignStartStore from '../stores/CampaignStartStore';
 import CampaignTitleInputField from '../components/CampaignStart/CampaignTitleInputField';
-import { historyPush, isCordova } from '../utils/cordovaUtils';
+import { isCordova } from '../utils/cordovaUtils';
 import MainFooter from '../components/Navigation/MainFooter';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';

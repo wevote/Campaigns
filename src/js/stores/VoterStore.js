@@ -2,7 +2,7 @@ import { ReduceStore } from 'flux/utils';
 import cookies from '../utils/cookies';
 import Dispatcher from '../components/Dispatcher/Dispatcher';
 import { stringContains } from '../utils/textFormat';
-// import signInModalGlobalState from '../components/Widgets/signInModalGlobalState';
+
 
 class VoterStore extends ReduceStore {
   getInitialState () {
@@ -351,6 +351,7 @@ class VoterStore extends ReduceStore {
     let voterMustRequestNewCode;
     let voterSecretCodeRequestsLocked;
 
+    // console.log('VoterStore reduce action', action.type);
     switch (action.type) {
       case 'clearEmailAddressStatus':
         // console.log('VoterStore clearEmailAddressStatus');
@@ -376,12 +377,12 @@ class VoterStore extends ReduceStore {
         //   // refresh the voter data so we have the value linked_organization_we_vote_id in the voter object.
         //   if (action.res.success) {
         //     if (action.res.facebook_id === state.voter.facebook_id) {
-        //       VoterActions.voterRetrieve();
+        //       >No application code in stores!<  VoterActions.voterRetrieve();
         //     } else {
         //       const organizationTwitterHandle = action.res.organization_twitter_handle || '';
         //       const twitterScreenName = state.voter.twitter_screen_name !== undefined ? state.voter.twitter_screen_name : '';
         //       if (organizationTwitterHandle && organizationTwitterHandle.toLowerCase() === twitterScreenName.toLowerCase()) {
-        //         VoterActions.voterRetrieve();
+        //         >No application code in stores!<   VoterActions.voterRetrieve();
         //       }
         //     }
         //   }
@@ -392,12 +393,12 @@ class VoterStore extends ReduceStore {
         //   if (action.res.success) {
         //     if (action.res.kind_of_follow_task === 'FOLLOW_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW') {
         //       // console.log("organizationSuggestionTasks FOLLOW_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW");
-        //       // VoterGuideActions.voterGuidesToFollowRetrieve(this.electionId());
-        //       VoterGuideActions.voterGuidesFollowedRetrieve(this.electionId());
+        //       // >No application code in stores!<   VoterGuideActions.voterGuidesToFollowRetrieve(this.electionId());
+        //       >No application code in stores!<   VoterGuideActions.voterGuidesFollowedRetrieve(this.electionId());
         //     } else if (action.res.kind_of_suggestion_task === 'UPDATE_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW') {
         //       // console.log("organizationSuggestionTasks UPDATE_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW");
-        //       // VoterGuideActions.voterGuidesToFollowRetrieve(this.electionId());
-        //       VoterGuideActions.voterGuidesFollowedRetrieve(this.electionId());
+        //       // >No application code in stores!<   VoterGuideActions.voterGuidesToFollowRetrieve(this.electionId());
+        //       >No application code in stores!<   VoterGuideActions.voterGuidesFollowedRetrieve(this.electionId());
         //     }
         //   }
         //   return state;
@@ -441,12 +442,12 @@ class VoterStore extends ReduceStore {
         //   if (externalVoterId && membershipOrganizationWeVoteId) {
         //     if (!this.voterExternalIdHasBeenSavedOnce(externalVoterId, membershipOrganizationWeVoteId)) {
         //       // console.log('voterExternalIdHasBeenSavedOnce has NOT been saved before.');
-        //       VoterActions.voterExternalIdSave(externalVoterId, membershipOrganizationWeVoteId);
+        //       >No application code in stores!< VoterActions.voterExternalIdSave(externalVoterId, membershipOrganizationWeVoteId);
         //       if (!voterExternalIdHasBeenSavedOnce[externalVoterId]) {
         //         voterExternalIdHasBeenSavedOnce[externalVoterId] = {};
         //       }
         //       voterExternalIdHasBeenSavedOnce[externalVoterId][membershipOrganizationWeVoteId] = true;
-        //       // AnalyticsActions.saveActionBallotVisit(VoterStore.electionId());
+        //       // >No application code in stores!<   AnalyticsActions.saveActionBallotVisit(VoterStore.electionId());
         //     } else {
         //       // console.log('voterExternalIdHasBeenSavedOnce has been saved before.');
         //     }
@@ -460,7 +461,7 @@ class VoterStore extends ReduceStore {
       case 'twitterRetrieveIdsIFollow':
         // console.log('VoterStore twitterRetrieveIdsIFollow');
         // if (action.res.success) {
-        //   VoterActions.organizationSuggestionTasks('UPDATE_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW',
+        //   >No application code in stores!<   VoterActions.organizationSuggestionTasks('UPDATE_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW',
         //     'FOLLOW_SUGGESTIONS_FROM_TWITTER_IDS_I_FOLLOW');
         // }
 
@@ -468,7 +469,7 @@ class VoterStore extends ReduceStore {
 
       case 'voterAnalysisForJumpProcess':
         // console.log('VoterStore, voterAnalysisForJumpProcess');
-        // VoterActions.voterRetrieve();
+        // >No application code in stores!<   VoterActions.voterRetrieve();
         return {
           ...state,
           emailAddressStatus: {
@@ -498,7 +499,7 @@ class VoterStore extends ReduceStore {
         // if (action.res.status === 'SIMPLE_ADDRESS_SAVE') {
         //   // Don't do any other refreshing
         // } else {
-        //   BallotActions.voterBallotItemsRetrieve();
+        //   >No application code in stores!<   BallotActions.voterBallotItemsRetrieve();
         // }
         ({ address } = action.res);
         if (!address) {
@@ -545,7 +546,7 @@ class VoterStore extends ReduceStore {
 
       case 'voterEmailAddressSave':
         // console.log('VoterStore, voterEmailAddressSave');
-        // VoterActions.voterRetrieve();
+        // >No application code in stores!<   VoterActions.voterRetrieve();
         return {
           ...state,
           emailAddressList: action.res.email_address_list,
@@ -566,7 +567,7 @@ class VoterStore extends ReduceStore {
 
       case 'voterEmailAddressSignIn':
         // console.log('VoterStore, voterEmailAddressSignIn');
-        // VoterActions.voterRetrieve();
+        // >No application code in stores!<   VoterActions.voterRetrieve();
         return {
           ...state,
           emailSignInStatus: {
@@ -582,7 +583,7 @@ class VoterStore extends ReduceStore {
 
       case 'voterEmailAddressVerify':
         // console.log('VoterStore, voterEmailAddressVerify');
-        // VoterActions.voterRetrieve();
+        // >No application code in stores!<   VoterActions.voterRetrieve();
         return {
           ...state,
           emailAddressStatus: {
@@ -601,7 +602,7 @@ class VoterStore extends ReduceStore {
 
       case 'voterFacebookSaveToCurrentAccount':
         // console.log('VoterStore, voterFacebookSaveToCurrentAccount');
-        // VoterActions.voterRetrieve();
+        // >No application code in stores!<   VoterActions.voterRetrieve();
         return {
           ...state,
           facebookSignInStatus: {
@@ -613,20 +614,20 @@ class VoterStore extends ReduceStore {
         //   // console.log('VoterStore, voterMergeTwoAccounts');
         //   // On the server we just switched linked this voterDeviceId to a new voter record, so we want to
         //   //  refresh a lot of data
-        //   // VoterActions.voterRetrieve();
+        //   // >No application code in stores!<   VoterActions.voterRetrieve();
         //   // // And set a timer for 3 seconds from now to refresh again
         //   // this.timer = setTimeout(() => {
-        //   //   VoterActions.voterRetrieve();
+        //   //   >No application code in stores!<   VoterActions.voterRetrieve();
         //   // }, delayBeforeApiCall);
-        //   // VoterActions.voterEmailAddressRetrieve();
-        //   // VoterActions.voterSMSPhoneNumberRetrieve();
+        //   // >No application code in stores!<   VoterActions.voterEmailAddressRetrieve();
+        //   // >No application code in stores!<   VoterActions.voterSMSPhoneNumberRetrieve();
         //   if (!signInModalGlobalState.get('textOrEmailSignInInProcess')) {
         //     // Cascading actions like this causes serious problems when you have a dialog with components that change stores.
-        //     FriendActions.currentFriends();
-        //     FriendActions.friendInvitationsSentByMe();
-        //     FriendActions.friendInvitationsSentToMe();
-        //     FriendActions.friendInvitationsProcessed();
-        //     BallotActions.voterBallotItemsRetrieve();
+        //     >No application code in stores!<   FriendActions.currentFriends();
+        //     >No application code in stores!<   FriendActions.friendInvitationsSentByMe();
+        //     >No application code in stores!<   FriendActions.friendInvitationsSentToMe();
+        //     >No application code in stores!<   FriendActions.friendInvitationsProcessed();
+        //     >No application code in stores!<   BallotActions.voterBallotItemsRetrieve();
         //   }
         //   return {
         //     ...state,
@@ -702,7 +703,7 @@ class VoterStore extends ReduceStore {
           // ...and then ask for a new voter. When it returns a voter with a new voter_device_id, we will set new cookie
           // if (!cookies.getItem('voter_device_id')) {
           //   // console.log("voter_device_id gone -- calling voterRetrieve");
-          //   VoterActions.voterRetrieve();
+          //   >No application code in stores!<   VoterActions.voterRetrieve();
           // } else {
           //   // console.log("voter_device_id still exists -- did not call voterRetrieve");
           // }
@@ -714,7 +715,7 @@ class VoterStore extends ReduceStore {
               this.setVoterDeviceIdCookie(voterDeviceId);
             }
 
-            // VoterActions.voterAddressRetrieve(voterDeviceId);
+            // >No application code in stores!<   VoterActions.voterAddressRetrieve(voterDeviceId);
 
             // FriendsInvitationList.jsx is choking on this because calling this
             // results in an infinite loop cycling between voterRetrieve and getFaceProfilePicture which
@@ -725,14 +726,14 @@ class VoterStore extends ReduceStore {
             // console.log("VoterStore, voterRetrieve, action.res: ", action.res);
 
             // if (action.res.signed_in_facebook && (url === null || url === '') && facebookPhotoRetrieveLoopCount < 10) {
-            //   FacebookActions.getFacebookProfilePicture();
+            //   >No application code in stores!<   FacebookActions.getFacebookProfilePicture();
             // }
           } else {
             // console.log("voter_device_id not returned by voterRetrieve");
           }
         }
         // if (incomingVoter.linked_organization_we_vote_id) {
-        //   OrganizationActions.organizationRetrieve(incomingVoter.linked_organization_we_vote_id);
+        //   >No application code in stores!<   OrganizationActions.organizationRetrieve(incomingVoter.linked_organization_we_vote_id);
         // }
         // if (incomingVoter.signed_in_with_apple) {
         //   // Completing the logical OR that can't be conveniently made in the server, since Sign in with Apple is device_id specific
@@ -753,9 +754,9 @@ class VoterStore extends ReduceStore {
 
       case 'voterSignOut':
         // console.log("VoterStore resetting voterStore via voterSignOut");
-        // VoterActions.voterRetrieve();
-        // VoterActions.voterEmailAddressRetrieve();
-        // VoterActions.voterSMSPhoneNumberRetrieve();
+        // >No application code in stores!<   VoterActions.voterRetrieve();
+        // >No application code in stores!<   VoterActions.voterEmailAddressRetrieve();
+        // >No application code in stores!<   VoterActions.voterSMSPhoneNumberRetrieve();
         revisedState = state;
         revisedState = { ...revisedState, ...this.getInitialState() };
         return revisedState;
@@ -769,8 +770,8 @@ class VoterStore extends ReduceStore {
 
       case 'voterSMSPhoneNumberSave':
         // console.log('VoterStore  voterSMSPhoneNumberSave ');
-        // VoterActions.voterRetrieve();
-        // VoterActions.voterSMSPhoneNumberRetrieve();
+        // >No application code in stores!<   VoterActions.voterRetrieve();
+        // >No application code in stores!<   VoterActions.voterSMSPhoneNumberRetrieve();
         return {
           ...state,
           smsPhoneNumberList: action.res.sms_phone_number_list,
@@ -791,12 +792,12 @@ class VoterStore extends ReduceStore {
 
         // case 'voterSplitIntoTwoAccounts':
         //   // console.log('VoterStore  voterSplitIntoTwoAccounts ');
-        //   VoterActions.voterRetrieve();
+        //   >No application code in stores!<   VoterActions.voterRetrieve();
         //   return state;
 
       case 'voterTwitterSaveToCurrentAccount':
         // console.log('VoterStore  voterTwitterSaveToCurrentAccount ');
-        // VoterActions.voterRetrieve();
+        // >No application code in stores!<   VoterActions.voterRetrieve();
         return {
           ...state,
           twitterSignInStatus: {
@@ -817,7 +818,7 @@ class VoterStore extends ReduceStore {
           }
           // if (action.res.voter_updated && this.getLinkedOrganizationWeVoteId()) {
           //   // console.log('voter_updated:', action.res.voter_updated);
-          //   OrganizationActions.organizationRetrieve(this.getLinkedOrganizationWeVoteId());
+          //   >No application code in stores!<   OrganizationActions.organizationRetrieve(this.getLinkedOrganizationWeVoteId());
           // }
           return {
             ...state,
@@ -845,9 +846,9 @@ class VoterStore extends ReduceStore {
         secretCodeVerified = (action.res.secret_code_verified && action.res.secret_code_verified === true);
         voterMustRequestNewCode = (action.res.voter_must_request_new_code && action.res.voter_must_request_new_code === true);
         voterSecretCodeRequestsLocked = (action.res.secret_code_system_locked_for_this_voter_device_id && action.res.secret_code_system_locked_for_this_voter_device_id === true);
-        // VoterActions.voterRetrieve();
-        // VoterActions.voterEmailAddressRetrieve();
-        // VoterActions.voterSMSPhoneNumberRetrieve();
+        // >No application code in stores!<   VoterActions.voterRetrieve();
+        // >No application code in stores!<   VoterActions.voterEmailAddressRetrieve();
+        // >No application code in stores!<   VoterActions.voterSMSPhoneNumberRetrieve();
         return {
           ...state,
           secretCodeVerificationStatus: {
@@ -863,7 +864,7 @@ class VoterStore extends ReduceStore {
         if (action.res.success) {
           // eslint-disable-next-line camelcase
           const { first_name, middle_name, last_name, email, user_code: appleUserCode } = action.res;
-          // VoterActions.voterRetrieve();
+          // >No application code in stores!<   VoterActions.voterRetrieve();
           return {
             ...state,
             voter: {
