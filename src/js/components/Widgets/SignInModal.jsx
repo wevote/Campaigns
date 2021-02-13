@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { Dialog, DialogContent, DialogTitle, IconButton, Typography } from '@material-ui/core';
+import { Dialog, DialogContent, DialogTitle, IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import { withStyles, withTheme } from '@material-ui/core/styles';
 import styled from 'styled-components';

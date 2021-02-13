@@ -59,7 +59,7 @@ export default class SettingsAccount extends Component {
   // See https://reactjs.org/docs/error-boundaries.html
   static getDerivedStateFromError (error) { // eslint-disable-line no-unused-vars
     // Update state so the next render will show the fallback UI, We should have a "Oh snap" page
-    console.log("Error in SettingsAccount: ", error);
+    console.log('Error in SettingsAccount: ', error);
     return { hasError: true };
   }
 
