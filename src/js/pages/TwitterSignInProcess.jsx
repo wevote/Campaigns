@@ -20,7 +20,6 @@ export default class TwitterSignInProcess extends Component {
       mergingTwoAccounts: false,
       redirectInProgress: false,
       twitterAuthResponse: {},
-      yesPleaseMergeAccounts: false,
       jqueryLoading: true,
     };
   }
@@ -63,6 +62,30 @@ export default class TwitterSignInProcess extends Component {
     if (twitterAuthResponse.twitter_sign_in_found && twitterAuthResponse.twitter_sign_in_verified) {
       VoterActions.voterRetrieve();
       // VoterActions.twitterRetrieveIdsIfollow();
+    }
+    // 2/11/21, Moved from render (since it sets state)
+    if (twitterAuthResponse.twitter_sign_in_failed) {
+      oAuthLog('Twitter sign in failed - push to /settings/account');  // TODO: /settings/account does not exist in Campaign
+      this.setState({ redirectInProcess: true });
+      historyPush({
+        pathname: '/settings/account',
+        state: {
+          message: 'Twitter sign in failed. Please try again.',
+          message_type: 'success',
+        },
+      });
+    }
+
+    if (!twitterAuthResponse.twitter_sign_in_found) {
+      this.setState({ redirectInProcess: true });
+      oAuthLog('twitterAuthResponse.twitter_sign_in_found: ', twitterAuthResponse.twitter_sign_in_found);  // TODO: /settings/account does not exist in Campaign
+      historyPush({
+        pathname: '/settings/account',
+        state: {
+          message: 'Twitter authentication not found. Please try again.',
+          message_type: 'warning',
+        },
+      });
     }
   }
 
@@ -153,22 +176,6 @@ export default class TwitterSignInProcess extends Component {
   voterTwitterSaveToCurrentAccount () {
     // console.log('voterTwitterSaveToCurrentAccount');
     VoterActions.voterTwitterSaveToCurrentAccount();
-    // const signInStartFullUrl = cookies.getItem('sign_in_start_full_url');
-    // if (signInStartFullUrl) {
-    //   AppActions.unsetStoreSignInStartFullUrl();
-    //   cookies.removeItem('sign_in_start_full_url', '/');
-    //   cookies.removeItem('sign_in_start_full_url', '/', 'wevote.us');
-    //   window.location.assign(signInStartFullUrl);
-    // } else {
-    //   const redirectPathname = '/ballot';
-    //   historyPush({
-    //     pathname: redirectPathname,
-    //     state: {
-    //       message: 'You have successfully signed in with Twitter.',
-    //       message_type: 'success',
-    //     },
-    //   });
-    // }
     if (VoterStore.getVoterPhotoUrlMedium().length === 0) {
       // This only fires once, for brand new users on their very first login
       VoterActions.voterRetrieve();
@@ -181,7 +188,7 @@ export default class TwitterSignInProcess extends Component {
 
   render () {
     renderLog('TwitterSignInProcess');  // Set LOG_RENDER_EVENTS to log all renders
-    const { jqueryLoading, hostname, mergingTwoAccounts, redirectInProgress, twitterAuthResponse, yesPleaseMergeAccounts } = this.state;
+    const { jqueryLoading, hostname, mergingTwoAccounts, redirectInProgress, twitterAuthResponse } = this.state;
     console.log('TwitterSignInProcess render, redirectInProgress:', redirectInProgress);
     if (jqueryLoading) {
       return (
@@ -215,41 +222,6 @@ export default class TwitterSignInProcess extends Component {
     }
     oAuthLog('=== Passed initial gate === with twitterAuthResponse: ', twitterAuthResponse);
     const { twitter_secret_key: twitterSecretKey } = twitterAuthResponse;
-
-    if (twitterAuthResponse.twitter_sign_in_failed) {
-      oAuthLog('Twitter sign in failed - push to /settings/account');
-      this.setState({ redirectInProcess: true });   // TODO: Setting state in a render is illegal.  Fix this
-      historyPush({
-        pathname: '/settings/account',
-        state: {
-          message: 'Twitter sign in failed. Please try again.',
-          message_type: 'success',
-        },
-      });
-      return LoadingWheel;
-    }
-
-    if (yesPleaseMergeAccounts) {
-      // Go ahead and merge this voter record with the voter record that the twitterSecretKey belongs to
-      oAuthLog('this.voterMergeTwoAccountsByTwitterKey -- yes please merge accounts');
-      this.voterMergeTwoAccountsByTwitterKey(twitterSecretKey);  // TODO: Setting state in a render is illegal.  Fix this.
-      return LoadingWheel;
-    }
-
-    // This process starts when we return from attempting voterTwitterSignInRetrieve
-    // If twitter_sign_in_found NOT True, go back to the sign in page to try again
-    if (!twitterAuthResponse.twitter_sign_in_found) {
-      this.setState({ redirectInProcess: true }); // TODO: Setting state in a render is illegal.  Fix this.
-      oAuthLog('twitterAuthResponse.twitter_sign_in_found', twitterAuthResponse.twitter_sign_in_found);
-      historyPush({
-        pathname: '/settings/account',
-        state: {
-          message: 'Twitter authentication not found. Please try again.',
-          message_type: 'warning',
-        },
-      });
-      return LoadingWheel;
-    }
 
     // Is there a collision of two accounts?
     if (twitterAuthResponse.existing_twitter_account_found) {

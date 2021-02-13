@@ -57,6 +57,12 @@ class VoterPhoneVerificationEntry extends Component {
   }
 
   componentWillUnmount () {
+    // console.log('VoterPhoneVerificationEntry componentWillUnmount voter:', VoterStore.getVoter());
+    const { is_signed_in: isSignedIn, needsVoterRetrieve } = VoterStore.getVoter();
+    if (!isSignedIn && needsVoterRetrieve) {
+      // Refresh voter after sign-in by SMS or Email
+      VoterActions.voterRetrieve();
+    }
     this.voterStoreListener.remove();
   }
 
@@ -71,7 +77,8 @@ class VoterPhoneVerificationEntry extends Component {
       // is_signed_in: isSignedIn,
       signed_in_with_sms_phone_number: signedInWithSmsPhoneNumber,
     } = voter;
-    // console.log(`VoterEmailAddressEntry onVoterStoreChange isSignedIn: ${isSignedIn}, signedInWithSmsPhoneNumber: ${signedInWithSmsPhoneNumber}`);
+    // console.log('VoterPhoneVerificationEntry onVoterStoreChange voter:', voter);
+    // console.log(`VoterPhoneVerificationEntry onVoterStoreChange secretCodeVerified: ${secretCodeVerified}, signedInWithSmsPhoneNumber: ${signedInWithSmsPhoneNumber}`);
     if (secretCodeVerified) {
       this.setState({
         displayPhoneVerificationButton: false,
@@ -96,7 +103,7 @@ class VoterPhoneVerificationEntry extends Component {
         signInCodeSMSSentAndWaitingForResponse: false,
       });
     } else if (signedInWithSmsPhoneNumber) {
-      // console.log('VoterEmailAddressEntry onVoterStoreChange signedInWithSmsPhoneNumber so doing a fallback close ===================');
+      // console.log('VoterPhoneVerificationEntry onVoterStoreChange signedInWithSmsPhoneNumber so doing a fallback close ===================');
       this.closeSignInModal();
       this.setState({
         smsPhoneNumberStatus,
@@ -166,7 +173,7 @@ class VoterPhoneVerificationEntry extends Component {
   };
 
   closeVerifyModal = () => {
-    // console.log('VoterPhoneVerificationEntry closeVerifyModal');
+    // console.log('VoterPhoneVerificationEntry closeVerifyModal voter: ', VoterStore.getVoter());
     VoterActions.clearSMSPhoneNumberStatus();
     VoterActions.clearSecretCodeVerificationStatus();
     this.setState({
@@ -328,7 +335,7 @@ class VoterPhoneVerificationEntry extends Component {
       secretCodeSystemLocked, showError, showVerifyModal, signInCodeSMSSentAndWaitingForResponse,
       smsPhoneNumberStatus, smsPhoneNumberList, smsPhoneNumberListCount, voterSMSPhoneNumber,
     } = this.state;
-    // console.log('VoterPhoneVerificationEntry render');
+    // console.log('VoterPhoneVerificationEntry render voter:', VoterStore.getVoter());
 
     const signInLinkOrCodeSent = (smsPhoneNumberStatus.link_to_sign_in_sms_sent || smsPhoneNumberStatus.sign_in_code_sms_sent);
     const smsPhoneNumberStatusHtml = (

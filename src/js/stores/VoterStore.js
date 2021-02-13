@@ -10,6 +10,7 @@ class VoterStore extends ReduceStore {
       voter: {
         interface_status_flags: 0,
         state_code_from_ip_address: '',
+        needsVoterRetrieve: false,
       },
       address: {},
       emailAddressStatus: {},
@@ -688,6 +689,8 @@ class VoterStore extends ReduceStore {
 
         // Preserve address within voter
         incomingVoter = action.res;
+        incomingVoter.needsVoterRetrieve = false;
+
         ({ facebookPhotoRetrieveLoopCount } = state);
 
         currentVoterDeviceId = cookies.getItem('voter_device_id');
@@ -857,6 +860,10 @@ class VoterStore extends ReduceStore {
             secretCodeVerified,
             voterMustRequestNewCode,
             voterSecretCodeRequestsLocked,
+          },
+          voter: {
+            ...state.voter,
+            needsVoterRetrieve: secretCodeVerified,
           },
         };
 

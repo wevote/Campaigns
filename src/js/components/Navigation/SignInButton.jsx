@@ -8,6 +8,8 @@ import VoterStore from '../../stores/VoterStore';
 import { renderLog } from '../../utils/logging';
 import { shortenText } from '../../utils/textFormat';
 import SignInModal from '../Widgets/SignInModal';
+import anonymous from '../../../img/global/icons/avatar-generic.png';
+import LazyImage from '../../utils/LazyImage';
 
 
 class SignInButton extends Component {
@@ -35,6 +37,7 @@ class SignInButton extends Component {
 
   onVoterStoreChange () {
     // console.log('SignInButton onVoterStoreChange');
+    // console.log('onVoterStoreChange voter:', VoterStore.getVoter());
     // eslint-disable-next-line react/no-unused-state
     this.setState({ voterLoaded: true });
   }
@@ -47,7 +50,7 @@ class SignInButton extends Component {
 
   closeSignInModal = () => {
     // AppActions.setShowSignInModal(false);
-    // console.log('closeSignInModal');
+    // console.log('closeSignInModal voter:', VoterStore.getVoter());
     this.setState({ showSignInModal: false });
   };
 
@@ -69,6 +72,7 @@ class SignInButton extends Component {
       const { is_signed_in: signedIn, voter_photo_url_medium: photoURL  } = voter;
       voterIsSignedIn  = signedIn;
       voterPhotoUrlMedium = photoURL;
+      // console.log('SignInButton at render, voter:', voter);
     }
     // const end = window.performance.now();
     // console.log(`Execution time: ${end - this.start} ms, ${voterPhotoUrlMedium}`);
@@ -85,9 +89,10 @@ class SignInButton extends Component {
                   id="profileAvatarHeaderBar"
                   onClick={this.toggleSignInModal}
                 >
-                  <img
-                    className="header-nav__avatar"
+                  <LazyImage
                     src={voterPhotoUrlMedium}
+                    placeholder={anonymous}
+                    className="header-nav__avatar"
                     height={34}
                     width={34}
                     alt="Your Settings"

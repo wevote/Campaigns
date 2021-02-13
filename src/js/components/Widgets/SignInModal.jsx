@@ -322,6 +322,4 @@ const SignInText = styled.span`
   text-align: center;
 `;
 
-
-
 export default withTheme(withStyles(styles)(SignInModal));
