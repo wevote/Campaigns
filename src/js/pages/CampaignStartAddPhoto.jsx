@@ -27,16 +27,18 @@ class CampaignStartAddPhoto extends Component {
       window.jQuery = jquery;
       window.$ = jquery;
       CampaignStartActions.campaignRetrieveAsOwner('');
-      CampaignStartActions.campaignTitleQueuedToSave('');
     }).catch((error) => console.error('An error occurred while loading jQuery', error));
   }
 
   submitCampaignTitle = () => {
     const campaignTitleQueuedToSave = CampaignStartStore.getCampaignTitleQueuedToSave();
-    // console.log('CampaignStartAddPhoto, campaignTitleQueuedToSave:', campaignTitleQueuedToSave);
-    const campaignWeVoteId = '';
-    CampaignStartActions.campaignTitleSave(campaignWeVoteId, campaignTitleQueuedToSave);
-    CampaignStartActions.campaignTitleQueuedToSave('');
+    const campaignTitleQueuedToSaveSet = CampaignStartStore.getCampaignTitleQueuedToSaveSet();
+    if (campaignTitleQueuedToSaveSet) {
+      // console.log('CampaignStartAddPhoto, campaignTitleQueuedToSave:', campaignTitleQueuedToSave);
+      const campaignWeVoteId = '';
+      CampaignStartActions.campaignTitleSave(campaignWeVoteId, campaignTitleQueuedToSave);
+      CampaignStartActions.campaignTitleQueuedToSave('');
+    }
     historyPush('/c/sam-davis-for-oakland-school-board');
   }
 

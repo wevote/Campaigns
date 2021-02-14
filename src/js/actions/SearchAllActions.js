@@ -6,7 +6,7 @@ export default {
   },
 
   // search_scope_list
-  // P = POLITICIAN
+  // PN = POLITICIAN_NAME
   searchAll (textFromSearchField, searchScopeList = []) {
     Dispatcher.loadEndpoint('searchAll',
       {

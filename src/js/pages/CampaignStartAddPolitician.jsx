@@ -4,7 +4,7 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import AddCandidateInputField from '../components/CampaignStart/AddCandidateInputField';
+import AddCandidateInputField from '../components/CampaignStart/AddPoliticianInputField';
 import CampaignStartActions from '../actions/CampaignStartActions';
 import CampaignStartSteps from '../components/Navigation/CampaignStartSteps';
 import CampaignStartStore from '../stores/CampaignStartStore';
@@ -14,7 +14,7 @@ import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
 
 
-class CampaignStartAddCandidate extends Component {
+class CampaignStartAddPolitician extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -22,34 +22,40 @@ class CampaignStartAddCandidate extends Component {
   }
 
   componentDidMount () {
-    // console.log('CampaignStartAddCandidate, componentDidMount');
+    // console.log('CampaignStartAddPolitician, componentDidMount');
     import('jquery').then(({ default: jquery }) => {
       window.jQuery = jquery;
       window.$ = jquery;
       CampaignStartActions.campaignRetrieveAsOwner('');
-      CampaignStartActions.campaignTitleQueuedToSave('');
     }).catch((error) => console.error('An error occurred while loading jQuery', error));
   }
 
-  submitCampaignTitle = () => {
-    const campaignTitleQueuedToSave = CampaignStartStore.getCampaignTitleQueuedToSave();
-    // console.log('CampaignStartAddCandidate, campaignTitleQueuedToSave:', campaignTitleQueuedToSave);
-    const campaignWeVoteId = '';
-    CampaignStartActions.campaignTitleSave(campaignWeVoteId, campaignTitleQueuedToSave);
-    CampaignStartActions.campaignTitleQueuedToSave('');
+  submitPoliticianList = () => {
+    const campaignPoliticianListQueuedToSave = CampaignStartStore.getCampaignPoliticianListQueuedToSave();
+    const campaignPoliticianListQueuedToSaveSet = CampaignStartStore.getCampaignPoliticianListQueuedToSaveSet();
+    // Has a change been made that needs to be saved?
+    // console.log('CampaignStartAddPolitician, campaignPoliticianListQueuedToSaveSet:', campaignPoliticianListQueuedToSaveSet);
+    if (campaignPoliticianListQueuedToSaveSet) {
+      // console.log('CampaignStartAddPolitician, campaignPoliticianListQueuedToSave:', campaignPoliticianListQueuedToSave);
+      const campaignWeVoteId = '';
+      const campaignPoliticianListQueuedToSaveJson = JSON.stringify(campaignPoliticianListQueuedToSave);
+      // console.log('CampaignStartAddPolitician, campaignPoliticianListQueuedToSaveJson:', campaignPoliticianListQueuedToSaveJson);
+      CampaignStartActions.campaignPoliticianListSave(campaignWeVoteId, campaignPoliticianListQueuedToSaveJson);
+      CampaignStartActions.campaignPoliticianListQueuedToSave('');
+    }
     historyPush('/start-a-campaign-why-winning-matters');
   }
 
   render () {
-    renderLog('CampaignStartAddCandidate');  // Set LOG_RENDER_EVENTS to log all renders
+    renderLog('CampaignStartAddPolitician');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
-      console.log(`CampaignStartAddCandidate window.location.href: ${window.location.href}`);
+      console.log(`CampaignStartAddPolitician window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
     const mobileButtonClasses = classes.buttonDefault; // isWebApp() ? classes.buttonDefault : classes.buttonDefaultCordova;
     return (
       <div>
-        <Helmet title="Start a Campaign - We Vote Campaigns" />
+        <Helmet title="Add Candidate - We Vote Campaigns" />
         <MainHeaderBar />
         <PageWrapper cordova={isCordova()}>
           <OuterWrapper>
@@ -69,8 +75,8 @@ class CampaignStartAddCandidate extends Component {
                       <Button
                         classes={{ root: classes.buttonDesktop }}
                         color="primary"
-                        id="saveCampaignTitle"
-                        onClick={this.submitCampaignTitle}
+                        id="saveCampaignPoliticianList"
+                        onClick={this.submitPoliticianList}
                         variant="contained"
                       >
                         Continue
@@ -115,8 +121,8 @@ class CampaignStartAddCandidate extends Component {
             <Button
               classes={{ root: mobileButtonClasses }}
               color="primary"
-              id="saveCampaignTitleFooter"
-              onClick={this.submitCampaignTitle}
+              id="saveCampaignPoliticianListFooter"
+              onClick={this.submitPoliticianList}
               variant="contained"
             >
               Continue
@@ -128,7 +134,7 @@ class CampaignStartAddCandidate extends Component {
     );
   }
 }
-CampaignStartAddCandidate.propTypes = {
+CampaignStartAddPolitician.propTypes = {
   classes: PropTypes.object,
 };
 
@@ -263,4 +269,4 @@ const PageWrapper = styled.div`
   }
 `;
 
-export default withStyles(styles)(CampaignStartAddCandidate);
+export default withStyles(styles)(CampaignStartAddPolitician);

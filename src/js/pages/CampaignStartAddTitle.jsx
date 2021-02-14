@@ -27,16 +27,18 @@ class CampaignStartAddTitle extends Component {
       window.jQuery = jquery;
       window.$ = jquery;
       CampaignStartActions.campaignRetrieveAsOwner('');
-      CampaignStartActions.campaignTitleQueuedToSave('');
     }).catch((error) => console.error('An error occurred while loading jQuery', error));
   }
 
   submitCampaignTitle = () => {
     const campaignTitleQueuedToSave = CampaignStartStore.getCampaignTitleQueuedToSave();
-    // console.log('CampaignStartAddTitle, campaignTitleQueuedToSave:', campaignTitleQueuedToSave);
-    const campaignWeVoteId = '';
-    CampaignStartActions.campaignTitleSave(campaignWeVoteId, campaignTitleQueuedToSave);
-    CampaignStartActions.campaignTitleQueuedToSave('');
+    const campaignTitleQueuedToSaveSet = CampaignStartStore.getCampaignTitleQueuedToSaveSet();
+    if (campaignTitleQueuedToSaveSet) {
+      // console.log('CampaignStartAddTitle, campaignTitleQueuedToSave:', campaignTitleQueuedToSave);
+      const campaignWeVoteId = '';
+      CampaignStartActions.campaignTitleSave(campaignWeVoteId, campaignTitleQueuedToSave);
+      CampaignStartActions.campaignTitleQueuedToSave('');
+    }
     historyPush('/who-do-you-want-to-see-elected');
   }
 

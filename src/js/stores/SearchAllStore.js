@@ -26,8 +26,6 @@ class SearchAllStore extends ReduceStore {
   }
 
   reduce (state, action) { // eslint-disable-line
-    const searchResults = [];
-
     switch (action.type) {
       case 'clearSearchResults':
         // console.log('SearchAllStore clearSearchResults');
@@ -40,7 +38,7 @@ class SearchAllStore extends ReduceStore {
 
         return {
           textFromSearchField: action.res.text_from_search_field,
-          searchResults,
+          searchResults: action.res.search_results,
         };
 
       case 'error-searchAll':

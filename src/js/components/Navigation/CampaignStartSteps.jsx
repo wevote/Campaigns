@@ -23,7 +23,7 @@ class CampaignStartSteps extends Component {
     // console.log('CampaignStartSteps, componentDidMount');
     this.campaignStartStoreListener = CampaignStartStore.addListener(this.onCampaignStartStoreChange.bind(this));
     const step1Completed = CampaignStartStore.campaignTitleExists();
-    const step2Completed = CampaignStartStore.campaignCandidateListExists();
+    const step2Completed = CampaignStartStore.campaignPoliticianListExists();
     const step3Completed = CampaignStartStore.campaignDescriptionExists();
     const step4Completed = CampaignStartStore.campaignPhotoExists();
     this.setState({
@@ -40,7 +40,7 @@ class CampaignStartSteps extends Component {
 
   onCampaignStartStoreChange () {
     const step1Completed = CampaignStartStore.campaignTitleExists();
-    const step2Completed = CampaignStartStore.campaignCandidateListExists();
+    const step2Completed = CampaignStartStore.campaignPoliticianListExists();
     const step3Completed = CampaignStartStore.campaignDescriptionExists();
     const step4Completed = CampaignStartStore.campaignPhotoExists();
     // console.log('onCampaignStartStoreChange step1Completed: ', step1Completed, ', step2Completed: ', step2Completed, ', step3Completed:', step3Completed);

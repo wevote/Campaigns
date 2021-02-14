@@ -13,7 +13,7 @@ const About = React.lazy(() => import('./js/pages/About'));
 const Attributions = React.lazy(() => import('./js/pages/Attributions'));
 const CampaignDetailsPage = React.lazy(() => import('./js/pages/CampaignDetailsPage'));
 const CampaignStartIntro = React.lazy(() => import('./js/pages/CampaignStartIntro'));
-const CampaignStartAddCandidate = React.lazy(() => import('./js/pages/CampaignStartAddCandidate'));
+const CampaignStartAddPolitician = React.lazy(() => import('./js/pages/CampaignStartAddPolitician'));
 const CampaignStartAddDescription = React.lazy(() => import('./js/pages/CampaignStartAddDescription'));
 const CampaignStartAddPhoto = React.lazy(() => import('./js/pages/CampaignStartAddPhoto'));
 const CampaignStartAddTitle = React.lazy(() => import('./js/pages/CampaignStartAddTitle'));
@@ -72,7 +72,7 @@ class App extends Component {
                   <Route exact path="/membership"><Membership /></Route>
                   <Route exact path="/privacy"><Privacy /></Route>
                   <Route exact path="/start-a-campaign"><CampaignStartIntro /></Route>
-                  <Route exact path="/who-do-you-want-to-see-elected"><CampaignStartAddCandidate /></Route>
+                  <Route exact path="/who-do-you-want-to-see-elected"><CampaignStartAddPolitician /></Route>
                   <Route exact path="/start-a-campaign-why-winning-matters"><CampaignStartAddDescription /></Route>
                   <Route exact path="/start-a-campaign-add-photo"><CampaignStartAddPhoto /></Route>
                   <Route exact path="/start-a-campaign-add-title"><CampaignStartAddTitle /></Route>

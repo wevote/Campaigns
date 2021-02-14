@@ -4,12 +4,14 @@ import Dispatcher from '../components/Dispatcher/Dispatcher';
 class CampaignStartStore extends ReduceStore {
   getInitialState () {
     return {
-      campaignCandidateList: [],
-      campaignCandidateListQueuedToSave: [],
+      campaignPoliticianList: [],
+      campaignPoliticianListQueuedToSave: [],
+      campaignPoliticianListQueuedToSaveSet: false,
       campaignDescription: '',
       campaignPhoto: '',
       campaignTitle: '',
       campaignTitleQueuedToSave: '',
+      campaignTitleQueuedToSaveSet: false,
       campaignXOwnerList: [],
       campaignXWeVoteId: '',
     };
@@ -19,9 +21,9 @@ class CampaignStartStore extends ReduceStore {
     return this.getInitialState();
   }
 
-  campaignCandidateListExists () {
-    if (this.getState().campaignCandidateList) {
-      return Boolean(this.getState().campaignCandidateList.length > 0);
+  campaignPoliticianListExists () {
+    if (this.getState().campaignPoliticianList) {
+      return Boolean(this.getState().campaignPoliticianList.length > 0);
     } else {
       return false;
     }
@@ -51,12 +53,16 @@ class CampaignStartStore extends ReduceStore {
     }
   }
 
-  getCampaignCandidateList () {
-    return this.getState().campaignCandidateList || [];
+  getCampaignPoliticianList () {
+    return this.getState().campaignPoliticianList || [];
   }
 
-  getCampaignCandidateListQueuedToSave () {
-    return this.getState().campaignCandidateListQueuedToSave || [];
+  getCampaignPoliticianListQueuedToSave () {
+    return this.getState().campaignPoliticianListQueuedToSave || [];
+  }
+
+  getCampaignPoliticianListQueuedToSaveSet () {
+    return this.getState().campaignPoliticianListQueuedToSaveSet || false;
   }
 
   getCampaignTitle () {
@@ -67,17 +73,25 @@ class CampaignStartStore extends ReduceStore {
     return this.getState().campaignTitleQueuedToSave;
   }
 
+  getCampaignTitleQueuedToSaveSet () {
+    return this.getState().campaignTitleQueuedToSaveSet;
+  }
+
   reduce (state, action) {
     switch (action.type) {
-      case 'campaignCandidateListQueuedToSave':
-        // console.log('CampaignStartStore campaignCandidateListQueuedToSave: ', action.payload);
-        return { ...state, campaignCandidateListQueuedToSave: action.payload };
+      case 'campaignPoliticianListQueuedToSave':
+        // console.log('CampaignStartStore campaignPoliticianListQueuedToSave: ', action.payload);
+        return {
+          ...state,
+          campaignPoliticianListQueuedToSave: action.payload,
+          campaignPoliticianListQueuedToSaveSet: true,
+        };
 
       case 'campaignRetrieveAsOwner':
         // console.log('CampaignStartStore campaignRetrieveAsOwner');
         return {
           ...state,
-          campaignCandidateList: action.res.campaign_candidate_list,
+          campaignPoliticianList: action.res.campaignx_politician_list,
           campaignTitle: action.res.campaign_title,
           campaignXOwnerList: action.res.campaignx_owner_list,
           campaignXWeVoteId: action.res.campaignx_we_vote_id,
@@ -87,7 +101,7 @@ class CampaignStartStore extends ReduceStore {
         // console.log('CampaignStartStore campaignStartSave');
         return {
           ...state,
-          campaignCandidateList: action.res.campaign_candidate_list,
+          campaignPoliticianList: action.res.campaignx_politician_list,
           campaignTitle: action.res.campaign_title,
           campaignXOwnerList: action.res.campaignx_owner_list,
           campaignXWeVoteId: action.res.campaignx_we_vote_id,
@@ -95,7 +109,11 @@ class CampaignStartStore extends ReduceStore {
 
       case 'campaignTitleQueuedToSave':
         // console.log('CampaignStartStore campaignTitleQueuedToSave: ', action.payload);
-        return { ...state, campaignTitleQueuedToSave: action.payload };
+        return {
+          ...state,
+          campaignTitleQueuedToSave: action.payload,
+          campaignTitleQueuedToSaveSet: true,
+        };
 
       default:
         return state;
