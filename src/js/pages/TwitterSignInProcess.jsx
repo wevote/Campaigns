@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
+import { CircularProgress } from '@material-ui/core';
 import AppActions from '../actions/AppActions';
-import AppStore from '../stores/AppStore';
-import cookies from '../utils/cookies';
-import cordovaScrollablePaneTopPadding from '../utils/cordovaScrollablePaneTopPadding';
-import { historyPush, isWebApp } from '../utils/cordovaUtils';
-import LoadingWheel from '../components/LoadingWheel';
-import { oAuthLog, renderLog } from '../utils/logging';
-import { stringContains } from '../utils/textFormat';
 import TwitterActions from '../actions/TwitterActions';
+import VoterActions from '../actions/VoterActions';
+import SpinnerPage from '../components/Widgets/SpinnerPage';
+import AppStore from '../stores/AppStore';
 import TwitterStore from '../stores/TwitterStore';
 import VoterStore from '../stores/VoterStore';
-import VoterActions from '../actions/VoterActions';
+import cookies from '../utils/cookies';
+import { historyPush, isWebApp } from '../utils/cordovaUtils';
+import { oAuthLog, renderLog } from '../utils/logging';
+import { stringContains } from '../utils/textFormat';
+
 
 export default class TwitterSignInProcess extends Component {
   constructor (props) {
@@ -208,16 +209,7 @@ export default class TwitterSignInProcess extends Component {
       !twitterAuthResponse.twitter_retrieve_attempted) {
       oAuthLog('STOPPED, missing twitter_retrieve_attempted: twitterAuthResponse:', twitterAuthResponse);
       return (
-        <div className="twitter_sign_in_root">
-          <div className="page-content-container" style={{ paddingTop: `${cordovaScrollablePaneTopPadding()}` }}>
-            <div style={{ textAlign: 'center' }}>
-              Waiting for response from Twitter...
-            </div>
-            <div className="u-loading-spinner__wrapper">
-              <div className="u-loading-spinner">Please wait...</div>
-            </div>
-          </div>
-        </div>
+        <SpinnerPage topWords="Waiting for a response from Twitter..." bottomWords="Please wait..." />
       );
     }
     oAuthLog('=== Passed initial gate === with twitterAuthResponse: ', twitterAuthResponse);
@@ -233,21 +225,12 @@ export default class TwitterSignInProcess extends Component {
         oAuthLog('twitterAuthResponse NOT CALLING voterMergeTwoAccountsByTwitterKey');
       }
       return (
-        <div className="twitter_sign_in_root">
-          <div className="page-content-container" style={{ paddingTop: `${cordovaScrollablePaneTopPadding()}` }}>
-            <div style={{ textAlign: 'center' }}>
-              Loading your account...
-            </div>
-            <div className="u-loading-spinner__wrapper">
-              <div className="u-loading-spinner">Please wait...</div>
-            </div>
-          </div>
-        </div>
+        <SpinnerPage topWords="Loading your account..." bottomWords="Please wait..." />
       );
     } else {
       oAuthLog('Setting up new Twitter entry - voterTwitterSaveToCurrentAccount');
       this.voterTwitterSaveToCurrentAccount();
-      return LoadingWheel;
+      return <CircularProgress />;
     }
   }
 }

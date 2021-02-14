@@ -15,7 +15,6 @@ const useStyles = makeStyles((theme) => ({
   appBarRoot: {
     boxShadow: 'none',
     paddingBottom: '0',
-    paddingTop: '4px',
   },
   innerWrapper: {
     margin: '0 auto',
@@ -35,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
   outerWrapper: {
     borderBottom: '1px solid #ddd',
     flexGrow: 1,
+    minHeight: 52,
   },
   title: {
     flexGrow: 1,
@@ -98,7 +98,7 @@ export default function MainHeaderBar () {
             <Suspense fallback={<span>ZzZzZzZ</span>}>
               <SignInButton classes={classes} />
             </Suspense>
-            <div>
+            <div style={{ padding: '8px 0 0 0' }}>
               <IconButton
                 edge="start"
                 className={classes.menuButton}

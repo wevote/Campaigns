@@ -81,39 +81,35 @@ class SignInButton extends Component {
     return (
       <div>
         {voterIsSignedIn ? (
-          <span>
+          <>
             {voterPhotoUrlMedium ? (
-              <span>
-                <IconButton
-                  classes={{ root: classes.iconButtonRoot }}
-                  id="profileAvatarHeaderBar"
-                  onClick={this.toggleSignInModal}
-                >
-                  <LazyImage
-                    src={voterPhotoUrlMedium}
-                    placeholder={anonymous}
-                    className="header-nav__avatar"
-                    height={34}
-                    width={34}
-                    alt="Your Settings"
-                  />
-                </IconButton>
-              </span>
+              <IconButton
+                classes={{ root: classes.iconButtonRoot }}
+                id="profileAvatarHeaderBar"
+                onClick={this.toggleSignInModal}
+              >
+                <LazyImage
+                  src={voterPhotoUrlMedium}
+                  placeholder={anonymous}
+                  className="header-nav__avatar"
+                  height={34}
+                  width={34}
+                  alt="Your Settings"
+                />
+              </IconButton>
             ) : (
-              <span>
-                <IconButton
-                  classes={{ root: classes.iconButtonRoot }}
-                  id="profileAvatarHeaderBar"
-                  onClick={this.toggleSignInModal}
-                >
-                  <FirstNameWrapper>
-                    {shortenText(voterFirstName, 9)}
-                  </FirstNameWrapper>
-                  <AccountCircle />
-                </IconButton>
-              </span>
+              <IconButton
+                classes={{ root: classes.iconButtonRoot }}
+                id="profileAvatarHeaderBar"
+                onClick={this.toggleSignInModal}
+              >
+                <FirstNameWrapper>
+                  {shortenText(voterFirstName, 9)}
+                </FirstNameWrapper>
+                <AccountCircle />
+              </IconButton>
             )}
-          </span>
+          </>
         ) : (
           <Button
             className="header-sign-in"
@@ -147,7 +143,7 @@ const FirstNameWrapper = styled.div`
 
 const SignInText = styled.div`
   font-size: 14px;
-  padding-right: 4px;
+  padding: 8px 8px 0;
   color: blue;
   text-transform: none;
 `;
