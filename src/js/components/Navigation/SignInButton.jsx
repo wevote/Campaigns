@@ -87,6 +87,7 @@ class SignInButton extends Component {
                 classes={{ root: classes.iconButtonRoot }}
                 id="profileAvatarHeaderBar"
                 onClick={this.toggleSignInModal}
+                style={{ padding: 8 }}
               >
                 <LazyImage
                   src={voterPhotoUrlMedium}
