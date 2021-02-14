@@ -67,6 +67,7 @@ class CampaignTitleInputField extends Component {
             <ColumnFullWidth>
               <FormControl classes={{ root: classes.formControl }}>
                 <TextField
+                  // classes={{ root: classes.textField }} // Not working yet
                   id={`campaignTitleTextArea-${externalUniqueId}`}
                   name="campaignTitle"
                   margin="dense"
