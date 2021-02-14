@@ -56,6 +56,6 @@ Set `const isProduction = false;` in webpack.config.js to turn on the analyzer.
 - `npm start`
 - `npm run start-https`
 - `npm run start-minified`
-- `npm run build`                 To populate the 
+- `npm run build`                 To populate the '/build' directory
 
 

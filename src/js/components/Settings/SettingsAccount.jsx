@@ -59,6 +59,7 @@ export default class SettingsAccount extends Component {
   // See https://reactjs.org/docs/error-boundaries.html
   static getDerivedStateFromError (error) { // eslint-disable-line no-unused-vars
     // Update state so the next render will show the fallback UI, We should have a "Oh snap" page
+    console.log('Error in SettingsAccount: ', error);
     return { hasError: true };
   }
 
@@ -86,10 +87,6 @@ export default class SettingsAccount extends Component {
       const getStartedMode = AppStore.getStartedMode();
       AnalyticsActions.saveActionAccountPage(VoterStore.electionId());
       const { origin } = window.location;
-
-      // if (window.location.pathname === '/ballot/modal/share') {
-
-      // }
 
       if (this.props.pleaseSignInTitle || this.props.pleaseSignInSubTitle || this.props.pleaseSignInTextOff) {
         this.setState({
@@ -374,10 +371,10 @@ export default class SettingsAccount extends Component {
                 {voterIsSignedIn ?
                   <div className="u-stack--sm">{yourAccountExplanation}</div> : (
                     <>
-                      {/*<div className="u-show-mobile-bigger-than-iphone5">*/}
-                      {/*  <div className="u-f3">{pleaseSignInTitle}</div>*/}
-                      {/*  <SignInSubtitle className="u-stack--sm">{pleaseSignInSubTitle}</SignInSubtitle>*/}
-                      {/*</div>*/}
+                      {/* <div className="u-show-mobile-bigger-than-iphone5"> */}
+                      {/*  <div className="u-f3">{pleaseSignInTitle}</div> /}
+                      {/*  <SignInSubtitle className="u-stack--sm">{pleaseSignInSubTitle}</SignInSubtitle> */}
+                      {/* </div> */}
                       <div className="u-show-desktop-tablet">
                         <div className="u-f3">{pleaseSignInTitle}</div>
                         <SignInSubtitle className="u-stack--sm">{pleaseSignInSubTitle}</SignInSubtitle>

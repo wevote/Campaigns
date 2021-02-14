@@ -168,9 +168,10 @@ class SettingsVerifySecretCode extends Component {
   onVoterStoreChange () {
     const secretCodeVerificationStatus = VoterStore.getSecretCodeVerificationStatus();
     const { incorrectSecretCodeEntered, numberOfTriesRemaining, secretCodeVerified, voterMustRequestNewCode, voterSecretCodeRequestsLocked } = secretCodeVerificationStatus;
-    // console.log('onVoterStoreChange secretCodeVerified: ' + secretCodeVerified);
+    // console.log('onVoterStoreChange secretCodeVerificationStatus:', secretCodeVerificationStatus);
+    // console.log(`onVoterStoreChange secretCodeVerified: ${secretCodeVerified}`);
     if (secretCodeVerified) {
-      // console.log('onVoterStoreChange secretCodeVerified: yes');
+      // console.log('onVoterStoreChange secretCodeVerified: yes,   voter:', VoterStore.getVoter());
       this.closeVerifyModalLocal();
     } else {
       let errorMessageToDisplay = '';
@@ -437,6 +438,7 @@ class SettingsVerifySecretCode extends Component {
 
   closeVerifyModalLocal = () => {
     // console.log('voterVerifySecretCode this.props.closeVerifyModal:', this.props.closeVerifyModal);
+    // console.log('voterVerifySecretCode voter:', VoterStore.getVoter());
     if (this.props.closeVerifyModal) {
       this.props.closeVerifyModal();
     }

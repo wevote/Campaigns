@@ -70,7 +70,12 @@ class VoterEmailAddressEntry extends Component {
   }
 
   componentWillUnmount () {
-    // console.log('VoterEmailAddressEntry componentWillUnmount');
+    // console.log('VoterEmailAddressEntry componentWillUnmount voter:', VoterStore.getVoter());
+    const { is_signed_in: isSignedIn, needsVoterRetrieve } = VoterStore.getVoter();
+    if (!isSignedIn && needsVoterRetrieve) {
+      // Refresh voter after sign-in by SMS or Email
+      VoterActions.voterRetrieve();
+    }
     this.voterStoreListener.remove();
   }
 

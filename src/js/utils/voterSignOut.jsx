@@ -1,3 +1,4 @@
+import VoterActions from '../actions/VoterActions';
 import cookies from './cookies';
 import AppActions from '../actions/AppActions';
 
@@ -17,4 +18,5 @@ export default function voterSignOut () {
   cookies.removeItem('show_full_navigation', '/');
   cookies.removeItem('sign_in_start_full_url', '/');
   cookies.removeItem('sign_in_start_full_url', '/', 'wevote.us');
+  VoterActions.voterRetrieve();   // to get the new voter_device_id before the next api call
 }
