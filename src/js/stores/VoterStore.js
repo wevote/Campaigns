@@ -611,43 +611,26 @@ class VoterStore extends ReduceStore {
           },
         };
 
-        // case 'voterMergeTwoAccounts':
-        //   // console.log('VoterStore, voterMergeTwoAccounts');
-        //   // On the server we just switched linked this voterDeviceId to a new voter record, so we want to
-        //   //  refresh a lot of data
-        //   // >No application code in stores!<   VoterActions.voterRetrieve();
-        //   // // And set a timer for 3 seconds from now to refresh again
-        //   // this.timer = setTimeout(() => {
-        //   //   >No application code in stores!<   VoterActions.voterRetrieve();
-        //   // }, delayBeforeApiCall);
-        //   // >No application code in stores!<   VoterActions.voterEmailAddressRetrieve();
-        //   // >No application code in stores!<   VoterActions.voterSMSPhoneNumberRetrieve();
-        //   if (!signInModalGlobalState.get('textOrEmailSignInInProcess')) {
-        //     // Cascading actions like this causes serious problems when you have a dialog with components that change stores.
-        //     >No application code in stores!<   FriendActions.currentFriends();
-        //     >No application code in stores!<   FriendActions.friendInvitationsSentByMe();
-        //     >No application code in stores!<   FriendActions.friendInvitationsSentToMe();
-        //     >No application code in stores!<   FriendActions.friendInvitationsProcessed();
-        //     >No application code in stores!<   BallotActions.voterBallotItemsRetrieve();
-        //   }
-        //   return {
-        //     ...state,
-        //     emailSignInStatus: {
-        //       email_ownership_is_verified: true,
-        //       email_secret_key_belongs_to_this_voter: true,
-        //       email_sign_in_attempted: true,
-        //       email_address_found: true,
-        //       yes_please_merge_accounts: false,
-        //       voter_we_vote_id_from_secret_key: '',
-        //       voter_merge_two_accounts_attempted: true,
-        //     },
-        //     facebookSignInStatus: {
-        //       voter_merge_two_accounts_attempted: true,
-        //     },
-        //     twitterSignInStatus: {
-        //       voter_merge_two_accounts_attempted: true,
-        //     },
-        //   };
+      case 'voterMergeTwoAccounts':
+        console.log('VoterStore, voterMergeTwoAccounts');
+        return {
+          ...state,
+          emailSignInStatus: {
+            email_ownership_is_verified: true,
+            email_secret_key_belongs_to_this_voter: true,
+            email_sign_in_attempted: true,
+            email_address_found: true,
+            yes_please_merge_accounts: false,
+            voter_we_vote_id_from_secret_key: '',
+            voter_merge_two_accounts_attempted: true,
+          },
+          facebookSignInStatus: {
+            voter_merge_two_accounts_attempted: true,
+          },
+          twitterSignInStatus: {
+            voter_merge_two_accounts_attempted: true,
+          },
+        };
 
       case 'voterNotificationSettingsUpdate':
         // console.log('VoterStore, voterNotificationSettingsUpdate');
@@ -702,14 +685,6 @@ class VoterStore extends ReduceStore {
           cookies.removeItem('voter_device_id');
           cookies.removeItem('voter_device_id', '/');
           cookies.removeItem('voter_device_id', '/', 'wevote.us');
-
-          // ...and then ask for a new voter. When it returns a voter with a new voter_device_id, we will set new cookie
-          // if (!cookies.getItem('voter_device_id')) {
-          //   // console.log("voter_device_id gone -- calling voterRetrieve");
-          //   >No application code in stores!<   VoterActions.voterRetrieve();
-          // } else {
-          //   // console.log("voter_device_id still exists -- did not call voterRetrieve");
-          // }
         } else {
           voterDeviceId = action.res.voter_device_id;
           if (voterDeviceId) {
@@ -717,20 +692,6 @@ class VoterStore extends ReduceStore {
               // console.log("Setting new voter_device_id");
               this.setVoterDeviceIdCookie(voterDeviceId);
             }
-
-            // >No application code in stores!<   VoterActions.voterAddressRetrieve(voterDeviceId);
-
-            // FriendsInvitationList.jsx is choking on this because calling this
-            // results in an infinite loop cycling between voterRetrieve and getFaceProfilePicture which
-            // resolves to FACEBOOK_RECEIVED_PICTURE which then attempts to save using voterFacebookSignInPhoto
-            // which in turn resolves to voterFacebookSignInSave which finally attempts to call
-            // voterRetrieve again
-            // const url = action.res.facebook_profile_image_url_https;
-            // console.log("VoterStore, voterRetrieve, action.res: ", action.res);
-
-            // if (action.res.signed_in_facebook && (url === null || url === '') && facebookPhotoRetrieveLoopCount < 10) {
-            //   >No application code in stores!<   FacebookActions.getFacebookProfilePicture();
-            // }
           } else {
             // console.log("voter_device_id not returned by voterRetrieve");
           }
@@ -748,6 +709,7 @@ class VoterStore extends ReduceStore {
         //   }
         // }
 
+        console.log('voterRetrieve incoming voter_id: ', incomingVoter.we_vote_id);
         return {
           ...state,
           facebookPhotoRetrieveLoopCount: facebookPhotoRetrieveLoopCount + 1,

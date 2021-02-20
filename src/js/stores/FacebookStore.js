@@ -1,10 +1,7 @@
 import { ReduceStore } from 'flux/utils';
 import Dispatcher from '../components/Dispatcher/Dispatcher';
-// import FacebookActions from '../actions/FacebookActions';
 import FacebookConstants from '../constants/FacebookConstants';
-// import FriendActions from '../actions/FriendActions';
 import signInModalGlobalState from '../components/Widgets/signInModalGlobalState';
-// import VoterActions from '../actions/VoterActions';
 
 class FacebookStore extends ReduceStore {
   getInitialState () {
@@ -29,30 +26,16 @@ class FacebookStore extends ReduceStore {
     return this.getState().userId;
   }
 
-  getFacebookAuthResponse () {
-    return {
-      accessToken: this.accessToken,
-      facebookIsLoggedIn: this.loggedIn,
-      userId: this.userId,
-
-      // facebookPictureStatus: this.getState().facebookPictureStatus,
-      // facebookPictureUrl: this.getState().facebookPictureUrl,
-      facebook_retrieve_attempted: this.getState().facebook_retrieve_attempted,
-      facebook_sign_in_found: this.getState().facebook_sign_in_found,
-      facebook_sign_in_verified: this.getState().facebook_sign_in_verified,
-      facebook_sign_in_failed: this.getState().facebook_sign_in_failed,
-      facebook_secret_key: this.getState().facebook_secret_key,
-      facebook_profile_image_url_https: this.getState().facebook_profile_image_url_https,
-      voter_has_data_to_preserve: this.getState().voter_has_data_to_preserve,
-      existing_facebook_account_found: this.getState().existing_facebook_account_found,
-      voter_we_vote_id_attached_to_facebook: this.getState().voter_we_vote_id_attached_to_facebook,
-      voter_we_vote_id_attached_to_facebook_email: this.getState().voter_we_vote_id_attached_to_facebook_email,
-
-      // yes_please_merge_accounts: this.getState().yes_please_merge_accounts,
-    };
+  getFacebookAuthData () {
+    return this.getState().facebookAuthData;
   }
 
-  getFacebookData () {
+
+  getFacebookAuthResponse () {
+    return this.getState().facebookAuthData;
+  }
+
+  getFacebookEmailInfo () {
     return {
       userId: this.facebookEmailData.id,
       email: this.facebookEmailData.email,
@@ -107,23 +90,39 @@ class FacebookStore extends ReduceStore {
     const facebookInvitableFriendsRetrieved = true;
     let facebookInvitableFriendsList = [];
     let appRequestAlreadyProcessed = false;
-    // const facebookUserId = this.userId;
     let facebookProfileImageUrlHttps = '';
+    let signInFound = false;
 
     switch (action.type) {
       case FacebookConstants.FACEBOOK_LOGGED_IN:
-        signInModalGlobalState.set('waitingForFacebookApiCompletion', false);
+        signInModalGlobalState.set('facebookSignInStep', 'getVotersFacebookData');
 
-        // console.log("FACEBOOK_LOGGED_IN action.data:", action.data);
-        // FacebookActions.saveFacebookSignInAuth(action.data.authResponse);
-        // FacebookActions.getFacebookData();     // Includes a save
+        // console.log('FACEBOOK_LOGGED_IN action.data:', action.data);
+        // console.log('case FacebookConstants.FACEBOOK_LOGGED_IN fbState:', signInModalGlobalState.getAll());
+        // console.log('case FacebookConstants.FACEBOOK_LOGGED_IN fbState all:', all);
+
+        try {
+          signInFound = action.data.authResponse.userID > 0;
+          // eslint-disable-next-line no-empty
+        } catch (e) {}
+
         return {
           ...state,
+          facebookAuthData: {
+            accessToken: action.data.authResponse.accessToken,
+            data_access_expiration_time: action.data.authResponse.data_access_expiration_time,
+            expiresIn: action.data.authResponse.expiresIn,
+            signedRequest: action.data.authResponse.signedRequest,
+            userID: action.data.authResponse.userID,
+            status: action.data.status,
+          },
           authData: action.data,
+          facebook_sign_in_found: signInFound,
+          facebook_sign_in_failed: !signInFound,
+          facebook_retrieve_attempted: true,
         };
 
       case FacebookConstants.FACEBOOK_RECEIVED_DATA:
-
         // Cache the data in the API server
         // console.log("FACEBOOK_RECEIVED_DATA action.data:", action.data);
         // FacebookActions.voterFacebookSignInData(action.data);  // Steve this calls a save to the server
@@ -131,6 +130,13 @@ class FacebookStore extends ReduceStore {
         return {
           ...state,
           emailData: action.data,
+          facebookAuthData: {
+            ...state.facebookAuthData,
+            email: action.data.email,
+            firstName: action.data.first_name,
+            id: action.data.id,
+            lastName: action.data.last_name,
+          },
         };
 
       case FacebookConstants.FACEBOOK_RECEIVED_INVITABLE_FRIENDS:
@@ -178,11 +184,6 @@ class FacebookStore extends ReduceStore {
 
       case 'voterFacebookSignInRetrieve':
         // console.log("FacebookStore voterFacebookSignInRetrieve, facebook_sign_in_verified: ", action.res.facebook_sign_in_verified);
-        signInModalGlobalState.set('waitingForFacebookApiCompletion', false);
-        // if (action.res.facebook_sign_in_verified) {
-        //   VoterActions.voterRetrieve();
-        // }
-
         return {
           ...state,
           voter_device_id: action.res.voter_device_id,
@@ -204,6 +205,21 @@ class FacebookStore extends ReduceStore {
           // facebook_last_name: action.res.facebook_last_name,
           facebook_profile_image_url_https: action.res.facebook_profile_image_url_https,
           facebook_friends_list: action.res.facebook_friends_list,
+
+          // The new way 2/19/20, soft abandoning lines above...
+          facebookAuthData: {
+            ...state.facebookAuthData,
+            facebook_retrieve_attempted: action.res.facebook_retrieve_attempted,
+            facebook_sign_in_found: action.res.facebook_sign_in_found,
+            facebook_sign_in_verified: action.res.facebook_sign_in_verified,
+            facebook_sign_in_failed: action.res.facebook_sign_in_failed,
+            facebook_secret_key: action.res.facebook_secret_key,
+            existing_facebook_account_found: action.res.existing_facebook_account_found,
+            voter_we_vote_id_attached_to_facebook: action.res.voter_we_vote_id_attached_to_facebook,
+            voter_we_vote_id_attached_to_facebook_email: action.res.voter_we_vote_id_attached_to_facebook_email,
+
+          },
+
         };
 
       case 'voterFacebookSignInSave':
@@ -216,7 +232,11 @@ class FacebookStore extends ReduceStore {
           // FacebookActions.voterFacebookSignInRetrieve();
         }
 
-        return state;
+        return {
+          ...state,
+          facebook_save_attempted: action.res.facebook_save_attempted,
+          facebook_sign_in_saved: action.res.facebook_sign_in_saved,
+        };
 
       case 'voterSignOut':
 

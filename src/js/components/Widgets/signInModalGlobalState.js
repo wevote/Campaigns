@@ -33,4 +33,9 @@ export default {
   getBool (key) {
     return simState[key] ? simState[key] : false;
   },
+
+  // For debugging
+  getAll () {
+    return simState;
+  },
 };

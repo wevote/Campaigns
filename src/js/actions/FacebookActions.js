@@ -1,12 +1,10 @@
 import { isWebApp } from '../utils/cordovaUtils'; // eslint-disable-line import/no-cycle
 import Dispatcher from '../components/Dispatcher/Dispatcher';
 import FacebookConstants from '../constants/FacebookConstants';
-// import FriendActions from './FriendActions'; // eslint-disable-line import/no-cycle
 import { oAuthLog } from '../utils/logging';
 import signInModalGlobalState from '../components/Widgets/signInModalGlobalState';
-// import VoterActions from './VoterActions'; // eslint-disable-line import/no-cycle
-// import VoterSessionActions from './VoterSessionActions';
 import webAppConfig from '../config';
+import { dumpObjProps } from '../utils/appleSiliconUtils';
 
 // Including FacebookStore causes problems in the WebApp, and again in the Native App
 
@@ -26,11 +24,7 @@ export default {
   },
 
   appLogout () {
-    signInModalGlobalState.set('waitingForFacebookApiCompletion', false);
-    // VoterSessionActions.voterSignOut(); // This deletes the device_id cookie
-    // VoterActions.voterRetrieve();
-    // VoterActions.voterEmailAddressRetrieve();
-    // VoterActions.voterSMSPhoneNumberRetrieve();
+    // signInModalGlobalState.set('waitingForFacebookApiCompletion', false);
   },
 
   disconnectFromFacebook () {
@@ -53,17 +47,17 @@ export default {
   },
 
   // https://developers.facebook.com/docs/graph-api/reference/v2.6/user
-  getFacebookData () {
+  getVoterInfoFromFacebookAPI () {
     if (!webAppConfig.ENABLE_FACEBOOK) {
-      console.log('FacebookActions.getFacebookData was not invoked, see ENABLE_FACEBOOK in config.js');
+      console.log('FacebookActions.getVoterInfoFromFacebookAPI was not invoked, see ENABLE_FACEBOOK in config.js');
       return;
     }
-    // console.log('FacebookActions.getFacebookData invocation');
+    // console.log('FacebookActions.getVoterInfoFromFacebookAPI invocation');
     if (this.facebookApi()) {
       this.facebookApi().api(
         '/me?fields=id,email,first_name,middle_name,last_name,cover', (response) => {
-          // console.log('FacebookActions.getFacebookData response ', response);
-          oAuthLog('getFacebookData response', response);
+          // console.log('FacebookActions.getVoterInfoFromFacebookAPI response ', response);
+          oAuthLog('getVoterInfoFromFacebookAPI response', response);
           Dispatcher.dispatch({
             type: FacebookConstants.FACEBOOK_RECEIVED_DATA,
             data: response,
@@ -71,7 +65,7 @@ export default {
         },
       );
     } else {
-      console.log('FacebookActions.getFacebookProfilePicture was not invoked, this.facebookApi() undefined');
+      console.error('FacebookActions.getVoterInfoFromFacebookAPI was not invoked, this.facebookApi() undefined');
     }
   },
 
@@ -96,15 +90,18 @@ export default {
     }
 
     Dispatcher.loadEndpoint('voterFacebookSignInSave', {
-      facebook_user_id: data.id || false,
-      facebook_email: data.email || false,
-      facebook_first_name: data.first_name || false,
-      facebook_middle_name: data.middle_name || false,
-      facebook_last_name: data.last_name || false,
-      facebook_profile_image_url_https: data.url || false,
-      facebook_background_image_url_https: background,
+      facebook_access_token: data.accessToken || false,
       facebook_background_image_offset_x: offsetX,
       facebook_background_image_offset_y: offsetY,
+      facebook_background_image_url_https: background,
+      facebook_email: data.email || false,
+      facebook_expires_in: data.expiresIn || false,
+      facebook_first_name: data.firstName || false,
+      facebook_last_name: data.lastName || false,
+      facebook_middle_name: data.middleName || false,
+      facebook_profile_image_url_https: data.url || false,
+      facebook_signed_request: data.signedRequest || false,
+      facebook_user_id: data.id || false,
       save_auth_data: false,
       save_profile_data: true,
     });
@@ -237,7 +234,7 @@ export default {
   },
 
   loginSuccess (successResponse) {
-    signInModalGlobalState.set('waitingForFacebookApiCompletion', false);
+    signInModalGlobalState.set('facebookSignInStep', 'getVotersFacebookData');
     if (successResponse.authResponse) {
       oAuthLog('FacebookActions loginSuccess userData: ', successResponse);
       Dispatcher.dispatch({
@@ -251,7 +248,6 @@ export default {
   },
 
   loginFailure (errorResponse) {
-    signInModalGlobalState.set('waitingForFacebookApiCompletion', false);
     oAuthLog('FacebookActions loginFailure error response: ', errorResponse);
   },
 
@@ -282,16 +278,26 @@ export default {
 
     if (this.facebookApi()) {
       const innerThis = this;
+
+      signInModalGlobalState.set('facebookSignInStep', 'gettingLoginStatus');
       this.facebookApi().getLoginStatus(
         (response) => {
           oAuthLog('FacebookActions this.facebookApi().getLoginStatus response: ', response);
-          // dumpObjProps('facebookApi().getLoginStatus()', response);
+          try {
+            oAuthLog('FacebookActions this.facebookApi().getLoginStatus response.userID: ', response.authResponse.userID);
+          } catch (error) {
+            oAuthLog('FacebookActions this.facebookApi().getLoginStatus response.authResponse.userID not found  ');
+          }
+          dumpObjProps('facebookApi().getLoginStatus()', response);
           if (response.status === 'connected') {
+            signInModalGlobalState.set('facebookSignInStep', 'processingConnected');
             Dispatcher.dispatch({
               type: FacebookConstants.FACEBOOK_LOGGED_IN,
               data: response,
             });
           } else {
+            signInModalGlobalState.set('facebookSignInStep', 'loggingInViaFbApi');
+            signInModalGlobalState.set('facebookSignInStatus', 'Attempting Facebook login...');
             if (isWebApp()) { // eslint-disable-line no-lonely-if
               window.FB.login(innerThis.loginSuccess, innerThis.loginFailure, innerThis.getPermissions());
             } else {
@@ -301,7 +307,7 @@ export default {
         },
       );
     } else {
-      console.log('FacebookActions.login was not invoked, this.facebookApi() undefined');
+      console.error('FacebookActions.login was not invoked, this.facebookApi() undefined');
     }
   },
 
@@ -313,13 +319,18 @@ export default {
   // Save incoming auth data from Facebook
   saveFacebookSignInAuth (data) {
     // console.log('saveFacebookSignInAuth (result of incoming data from the FB API) kicking off an api server voterFacebookSignInSave');
+    // const fbState = signInModalGlobalState.getAll();  // For debug
+    // console.log('saveFacebookSignInAuth fbState:', fbState);
     Dispatcher.loadEndpoint('voterFacebookSignInSave', {
       facebook_access_token: data.accessToken || false,
-      facebook_user_id: data.userID || false,
+      facebook_user_id: data.userID || data.userId || false,
       facebook_expires_in: data.expiresIn || false,
       facebook_signed_request: data.signedRequest || false,
       save_auth_data: true,
       save_profile_data: false,
+      facebook_sign_in_failed: data.facebook_sign_in_failed,
+      facebook_sign_in_found: data.facebook_sign_in_found,
+      facebookIsLoggedIn: data.facebookIsLoggedIn,
     });
   },
 

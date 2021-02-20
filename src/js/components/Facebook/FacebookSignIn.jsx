@@ -1,106 +1,87 @@
 import React, { Component } from 'react';
+import { CircularProgress } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { oAuthLog, renderLog } from '../../utils/logging';
-import AppStore from '../../stores/AppStore';
 import FacebookActions from '../../actions/FacebookActions';
+import VoterActions from '../../actions/VoterActions';
+import AppStore from '../../stores/AppStore';
 import FacebookStore from '../../stores/FacebookStore';
+import VoterStore from '../../stores/VoterStore';
+import { oAuthLog, renderLog } from '../../utils/logging';
 import signInModalGlobalState from '../Widgets/signInModalGlobalState';
 import SplitIconButton from '../Widgets/SplitIconButton';
-import VoterStore from '../../stores/VoterStore';
-import VoterActions from '../../actions/VoterActions';
 
 
 class FacebookSignIn extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      buttonSubmittedText: '',
-      deferredFacebookSignInRetrieve: false,
-      facebookAuthResponse: {},
       facebookSignInSequenceStarted: false,
-      mergingTwoAccounts: false,
       redirectInProgress: false,
-      retrievingSignIn: false,
       saving: false,
-      waitingForMergeTwoAccounts: false,
     };
 
     this.onKeyDown = this.onKeyDown.bind(this);
   }
 
   componentDidMount () {
+    // console.log('FacebookSignIn, componentDidMount');
     this.facebookStoreListener = FacebookStore.addListener(this.onFacebookStoreChange.bind(this));
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
     this.appStoreListener = AppStore.addListener(this.onVoterStoreChange.bind(this));
-    // console.log('FacebookSignIn, componentDidMount');
-    this.setState({
-      buttonSubmittedText: this.props.buttonSubmittedText || 'Signing in...',
-    });
-
-    if (!signInModalGlobalState.getBool('waitingForFacebookApiCompletion')) {
-      signInModalGlobalState.set('waitingForFacebookApiCompletion', true);
-      this.voterFacebookSignInRetrieve();
-    }
+    signInModalGlobalState.set('facebookSignInStep', '');
   }
 
   componentWillUnmount () {
     this.facebookStoreListener.remove();
     this.voterStoreListener.remove();
     this.appStoreListener.remove();
-    signInModalGlobalState.set('startFacebookSignInSequence', false);
-    signInModalGlobalState.set('waitingForFacebookApiCompletion', false);
-  }
-
-  onAppStoreChange () {
-    if (this.state.deferredFacebookSignInRetrieve) {
-      this.setState({
-        deferredFacebookSignInRetrieve: false,
-      });
-      this.voterFacebookSignInRetrieve();
-    }
   }
 
   onFacebookStoreChange () {
-    // console.log('FacebookSignIn onFacebookStoreChange');
+    console.log('FacebookSignIn onFacebookStoreChange');
+    // eslint-disable-next-line no-unused-vars
+    const fbState = signInModalGlobalState.getAll();  // For debug
+    const facebookAuthResponse = FacebookStore.getFacebookAuthResponse();
 
-    this.setState({
-      facebookAuthResponse: FacebookStore.getFacebookAuthResponse(),
-      retrievingSignIn: false,
-      saving: false,
-    });
-
-    const { facebookIsLoggedIn, facebook_sign_in_failed: facebookSignInFailed,
-      facebook_sign_in_found: facebookSignInFound, facebook_sign_in_verified: facebookSignInVerified,
-      facebook_secret_key: facebookSecretKey } = this.state.facebookAuthResponse;
-
-    if (facebookIsLoggedIn && !facebookSignInFailed && facebookSignInFound && facebookSignInVerified) {
-      this.setState({ redirectInProcess: false });
-      // console.log('FacebookSignIn calling voterMergeTwoAccountsByFacebookKey, since the voter is authenticated with facebook');
+    if (signInModalGlobalState.get('facebookSignInStep') === 'getVotersFacebookData') {
+      console.log('FacebookSignIn sending getFacebookData after FB.login');
+      signInModalGlobalState.set('facebookSignInStatus', 'Retrieving Facebook additional data...');
+      FacebookActions.getVoterInfoFromFacebookAPI();
+      signInModalGlobalState.set('facebookSignInStep', 'saveWhatWeHaveToFB');
+    } else if (signInModalGlobalState.get('facebookSignInStep') === 'saveWhatWeHaveToFB') {
+      FacebookActions.voterFacebookSignInData(FacebookStore.getFacebookAuthData());
+      signInModalGlobalState.set('facebookSignInStep', 'retrieveSecretKey');
+    } else if (signInModalGlobalState.get('facebookSignInStep') === 'retrieveSecretKey') {
+      FacebookActions.voterFacebookSignInRetrieve();  // get the secret key
+      signInModalGlobalState.set('facebookSignInStep', 'checkForNeedToMerge');
+      signInModalGlobalState.set('facebookSignInStatus', 'Retrieving sign in data...');
+    } else if (signInModalGlobalState.get('facebookSignInStep') === 'checkForNeedToMerge') {
+      console.log('FacebookSignIn calling voterMergeTwoAccountsByFacebookKey, since the voter is authenticated with facebook');
+      signInModalGlobalState.set('facebookSignInStatus', 'Merging any changes made when not signed in...');
+      const { facebook_secret_key: facebookSecretKey } = facebookAuthResponse;
       VoterActions.voterMergeTwoAccountsByFacebookKey(facebookSecretKey);
-      this.setState({ waitingForMergeTwoAccounts: true });
+      signInModalGlobalState.set('facebookSignInStep', 'voterRefresh');
+    } else if (signInModalGlobalState.get('facebookSignInStep') === 'voterRefresh') {
+      console.log('FacebookSignIn facebookSignInStep === voterRefresh and calling voterRetrieve()');
+      signInModalGlobalState.set('facebookSignInStep', 'waitingForRetrieveVoterResponse');
+      VoterActions.voterRetrieve();
     }
   }
 
   onVoterStoreChange () {
-    // console.log('FacebookSignIn onVoterStoreChange');
-    const { redirectInProcess, waitingForMergeTwoAccounts } = this.state;
-    const voter = VoterStore.getVoter();
-    const { signed_in_facebook: voterIsSignedInFacebook } = voter;
-    if (voterIsSignedInFacebook) {
-      signInModalGlobalState.set('startFacebookSignInSequence', false);
-    }
-
-    if (!redirectInProcess && !waitingForMergeTwoAccounts) {
-      const facebookSignInStatus = VoterStore.getFacebookSignInStatus();
-      // console.log('facebookSignInStatus:', facebookSignInStatus);
-      // console.log('FacebookSignIn onVoterStoreChange, voterIsSignedInFacebook:', voterIsSignedInFacebook);
-      if (voterIsSignedInFacebook || (facebookSignInStatus && facebookSignInStatus.voter_merge_two_accounts_attempted)) {
-        const newRedirectPathname = '/ballot';
-        oAuthLog('Redirecting to newRedirectPathname:', newRedirectPathname);
-        signInModalGlobalState.set('startFacebookSignInSequence', false);
-        this.closeSignInModalLocal();
-      }
+    console.log('FacebookSignIn onVoterStoreChange');
+    // eslint-disable-next-line no-unused-vars
+    const fbState = signInModalGlobalState.getAll();  // For debug
+    const voter = VoterStore.getVoter();  // for debug
+    console.log('FacebookSignIn onVoterStoreChange       voter:', voter);
+    if (signInModalGlobalState.get('facebookSignInStep') === 'waitingForRetrieveVoterResponse') {
+      console.log('onVoterStoreChange ... facebookSignInStep === waitingForRetrieveVoterResponse');
+      signInModalGlobalState.set('facebookSignInStep', 'done');
+      this.closeSignInModalLocal();
+    } else if (signInModalGlobalState.get('facebookSignInStep') === 'voterRefresh') {
+      // The FacebookStore was not involved in this step, so need to involve it
+      this.onFacebookStoreChange();
     }
   }
 
@@ -115,21 +96,18 @@ class FacebookSignIn extends Component {
     this.setState({
       facebookSignInSequenceStarted: true,
     });
-    signInModalGlobalState.set('startFacebookSignInSequence', true);
     FacebookActions.login();
   };
 
   closeSignInModalLocal = () => {
     if (this.props.closeSignInModal) {
       console.log('FacebookSignIn closeSignInModalLocal closing dialog ---------------');
-      signInModalGlobalState.set('startFacebookSignInSequence', false);
-      signInModalGlobalState.set('waitingForFacebookApiCompletion', false);
       this.props.closeSignInModal();
     }
   };
 
   voterFacebookSaveToCurrentAccount () {
-    // console.log('In voterFacebookSaveToCurrentAccount');
+    console.log('In voterFacebookSaveToCurrentAccount');
     VoterActions.voterFacebookSaveToCurrentAccount();
   }
 
@@ -139,56 +117,47 @@ class FacebookSignIn extends Component {
       FacebookActions.voterFacebookSignInRetrieve();
       this.setState({
         saving: true,
-        retrievingSignIn: true,
       });
     }
   }
 
   render () {
     renderLog('FacebookSignIn');  // Set LOG_RENDER_EVENTS to log all renders
-    const { buttonText } = this.props;
-    const { buttonSubmittedText, facebookAuthResponse, facebookSignInSequenceStarted, mergingTwoAccounts, redirectInProgress, waitingForMergeTwoAccounts } = this.state;
+    const { buttonSubmittedText, buttonText } = this.props;
+    const { facebookSignInSequenceStarted, redirectInProgress } = this.state;
+    const facebookAuthResponse = FacebookStore.getFacebookAuthResponse();
+    // eslint-disable-next-line no-unused-vars
+    const fbState = signInModalGlobalState.getAll();  // For debug
     if (redirectInProgress) {
       return null;
     }
 
-    let statusMessage = '';
     let showWheel = true;
 
-    if (!signInModalGlobalState.getBool('startFacebookSignInSequence')) {
-      // console.log('FacebookSignIn top of checks, no action yet, facebookAuthResponse', (facebookAuthResponse || 'no auth obj'));
-    } else if (signInModalGlobalState.getBool('waitingForFacebookApiCompletion') ||
-        this.state.saving ||
-        this.state.retrievingSignIn ||
-        !facebookAuthResponse) {
-      // console.log('Waiting for a response from Facebook this.state.saving: ', this.state.saving, 'this.state.retrievingSignIn', this.state.retrievingSignIn,
-      //   '!facebookAuthResponse', !facebookAuthResponse, 'signInModalGlobalState.getBool(waitingForFacebookApiCompletion)', signInModalGlobalState.getBool('waitingForFacebookApiCompletion'));
-      statusMessage = 'Waiting for a response from Facebook...';
-    } else if (facebookAuthResponse.facebook_sign_in_failed) {
+    if (facebookAuthResponse && facebookAuthResponse.facebook_sign_in_failed) {
       oAuthLog('facebookAuthResponse.facebook_sign_in_failed , setting "Facebook sign in process." message.');
-      statusMessage = 'Facebook sign in process.';
-    } else if (waitingForMergeTwoAccounts) {
-      statusMessage = 'Loading your account information...';
-    } else if (!facebookAuthResponse.facebook_sign_in_found) {
+      signInModalGlobalState.set('facebookSignInStatus', 'Facebook sign in process.');
+    } else if (facebookAuthResponse && facebookAuthResponse.facebook_sign_in_found === false) {
       // This process starts when we return from attempting voterFacebookSignInRetrieve.  If facebook_sign_in_found NOT True, try again
       oAuthLog('facebookAuthResponse.facebook_sign_in_found with no authentication');
-      statusMessage = 'Facebook authentication not found. Please try again.';
+      signInModalGlobalState.set('facebookSignInStatus', 'Facebook authentication not found. Please try again.');
       showWheel = false;
-    } else if (facebookAuthResponse.existing_facebook_account_found) {  // Is there a collision of two accounts?
+    } else if (signInModalGlobalState.get('facebookSignInStep') === 'voterRefresh' ||
+      signInModalGlobalState.get('facebookSignInStep') === 'waitingForRetrieveVoterResponse') {
+      oAuthLog('FacebookSignin voterRetrieve, which should bring in the merged voter');
+    } else if (facebookAuthResponse && facebookAuthResponse.existing_facebook_account_found) {  // Is there a collision of two accounts?
       oAuthLog('FacebookSignIn facebookAuthResponse.existing_facebook_account_found');
-      if (mergingTwoAccounts) {
+      if (signInModalGlobalState.get('facebookSignInStep') === 'retrieveSecretKey' ||
+        signInModalGlobalState.get('facebookSignInStep') === 'checkForNeedToMerge') {
         oAuthLog('FacebookSignIn merging two accounts by facebook key');
-        statusMessage = 'Loading your account...';
       } else {
         oAuthLog('FacebookSignIn internal error ---------------');
-        statusMessage = 'Internal error...';
+        signInModalGlobalState.set('facebookSignInStatus', 'Internal error...');
       }
-    } else {
-      oAuthLog('Setting up new Facebook entry - voterFacebookSaveToCurrentAccount');
-      this.voterFacebookSaveToCurrentAccount();
-      statusMessage = 'Saving your account...';
     }
 
+    const statusMessage = signInModalGlobalState.get('facebookSignInStatus') || '';
+    // console.log('FacebookSignIn immediately before render, statusMessage:', statusMessage);
     return (
       <div>
         <SplitIconButton
@@ -208,9 +177,10 @@ class FacebookSignIn extends Component {
               {statusMessage}
             </div>
             { showWheel ? (
-              <div className="u-loading-spinner__wrapper">
-                <div className="u-loading-spinner">Please wait...</div>
-              </div>
+              <>
+                <CircularProgress style={{ margin: 8 }} />
+                <div>Please wait...</div>
+              </>
             ) : null}
           </FacebookErrorContainer>
         ) : null}
@@ -229,5 +199,5 @@ export default FacebookSignIn;
 const FacebookErrorContainer  = styled.h3`
   margin-top: 8px;
   background-color: #fff;
-  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
 `;
