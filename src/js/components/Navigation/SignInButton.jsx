@@ -37,7 +37,7 @@ class SignInButton extends Component {
 
   onVoterStoreChange () {
     // console.log('SignInButton onVoterStoreChange');
-    // console.log('onVoterStoreChange voter:', VoterStore.getVoter());
+    // console.log('SignInButton onVoterStoreChange voter:', VoterStore.getVoter());
     // eslint-disable-next-line react/no-unused-state
     this.setState({ voterLoaded: true });
   }

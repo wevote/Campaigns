@@ -120,7 +120,9 @@ class AppStore extends ReduceStore {
   }
 
   isOnFacebookSupportedDomainUrl () {
-    return this.getState().onFacebookSupportedDomainUrl;
+    /* hack for Campaign */
+    // return this.getState().onFacebookSupportedDomainUrl;
+    return true;
   }
 
   isOnChosenFullDomainUrl () {

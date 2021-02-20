@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { ThemeProvider } from 'styled-components';
 import muiTheme from './js/components/Widgets/mui-theme';
@@ -71,6 +71,7 @@ class App extends Component {
                   <Route exact path="/impact"><Impact /></Route>
                   <Route exact path="/membership"><Membership /></Route>
                   <Route exact path="/privacy"><Privacy /></Route>
+                  <Route exact path="/ready"><Redirect to="/" /></Route>
                   <Route exact path="/start-a-campaign"><CampaignStartIntro /></Route>
                   <Route exact path="/who-do-you-want-to-see-elected"><CampaignStartAddPolitician /></Route>
                   <Route exact path="/start-a-campaign-why-winning-matters"><CampaignStartAddDescription /></Route>

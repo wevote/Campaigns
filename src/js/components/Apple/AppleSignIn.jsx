@@ -255,7 +255,7 @@ const AppleSignInContainer  = styled.div`
   border-color: #000;
   color: ${({ enabled }) => (enabled ? '#fff' : 'grey')};
   display: block;
-  margin: 0 auto 11px;
+  margin: 16px auto 11px;
   height: 46px;
   border-radius: 4px;
   overflow: hidden;
@@ -274,7 +274,7 @@ const AppleSignedInContainer  = styled.div`
   background-color: #000;
   border-color: #000;
   color: #fff;
-  margin: 0 auto 11px;
+  margin: 16px auto 11px;
   height: 46px;
   border-radius: 4px;
   max-width: 408px;

@@ -4,6 +4,7 @@ import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from '@materi
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import { historyPush } from '../../utils/cordovaUtils';
+import initializeFacebookSDK from '../../utils/initializeFacebookSDK';
 import { renderLog } from '../../utils/logging';
 import voterSignOut from '../../utils/voterSignOut';
 import HeaderBarLogo from './HeaderBarLogo';
@@ -79,6 +80,11 @@ export default function MainHeaderBar () {
     lineHeight: 'unset',
     opacity: '40%',
   };
+
+  const { FB } = window;
+  if (!FB) {
+    initializeFacebookSDK();
+  }
 
   renderLog('MainHeaderBar');
 

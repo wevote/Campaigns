@@ -3,6 +3,7 @@ import { Button } from '@material-ui/core';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import webAppConfig from '../../config';
 import cookies from '../../utils/cookies';
 import AnalyticsActions from '../../actions/AnalyticsActions';
 import AppActions from '../../actions/AppActions';
@@ -10,7 +11,6 @@ import AppleSignIn from '../Apple/AppleSignIn';
 import AppStore from '../../stores/AppStore';
 import BrowserPushMessage from '../Widgets/BrowserPushMessage';
 import { historyPush, isCordova, isIPhone4in, isIPhone4p7in, restoreStylesAfterCordovaKeyboard } from '../../utils/cordovaUtils';
-import FacebookActions from '../../actions/FacebookActions';
 import FacebookStore from '../../stores/FacebookStore';
 import FacebookSignIn from '../Facebook/FacebookSignIn';
 import LoadingWheel from '../LoadingWheel';
@@ -42,7 +42,7 @@ export default class SettingsAccount extends Component {
       hideTwitterSignInButton: false,
       hideVoterEmailAddressEntry: false,
       hideVoterPhoneEntry: false,
-      isInternetExplorer: document.documentMode || false, // Yes, we are talking about that old Microsoft product==
+      isInternetExplorer: document.documentMode || false, // Yes, we are talking about that old Microsoft product
       isOnWeVoteRootUrl: true,
       isOnWeVoteSubdomainUrl: false,
       isOnFacebookSupportedDomainUrl: false,
@@ -207,8 +207,11 @@ export default class SettingsAccount extends Component {
   }
 
   onFacebookChange () {
+    const facebookAuthResponse = FacebookStore.getFacebookAuthResponse();
+    // console.log('SettingsAccount onFacebookChange facebookAuthResponse:', facebookAuthResponse);
+
     this.setState({
-      facebookAuthResponse: FacebookStore.getFacebookAuthResponse(),
+      facebookAuthResponse,
     });
   }
 
@@ -281,13 +284,6 @@ export default class SettingsAccount extends Component {
     }
   }
 
-  facebookLogOutOnKeyDown (event) {
-    const enterAndSpaceKeyCodes = [13, 32];
-    if (enterAndSpaceKeyCodes.includes(event.keyCode)) {
-      FacebookActions.appLogout();
-    }
-  }
-
   hideDialogForCordovaLocal () {
     if (!this.state.hideDialogForCordova) {
       this.setState({ hideDialogForCordova: true });
@@ -326,8 +322,8 @@ export default class SettingsAccount extends Component {
       signed_in_twitter: voterIsSignedInTwitter, signed_in_with_email: voterIsSignedInWithEmail,
       twitter_screen_name: twitterScreenName, signed_in_with_apple: voterIsSignedInWithApple,
     } = voter;
-    // console.log("SettingsAccount.jsx facebookAuthResponse:", facebookAuthResponse);
-    // console.log("SettingsAccount.jsx voter:", voter);
+    // console.log('SettingsAccount.jsx (beginning of render) facebookAuthResponse:', facebookAuthResponse);
+    // console.log('SettingsAccount.jsx voter:', voter);
     // console.log('SettingsAccount.jsx hideDialogForCordova:', hideDialogForCordova);
     if (!voterIsSignedInFacebook && facebookAuthResponse && facebookAuthResponse.length && facebookAuthResponse.facebook_retrieve_attempted) {
       // console.log('SettingsAccount.jsx facebook_retrieve_attempted');
@@ -350,11 +346,13 @@ export default class SettingsAccount extends Component {
       }
     }
 
-    // console.log('SettingsAccount voterIsSignedIn', voterIsSignedIn, '\nsignedInTwitter', voterIsSignedInTwitter, 'signedInFacebook', voterIsSignedInFacebook,
-    //   'signedInWithApple', voterIsSignedInWithApple, '\nhideDialogForCordova', hideDialogForCordova, 'hideCurrentlySignedInHeader', hideCurrentlySignedInHeader,
-    //   'hideTwitterSignInButton', hideTwitterSignInButton,
-    //   'hideFacebookSignInButton', hideFacebookSignInButton, 'hideDialogForCordova', hideDialogForCordova,
-    //   'isOnFacebookSupportedDomainUrl', isOnFacebookSupportedDomainUrl, 'isOnWeVoteRootUrl', isOnWeVoteRootUrl);
+    // console.log('SettingsAccount voterIsSignedIn:', voterIsSignedIn,
+    //   '\nvoterIsSignedInTwitter:', voterIsSignedInTwitter, ', voterIsSignedInFacebook:', voterIsSignedInFacebook,
+    //   ',voterIsSignedInWithApple:', voterIsSignedInWithApple,
+    //   '\nhideDialogForCordova:', hideDialogForCordova, ', hideCurrentlySignedInHeader:', hideCurrentlySignedInHeader,
+    //   ', hideTwitterSignInButton:', hideTwitterSignInButton,
+    //   ', hideFacebookSignInButton:', hideFacebookSignInButton, ', hideDialogForCordova:', hideDialogForCordova,
+    //   '\nisOnFacebookSupportedDomainUrl:', isOnFacebookSupportedDomainUrl, ', isOnWeVoteRootUrl:', isOnWeVoteRootUrl);
 
     return (
       <>
@@ -370,16 +368,10 @@ export default class SettingsAccount extends Component {
               <div>
                 {voterIsSignedIn ?
                   <div className="u-stack--sm">{yourAccountExplanation}</div> : (
-                    <>
-                      {/* <div className="u-show-mobile-bigger-than-iphone5"> */}
-                      {/*  <div className="u-f3">{pleaseSignInTitle}</div> /}
-                      {/*  <SignInSubtitle className="u-stack--sm">{pleaseSignInSubTitle}</SignInSubtitle> */}
-                      {/* </div> */}
-                      <div className="u-show-desktop-tablet">
-                        <div className="u-f3">{pleaseSignInTitle}</div>
-                        <SignInSubtitle className="u-stack--sm">{pleaseSignInSubTitle}</SignInSubtitle>
-                      </div>
-                    </>
+                    <div className="u-show-desktop-tablet">
+                      <div className="u-f3">{pleaseSignInTitle}</div>
+                      <SignInSubtitle className="u-stack--sm">{pleaseSignInSubTitle}</SignInSubtitle>
+                    </div>
                   )}
               </div>
             )}
@@ -399,7 +391,7 @@ export default class SettingsAccount extends Component {
                   )}
                 </div>
                 <div className="u-stack--md">
-                  { !hideFacebookSignInButton && !voterIsSignedInFacebook && isOnFacebookSupportedDomainUrl && (
+                  { !hideFacebookSignInButton && webAppConfig.ENABLE_FACEBOOK && !voterIsSignedInFacebook && isOnFacebookSupportedDomainUrl && (
                     <span>
                       <FacebookSignIn
                         closeSignInModal={this.localCloseSignInModal}
@@ -412,7 +404,9 @@ export default class SettingsAccount extends Component {
               </>
             ) : null}
             {!hideAppleSignInButton && (
-              <AppleSignIn signedIn={voterIsSignedInWithApple} closeSignInModal={this.localCloseSignInModal} />
+              <div className="u-stack--md">
+                <AppleSignIn signedIn={voterIsSignedInWithApple} closeSignInModal={this.localCloseSignInModal} />
+              </div>
             )}
             {voterIsSignedIn && !hideDialogForCordova ? (
               <div className="u-stack--md">
