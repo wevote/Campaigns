@@ -127,7 +127,7 @@ class FacebookSignIn extends Component {
     const { facebookSignInSequenceStarted, redirectInProgress } = this.state;
     const facebookAuthResponse = FacebookStore.getFacebookAuthResponse();
     // eslint-disable-next-line no-unused-vars
-    const fbState = signInModalGlobalState.getAll();  // For debug
+    const fbState = signInModalGlobalState.getAll();     // For debug
     if (redirectInProgress) {
       return null;
     }
