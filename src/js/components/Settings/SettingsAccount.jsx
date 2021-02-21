@@ -1,30 +1,31 @@
 import React, { Component } from 'react';
 import { Button } from '@material-ui/core';
-import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
 import styled from 'styled-components';
-import webAppConfig from '../../config';
-import cookies from '../../utils/cookies';
 import AnalyticsActions from '../../actions/AnalyticsActions';
 import AppActions from '../../actions/AppActions';
-import AppleSignIn from '../Apple/AppleSignIn';
+import TwitterActions from '../../actions/TwitterActions';
+import VoterActions from '../../actions/VoterActions';
+import VoterSessionActions from '../../actions/VoterSessionActions';
+import webAppConfig from '../../config';
 import AppStore from '../../stores/AppStore';
-import BrowserPushMessage from '../Widgets/BrowserPushMessage';
-import { historyPush, isCordova, isIPhone4in, isIPhone4p7in, restoreStylesAfterCordovaKeyboard } from '../../utils/cordovaUtils';
 import FacebookStore from '../../stores/FacebookStore';
+import VoterStore from '../../stores/VoterStore';
+import cookies from '../../utils/cookies';
+import { historyPush, isCordova, isIPhone4in, isIPhone4p7in, restoreStylesAfterCordovaKeyboard } from '../../utils/cordovaUtils';
+import initializejQuery from '../../utils/initializejQuery';
+import { oAuthLog, renderLog } from '../../utils/logging';
+import { stringContains } from '../../utils/textFormat';
+import AppleSignIn from '../Apple/AppleSignIn';
 import FacebookSignIn from '../Facebook/FacebookSignIn';
 import LoadingWheel from '../LoadingWheel';
-import { oAuthLog, renderLog } from '../../utils/logging';
-import signInModalGlobalState from '../Widgets/signInModalGlobalState';
-import { stringContains } from '../../utils/textFormat';
-import TwitterActions from '../../actions/TwitterActions';
 import TwitterSignIn from '../Twitter/TwitterSignIn';
-import VoterActions from '../../actions/VoterActions';
+import BrowserPushMessage from '../Widgets/BrowserPushMessage';
+import signInModalGlobalState from '../Widgets/signInModalGlobalState';
 import VoterEmailAddressEntry from './VoterEmailAddressEntry';
-import VoterSessionActions from '../../actions/VoterSessionActions';
-import VoterStore from '../../stores/VoterStore';
-import VoterPhoneVerificationEntry from './VoterPhoneVerificationEntry';
 import VoterPhoneEmailCordovaEntryModal from './VoterPhoneEmailCordovaEntryModal';
+import VoterPhoneVerificationEntry from './VoterPhoneVerificationEntry';
 
 /* global $ */
 
@@ -67,9 +68,7 @@ export default class SettingsAccount extends Component {
   // componentWillMount is used in WebApp
   componentDidMount () {
     console.log('SettingsAccount componentDidMount');
-    import('jquery').then(({ default: jquery }) => {
-      window.jQuery = jquery;
-      window.$ = jquery;
+    initializejQuery(() => {
       this.setState({ jqueryLoaded: true });
 
       this.onVoterStoreChange();

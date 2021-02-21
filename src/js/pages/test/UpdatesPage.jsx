@@ -2,6 +2,7 @@ import React from 'react';
 import TestPageHeader from '../../components/Navigation/TestPageHeader';
 import VoterActions from '../../actions/VoterActions';
 import VoterStore from '../../stores/VoterStore';
+import initializejQuery from '../../utils/initializejQuery';
 
 import thailand from '../../../img/demo/Thailand.jpg';
 
@@ -16,14 +17,11 @@ export default class UpdatesPage extends React.Component {
 
   componentDidMount () {
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
-    import('jquery').then(({ default: jquery }) => {
-      window.jQuery = jquery;
-      window.$ = jquery;
-
+    initializejQuery(() => {
       VoterActions.voterRetrieve();
       console.log('UpdatesPage, componentDidMount');
       // dumpCookies();
-    }).catch((error) => console.error('An error occurred while loading jQuery', error));
+    });
     // console.log('CommentsPage, YOU GET HERE EVEN IF JQUERY DID NOT LOAD componentDidMount');
   }
 

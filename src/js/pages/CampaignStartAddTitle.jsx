@@ -11,7 +11,9 @@ import CampaignTitleInputField from '../components/CampaignStart/CampaignTitleIn
 import { historyPush, isCordova } from '../utils/cordovaUtils';
 import MainFooter from '../components/Navigation/MainFooter';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
+import initializejQuery from '../utils/initializejQuery';
 import { renderLog } from '../utils/logging';
+
 
 
 class CampaignStartAddTitle extends Component {
@@ -23,11 +25,9 @@ class CampaignStartAddTitle extends Component {
 
   componentDidMount () {
     // console.log('CampaignStartAddTitle, componentDidMount');
-    import('jquery').then(({ default: jquery }) => {
-      window.jQuery = jquery;
-      window.$ = jquery;
+    initializejQuery(() => {
       CampaignStartActions.campaignRetrieveAsOwner('');
-    }).catch((error) => console.error('An error occurred while loading jQuery', error));
+    });
   }
 
   submitCampaignTitle = () => {

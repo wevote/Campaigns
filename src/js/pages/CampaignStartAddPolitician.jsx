@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
+import { Button } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
-import AddCandidateInputField from '../components/CampaignStart/AddPoliticianInputField';
 import CampaignStartActions from '../actions/CampaignStartActions';
+import AddCandidateInputField from '../components/CampaignStart/AddPoliticianInputField';
 import CampaignStartSteps from '../components/Navigation/CampaignStartSteps';
-import CampaignStartStore from '../stores/CampaignStartStore';
-import { historyPush, isCordova } from '../utils/cordovaUtils';
 import MainFooter from '../components/Navigation/MainFooter';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
+import CampaignStartStore from '../stores/CampaignStartStore';
+import { historyPush, isCordova } from '../utils/cordovaUtils';
+import initializejQuery from '../utils/initializejQuery';
 import { renderLog } from '../utils/logging';
-
 
 class CampaignStartAddPolitician extends Component {
   constructor (props) {
@@ -23,11 +23,9 @@ class CampaignStartAddPolitician extends Component {
 
   componentDidMount () {
     // console.log('CampaignStartAddPolitician, componentDidMount');
-    import('jquery').then(({ default: jquery }) => {
-      window.jQuery = jquery;
-      window.$ = jquery;
+    initializejQuery(() => {
       CampaignStartActions.campaignRetrieveAsOwner('');
-    }).catch((error) => console.error('An error occurred while loading jQuery', error));
+    });
   }
 
   submitPoliticianList = () => {

@@ -9,6 +9,7 @@ import TwitterStore from '../stores/TwitterStore';
 import VoterStore from '../stores/VoterStore';
 import cookies from '../utils/cookies';
 import { historyPush, isWebApp } from '../utils/cordovaUtils';
+import initializejQuery from '../utils/initializejQuery';
 import { oAuthLog, renderLog } from '../utils/logging';
 import { stringContains } from '../utils/textFormat';
 
@@ -29,10 +30,7 @@ export default class TwitterSignInProcess extends Component {
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.twitterStoreListener = TwitterStore.addListener(this.onTwitterStoreChange.bind(this));
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
-    import('jquery').then(({ default: jquery }) => {
-      console.log('jquery loading in TwitterSigninProcess');
-      window.jQuery = jquery;
-      window.$ = jquery;
+    initializejQuery(() => {
       this.twitterSignInRetrieve();
       this.setState({
         hostname: AppStore.getHostname(),
