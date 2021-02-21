@@ -1,13 +1,12 @@
 import React from 'react';
-
-import AppActions from '../../actions/AppActions';
-import AppStore from '../../stores/AppStore';
-// import cookies from '../../utils/cookies';
 import japan from '../../../img/demo/Japan.jpg';
-import TestPageHeader from '../../components/Navigation/TestPageHeader';
+import AppActions from '../../actions/AppActions';
 import VoterActions from '../../actions/VoterActions';
-import VoterStore from '../../stores/VoterStore';
 import compiledDate from '../../compiledDate';
+import TestPageHeader from '../../components/Navigation/TestPageHeader';
+import AppStore from '../../stores/AppStore';
+import VoterStore from '../../stores/VoterStore';
+import initializejQuery from '../../utils/initializejQuery';
 
 export default class CommentsPage extends React.Component {
   constructor (props) {
@@ -24,17 +23,14 @@ export default class CommentsPage extends React.Component {
   componentDidMount () {
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
-    import('jquery').then(({ default: jquery }) => {
-      window.jQuery = jquery;
-      window.$ = jquery;
-
+    initializejQuery(() => {
       VoterActions.voterRetrieve();
       let { hostname } = window.location;
       hostname = hostname || '';
       AppActions.siteConfigurationRetrieve(hostname);
       console.log('CommentsPage, componentDidMount');
       // dumpCookies();
-    }).catch((error) => console.error('An error occurred while loading jQuery', error));
+    });
     // console.log('CommentsPage, YOU GET HERE EVEN IF JQUERY DID NOT LOAD componentDidMount');
   }
 

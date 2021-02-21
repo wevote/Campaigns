@@ -14,6 +14,7 @@ import { isCordova, isAndroid, isIOS,
 } from '../../utils/cordovaUtils';
 import SettingsAccount from '../Settings/SettingsAccount';
 import VoterStore from '../../stores/VoterStore';
+import initializejQuery from '../../utils/initializejQuery';
 import { stringContains } from '../../utils/textFormat';
 import signInModalGlobalState from './signInModalGlobalState';
 
@@ -31,11 +32,7 @@ class SignInModal extends Component {
   componentDidMount () {
     this.onVoterStoreChange();
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
-    import('jquery').then(({ default: jquery }) => {
-      window.jQuery = jquery;
-      window.$ = jquery;
-      console.log('jquery loaded in SignInModal');
-    });
+    initializejQuery();
     const library = 'fontawesome';
     if (libraryNeedsLoading(library)) {
       lazyLoader(library)
@@ -75,6 +72,7 @@ class SignInModal extends Component {
 
   // See https://reactjs.org/docs/error-boundaries.html
   static getDerivedStateFromError (error) { // eslint-disable-line no-unused-vars
+    console.error('Error caught in SignInModal: ', error);
     // Update state so the next render will show the fallback UI, We should have a "Oh snap" page
     return { hasError: true };
   }

@@ -9,6 +9,7 @@ import { renderLog } from '../../utils/logging';
 import { shortenText } from '../../utils/textFormat';
 import SignInModal from '../Widgets/SignInModal';
 import anonymous from '../../../img/global/icons/avatar-generic.png';
+import initializejQuery from '../../utils/initializejQuery';
 import LazyImage from '../../utils/LazyImage';
 
 
@@ -22,9 +23,7 @@ class SignInButton extends Component {
 
   componentDidMount () {
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
-    import('jquery').then(({ default: jquery }) => {
-      window.jQuery = jquery;
-      window.$ = jquery;
+    initializejQuery(() => {
       VoterActions.voterRetrieve();
       // console.log('SignInButton, componentDidMount voterRetrieve fired ');
     });

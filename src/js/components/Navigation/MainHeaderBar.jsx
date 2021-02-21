@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import { historyPush } from '../../utils/cordovaUtils';
 import initializeFacebookSDK from '../../utils/initializeFacebookSDK';
+import initializeAppleSDK from '../../utils/initializeAppleSDK';
 import { renderLog } from '../../utils/logging';
 import voterSignOut from '../../utils/voterSignOut';
 import HeaderBarLogo from './HeaderBarLogo';
@@ -81,10 +82,14 @@ export default function MainHeaderBar () {
     opacity: '40%',
   };
 
-  const { FB } = window;
+  const { FB, AppleID } = window;
   if (!FB) {
     initializeFacebookSDK();
   }
+  if (!AppleID) {
+    initializeAppleSDK();
+  }
+
 
   renderLog('MainHeaderBar');
 
