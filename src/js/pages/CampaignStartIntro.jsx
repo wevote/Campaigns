@@ -37,13 +37,13 @@ class CampaignStartIntro extends Component {
                   <ContentRow>
                     <Dot><StepNumberPlaceholder>&nbsp;</StepNumberPlaceholder></Dot>
                     <StepText>
-                      Your campaign doesn&apos;t need to be perfect yet! You can edit your campaign later.
+                      Your voice is important, and will convince others to vote for the candidate(s) you like. If your first edits aren&apos;t perfect, don&apos;t worry; you can edit your campaign later.
                     </StepText>
                   </ContentRow>
 
                   <TitleRow>
                     <Dot><StepNumber>2</StepNumber></Dot>
-                    <StepTitle>Build support</StepTitle>
+                    <StepTitle>Community support can lead to victory</StepTitle>
                   </TitleRow>
                   <ContentRow>
                     <Dot><StepNumberPlaceholder>&nbsp;</StepNumberPlaceholder></Dot>
@@ -54,12 +54,12 @@ class CampaignStartIntro extends Component {
 
                   <TitleRow>
                     <Dot><StepNumber>3</StepNumber></Dot>
-                    <StepTitle>Be ready for election day</StepTitle>
+                    <StepTitle>Person-to-person persuasion is effective</StepTitle>
                   </TitleRow>
                   <ContentRow>
                     <Dot><StepNumberPlaceholder>&nbsp;</StepNumberPlaceholder></Dot>
                     <StepText>
-                      Help your community make sense of their voting decisions, so they can vote their values. The more of your friends who vote, the more impact you will have on the outcome of the election.
+                      You can make a difference by telling your friends why you want a candidate to win. The more of your friends who vote, the more impact you will have on the outcome of the election.
                     </StepText>
                   </ContentRow>
                   <DesktopButtonWrapper className="u-show-desktop-tablet">
@@ -200,7 +200,7 @@ const MobileButtonWrapper = styled.div`
 const OuterWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin: 15px 15px;
+  margin: 15px 0;
 `;
 
 const PageWrapper = styled.div`

@@ -60,7 +60,7 @@ class CampaignStartAddPolitician extends Component {
             <InnerWrapper>
               <CampaignStartSteps atStepNumber2 />
               <ContentTitle>
-                Who do you want to see elected?
+                Who do you want to win?
               </ContentTitle>
               <ContentIntroductionText>
                 Choose the candidate(s) you want to win. These are the politicians who will support your values and the policies you care about.

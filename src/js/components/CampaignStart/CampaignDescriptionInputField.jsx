@@ -7,23 +7,23 @@ import CampaignStartActions from '../../actions/CampaignStartActions';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import { renderLog } from '../../utils/logging';
 
-class CampaignTitleInputField extends Component {
+class CampaignDescriptionInputField extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      campaignTitle: '',
+      campaignDescription: '',
     };
 
     this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.updateCampaignTitle = this.updateCampaignTitle.bind(this);
+    this.updateCampaignDescription = this.updateCampaignDescription.bind(this);
   }
 
   componentDidMount () {
-    // console.log('CampaignTitleInputField, componentDidMount');
+    // console.log('CampaignDescriptionInputField, componentDidMount');
     this.campaignStartStoreListener = CampaignStartStore.addListener(this.onCampaignStartStoreChange.bind(this));
-    const campaignTitle = CampaignStartStore.getCampaignTitle();
+    const campaignDescription = CampaignStartStore.getCampaignDescription();
     this.setState({
-      campaignTitle,
+      campaignDescription,
     });
   }
 
@@ -36,33 +36,34 @@ class CampaignTitleInputField extends Component {
   }
 
   onCampaignStartStoreChange () {
-    const campaignTitle = CampaignStartStore.getCampaignTitle();
-    const campaignTitleQueuedToSave = CampaignStartStore.getCampaignTitleQueuedToSave();
-    const campaignTitleQueuedToSaveSet = CampaignStartStore.getCampaignTitleQueuedToSaveSet();
-    let campaignTitleAdjusted = campaignTitle;
-    if (campaignTitleQueuedToSaveSet) {
-      campaignTitleAdjusted = campaignTitleQueuedToSave;
+    const campaignDescription = CampaignStartStore.getCampaignDescription();
+    const campaignDescriptionQueuedToSave = CampaignStartStore.getCampaignDescriptionQueuedToSave();
+    const campaignDescriptionQueuedToSaveSet = CampaignStartStore.getCampaignDescriptionQueuedToSaveSet();
+    let campaignDescriptionAdjusted = campaignDescription;
+    if (campaignDescriptionQueuedToSaveSet) {
+      campaignDescriptionAdjusted = campaignDescriptionQueuedToSave;
     }
-    // console.log('onCampaignStartStoreChange campaignTitle: ', campaignTitle, ', campaignTitleQueuedToSave: ', campaignTitleQueuedToSave, ', campaignTitleAdjusted:', campaignTitleAdjusted);
+    // console.log('onCampaignStartStoreChange campaignDescription: ', campaignDescription, ', campaignDescriptionQueuedToSave: ', campaignDescriptionQueuedToSave, ', campaignDescriptionAdjusted:', campaignDescriptionAdjusted);
     this.setState({
-      campaignTitle: campaignTitleAdjusted,
+      campaignDescription: campaignDescriptionAdjusted,
     });
   }
 
-  updateCampaignTitle (event) {
-    if (event.target.name === 'campaignTitle') {
-      CampaignStartActions.campaignTitleQueuedToSave(event.target.value);
+  updateCampaignDescription (event) {
+    if (event.target.name === 'campaignDescription') {
+      CampaignStartActions.campaignDescriptionQueuedToSave(event.target.value);
       this.setState({
-        campaignTitle: event.target.value,
+        campaignDescription: event.target.value,
       });
     }
   }
 
   render () {
-    renderLog('CampaignTitleInputField');  // Set LOG_RENDER_EVENTS to log all renders
+    renderLog('CampaignDescriptionInputField');  // Set LOG_RENDER_EVENTS to log all renders
 
-    const { campaignTitlePlaceholder, classes, externalUniqueId } = this.props;
-    const { campaignTitle } = this.state;
+    const { classes, externalUniqueId } = this.props;
+    const { campaignDescription } = this.state;
+
     return (
       <div className="">
         <form onSubmit={(e) => { e.preventDefault(); }}>
@@ -71,14 +72,16 @@ class CampaignTitleInputField extends Component {
               <FormControl classes={{ root: classes.formControl }}>
                 <TextField
                   // classes={{ root: classes.textField }} // Not working yet
-                  id={`campaignTitleTextArea-${externalUniqueId}`}
-                  name="campaignTitle"
+                  id={`campaignDescriptionTextArea-${externalUniqueId}`}
+                  name="campaignDescription"
                   margin="dense"
+                  multiline
+                  rows={8}
                   variant="outlined"
-                  placeholder={campaignTitlePlaceholder || 'What will the candidate(s) accomplish?'}
-                  value={campaignTitle}
+                  placeholder="Why is important for candidate(s) to win?"
+                  value={campaignDescription}
                   onKeyDown={this.handleKeyPress}
-                  onChange={this.updateCampaignTitle}
+                  onChange={this.updateCampaignDescription}
                 />
               </FormControl>
             </ColumnFullWidth>
@@ -88,8 +91,7 @@ class CampaignTitleInputField extends Component {
     );
   }
 }
-CampaignTitleInputField.propTypes = {
-  campaignTitlePlaceholder: PropTypes.string,
+CampaignDescriptionInputField.propTypes = {
   classes: PropTypes.object,
   externalUniqueId: PropTypes.string,
 };
@@ -116,4 +118,4 @@ const Wrapper = styled.div`
   width: calc(100% + 24px);
 `;
 
-export default withStyles(styles)(CampaignTitleInputField);
+export default withStyles(styles)(CampaignDescriptionInputField);

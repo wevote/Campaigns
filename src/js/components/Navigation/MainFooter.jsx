@@ -16,7 +16,15 @@ class MainFooter extends Component {
             <TopSectionInnerWrapper>
               <Column>
                 <ColumnTitle>About We Vote</ColumnTitle>
-                <Link id="footerLinkAbout" className={classes.link} to="/about">About &amp; Team</Link>
+                <OpenExternalWebSite
+                  linkIdAttribute="footerLinkAbout"
+                  url="https://wevote.us/more/about"
+                  target="_blank"
+                  body={(
+                    <span>About &amp; Team</span>
+                  )}
+                  className={classes.link}
+                />
                 <Link id="footerLinkCredits" className={classes.link} to="/credits">Credits &amp; Thanks</Link>
                 {/* <Link id="footerLinkImpact" className={classes.link} to="/impact">Impact</Link> */}
                 <OpenExternalWebSite
@@ -82,7 +90,7 @@ class MainFooter extends Component {
                   url="https://www.facebook.com/WeVoteUSA/"
                   target="_blank"
                   body={(
-                    <span>Facebook - WeVoteUSA</span>
+                    <span>Facebook&nbsp;-&nbsp;WeVoteUSA</span>
                   )}
                   className={classes.link}
                 />
@@ -107,11 +115,11 @@ class MainFooter extends Component {
               </Column>
               <Column>
                 <ColumnTitle>Products</ColumnTitle>
-                <Link id="footerLinkFreeOnlineTools" className={classes.link} to="/settings/tools">Free Tools</Link>
-                <Link id="footerLinkForPricing" className={classes.link} to="/pricing">Pricing</Link>
+                {/* <Link id="footerLinkFreeOnlineTools" className={classes.link} to="/settings/tools">Free Tools</Link> */}
+                {/* <Link id="footerLinkForPricing" className={classes.link} to="/pricing">Pricing</Link> */}
                 <OpenExternalWebSite
                   linkIdAttribute="footerLinkSeeYourBallot"
-                  url="https://ballot.WeVote.US"
+                  url="https://WeVote.US/ballot"
                   target="_blank"
                   body={(
                     <span>See Your Ballot</span>

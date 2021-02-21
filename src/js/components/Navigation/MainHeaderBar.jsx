@@ -139,7 +139,7 @@ export default function MainHeaderBar () {
                   Our Promise: We&apos;ll never sell your email.
                 </Typography>
                 {/* The next 6 lines have a test url of '/', not for production! */}
-                <MenuItem onClick={() => handleClose('/')}>Your campaigns</MenuItem>
+                <MenuItem onClick={() => handleClose('/profile/started')}>Your campaigns</MenuItem>
                 <MenuItem onClick={() => handleClose('/')}>Your ballot</MenuItem>
                 <MenuItem onClick={() => handleClose('/')}>Settings</MenuItem>
                 <MenuItem onClick={() => handleClose('/start-a-campaign')}>Start a campaign</MenuItem>
