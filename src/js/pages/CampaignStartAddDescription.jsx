@@ -9,10 +9,10 @@ import CampaignStartSteps from '../components/Navigation/CampaignStartSteps';
 import CampaignStartStore from '../stores/CampaignStartStore';
 // import CampaignTitleInputField from '../components/CampaignStart/CampaignTitleInputField';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
+import initializejQuery from '../utils/initializejQuery';
 import MainFooter from '../components/Navigation/MainFooter';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
-
 
 class CampaignStartAddDescription extends Component {
   constructor (props) {
@@ -23,11 +23,9 @@ class CampaignStartAddDescription extends Component {
 
   componentDidMount () {
     // console.log('CampaignStartAddDescription, componentDidMount');
-    import('jquery').then(({ default: jquery }) => {
-      window.jQuery = jquery;
-      window.$ = jquery;
+    initializejQuery(() => {
       CampaignStartActions.campaignRetrieveAsOwner('');
-    }).catch((error) => console.error('An error occurred while loading jQuery', error));
+    });
   }
 
   submitCampaignTitle = () => {
