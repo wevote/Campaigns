@@ -72,7 +72,7 @@ class SignInModal extends Component {
 
   // See https://reactjs.org/docs/error-boundaries.html
   static getDerivedStateFromError (error) { // eslint-disable-line no-unused-vars
-    console.error('Error in SignInModal: ', error);
+    console.error('Error caught in SignInModal: ', error);
     // Update state so the next render will show the fallback UI, We should have a "Oh snap" page
     return { hasError: true };
   }
