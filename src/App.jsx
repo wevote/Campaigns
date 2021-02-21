@@ -12,11 +12,13 @@ import WeVoteRouter from './js/components/Widgets/WeVoteRouter';
 const About = React.lazy(() => import('./js/pages/About'));
 const Attributions = React.lazy(() => import('./js/pages/Attributions'));
 const CampaignDetailsPage = React.lazy(() => import('./js/pages/CampaignDetailsPage'));
-const CampaignStartIntro = React.lazy(() => import('./js/pages/CampaignStartIntro'));
 const CampaignStartAddPolitician = React.lazy(() => import('./js/pages/CampaignStartAddPolitician'));
 const CampaignStartAddDescription = React.lazy(() => import('./js/pages/CampaignStartAddDescription'));
 const CampaignStartAddPhoto = React.lazy(() => import('./js/pages/CampaignStartAddPhoto'));
 const CampaignStartAddTitle = React.lazy(() => import('./js/pages/CampaignStartAddTitle'));
+const CampaignStartEditAll = React.lazy(() => import('./js/pages/CampaignStartEditAll'));
+const CampaignStartIntro = React.lazy(() => import('./js/pages/CampaignStartIntro'));
+const CampaignStartPreview = React.lazy(() => import('./js/pages/CampaignStartPreview'));
 const Credits = React.lazy(() => import('./js/pages/Credits'));
 const FAQ = React.lazy(() => import('./js/pages/FAQ'));
 const HomePage = React.lazy(() => import('./js/pages/HomePage'));
@@ -24,6 +26,7 @@ const Impact = React.lazy(() => import('./js/pages/Impact'));
 const Membership = React.lazy(() => import('./js/pages/Membership'));
 const PageNotFound = React.lazy(() => import('./js/pages/PageNotFound'));
 const Privacy = React.lazy(() => import('./js/pages/Privacy'));
+const SettingsCampaignList = React.lazy(() => import('./js/pages/SettingsCampaignList'));
 const StyleGuidePage = React.lazy(() => import('./js/pages/StyleGuidePage'));
 const TermsOfService = React.lazy(() => import('./js/pages/TermsOfService'));
 const TwitterSignInProcess = React.lazy(() => import('./js/pages/TwitterSignInProcess'));
@@ -71,12 +74,16 @@ class App extends Component {
                   <Route exact path="/impact"><Impact /></Route>
                   <Route exact path="/membership"><Membership /></Route>
                   <Route exact path="/privacy"><Privacy /></Route>
+                  <Route exact path="/profile/started"><SettingsCampaignList /></Route>
+                  <Route exact path="/profile/supported"><SettingsCampaignList /></Route>
                   <Route exact path="/ready"><Redirect to="/" /></Route>
                   <Route exact path="/start-a-campaign"><CampaignStartIntro /></Route>
                   <Route exact path="/who-do-you-want-to-see-elected"><CampaignStartAddPolitician /></Route>
                   <Route exact path="/start-a-campaign-why-winning-matters"><CampaignStartAddDescription /></Route>
                   <Route exact path="/start-a-campaign-add-photo"><CampaignStartAddPhoto /></Route>
                   <Route exact path="/start-a-campaign-add-title"><CampaignStartAddTitle /></Route>
+                  <Route exact path="/start-a-campaign-edit-all"><CampaignStartEditAll /></Route>
+                  <Route exact path="/start-a-campaign-preview"><CampaignStartPreview /></Route>
                   <Route exact path="/styles"><StyleGuidePage /></Route>
                   <Route exact path="/terms"><TermsOfService /></Route>
                   <Route exact path="/test/comments"><CommentsTestPage /></Route>

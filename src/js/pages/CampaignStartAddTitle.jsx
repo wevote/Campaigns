@@ -61,7 +61,7 @@ class CampaignStartAddTitle extends Component {
                 Write your campaign title
               </ContentTitle>
               <ContentIntroductionText>
-                This is the first thing people will see about your campaign. Get their attention with a short title that focuses on what the candidate you support will do to improve people&apos;s lives.
+                This is the first thing people will see about your campaign. Get their attention with a short title that focuses on what the candidate(s) you support will do to improve people&apos;s lives.
               </ContentIntroductionText>
               <CampaignStartSectionWrapper>
                 <CampaignStartSection>
@@ -90,30 +90,30 @@ class CampaignStartAddTitle extends Component {
                       <AdviceBoxText>
                         Not: &quot;If you want to have your kids be more engaged at school, vote for Sam Davis for Oakland School Board&quot;
                       </AdviceBoxText>
-                      <AdviceBoxText>
-                        &nbsp;
-                      </AdviceBoxText>
-                      <AdviceBoxTitle>
-                        Focus on the positive change
-                      </AdviceBoxTitle>
-                      <AdviceBoxText>
-                        Example: &quot;&quot;
-                      </AdviceBoxText>
-                      <AdviceBoxText>
-                        Not: &quot;&quot;
-                      </AdviceBoxText>
-                      <AdviceBoxText>
-                        &nbsp;
-                      </AdviceBoxText>
-                      <AdviceBoxTitle>
-                        Communicate urgency
-                      </AdviceBoxTitle>
-                      <AdviceBoxText>
-                        Example: &quot;&quot;
-                      </AdviceBoxText>
-                      <AdviceBoxText>
-                        Not: &quot;&quot;
-                      </AdviceBoxText>
+                      {/* <AdviceBoxText> */}
+                      {/*  &nbsp; */}
+                      {/* </AdviceBoxText> */}
+                      {/* <AdviceBoxTitle> */}
+                      {/*  Focus on the positive change */}
+                      {/* </AdviceBoxTitle> */}
+                      {/* <AdviceBoxText> */}
+                      {/*  Example: &quot;&quot; */}
+                      {/* </AdviceBoxText> */}
+                      {/* <AdviceBoxText> */}
+                      {/*  Not: &quot;&quot; */}
+                      {/* </AdviceBoxText> */}
+                      {/* <AdviceBoxText> */}
+                      {/*  &nbsp; */}
+                      {/* </AdviceBoxText> */}
+                      {/* <AdviceBoxTitle> */}
+                      {/*  Communicate urgency */}
+                      {/* </AdviceBoxTitle> */}
+                      {/* <AdviceBoxText> */}
+                      {/*  Example: &quot;&quot; */}
+                      {/* </AdviceBoxText> */}
+                      {/* <AdviceBoxText> */}
+                      {/*  Not: &quot;&quot; */}
+                      {/* </AdviceBoxText> */}
                     </AdviceBox>
                   </AdviceBoxWrapper>
                 </CampaignStartSection>
