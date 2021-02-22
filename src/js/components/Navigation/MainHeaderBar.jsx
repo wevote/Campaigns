@@ -23,6 +23,8 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '960px',
   },
   logoLinkRoot: {
+    height: 0,
+    fontSize: 0,
   },
   menuButton: {
     fontSize: '4px',
@@ -36,13 +38,16 @@ const useStyles = makeStyles((theme) => ({
   outerWrapper: {
     borderBottom: '1px solid #ddd',
     flexGrow: 1,
-    minHeight: 52,
+    minHeight: 48,
   },
   title: {
     flexGrow: 1,
   },
   toolbarRoot: {
     minHeight: '0 !important',
+  },
+  headerButtonRoot: {
+    maxHeight: 42,
   },
 }));
 
