@@ -1,5 +1,6 @@
 /* eslint-disable */
 // start the express server
+const compression = require('compression')
 const express = require("express");
 const app = express();
 const fs = require("fs");
@@ -8,11 +9,16 @@ const path = require("path");
 const webAppConfig = require("./src/js/config");
 
 module.exports = function (PROD) {
+  if (PROD === undefined) {
+    PROD = 0;
+  }
+  console.log("INFO: top of script", new Date());
   const port = 3000; // PROD ? 3000 : 3003;
   const opts = { redirect: true };
   const hostname = PROD ? webAppConfig.WE_VOTE_HOSTNAME : "localhost";
   const secureCertificateInstalled = webAppConfig.SECURE_CERTIFICATE_INSTALLED || false;
 
+  app.use(compression())
   app.use("/", express.static("build", opts));
   app.all("*", (req, res) => res.sendFile(__dirname + "/build/index.html"));
   if (secureCertificateInstalled) {
