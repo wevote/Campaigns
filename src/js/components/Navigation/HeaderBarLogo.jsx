@@ -17,6 +17,8 @@ const HeaderBarLogo = ({ classes, logoURL, light }) => (
       <WeVoteLogoWrapper>
         <Link className={classes.logoLinkRoot} to={`${isCordova() ? '/' : '/'}`} id="logoHeaderBar">
           <img
+            width="141"
+            height="46"
             alt="We Vote logo"
             src={light ? cordovaDot(logoLight) : cordovaDot(logoDark)}
           />
