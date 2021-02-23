@@ -67,12 +67,12 @@ export default {
       });
   },
 
-  campaignRetrieve (campaignWeVoteId) {
-    Dispatcher.loadEndpoint('campaignRetrieve',
-      {
-        campaignx_we_vote_id: campaignWeVoteId,
-      });
-  },
+  // campaignRetrieve (campaignWeVoteId) {
+  //   Dispatcher.loadEndpoint('campaignRetrieve',
+  //     {
+  //       campaignx_we_vote_id: campaignWeVoteId,
+  //     });
+  // },
 
   campaignRetrieveAsOwner (campaignWeVoteId) {
     Dispatcher.loadEndpoint('campaignRetrieveAsOwner',

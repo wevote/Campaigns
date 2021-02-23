@@ -9,16 +9,23 @@ import { historyPush, isCordova } from '../utils/cordovaUtils';
 import MainFooter from '../components/Navigation/MainFooter';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
+import SettingsCampaignList from '../components/Settings/SettingsCampaignList';
 
-class SettingsCampaignList extends Component {
+class SettingsYourCampaigns extends Component {
   static getProps () {
     return {};
   }
 
+  constructor (props) {
+    super(props);
+    this.state = {
+    };
+  }
+
   render () {
-    renderLog('SettingsCampaignList');  // Set LOG_RENDER_EVENTS to log all renders
+    renderLog('SettingsYourCampaigns');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
-      console.log(`SettingsCampaignList window.location.href: ${window.location.href}`);
+      console.log(`SettingsYourCampaigns window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
     return (
@@ -40,13 +47,14 @@ class SettingsCampaignList extends Component {
             </Button>
           </IntroductionMessageSection>
           <CampaignListTabs />
+          <SettingsCampaignList />
         </PageWrapper>
         <MainFooter />
       </div>
     );
   }
 }
-SettingsCampaignList.propTypes = {
+SettingsYourCampaigns.propTypes = {
   classes: PropTypes.object,
 };
 
@@ -98,4 +106,4 @@ const PageWrapper = styled.div`
   }
 `;
 
-export default withStyles(styles)(SettingsCampaignList);
+export default withStyles(styles)(SettingsYourCampaigns);

@@ -21,15 +21,6 @@ export function abbreviateNumber (num) {
   return num;
 }
 
-export function arrayContains (needle, arrayHaystack) {
-  // console.log("arrayContains, needle:", needle, ", haystack: ", arrayHaystack);
-  if (arrayHaystack) {
-    return arrayHaystack.indexOf(needle) > -1;
-  } else {
-    return false;
-  }
-}
-
 // We assume that arrayHaystack contains objects with one property with the name in needleProperty
 // When we find the first object in the arrayHaystack, replace it with the newObject
 export function arrayReplaceObjectMatchingPropertyValue (needleValue, needleProperty, arrayHaystack, newObject) {
@@ -245,14 +236,7 @@ export function numberWithCommas (rawNumber) {
   }
 }
 
-/**
- * DEPRECATED -- DO NOT USE ANYMORE
- * We now have a String.startsWith polyfill for IE 10
- * @param needle
- * @param incomingString
- * @returns {boolean}
- */
-export function startsWith (needle, incomingString) {
+function startsWithLocal (needle, incomingString) {
   // IE 10 does not support the "string.startsWith" function.  DO NOT USE THAT FUNCTION
   // console.log("startsWith, needle:", needle, ", haystack: ", incomingString);
   if (incomingString) {
@@ -268,19 +252,19 @@ export function removeTwitterNameFromDescription (displayName, twitterDescriptio
   const twitterDescriptionNotNull = twitterDescription || '';
   let twitterDescriptionMinusName;
 
-  if (startsWith(displayNameNotNull, twitterDescriptionNotNull)) {
+  if (startsWithLocal(displayNameNotNull, twitterDescriptionNotNull)) {
     twitterDescriptionMinusName = twitterDescriptionNotNull.substr(displayNameNotNull.length);
-  } else if (startsWith(`The ${displayNameNotNull}`, twitterDescriptionNotNull)) {
+  } else if (startsWithLocal(`The ${displayNameNotNull}`, twitterDescriptionNotNull)) {
     twitterDescriptionMinusName = twitterDescriptionNotNull.substr(displayNameNotNull.length + 4);
   } else if (twitterDescriptionNotNull.length) {
     twitterDescriptionMinusName = twitterDescriptionNotNull;
   } else {
     twitterDescriptionMinusName = '';
   }
-  if (startsWith(', ', twitterDescriptionMinusName)) {
+  if (startsWithLocal(', ', twitterDescriptionMinusName)) {
     twitterDescriptionMinusName = twitterDescriptionMinusName.substr(2);
   }
-  if (startsWith(': ', twitterDescriptionMinusName)) {
+  if (startsWithLocal(': ', twitterDescriptionMinusName)) {
     twitterDescriptionMinusName = twitterDescriptionMinusName.substr(2);
   }
   return twitterDescriptionMinusName;

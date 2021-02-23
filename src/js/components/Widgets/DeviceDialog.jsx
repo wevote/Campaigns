@@ -5,7 +5,7 @@ import { withStyles, withTheme } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import { hasIPhoneNotch } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
-import { startsWith } from '../../utils/textFormat';
+import startsWith from '../../utils/startsWith';
 import VoterStore from '../../stores/VoterStore';
 
 const webAppConfig = require('../../config');

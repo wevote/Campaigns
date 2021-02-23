@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { renderLog } from '../../utils/logging';
-import HomeCampaignItem from './HomeCampaignItem';
+import CampaignCardForList from '../Campaign/CampaignCardForList';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
 
 
@@ -90,7 +90,7 @@ class HomeCampaignList extends Component {
             // console.log('numberOfBallotItemsDisplayed: ', numberOfBallotItemsDisplayed);
             return (
               <div key={`oneCampaignItem-${oneCampaign.campaign_we_vote_id}`}>
-                <HomeCampaignItem
+                <CampaignCardForList
                   campaignWeVoteId={oneCampaign.campaign_we_vote_id}
                 />
               </div>

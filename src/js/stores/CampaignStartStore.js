@@ -169,7 +169,7 @@ class CampaignStartStore extends ReduceStore {
           };
         }
 
-      case 'campaignRetrieve':
+      // case 'campaignRetrieve':
       case 'campaignRetrieveAsOwner':
         // console.log('CampaignStartStore campaignRetrieveAsOwner');
         return {
