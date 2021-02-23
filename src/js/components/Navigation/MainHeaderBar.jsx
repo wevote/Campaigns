@@ -23,6 +23,8 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '960px',
   },
   logoLinkRoot: {
+    height: 0,
+    fontSize: 0,
   },
   menuButton: {
     fontSize: '4px',
@@ -33,16 +35,34 @@ const useStyles = makeStyles((theme) => ({
   menuRoot: {
     marginTop: '34px',
   },
+  menuItem: {
+    [theme.breakpoints.down('md')]: {
+      minHeight: 'unset',
+    },
+  },
+  menuExtraItem: {
+    fontSize: 12,
+    paddingTop: 'unset',
+    paddingBottom: 6,
+    lineHeight: 'unset',
+    opacity: '60%',
+    [theme.breakpoints.down('md')]: {
+      minHeight: 'unset',
+    },
+  },
   outerWrapper: {
     borderBottom: '1px solid #ddd',
     flexGrow: 1,
-    minHeight: 52,
+    minHeight: 48,
   },
   title: {
     flexGrow: 1,
   },
   toolbarRoot: {
     minHeight: '0 !important',
+  },
+  headerButtonRoot: {
+    maxHeight: 42,
   },
 }));
 
@@ -65,14 +85,6 @@ export default function MainHeaderBar () {
     // console.log('MainHeaderBar signOut');
     setAnchorEl(null);
     voterSignOut();
-  };
-
-  const extraItems = {
-    fontSize: 12,
-    paddingTop: 'unset',
-    paddingBottom: 6,
-    lineHeight: 'unset',
-    opacity: '60%',
   };
 
   const ourPromise = {
@@ -139,17 +151,17 @@ export default function MainHeaderBar () {
                   Our Promise: We&apos;ll never sell your email.
                 </Typography>
                 {/* The next 6 lines have a test url of '/', not for production! */}
-                <MenuItem onClick={() => handleClose('/profile/started')}>Your campaigns</MenuItem>
-                <MenuItem onClick={() => handleClose('/')}>Your ballot</MenuItem>
-                <MenuItem onClick={() => handleClose('/')}>Settings</MenuItem>
-                <MenuItem onClick={() => handleClose('/start-a-campaign')}>Start a campaign</MenuItem>
-                <MenuItem onClick={() => handleClose('/membership')}>Membership</MenuItem>
-                <MenuItem onClick={() => handleClose('/')}>Search</MenuItem>
-                <MenuItem onClick={() => signOut()}>Sign out</MenuItem>
+                <MenuItem className={classes.menuItem} onClick={() => handleClose('/profile/started')}>Your campaigns</MenuItem>
+                <MenuItem className={classes.menuItem} onClick={() => handleClose('/')}>Your ballot</MenuItem>
+                <MenuItem className={classes.menuItem} onClick={() => handleClose('/')}>Settings</MenuItem>
+                <MenuItem className={classes.menuItem} onClick={() => handleClose('/start-a-campaign')}>Start a campaign</MenuItem>
+                <MenuItem className={classes.menuItem} onClick={() => handleClose('/membership')}>Membership</MenuItem>
+                <MenuItem className={classes.menuItem} onClick={() => handleClose('/')}>Search</MenuItem>
+                <MenuItem className={classes.menuItem} onClick={() => signOut()}>Sign out</MenuItem>
                 <span style={{ lineHeight: '28px' }}>&nbsp;</span>
-                <MenuItem style={extraItems} onClick={() => handleClose('/faq')}>Frequently asked questions</MenuItem>
-                <MenuItem style={extraItems} onClick={() => handleClose('/terms')}>Terms of service</MenuItem>
-                <MenuItem style={extraItems} onClick={() => handleClose('/privacy')}>Privacy Policy</MenuItem>
+                <MenuItem className={classes.menuExtraItem} onClick={() => handleClose('/faq')}>Frequently asked questions</MenuItem>
+                <MenuItem className={classes.menuExtraItem} onClick={() => handleClose('/terms')}>Terms of service</MenuItem>
+                <MenuItem className={classes.menuExtraItem} onClick={() => handleClose('/privacy')}>Privacy Policy</MenuItem>
               </Menu>
             </div>
           </Toolbar>

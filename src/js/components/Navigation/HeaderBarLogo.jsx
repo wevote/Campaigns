@@ -18,7 +18,7 @@ const HeaderBarLogo = ({ classes, logoURL, light }) => (
         <Link className={classes.logoLinkRoot} to={`${isCordova() ? '/' : '/'}`} id="logoHeaderBar">
           <img
             width="141"
-            height="46"
+            height="44"
             alt="We Vote logo"
             src={light ? cordovaDot(logoLight) : cordovaDot(logoDark)}
           />
@@ -41,6 +41,7 @@ const HeaderBarWrapper = styled.div`
 `;
 
 const WeVoteLogoWrapper = styled.div`
+  margin-top: -2px;
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
   }
 `;
