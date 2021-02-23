@@ -131,7 +131,7 @@ CampaignStartPreview.propTypes = {
   classes: PropTypes.object,
 };
 
-const styles = () => ({
+const styles = (theme) => ({
   buttonEdit: {
     boxShadow: 'none !important',
     fontSize: '18px',
@@ -145,9 +145,11 @@ const styles = () => ({
     fontSize: '18px',
     height: '45px !important',
     marginLeft: 10,
-    padding: '0 30px',
     textTransform: 'none',
     width: 200,
+    [theme.breakpoints.down('sm')]: {
+      width: 150,
+    },
   },
   buttonRoot: {
     width: 250,

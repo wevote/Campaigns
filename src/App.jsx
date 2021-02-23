@@ -26,7 +26,7 @@ const Impact = React.lazy(() => import('./js/pages/Impact'));
 const Membership = React.lazy(() => import('./js/pages/Membership'));
 const PageNotFound = React.lazy(() => import('./js/pages/PageNotFound'));
 const Privacy = React.lazy(() => import('./js/pages/Privacy'));
-const SettingsCampaignList = React.lazy(() => import('./js/pages/SettingsCampaignList'));
+const SettingsYourCampaigns = React.lazy(() => import('./js/pages/SettingsYourCampaigns'));
 const StyleGuidePage = React.lazy(() => import('./js/pages/StyleGuidePage'));
 const TermsOfService = React.lazy(() => import('./js/pages/TermsOfService'));
 const TwitterSignInProcess = React.lazy(() => import('./js/pages/TwitterSignInProcess'));
@@ -74,8 +74,8 @@ class App extends Component {
                   <Route exact path="/impact"><Impact /></Route>
                   <Route exact path="/membership"><Membership /></Route>
                   <Route exact path="/privacy"><Privacy /></Route>
-                  <Route exact path="/profile/started"><SettingsCampaignList /></Route>
-                  <Route exact path="/profile/supported"><SettingsCampaignList /></Route>
+                  <Route exact path="/profile/started"><SettingsYourCampaigns /></Route>
+                  <Route exact path="/profile/supported"><SettingsYourCampaigns /></Route>
                   <Route exact path="/ready"><Redirect to="/" /></Route>
                   <Route exact path="/start-a-campaign"><CampaignStartIntro /></Route>
                   <Route exact path="/who-do-you-want-to-see-elected"><CampaignStartAddPolitician /></Route>

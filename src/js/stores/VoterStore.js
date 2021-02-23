@@ -709,7 +709,7 @@ class VoterStore extends ReduceStore {
         //   }
         // }
 
-        console.log('voterRetrieve incoming voter_id: ', incomingVoter.we_vote_id);
+        // console.log('voterRetrieve incoming voter_id: ', incomingVoter.we_vote_id);
         return {
           ...state,
           facebookPhotoRetrieveLoopCount: facebookPhotoRetrieveLoopCount + 1,
