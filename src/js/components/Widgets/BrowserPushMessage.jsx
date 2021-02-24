@@ -16,16 +16,16 @@ class BrowserPushMessage extends Component {
   }
 
   // eslint-disable-next-line camelcase,react/sort-comp
-  UNSAFE_componentWillReceiveProps (nextProps) {
-    // When a new candidate is passed in, update this component to show the new data
-    if (nextProps.incomingProps && nextProps.incomingProps.location && nextProps.incomingProps.location.state) {
-      this.setState({
-        message: nextProps.incomingProps.location.state.message,
-        name: nextProps.incomingProps.location.state.message_name,
-        // type: nextProps.incomingProps.location.state.message_type,
-      });
-    }
-  }
+  // UNSAFE_componentWillReceiveProps (nextProps) {
+  //   // When a new candidate is passed in, update this component to show the new data
+  //   if (nextProps.incomingProps && nextProps.incomingProps.location && nextProps.incomingProps.location.state) {
+  //     this.setState({
+  //       message: nextProps.incomingProps.location.state.message,
+  //       name: nextProps.incomingProps.location.state.message_name,
+  //       // type: nextProps.incomingProps.location.state.message_type,
+  //     });
+  //   }
+  // }
 
   handleClose = () => this.setState({ open: false });
 
@@ -76,7 +76,7 @@ class BrowserPushMessage extends Component {
 }
 BrowserPushMessage.propTypes = {
   externalUniqueId: PropTypes.string,
-  incomingProps: PropTypes.object, // needs more specificity
+  // incomingProps: PropTypes.object, // needs more specificity
   classes: PropTypes.object,
 };
 

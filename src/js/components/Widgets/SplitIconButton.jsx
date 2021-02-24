@@ -15,20 +15,32 @@ class SplitIconButton extends PureComponent {
       fontColor,
       fontSize,
       icon,
+      styles,
       title,
       variant,
     } = this.props;
-    const buttonStyle = {
+    const defaultButtonStyles = {
       background: backgroundColor || '#2e3c5d',
       border: '1px solid rgba(46, 60, 93, .5)',
       color: fontColor || getTextColorFromBackground(backgroundColor || '#2e3c5d'),
       fontSize: fontSize || '13px',
     };
+
+    let buttonStyles = {};
+    if (styles) {
+      buttonStyles = {
+        ...defaultButtonStyles,
+        ...styles,
+      };
+    } else {
+      buttonStyles = defaultButtonStyles;
+    }
+
     if (compressedSize) {
-      buttonStyle.border = '1px solid rgba(46, 60, 93, .5)';
-      buttonStyle.padding = 4;
-      buttonStyle.width = 160;
-      buttonStyle.height = 32;
+      buttonStyles.border = '1px solid rgba(46, 60, 93, .5)';
+      buttonStyles.padding = 4;
+      buttonStyles.width = 160;
+      buttonStyles.height = 32;
     }
 
     return (
@@ -38,7 +50,7 @@ class SplitIconButton extends PureComponent {
         disabled={this.props.disabled}
         id={`${this.props.externalUniqueId}-splitIconButton`}
         title={title}
-        style={buttonStyle}
+        style={buttonStyles}
         onClick={this.props.onClick}
         onKeyDown={this.props.onKeyDown}
         variant={variant || 'contained'}
@@ -83,6 +95,7 @@ SplitIconButton.propTypes = {
   onClick: PropTypes.func,
   onKeyDown: PropTypes.func,
   separatorColor: PropTypes.string,
+  styles: PropTypes.object,
   title: PropTypes.string,
   variant: PropTypes.string,
 };

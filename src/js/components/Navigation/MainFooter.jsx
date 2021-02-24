@@ -8,9 +8,11 @@ import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
 
 class MainFooter extends Component {
   render () {
-    const { classes } = this.props;
+    const { classes, displayFooter } = this.props;
+    const disp = displayFooter !== undefined ? displayFooter : true;
+
     return (
-      <OuterWrapper>
+      <OuterWrapper displayFooter={disp}>
         <InnerWrapper>
           <TopSectionOuterWrapper>
             <TopSectionInnerWrapper>
@@ -158,6 +160,7 @@ class MainFooter extends Component {
 }
 MainFooter.propTypes = {
   classes: PropTypes.object,
+  displayFooter: PropTypes.bool,
 };
 
 const styles = (theme) => ({
@@ -233,6 +236,7 @@ const OuterWrapper = styled.div`
   border-top: 1px solid #ddd;
   margin-top: 30px;
   width: 100%;
+  display: ${({ displayFooter }) => ((displayFooter) ? '' : 'none')};
 `;
 
 const Text = styled.p`
