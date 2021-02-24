@@ -26,6 +26,7 @@ class CheckoutForm extends React.Component {
       type: 'card',
       card: elements.getElement(CardElement),
     });
+    console.log(`handleSubmit error: ${error}  paymentMethod: ${paymentMethod}`);
   };
 
   render () {

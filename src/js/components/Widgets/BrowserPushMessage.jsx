@@ -76,7 +76,7 @@ class BrowserPushMessage extends Component {
 }
 BrowserPushMessage.propTypes = {
   externalUniqueId: PropTypes.string,
-  incomingProps: PropTypes.object, // needs more specificity
+  // incomingProps: PropTypes.object, // needs more specificity
   classes: PropTypes.object,
 };
 

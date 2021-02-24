@@ -16,7 +16,7 @@ import { renderLog } from '../utils/logging';
 const InjectedCheckoutForm = (value) => (
   <ElementsConsumer>
     {({ stripe, elements }) => (
-      <CheckoutForm stripe={stripe} elements={elements} value={value}/>
+      <CheckoutForm stripe={stripe} elements={elements} value={value} />
     )}
   </ElementsConsumer>
 );
