@@ -4,15 +4,15 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import CampaignStartActions from '../actions/CampaignStartActions';
-import CampaignStartSteps from '../components/Navigation/CampaignStartSteps';
-import CampaignStartStore from '../stores/CampaignStartStore';
-import CampaignTitleInputField from '../components/CampaignStart/CampaignTitleInputField';
-import { historyPush, isCordova } from '../utils/cordovaUtils';
-import MainFooter from '../components/Navigation/MainFooter';
-import MainHeaderBar from '../components/Navigation/MainHeaderBar';
-import initializejQuery from '../utils/initializejQuery';
-import { renderLog } from '../utils/logging';
+import CampaignStartActions from '../../actions/CampaignStartActions';
+import CampaignStartSteps from '../../components/Navigation/CampaignStartSteps';
+import CampaignStartStore from '../../stores/CampaignStartStore';
+import CampaignTitleInputField from '../../components/CampaignStart/CampaignTitleInputField';
+import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import MainFooter from '../../components/Navigation/MainFooter';
+import MainHeaderBar from '../../components/Navigation/MainHeaderBar';
+import initializejQuery from '../../utils/initializejQuery';
+import { renderLog } from '../../utils/logging';
 
 
 

@@ -4,16 +4,16 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import AddCandidateInputField from '../components/CampaignStart/AddPoliticianInputField';
-import CampaignDescriptionInputField from '../components/CampaignStart/CampaignDescriptionInputField';
-import CampaignPhotoUpload from '../components/CampaignStart/CampaignPhotoUpload';
-import CampaignStartActions from '../actions/CampaignStartActions';
-import CampaignStartStore from '../stores/CampaignStartStore';
-import CampaignTitleInputField from '../components/CampaignStart/CampaignTitleInputField';
-import { historyPush, isCordova } from '../utils/cordovaUtils';
-import MainFooter from '../components/Navigation/MainFooter';
-import MainHeaderBar from '../components/Navigation/MainHeaderBar';
-import { renderLog } from '../utils/logging';
+import AddCandidateInputField from '../../components/CampaignStart/AddPoliticianInputField';
+import CampaignDescriptionInputField from '../../components/CampaignStart/CampaignDescriptionInputField';
+import CampaignPhotoUpload from '../../components/CampaignStart/CampaignPhotoUpload';
+import CampaignStartActions from '../../actions/CampaignStartActions';
+import CampaignStartStore from '../../stores/CampaignStartStore';
+import CampaignTitleInputField from '../../components/CampaignStart/CampaignTitleInputField';
+import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import MainFooter from '../../components/Navigation/MainFooter';
+import MainHeaderBar from '../../components/Navigation/MainHeaderBar';
+import { renderLog } from '../../utils/logging';
 
 
 class CampaignStartEditAll extends Component {
