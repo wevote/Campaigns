@@ -4,15 +4,15 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import AppActions from '../actions/AppActions';
-import CampaignStartActions from '../actions/CampaignStartActions';
-import CampaignStartCompleteYourProfileController from '../components/CampaignStart/CampaignStartCompleteYourProfileController';
-import CampaignStartStore from '../stores/CampaignStartStore';
-import { historyPush, isCordova } from '../utils/cordovaUtils';
-import MainFooter from '../components/Navigation/MainFooter';
-import MainHeaderBar from '../components/Navigation/MainHeaderBar';
-import { renderLog } from '../utils/logging';
-import VoterStore from '../stores/VoterStore';
+import AppActions from '../../actions/AppActions';
+import CampaignStartActions from '../../actions/CampaignStartActions';
+import CampaignStartCompleteYourProfileController from '../../components/CampaignStart/CampaignStartCompleteYourProfileController';
+import CampaignStartStore from '../../stores/CampaignStartStore';
+import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import MainFooter from '../../components/Navigation/MainFooter';
+import MainHeaderBar from '../../components/Navigation/MainHeaderBar';
+import { renderLog } from '../../utils/logging';
+import VoterStore from '../../stores/VoterStore';
 
 
 class CampaignStartPreview extends Component {

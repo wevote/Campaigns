@@ -4,13 +4,13 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import CampaignListTabs from '../components/Navigation/CampaignListTabs';
-import { historyPush, isCordova } from '../utils/cordovaUtils';
-import MainFooter from '../components/Navigation/MainFooter';
-import MainHeaderBar from '../components/Navigation/MainHeaderBar';
-import { renderLog } from '../utils/logging';
-import SettingsCampaignList from '../components/Settings/SettingsCampaignList';
-import VoterStore from '../stores/VoterStore';
+import CampaignListTabs from '../../components/Navigation/CampaignListTabs';
+import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import MainFooter from '../../components/Navigation/MainFooter';
+import MainHeaderBar from '../../components/Navigation/MainHeaderBar';
+import { renderLog } from '../../utils/logging';
+import SettingsCampaignList from '../../components/Settings/SettingsCampaignList';
+import VoterStore from '../../stores/VoterStore';
 
 class SettingsYourCampaigns extends Component {
   static getProps () {

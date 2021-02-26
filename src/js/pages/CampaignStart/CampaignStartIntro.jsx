@@ -4,10 +4,10 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import { historyPush, isCordova } from '../utils/cordovaUtils';
-import MainFooter from '../components/Navigation/MainFooter';
-import MainHeaderBar from '../components/Navigation/MainHeaderBar';
-import { renderLog } from '../utils/logging';
+import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import MainFooter from '../../components/Navigation/MainFooter';
+import MainHeaderBar from '../../components/Navigation/MainHeaderBar';
+import { renderLog } from '../../utils/logging';
 
 
 class CampaignStartIntro extends Component {
