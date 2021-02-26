@@ -29,8 +29,14 @@ class VoterStore extends ReduceStore {
       },
       smsPhoneNumberStatus: {},
       smsPhoneNumberList: [],
+      voterEmailQueuedToSave: '',
+      voterEmailQueuedToSaveSet: false,
+      voterFirstNameQueuedToSave: '',
+      voterFirstNameQueuedToSaveSet: false,
       voterFound: false,
       voterExternalIdHasBeenSavedOnce: {}, // Dict with externalVoterId and membershipOrganizationWeVoteId as keys, and true/false as value
+      voterLastNameQueuedToSave: '',
+      voterLastNameQueuedToSaveSet: false,
       voterNotificationSettingsUpdateStatus: {
         apiResponseReceived: false,
         emailFound: false,
@@ -48,6 +54,10 @@ class VoterStore extends ReduceStore {
 
   getVoter () {
     return this.getState().voter;
+  }
+
+  getVoterEmail () {
+    return this.getState().voter.email || '';
   }
 
   getVoterWeVoteId () {
@@ -228,8 +238,36 @@ class VoterStore extends ReduceStore {
     return this.getState().twitterSignInStatus || {};
   }
 
+  getVoterEmailQueuedToSave () {
+    return this.getState().voterEmailQueuedToSave;
+  }
+
+  getVoterEmailQueuedToSaveSet () {
+    return this.getState().voterEmailQueuedToSaveSet;
+  }
+
+  getVoterFirstNameQueuedToSave () {
+    return this.getState().voterFirstNameQueuedToSave;
+  }
+
+  getVoterFirstNameQueuedToSaveSet () {
+    return this.getState().voterFirstNameQueuedToSaveSet;
+  }
+
+  getVoterLastNameQueuedToSave () {
+    return this.getState().voterLastNameQueuedToSave;
+  }
+
+  getVoterLastNameQueuedToSaveSet () {
+    return this.getState().voterLastNameQueuedToSaveSet;
+  }
+
   getVoterIsSignedIn () {
     return this.getState().voter.is_signed_in || false;
+  }
+
+  getVoterIsSignedInWithEmail () {
+    return this.getState().voter.signed_in_with_email || false;
   }
 
   getVoterNotificationSettingsUpdateStatus () {
@@ -610,6 +648,54 @@ class VoterStore extends ReduceStore {
             facebook_account_created: action.res.facebook_account_created,
           },
         };
+
+      case 'voterEmailQueuedToSave':
+        // console.log('VoterStore voterEmailQueuedToSave: ', action.payload);
+        if (action.payload === undefined) {
+          return {
+            ...state,
+            voterEmailQueuedToSave: '',
+            voterEmailQueuedToSaveSet: false,
+          };
+        } else {
+          return {
+            ...state,
+            voterEmailQueuedToSave: action.payload,
+            voterEmailQueuedToSaveSet: true,
+          };
+        }
+
+      case 'voterFirstNameQueuedToSave':
+        // console.log('VoterStore voterFirstNameQueuedToSave: ', action.payload);
+        if (action.payload === undefined) {
+          return {
+            ...state,
+            voterFirstNameQueuedToSave: '',
+            voterFirstNameQueuedToSaveSet: false,
+          };
+        } else {
+          return {
+            ...state,
+            voterFirstNameQueuedToSave: action.payload,
+            voterFirstNameQueuedToSaveSet: true,
+          };
+        }
+
+      case 'voterLastNameQueuedToSave':
+        // console.log('VoterStore voterLastNameQueuedToSave: ', action.payload);
+        if (action.payload === undefined) {
+          return {
+            ...state,
+            voterLastNameQueuedToSave: '',
+            voterLastNameQueuedToSaveSet: false,
+          };
+        } else {
+          return {
+            ...state,
+            voterLastNameQueuedToSave: action.payload,
+            voterLastNameQueuedToSaveSet: true,
+          };
+        }
 
       case 'voterMergeTwoAccounts':
         console.log('VoterStore, voterMergeTwoAccounts');

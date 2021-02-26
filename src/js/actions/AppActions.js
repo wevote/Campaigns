@@ -40,6 +40,10 @@ export default {
     Dispatcher.dispatch({ type: 'showAdviserIntroModal', payload: show });
   },
 
+  setShowCampaignStartCompleteYourProfileModal (show) {
+    Dispatcher.dispatch({ type: 'showCampaignStartCompleteYourProfileModal', payload: show });
+  },
+
   setShowEditAddressButton (show) {
     Dispatcher.dispatch({ type: 'showEditAddressButton', payload: show });
   },

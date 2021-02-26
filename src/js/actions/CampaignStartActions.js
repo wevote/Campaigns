@@ -67,12 +67,13 @@ export default {
       });
   },
 
-  // campaignRetrieve (campaignWeVoteId) {
-  //   Dispatcher.loadEndpoint('campaignRetrieve',
-  //     {
-  //       campaignx_we_vote_id: campaignWeVoteId,
-  //     });
-  // },
+  campaignPublishNow (campaignWeVoteId) {
+    Dispatcher.loadEndpoint('campaignStartSave',
+      {
+        campaign_publish_now: true,
+        campaignx_we_vote_id: campaignWeVoteId,
+      });
+  },
 
   campaignRetrieveAsOwner (campaignWeVoteId) {
     Dispatcher.loadEndpoint('campaignRetrieveAsOwner',
@@ -91,6 +92,16 @@ export default {
       {
         campaign_title: campaignTitle,
         campaign_title_changed: true,
+        campaignx_we_vote_id: campaignWeVoteId,
+      });
+  },
+
+  inDraftModeSave (campaignWeVoteId, inDraftMode) {
+    // console.log('campaignDescriptionSave: ', campaignDescription);
+    Dispatcher.loadEndpoint('campaignStartSave',
+      {
+        in_draft_mode: inDraftMode,
+        in_draft_mode_changed: true,
         campaignx_we_vote_id: campaignWeVoteId,
       });
   },

@@ -61,9 +61,9 @@ class SettingsCampaignList extends Component {
   // }
 
   render () {
-    const { campaignList, loadingMoreItems, numberOfCampaignsToDisplay, voterStartedCampaignList, voterSupportedCampaignList } = this.state;
     renderLog('SettingsCampaignList');  // Set LOG_RENDER_EVENTS to log all renders
     // console.log('SettingsCampaignList render');
+    const { loadingMoreItems, numberOfCampaignsToDisplay, voterStartedCampaignList, voterSupportedCampaignList } = this.state;
     const { location: { pathname } } = window;
     let showSupportedCampaigns = false;
     if (startsWith('/profile/supported', pathname)) {
@@ -94,27 +94,24 @@ class SettingsCampaignList extends Component {
             </div>
             <LoadMoreItemsManuallyWrapper>
               {/*  onClick={this.increaseNumberOfPositionItemsToDisplay} */}
-              {!!(campaignList && campaignList.length > 1) && (
+              {!!(voterSupportedCampaignList && voterSupportedCampaignList.length > 1) && (
                 <LoadMoreItemsManually
                   loadingMoreItemsNow={loadingMoreItems}
                   numberOfItemsDisplayed={numberOfCampaignsDisplayed}
-                  numberOfItemsTotal={campaignList.length}
+                  numberOfItemsTotal={voterSupportedCampaignList.length}
                 />
               )}
             </LoadMoreItemsManuallyWrapper>
           </div>
         ) : (
           <div>
-            {voterStartedCampaignList.map((oneCampaign) => {
-              // console.log('oneCampaign:', oneCampaign);
-              return (
-                <div key={`oneCampaignItemStarted-${oneCampaign.campaignx_we_vote_id}`}>
-                  <CampaignCardForList
-                    campaignXWeVoteId={oneCampaign.campaignx_we_vote_id}
-                  />
-                </div>
-              );
-            })}
+            {voterStartedCampaignList.map((oneCampaign) => (
+              <div key={`oneCampaignItemStarted-${oneCampaign.campaignx_we_vote_id}`}>
+                <CampaignCardForList
+                  campaignXWeVoteId={oneCampaign.campaignx_we_vote_id}
+                />
+              </div>
+            ))}
           </div>
         )}
       </Wrapper>

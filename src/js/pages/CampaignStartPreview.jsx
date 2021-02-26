@@ -4,12 +4,15 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
+import AppActions from '../actions/AppActions';
 import CampaignStartActions from '../actions/CampaignStartActions';
+import CampaignStartCompleteYourProfileController from '../components/CampaignStart/CampaignStartCompleteYourProfileController';
 import CampaignStartStore from '../stores/CampaignStartStore';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
 import MainFooter from '../components/Navigation/MainFooter';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
+import VoterStore from '../stores/VoterStore';
 
 
 class CampaignStartPreview extends Component {
@@ -22,7 +25,9 @@ class CampaignStartPreview extends Component {
   componentDidMount () {
     // console.log('CampaignStartPreview, componentDidMount');
     this.onCampaignStartStoreChange();
+    this.onVoterStoreChange();
     this.campaignStartStoreListener = CampaignStartStore.addListener(this.onCampaignStartStoreChange.bind(this));
+    this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
     import('jquery').then(({ default: jquery }) => {
       window.jQuery = jquery;
       window.$ = jquery;
@@ -32,6 +37,7 @@ class CampaignStartPreview extends Component {
 
   componentWillUnmount () {
     this.campaignStartStoreListener.remove();
+    this.voterStoreListener.remove();
   }
 
   onCampaignStartStoreChange () {
@@ -42,11 +48,24 @@ class CampaignStartPreview extends Component {
     const step2Completed = CampaignStartStore.campaignPoliticianListExists();
     const step3Completed = CampaignStartStore.campaignDescriptionExists();
     const readyToPublish = step1Completed && step2Completed && step3Completed;
+    const voterSignedInWithEmail = CampaignStartStore.getVoterSignedInWithEmail();
     this.setState({
       campaignDescription,
       campaignPhotoLargeUrl,
       campaignTitle,
       readyToPublish,
+      voterSignedInWithEmail,
+    });
+  }
+
+  onVoterStoreChange () {
+    const voterFirstName = VoterStore.getFirstName();
+    const voterLastName = VoterStore.getLastName();
+    const voterSignedInWithEmail = VoterStore.getVoterIsSignedInWithEmail();
+    this.setState({
+      voterFirstName,
+      voterLastName,
+      voterSignedInWithEmail,
     });
   }
 
@@ -54,8 +73,30 @@ class CampaignStartPreview extends Component {
     historyPush('/start-a-campaign-edit-all');
   }
 
-  submitPublishNow = () => {
-    historyPush('/c/sam-davis-for-oakland-school-board');
+  submitPublishNowDesktop = () => {
+    const { voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
+    if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
+      // Open complete your profile modal
+      AppActions.setShowCampaignStartCompleteYourProfileModal(true);
+    } else {
+      // Mark the campaign as published
+      const campaignWeVoteId = '';
+      CampaignStartActions.inDraftModeSave(campaignWeVoteId, false);
+      historyPush('/profile/started');
+    }
+  }
+
+  submitPublishNowMobile = () => {
+    const { voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
+    if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
+      // Navigate to the mobile complete your profile page
+      historyPush('/start-a-campaign-complete-your-profile');
+    } else {
+      // Mark the campaign as published
+      const campaignWeVoteId = '';
+      CampaignStartActions.inDraftModeSave(campaignWeVoteId, false);
+      historyPush('/profile/started');
+    }
   }
 
   render () {
@@ -64,7 +105,10 @@ class CampaignStartPreview extends Component {
       console.log(`CampaignStartPreview window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
-    const { campaignDescription, campaignPhotoLargeUrl, campaignTitle, readyToPublish } = this.state;
+    const {
+      campaignDescription, campaignPhotoLargeUrl, campaignTitle, readyToPublish,
+      // voterFirstName, voterLastName, voterSignedInWithEmail,
+    } = this.state;
     return (
       <div>
         <Helmet title="Preview Your Campaign - We Vote Campaigns" />
@@ -81,16 +125,30 @@ class CampaignStartPreview extends Component {
               >
                 Edit
               </Button>
-              <Button
-                classes={{ root: classes.buttonSave }}
-                color="primary"
-                disabled={!readyToPublish}
-                id="saveCampaignEditAll"
-                onClick={this.submitPublishNow}
-                variant="contained"
-              >
-                Publish Now
-              </Button>
+              <div className="u-show-mobile-tablet">
+                <Button
+                  classes={{ root: classes.buttonSave }}
+                  color="primary"
+                  disabled={!readyToPublish}
+                  id="saveCampaignPublishNowMobile"
+                  onClick={this.submitPublishNowMobile}
+                  variant="contained"
+                >
+                  Publish Now
+                </Button>
+              </div>
+              <div className="u-show-desktop">
+                <Button
+                  classes={{ root: classes.buttonSave }}
+                  color="primary"
+                  disabled={!readyToPublish}
+                  id="saveCampaignPublishNowDesktop"
+                  onClick={this.submitPublishNowDesktop}
+                  variant="contained"
+                >
+                  Publish Now
+                </Button>
+              </div>
             </SaveCancelButtonsWrapper>
           </SaveCancelInnerWrapper>
         </SaveCancelOuterWrapper>
@@ -122,6 +180,7 @@ class CampaignStartPreview extends Component {
             </InnerWrapper>
           </OuterWrapper>
         </PageWrapper>
+        <CampaignStartCompleteYourProfileController />
         <MainFooter />
       </div>
     );

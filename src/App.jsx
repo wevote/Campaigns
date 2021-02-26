@@ -16,6 +16,7 @@ const CampaignStartAddPolitician = React.lazy(() => import('./js/pages/CampaignS
 const CampaignStartAddDescription = React.lazy(() => import('./js/pages/CampaignStartAddDescription'));
 const CampaignStartAddPhoto = React.lazy(() => import('./js/pages/CampaignStartAddPhoto'));
 const CampaignStartAddTitle = React.lazy(() => import('./js/pages/CampaignStartAddTitle'));
+const CampaignStartCompleteYourProfileMobile = React.lazy(() => import('./js/pages/CampaignStart/CampaignStartCompleteYourProfileMobile'));
 const CampaignStartEditAll = React.lazy(() => import('./js/pages/CampaignStartEditAll'));
 const CampaignStartIntro = React.lazy(() => import('./js/pages/CampaignStartIntro'));
 const CampaignStartPreview = React.lazy(() => import('./js/pages/CampaignStartPreview'));
@@ -26,6 +27,7 @@ const Impact = React.lazy(() => import('./js/pages/Impact'));
 const Membership = React.lazy(() => import('./js/pages/Membership'));
 const PageNotFound = React.lazy(() => import('./js/pages/PageNotFound'));
 const Privacy = React.lazy(() => import('./js/pages/Privacy'));
+const SettingsEditProfile = React.lazy(() => import('./js/pages/Settings/SettingsEditProfile'));
 const SettingsYourCampaigns = React.lazy(() => import('./js/pages/SettingsYourCampaigns'));
 const StyleGuidePage = React.lazy(() => import('./js/pages/StyleGuidePage'));
 const TermsOfService = React.lazy(() => import('./js/pages/TermsOfService'));
@@ -70,6 +72,7 @@ class App extends Component {
                   <Route exact path="/c/:campaignIdentifier/comments" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/c/:campaignIdentifier/updates" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/credits"><Credits /></Route>
+                  <Route exact path="/edit-profile"><SettingsEditProfile /></Route>
                   <Route exact path="/faq"><FAQ /></Route>
                   <Route exact path="/impact"><Impact /></Route>
                   <Route exact path="/membership"><Membership /></Route>
@@ -82,6 +85,7 @@ class App extends Component {
                   <Route exact path="/start-a-campaign-why-winning-matters"><CampaignStartAddDescription /></Route>
                   <Route exact path="/start-a-campaign-add-photo"><CampaignStartAddPhoto /></Route>
                   <Route exact path="/start-a-campaign-add-title"><CampaignStartAddTitle /></Route>
+                  <Route exact path="/start-a-campaign-complete-your-profile"><CampaignStartCompleteYourProfileMobile /></Route>
                   <Route exact path="/start-a-campaign-edit-all"><CampaignStartEditAll /></Route>
                   <Route exact path="/start-a-campaign-preview"><CampaignStartPreview /></Route>
                   <Route exact path="/styles"><StyleGuidePage /></Route>
