@@ -58,7 +58,6 @@ class CampaignCardForList extends Component {
     if (isCordova()) {
       console.log(`CampaignCardForList window.location.href: ${window.location.href}`);
     }
-    const { campaignXWeVoteId } = this.props;
     const { campaignX } = this.state;
     if (!campaignX) {
       return null;
@@ -66,6 +65,7 @@ class CampaignCardForList extends Component {
     const {
       campaign_description: campaignDescription,
       campaign_title: campaignTitle,
+      in_draft_mode: inDraftMode,
       we_vote_hosted_campaign_photo_medium_url: CampaignPhotoMediumUrl,
     } = campaignX;
     return (
@@ -73,6 +73,13 @@ class CampaignCardForList extends Component {
         <OneCampaignOuterWrapper onClick={this.onCampaignClick}>
           <OneCampaignInnerWrapper>
             <OneCampaignTextColumn>
+              {inDraftMode && (
+                <DraftModeWrapper>
+                  <DraftModeIndicator>
+                    Draft
+                  </DraftModeIndicator>
+                </DraftModeWrapper>
+              )}
               <OneCampaignTitle>
                 {campaignTitle}
               </OneCampaignTitle>
@@ -109,24 +116,39 @@ const styles = (theme) => ({
   },
 });
 
+const DraftModeIndicator = styled.span`
+  background-color: #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  padding: 3px 30px;
+`;
+
+const DraftModeWrapper = styled.div`
+  margin-bottom: 12px;
+`;
+
 const OneCampaignDescription = styled.div`
   font-size: 14px;
   margin: 4px 0;
 `;
 
 const OneCampaignInnerWrapper = styled.div`
-  margin: 15px;
+  margin: 15px 0;
   @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
     display: flex;
     justify-content: space-between;
+    margin: 15px;
   }
 `;
 
 const OneCampaignOuterWrapper = styled.div`
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  border-top: 1px solid #ddd;
   cursor: pointer;
   margin-top: 15px;
+  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
 `;
 
 const OneCampaignPhotoColumn = styled.div`

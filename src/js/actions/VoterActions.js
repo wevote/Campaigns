@@ -127,6 +127,14 @@ export default {
     });
   },
 
+  voterCompleteYourProfileSave (firstName = false, lastName = false) {
+    Dispatcher.loadEndpoint('voterUpdate',
+      {
+        first_name: firstName,
+        last_name: lastName,
+      });
+  },
+
   voterEmailAddressRetrieve () {
     Dispatcher.loadEndpoint('voterEmailAddressRetrieve', {});
   },
@@ -159,6 +167,10 @@ export default {
     });
   },
 
+  voterEmailQueuedToSave (voterEmail) {
+    Dispatcher.dispatch({ type: 'voterEmailQueuedToSave', payload: voterEmail });
+  },
+
   voterExternalIdSave (externalVoterId, membershipOrganizationWeVoteId) {
     Dispatcher.loadEndpoint('voterUpdate',
       {
@@ -172,6 +184,10 @@ export default {
     });
   },
 
+  voterFirstNameQueuedToSave (firstName) {
+    Dispatcher.dispatch({ type: 'voterFirstNameQueuedToSave', payload: firstName });
+  },
+
   // Tell the server to only save this name if a name does not currently exist
   voterFullNameSoftSave (firstName, lastName, full_name = '') {
     Dispatcher.loadEndpoint('voterUpdate',
@@ -181,6 +197,10 @@ export default {
         full_name,
         name_save_only_if_no_existing_names: true,
       });
+  },
+
+  voterLastNameQueuedToSave (lastName) {
+    Dispatcher.dispatch({ type: 'voterLastNameQueuedToSave', payload: lastName });
   },
 
   voterMergeTwoAccountsByEmailKey (emailSecretKey) {

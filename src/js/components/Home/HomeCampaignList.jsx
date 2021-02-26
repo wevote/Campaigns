@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { renderLog } from '../../utils/logging';
+import CampaignActions from '../../actions/CampaignActions';
 import CampaignCardForList from '../Campaign/CampaignCardForList';
+import CampaignStore from '../../stores/CampaignStore';
+import initializejQuery from '../../utils/initializejQuery';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
 
 
@@ -20,67 +23,53 @@ class HomeCampaignList extends Component {
 
   componentDidMount () {
     // console.log('HomeCampaignList componentDidMount');
-    if (this.props.startingNumberOfPositionsToDisplay && this.props.startingNumberOfPositionsToDisplay > 0) {
+    this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
+    initializejQuery(() => {
+      CampaignActions.campaignListRetrieve();
+    });
+    if (this.props.startingNumberOfCampaignsToDisplay && this.props.startingNumberOfCampaignsToDisplay > 0) {
       this.setState({
-        numberOfCampaignsToDisplay: this.props.startingNumberOfPositionsToDisplay,
+        numberOfCampaignsToDisplay: this.props.startingNumberOfCampaignsToDisplay,
       });
     }
-    const campaignList = [
-      {
-        campaign_name: 'Campaign Name',
-        campaign_we_vote_id: 'wv02camp999',
-      },
-    ];
+    const promotedCampaignList = CampaignStore.getPromotedCampaignXDicts();
     this.setState({
-      campaignList,
+      promotedCampaignList,
     });
   }
 
   componentWillUnmount () {
-    if (this.positionItemTimer) {
-      clearTimeout(this.positionItemTimer);
-      this.positionItemTimer = null;
-    }
+    this.campaignStoreListener.remove();
+  }
+
+  onCampaignStoreChange () {
+    const promotedCampaignList = CampaignStore.getPromotedCampaignXDicts();
+    this.setState({
+      promotedCampaignList,
+    });
   }
 
   // increaseNumberOfPositionItemsToDisplay = () => {
   //   let { numberOfCampaignsToDisplay } = this.state;
-  //   // console.log('Number of position items before increment: ', numberOfCampaignsToDisplay);
-  //
   //   numberOfCampaignsToDisplay += 2;
-  //   // console.log('Number of position items after increment: ', numberOfCampaignsToDisplay);
-  //
-  //   this.positionItemTimer = setTimeout(() => {
-  //     this.setState({
-  //       numberOfCampaignsToDisplay,
-  //     });
-  //   }, 500);
+  //   this.setState({
+  //     numberOfCampaignsToDisplay,
+  //   });
   // }
 
   render () {
-    // const { organizationWeVoteId } = this.props;
-    const { campaignList } = this.state;
     renderLog('HomeCampaignList');  // Set LOG_RENDER_EVENTS to log all renders
     // console.log('HomeCampaignList render');
-    if (!campaignList) {
-      // console.log('HomeCampaignList Loading...');
-      return null;
-    }
-    const { loadingMoreItems, numberOfCampaignsToDisplay } = this.state;
-    let positionsExist = false;
-    let count;
-    for (count = 0; count < campaignList.length; count++) {
-      positionsExist = true;
-    }
-    if (!positionsExist) {
-      return null;
-    }
+    const { promotedCampaignList, loadingMoreItems, numberOfCampaignsToDisplay } = this.state;
 
+    if (!promotedCampaignList) {
+      return null;
+    }
     let numberOfCampaignsDisplayed = 0;
     return (
-      <div>
+      <Wrapper>
         <div>
-          {campaignList.map((oneCampaign) => {
+          {promotedCampaignList.map((oneCampaign) => {
             // console.log('oneCampaign:', oneCampaign);
             // console.log('numberOfCampaignsDisplayed:', numberOfCampaignsDisplayed);
             if (numberOfCampaignsDisplayed >= numberOfCampaignsToDisplay) {
@@ -89,9 +78,9 @@ class HomeCampaignList extends Component {
             numberOfCampaignsDisplayed += 1;
             // console.log('numberOfBallotItemsDisplayed: ', numberOfBallotItemsDisplayed);
             return (
-              <div key={`oneCampaignItem-${oneCampaign.campaign_we_vote_id}`}>
+              <div key={`oneCampaignItem-${oneCampaign.campaignx_we_vote_id}`}>
                 <CampaignCardForList
-                  campaignWeVoteId={oneCampaign.campaign_we_vote_id}
+                  campaignXWeVoteId={oneCampaign.campaignx_we_vote_id}
                 />
               </div>
             );
@@ -99,21 +88,20 @@ class HomeCampaignList extends Component {
         </div>
         <LoadMoreItemsManuallyWrapper>
           {/*  onClick={this.increaseNumberOfPositionItemsToDisplay} */}
-          {!!(campaignList && campaignList.length > 1) && (
+          {!!(promotedCampaignList && promotedCampaignList.length > 1) && (
             <LoadMoreItemsManually
               loadingMoreItemsNow={loadingMoreItems}
               numberOfItemsDisplayed={numberOfCampaignsDisplayed}
-              numberOfItemsTotal={campaignList.length}
+              numberOfItemsTotal={promotedCampaignList.length}
             />
           )}
         </LoadMoreItemsManuallyWrapper>
-      </div>
+      </Wrapper>
     );
   }
 }
 HomeCampaignList.propTypes = {
-  // organizationWeVoteId: PropTypes.string,
-  startingNumberOfPositionsToDisplay: PropTypes.number,
+  startingNumberOfCampaignsToDisplay: PropTypes.number,
 };
 
 const styles = () => ({
@@ -132,6 +120,9 @@ const LoadMoreItemsManuallyWrapper = styled.div`
   @media print{
     display: none;
   }
+`;
+
+const Wrapper = styled.div`
 `;
 
 export default withStyles(styles)(HomeCampaignList);

@@ -103,7 +103,7 @@ const PageWrapper = styled.div`
 `;
 
 const WhatIsHappeningSection = styled.div`
-  margin: 0 15px 25px 0;
+  margin: 0 0 25px 0;
 `;
 
 const WhatIsHappeningTitle = styled.h3`

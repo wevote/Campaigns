@@ -27,6 +27,7 @@ class AppStore extends ReduceStore {
       shareModalStep: '',
       showActivityTidbitDrawer: false,
       showAdviserIntroModal: false,
+      showCampaignStartCompleteYourProfileModal: false,
       showEditAddressButton: false,
       showElectionsWithOrganizationVoterGuidesModal: false,
       showHowItWorksModal: false,
@@ -145,6 +146,10 @@ class AppStore extends ReduceStore {
 
   showAdviserIntroModal () {
     return this.getState().showAdviserIntroModal;
+  }
+
+  showCampaignStartCompleteYourProfileModal () {
+    return this.getState().showCampaignStartCompleteYourProfileModal;
   }
 
   showEditAddressButton () {
@@ -274,6 +279,9 @@ class AppStore extends ReduceStore {
         return { ...state, showActivityTidbitDrawer: action.payload };
       case 'showAdviserIntroModal':
         return { ...state, showAdviserIntroModal: action.payload };
+      case 'showCampaignStartCompleteYourProfileModal':
+        // console.log('showCampaignStartCompleteYourProfileModal show:', action.payload);
+        return { ...state, showCampaignStartCompleteYourProfileModal: action.payload };
       case 'showEditAddressButton':
         return { ...state, showEditAddressButton: action.payload };
       case 'showElectionsWithOrganizationVoterGuidesModal':

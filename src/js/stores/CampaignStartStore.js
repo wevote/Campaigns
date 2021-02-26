@@ -18,6 +18,7 @@ class CampaignStartStore extends ReduceStore {
       campaignTitleQueuedToSaveSet: false,
       campaignXOwnerList: [],
       campaignXWeVoteId: '',
+      voterSignedInWithEmail: false,
     };
   }
 
@@ -105,6 +106,14 @@ class CampaignStartStore extends ReduceStore {
     return this.getState().campaignTitleQueuedToSaveSet;
   }
 
+  getInDraftMode () {
+    return this.getState().inDraftMode;
+  }
+
+  getVoterSignedInWithEmail () {
+    return this.getState().voterSignedInWithEmail || false;
+  }
+
   reduce (state, action) {
     switch (action.type) {
       case 'campaignDescriptionQueuedToSave':
@@ -180,6 +189,8 @@ class CampaignStartStore extends ReduceStore {
           campaignTitle: action.res.campaign_title,
           campaignXOwnerList: action.res.campaignx_owner_list,
           campaignXWeVoteId: action.res.campaignx_we_vote_id,
+          inDraftMode: action.res.in_draft_mode,
+          voterSignedInWithEmail: action.res.voter_signed_in_with_email,
         };
 
       case 'campaignStartSave':
@@ -192,6 +203,8 @@ class CampaignStartStore extends ReduceStore {
           campaignTitle: action.res.campaign_title,
           campaignXOwnerList: action.res.campaignx_owner_list,
           campaignXWeVoteId: action.res.campaignx_we_vote_id,
+          inDraftMode: action.res.in_draft_mode,
+          voterSignedInWithEmail: action.res.voter_signed_in_with_email,
         };
 
       case 'campaignTitleQueuedToSave':

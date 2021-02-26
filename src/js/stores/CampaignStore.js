@@ -7,6 +7,7 @@ class CampaignStore extends ReduceStore {
       allCachedCampaignXDicts: {},  // key == campaignXWeVoteId, value = campaignX data dict
       allCachedCampaignXOwners: {},  // key == campaignXWeVoteId, value = list of owners of this campaign
       allCachedCampaignXPoliticians: {},  // key == campaignXWeVoteId, value = list of politicians supported in this Campaign
+      promotedCampaignXWeVoteIds: [], // These are the campaignx_we_vote_id's of the campaigns this voter started
       voterStartedCampaignXWeVoteIds: [], // These are the campaignx_we_vote_id's of the campaigns this voter started
       voterSupportedCampaignXWeVoteIds: [], // These are the campaignx_we_vote_id's of the campaigns this voter supports
       voterWeVoteId: '',
@@ -23,10 +24,6 @@ class CampaignStore extends ReduceStore {
       return {};
     }
     return campaignx;
-  }
-
-  getCampaignDescription () {
-    return this.getState().campaignDescription || '';
   }
 
   getCampaignXFromListOfWeVoteIds (listOfCampaignXWeVoteIds) {
@@ -48,14 +45,17 @@ class CampaignStore extends ReduceStore {
     return campaignXList;
   }
 
+  getPromotedCampaignXDicts () {
+    return this.getCampaignXFromListOfWeVoteIds(this.getState().promotedCampaignXWeVoteIds);
+  }
+
   getVoterStartedCampaignXDicts () {
-    // List of issue objects the voter can follow
     return this.getCampaignXFromListOfWeVoteIds(this.getState().voterStartedCampaignXWeVoteIds);
   }
 
   reduce (state, action) {
     const { allCachedCampaignXDicts } = state;
-    let { voterStartedCampaignXWeVoteIds } = state;
+    let { promotedCampaignXWeVoteIds, voterStartedCampaignXWeVoteIds } = state;
     let campaignXList;
     let revisedState;
     switch (action.type) {
@@ -64,6 +64,11 @@ class CampaignStore extends ReduceStore {
         revisedState = state;
 
         campaignXList = action.res.campaignx_list || [];
+
+        if (action.res.promoted_campaignx_we_vote_ids) {
+          promotedCampaignXWeVoteIds = action.res.promoted_campaignx_we_vote_ids;
+          revisedState = { ...revisedState, promotedCampaignXWeVoteIds };
+        }
         if (action.res.voter_started_campaignx_we_vote_ids) {
           voterStartedCampaignXWeVoteIds = action.res.voter_started_campaignx_we_vote_ids;
           revisedState = { ...revisedState, voterStartedCampaignXWeVoteIds };

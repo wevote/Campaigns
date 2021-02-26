@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import TextTruncate from 'react-text-truncate';
+// eslint-disable-next-line import/no-unresolved
+import TextTruncate from 'react-text-truncate';
 import { renderLog } from '../../utils/logging';
 
 // 2021-02-23 NOTE FROM DALE: I'd like to try to deprecate ReadMore in favor or react-truncate-markup

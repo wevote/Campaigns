@@ -15,6 +15,24 @@ body {
   }
 }
 
+/* Hide when 992px or greater
+   At 991px we see mobile-tablet
+   At 992px we see desktop or larger */
+@media (min-width: 992px) {
+  .u-show-mobile-tablet {
+    display: none !important;
+  }
+}
+
+/* Hide when 991px or less
+   At 991px we see mobile-tablet
+   At 992px we see desktop or larger */
+@media (max-width: 991px) {
+  .u-show-desktop {
+    display: none !important;
+  }
+}
+
 /* Hide when 575px or less
    At 575px we see mobile
    At 576px we see tablet or larger */

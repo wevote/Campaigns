@@ -153,7 +153,7 @@ export default function MainHeaderBar () {
                 {/* The next 6 lines have a test url of '/', not for production! */}
                 <MenuItem className={classes.menuItem} onClick={() => handleClose('/profile/started')}>Your campaigns</MenuItem>
                 <MenuItem className={classes.menuItem} onClick={() => handleClose('/')}>Your ballot</MenuItem>
-                <MenuItem className={classes.menuItem} onClick={() => handleClose('/')}>Settings</MenuItem>
+                <MenuItem className={classes.menuItem} onClick={() => handleClose('/edit-profile')}>Settings</MenuItem>
                 <MenuItem className={classes.menuItem} onClick={() => handleClose('/start-a-campaign')}>Start a campaign</MenuItem>
                 <MenuItem className={classes.menuItem} onClick={() => handleClose('/membership')}>Membership</MenuItem>
                 <MenuItem className={classes.menuItem} onClick={() => handleClose('/')}>Search</MenuItem>

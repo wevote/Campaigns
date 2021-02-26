@@ -134,14 +134,14 @@ class VoterEmailAddressEntry extends Component {
     VoterActions.setAsPrimaryEmailAddress(emailWeVoteId);
   }
 
-  voterEmailAddressSave = (event) => {
-    // console.log('VoterEmailAddressEntry this.voterEmailAddressSave');
-    const { voterEmailAddress } = this.state;
-    event.preventDefault();
-    const sendLinkToSignIn = true;
-    VoterActions.voterEmailAddressSave(voterEmailAddress, sendLinkToSignIn);
-    this.setState({ loading: true });
-  };
+  // voterEmailAddressSave = (event) => {
+  //   // console.log('VoterEmailAddressEntry this.voterEmailAddressSave');
+  //   const { voterEmailAddress } = this.state;
+  //   event.preventDefault();
+  //   const sendLinkToSignIn = true;
+  //   VoterActions.voterEmailAddressSave(voterEmailAddress, sendLinkToSignIn);
+  //   this.setState({ loading: true });
+  // };
 
   sendSignInCodeEmail = (event) => {
     if (event) {

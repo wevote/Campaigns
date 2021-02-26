@@ -10,6 +10,7 @@ import MainFooter from '../components/Navigation/MainFooter';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
 import SettingsCampaignList from '../components/Settings/SettingsCampaignList';
+import VoterStore from '../stores/VoterStore';
 
 class SettingsYourCampaigns extends Component {
   static getProps () {
@@ -22,28 +23,49 @@ class SettingsYourCampaigns extends Component {
     };
   }
 
+  componentDidMount () {
+    // console.log('VoterFirstNameInputField, componentDidMount');
+    this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
+    const voterFirstPlusLastName = VoterStore.getFirstPlusLastName();
+    this.setState({
+      voterFirstPlusLastName,
+    });
+  }
+
+  componentWillUnmount () {
+    this.voterStoreListener.remove();
+  }
+
+  onVoterStoreChange () {
+    const voterFirstPlusLastName = VoterStore.getFirstPlusLastName();
+    this.setState({
+      voterFirstPlusLastName,
+    });
+  }
+
   render () {
     renderLog('SettingsYourCampaigns');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
       console.log(`SettingsYourCampaigns window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
+    const { voterFirstPlusLastName } = this.state;
     return (
       <div>
         <Helmet title="Your Campaigns - We Vote Campaigns" />
         <MainHeaderBar />
         <PageWrapper cordova={isCordova()}>
           <IntroductionMessageSection>
-            <YourNameWrapper>Your Name</YourNameWrapper>
-            <YourLocationWrapper>Your Location</YourLocationWrapper>
+            <YourNameWrapper>{voterFirstPlusLastName || 'Your profile'}</YourNameWrapper>
+            <YourLocationWrapper>&nbsp;</YourLocationWrapper>
             <Button
               classes={{ root: classes.buttonRoot }}
               color="primary"
               id="campaignListEditProfile"
               variant="outlined"
-              onClick={() => historyPush('/')}
+              onClick={() => historyPush('/edit-profile')}
             >
-              Edit Profile
+              Edit profile
             </Button>
           </IntroductionMessageSection>
           <CampaignListTabs />
