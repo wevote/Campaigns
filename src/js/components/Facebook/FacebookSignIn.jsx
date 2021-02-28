@@ -8,7 +8,7 @@ import AppStore from '../../stores/AppStore';
 import FacebookStore from '../../stores/FacebookStore';
 import VoterStore from '../../stores/VoterStore';
 import { oAuthLog, renderLog } from '../../utils/logging';
-import signInModalGlobalState from '../Widgets/signInModalGlobalState';
+import signInModalGlobalState from '../Settings/signInModalGlobalState';
 import SplitIconButton from '../Widgets/SplitIconButton';
 
 
@@ -39,7 +39,7 @@ class FacebookSignIn extends Component {
   }
 
   onFacebookStoreChange () {
-    console.log('FacebookSignIn onFacebookStoreChange');
+    // console.log('FacebookSignIn onFacebookStoreChange');
     // eslint-disable-next-line no-unused-vars
     const fbState = signInModalGlobalState.getAll();  // For debug
     const facebookAuthResponse = FacebookStore.getFacebookAuthResponse();
@@ -70,11 +70,11 @@ class FacebookSignIn extends Component {
   }
 
   onVoterStoreChange () {
-    console.log('FacebookSignIn onVoterStoreChange');
+    // console.log('FacebookSignIn onVoterStoreChange');
     // eslint-disable-next-line no-unused-vars
     const fbState = signInModalGlobalState.getAll();  // For debug
-    const voter = VoterStore.getVoter();  // for debug
-    console.log('FacebookSignIn onVoterStoreChange       voter:', voter);
+    // const voter = VoterStore.getVoter();  // for debug
+    // console.log('FacebookSignIn onVoterStoreChange       voter:', voter);
     if (signInModalGlobalState.get('facebookSignInStep') === 'waitingForRetrieveVoterResponse') {
       console.log('onVoterStoreChange ... facebookSignInStep === waitingForRetrieveVoterResponse');
       signInModalGlobalState.set('facebookSignInStep', 'done');

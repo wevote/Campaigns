@@ -1,8 +1,9 @@
 import VoterActions from '../actions/VoterActions';
 import cookies from './cookies';
 import AppActions from '../actions/AppActions';
+import CampaignActions from '../actions/CampaignActions';
 
-export default function voterSignOut () {
+export default function voterSignOut () { // To discuss - having Store/Actions vs. voterSignOut as a function
   AppActions.setShowSignInModal(false);
   AppActions.unsetStoreSignInStartFullUrl();
   AppActions.signOutFromManyStores();   // Eleven stores or more, act on this action
@@ -18,5 +19,9 @@ export default function voterSignOut () {
   cookies.removeItem('show_full_navigation', '/');
   cookies.removeItem('sign_in_start_full_url', '/');
   cookies.removeItem('sign_in_start_full_url', '/', 'wevote.us');
-  VoterActions.voterRetrieve();   // to get the new voter_device_id before the next api call
+  VoterActions.voterRetrieve();  // to get the new voter_device_id before the next api call
+  const delayToAllowVoterRetrieveResponse = 2000;
+  setTimeout(() => {
+    CampaignActions.campaignListRetrieve();
+  }, delayToAllowVoterRetrieveResponse);
 }

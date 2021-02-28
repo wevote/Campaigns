@@ -35,7 +35,7 @@ HeaderBarLogo.propTypes = {
 };
 
 const HeaderBarWrapper = styled.div`
-  height: 34px;     // So the size of the bar doesn't jump when the twitter picture icon appears
+  height: 42px;     // So the size of the bar doesn't jump when the twitter picture icon appears
   @media print{
   }
 `;

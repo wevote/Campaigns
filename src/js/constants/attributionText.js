@@ -130,15 +130,9 @@ module.exports = [
   'nkbt/react-copy-to-clipboard is licensed under the MIT License (MIT)\n' +
   '\n' +
   'Copyright (c) 2016 Nik Butenko\n',
-  // Jan 2021, https://github.com/arnthor3/react-delay-render/blob/master/LICENCE
-  'arnthor3/react-delay-render is licensed under MIT License (MIT)\n' +
-  'Copyright (c) 2015 Chris Shiplet\n',
   // Jan 2019, https://github.com/nfl/react-helmet/blob/master/LICENSE
   'nfl/react-helmet is licensed under the MIT License (MIT)\n' +
   'Copyright (c) 2015 NFL\n',
-  // https://github.com/zeroasterisk/react-iframe-resizer-super/blob/master/LICENSE
-  'zeroasterisk/react-iframe-resizer-super is licensed under the MIT License (MIT)\n' +
-  'Copyright (c) 2016 Your Name. <name@emailprovider.io>',
   // Jan 2021, https://gitlab.com/catamphetamine/react-phone-number-input/-/blob/master/LICENSE
   'catamphetamine/react-phone-number-input is licensed under the MIT License (MIT)\n' +
   'Copyright (c) 2016 @catamphetamine <purecatamphetamine@gmail.com>\n',
@@ -160,9 +154,9 @@ module.exports = [
   // Jan 2019, https://github.com/tanem/react-svg/blob/master/LICENSE
   'tanem/react-svg is licensed under the  MIT License (MIT)\n' +
   'Copyright (c) 2014-present Tane Morgan <tane.morgan@gmail.com>\n',
-  // Jan 2021, https://github.com/ShinyChang/React-Text-Truncate/blob/master/LICENSE
-  'ShinyChang/React-Text-Truncate s licensed under the  MIT License (MIT)\n' +
-  'Copyright (c) 2014-present Tane Morgan <tane.morgan@gmail.com>\n',
+  // https://github.com/parsable/react-truncate-markup/blob/master/LICENSE.md
+  'Parsable/React-Truncate-Markup is licensed under the Apache License, Version 2.0\n' +
+  'Copyright (c) 2017-present Parsable Inc.\n',
   // Jan 2019, https://github.com/fkhadra/react-toastify/blob/master/LICENSE
   'fkhadra/react-toastify is licensed under the MIT License (MIT)\n' +
   'Copyright (c) 2017 Fadi Khadra\n',

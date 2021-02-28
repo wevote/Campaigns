@@ -7,10 +7,12 @@ import { historyPush } from '../../utils/cordovaUtils';
 import initializeFacebookSDK from '../../utils/initializeFacebookSDK';
 import initializeAppleSDK from '../../utils/initializeAppleSDK';
 import { renderLog } from '../../utils/logging';
-import voterSignOut from '../../utils/voterSignOut';
 import HeaderBarLogo from './HeaderBarLogo';
 
 const SignInButton = loadable(() => import('./SignInButton'));
+const SignInModalController = loadable(() => import('../Settings/SignInModalController'));
+const TopNavigationDesktop = loadable(() => import('./TopNavigationDesktop'));
+const VoterNameAndPhoto = loadable(() => import('./VoterNameAndPhoto'));
 
 
 const useStyles = makeStyles((theme) => ({
@@ -32,8 +34,11 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
     padding: '0',
   },
+  menuIconRoot: {
+    color: '#999',
+  },
   menuRoot: {
-    marginTop: '34px',
+    marginTop: '27px',
   },
   menuItem: {
     [theme.breakpoints.down('md')]: {
@@ -50,10 +55,15 @@ const useStyles = makeStyles((theme) => ({
       minHeight: 'unset',
     },
   },
+  menuItemMobileOnly: {
+    [theme.breakpoints.up('md')]: {
+      display: 'none !important',
+    },
+  },
   outerWrapper: {
     borderBottom: '1px solid #ddd',
     flexGrow: 1,
-    minHeight: 48,
+    minHeight: 42,
   },
   title: {
     flexGrow: 1,
@@ -70,21 +80,35 @@ export default function MainHeaderBar () {
   const classes = useStyles();
   // const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const open = Boolean(anchorEl) && anchorEl != null;
 
   const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
+    console.log('MainHeaderBar handleMenu event:', event);
+    // Prevent stray click events from coming in from the SignInModal, which are causing
+    // handleMenu to fire when we don't want it to.
+    // Limit opening the menu to click events initiated in this component.
+    // This is a bug and needs a more elegant solution.
+    if (event.target.id === 'firstNameWrapper' ||
+      event.target.id === 'mainHeaderBarDropDownMenuIcon' ||
+      event.target.id === 'nameAndPhotoWrapper' ||
+      event.target.id === 'openMainHeaderBarDropDown' ||
+      event.target.localName === 'path' ||
+      // event.target.localName === 'span' ||
+      event.target.localName === 'svg') {
+      // console.log('setAnchorEl');
+      setAnchorEl(event.currentTarget);
+    }
   };
 
   const handleClose = (destination) => {
+    // console.log('MainHeaderBar handleClose');
     setAnchorEl(null);
     historyPush(destination);
   };
 
-  const signOut = () => {
-    // console.log('MainHeaderBar signOut');
+  const handleCloseNoDestination = () => {
+    // console.log('MainHeaderBar handleCloseNoDestination');
     setAnchorEl(null);
-    voterSignOut();
   };
 
   const ourPromise = {
@@ -107,6 +131,7 @@ export default function MainHeaderBar () {
 
   const chosenSiteLogoUrl = '';  // {AppStore.getChosenSiteLogoUrl()}
   const light = false;
+  // console.log('MainHeaderBar open: ', open);
   return (
     <div className={classes.outerWrapper}>
       <div className={classes.innerWrapper}>
@@ -115,21 +140,26 @@ export default function MainHeaderBar () {
             <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
               <HeaderBarLogo classes={classes} light={light} logUrl={chosenSiteLogoUrl} />
             </IconButton>
+            <Suspense fallback={<span>&nbsp;</span>}>
+              <TopNavigationDesktop />
+            </Suspense>
             <Typography variant="h6" className={classes.title}>
               &nbsp;
             </Typography>
-            <Suspense fallback={<span>ZzZzZzZ</span>}>
-              <SignInButton classes={classes} />
-            </Suspense>
-            <div style={{ padding: '8px 0 0 0' }}>
+            <div>
               <IconButton
                 edge="start"
                 className={classes.menuButton}
                 color="inherit"
+                id="openMainHeaderBarDropDown"
                 onClick={handleMenu}
                 aria-label="menu"
               >
-                <MenuIcon />
+                <Suspense fallback={<span>&nbsp;</span>}>
+                  <SignInModalController />
+                  <VoterNameAndPhoto />
+                </Suspense>
+                <MenuIcon id="mainHeaderBarDropDownMenuIcon" classes={{ root: classes.menuIconRoot }} />
               </IconButton>
               <Menu
                 id="menu-appbar"
@@ -151,13 +181,17 @@ export default function MainHeaderBar () {
                   Our Promise: We&apos;ll never sell your email.
                 </Typography>
                 {/* The next 6 lines have a test url of '/', not for production! */}
-                <MenuItem className={classes.menuItem} onClick={() => handleClose('/profile/started')}>Your campaigns</MenuItem>
+                <MenuItem className={classes.menuItemMobileOnly} onClick={() => handleClose('/profile/started')}>Your campaigns</MenuItem>
                 <MenuItem className={classes.menuItem} onClick={() => handleClose('/')}>Your ballot</MenuItem>
                 <MenuItem className={classes.menuItem} onClick={() => handleClose('/edit-profile')}>Settings</MenuItem>
-                <MenuItem className={classes.menuItem} onClick={() => handleClose('/start-a-campaign')}>Start a campaign</MenuItem>
-                <MenuItem className={classes.menuItem} onClick={() => handleClose('/membership')}>Membership</MenuItem>
-                <MenuItem className={classes.menuItem} onClick={() => handleClose('/')}>Search</MenuItem>
-                <MenuItem className={classes.menuItem} onClick={() => signOut()}>Sign out</MenuItem>
+                <MenuItem className={classes.menuItemMobileOnly} onClick={() => handleClose('/start-a-campaign')}>Start a campaign</MenuItem>
+                <MenuItem className={classes.menuItemMobileOnly} onClick={() => handleClose('/membership')}>Membership</MenuItem>
+                <MenuItem className={classes.menuItemMobileOnly} onClick={() => handleClose('/')}>Search</MenuItem>
+                <MenuItem className={classes.menuItem} onClick={() => handleCloseNoDestination()}>
+                  <Suspense fallback={<span>&nbsp;</span>}>
+                    <SignInButton classes={classes} />
+                  </Suspense>
+                </MenuItem>
                 <span style={{ lineHeight: '28px' }}>&nbsp;</span>
                 <MenuItem className={classes.menuExtraItem} onClick={() => handleClose('/faq')}>Frequently asked questions</MenuItem>
                 <MenuItem className={classes.menuExtraItem} onClick={() => handleClose('/terms')}>Terms of service</MenuItem>

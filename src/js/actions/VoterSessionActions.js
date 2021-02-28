@@ -4,7 +4,7 @@ import AppActions from './AppActions';
 import { stringContains } from '../utils/textFormat';
 
 export default {
-  voterSignOut () {
+  voterSignOut () {  // To discuss - having Store/Actions vs. voterSignOut as a function
     AppActions.setShowSignInModal(false);
     AppActions.unsetStoreSignInStartFullUrl();
     Dispatcher.loadEndpoint('voterSignOut', { sign_out_all_devices: false });

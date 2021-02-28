@@ -68,12 +68,15 @@ class App extends Component {
                 <Switch>
                   <Route exact path="/about"><About /></Route>
                   <Route exact path="/attributions"><Attributions /></Route>
-                  <Route exact path="/c/:campaignIdentifier" render={(props) => <CampaignDetailsPage match={props.match} />} />
-                  <Route exact path="/c/:campaignIdentifier/comments" render={(props) => <CampaignDetailsPage match={props.match} />} />
-                  <Route exact path="/c/:campaignIdentifier/updates" render={(props) => <CampaignDetailsPage match={props.match} />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath" render={(props) => <CampaignDetailsPage match={props.match} />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/comments" render={(props) => <CampaignDetailsPage match={props.match} />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/updates" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/credits"><Credits /></Route>
                   <Route exact path="/edit-profile"><SettingsEditProfile /></Route>
                   <Route exact path="/faq"><FAQ /></Route>
+                  <Route exact path="/id/:campaignXWeVoteId" render={(props) => <CampaignDetailsPage match={props.match} />} />
+                  <Route exact path="/id/:campaignXWeVoteId/comments" render={(props) => <CampaignDetailsPage match={props.match} />} />
+                  <Route exact path="/id/:campaignXWeVoteId/updates" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/impact"><Impact /></Route>
                   <Route exact path="/membership"><Membership /></Route>
                   <Route exact path="/privacy"><Privacy /></Route>

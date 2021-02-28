@@ -34,7 +34,7 @@ class BrowserPushMessage extends Component {
     const { classes, externalUniqueId } = this.props;
     let { message } = this.state;
     const { name } = this.state;
-    console.log(`BrowserPushMessage message: ${message}  name: ${name}`);
+    // console.log(`BrowserPushMessage message: ${message}  name: ${name}`);
 
     if (name === 'test') {
     // type = 'danger';
