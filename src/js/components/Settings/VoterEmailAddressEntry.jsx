@@ -13,7 +13,7 @@ import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
 import SettingsVerifySecretCode from './SettingsVerifySecretCode';
 import VoterActions from '../../actions/VoterActions';
 import VoterStore from '../../stores/VoterStore';
-import signInModalGlobalState from '../Widgets/signInModalGlobalState';
+import signInModalGlobalState from './signInModalGlobalState';
 
 /* global $ */
 
@@ -263,12 +263,14 @@ class VoterEmailAddressEntry extends Component {
   };
 
   onFocus = () => {
+    // console.log('VoterEmailAddressEntry onFocus');
     const { displayEmailVerificationButton } = this.state;
     if (!displayEmailVerificationButton) {
       this.displayEmailVerificationButton();
       this.turnOtherSignInOptionsOff();
     }
     focusTextFieldAndroid();
+    // e.stopPropagation();
   };
 
   onAnimationEndCancel = () => {

@@ -12,7 +12,7 @@ import { isCordova, isAndroid, isIOS,
   isWebAppHeight0to568, isWebAppHeight569to667, isWebAppHeight668to736, isWebAppHeight737to896,
   isWebApp, historyPush, restoreStylesAfterCordovaKeyboard,
 } from '../../utils/cordovaUtils';
-import SettingsAccount from '../Settings/SettingsAccount';
+import SettingsAccount from './SettingsAccount';
 import VoterStore from '../../stores/VoterStore';
 import initializejQuery from '../../utils/initializejQuery';
 import { stringContains } from '../../utils/textFormat';

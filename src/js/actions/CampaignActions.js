@@ -14,4 +14,11 @@ export default {
         campaignx_we_vote_id: campaignWeVoteId,
       });
   },
+
+  campaignRetrieveBySEOFriendlyPath (campaignSEOFriendlyPath) {
+    Dispatcher.loadEndpoint('campaignRetrieve',
+      {
+        seo_friendly_path: campaignSEOFriendlyPath,
+      });
+  },
 };

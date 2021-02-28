@@ -10,13 +10,12 @@ import initializejQuery from '../../utils/initializejQuery';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
 
 
-const STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY = 6;
+const STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY = 1;
 
 class HomeCampaignList extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      loadingMoreItems: false,
       numberOfCampaignsToDisplay: STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY,
     };
   }
@@ -49,18 +48,18 @@ class HomeCampaignList extends Component {
     });
   }
 
-  // increaseNumberOfPositionItemsToDisplay = () => {
-  //   let { numberOfCampaignsToDisplay } = this.state;
-  //   numberOfCampaignsToDisplay += 2;
-  //   this.setState({
-  //     numberOfCampaignsToDisplay,
-  //   });
-  // }
+  increaseNumberOfCampaignsToDisplay = () => {
+    let { numberOfCampaignsToDisplay } = this.state;
+    numberOfCampaignsToDisplay += 2;
+    this.setState({
+      numberOfCampaignsToDisplay,
+    });
+  }
 
   render () {
     renderLog('HomeCampaignList');  // Set LOG_RENDER_EVENTS to log all renders
     // console.log('HomeCampaignList render');
-    const { promotedCampaignList, loadingMoreItems, numberOfCampaignsToDisplay } = this.state;
+    const { promotedCampaignList, numberOfCampaignsToDisplay } = this.state;
 
     if (!promotedCampaignList) {
       return null;
@@ -68,6 +67,13 @@ class HomeCampaignList extends Component {
     let numberOfCampaignsDisplayed = 0;
     return (
       <Wrapper>
+        {!!(promotedCampaignList &&
+            promotedCampaignList.length > 1) &&
+        (
+          <WhatIsHappeningTitle>
+            What&apos;s happening on WeVote.US
+          </WhatIsHappeningTitle>
+        )}
         <div>
           {promotedCampaignList.map((oneCampaign) => {
             // console.log('oneCampaign:', oneCampaign);
@@ -76,7 +82,8 @@ class HomeCampaignList extends Component {
               return null;
             }
             numberOfCampaignsDisplayed += 1;
-            // console.log('numberOfBallotItemsDisplayed: ', numberOfBallotItemsDisplayed);
+            // console.log('numberOfCampaignsDisplayed: ', numberOfCampaignsDisplayed);
+            // console.log('numberOfCampaignsToDisplay: ', numberOfCampaignsToDisplay);
             return (
               <div key={`oneCampaignItem-${oneCampaign.campaignx_we_vote_id}`}>
                 <CampaignCardForList
@@ -87,12 +94,13 @@ class HomeCampaignList extends Component {
           })}
         </div>
         <LoadMoreItemsManuallyWrapper>
-          {/*  onClick={this.increaseNumberOfPositionItemsToDisplay} */}
-          {!!(promotedCampaignList && promotedCampaignList.length > 1) && (
+          {!!(promotedCampaignList &&
+              promotedCampaignList.length > 1 &&
+              numberOfCampaignsToDisplay < promotedCampaignList.length) &&
+          (
             <LoadMoreItemsManually
-              loadingMoreItemsNow={loadingMoreItems}
-              numberOfItemsDisplayed={numberOfCampaignsDisplayed}
-              numberOfItemsTotal={promotedCampaignList.length}
+              loadMoreFunction={this.increaseNumberOfCampaignsToDisplay}
+              uniqueExternalId="HomeCampaignList"
             />
           )}
         </LoadMoreItemsManuallyWrapper>
@@ -112,14 +120,14 @@ const styles = () => ({
 
 const LoadMoreItemsManuallyWrapper = styled.div`
   margin-bottom: 0px;
-  padding-left: 16px;
-  padding-right: 26px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    padding-right: 16px;
-  }
   @media print{
     display: none;
   }
+`;
+
+const WhatIsHappeningTitle = styled.h3`
+  font-size: 22px;
+  text-align: left;
 `;
 
 const Wrapper = styled.div`

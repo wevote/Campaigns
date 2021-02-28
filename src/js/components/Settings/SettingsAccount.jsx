@@ -22,7 +22,7 @@ import FacebookSignIn from '../Facebook/FacebookSignIn';
 import LoadingWheel from '../LoadingWheel';
 import TwitterSignIn from '../Twitter/TwitterSignIn';
 import BrowserPushMessage from '../Widgets/BrowserPushMessage';
-import signInModalGlobalState from '../Widgets/signInModalGlobalState';
+import signInModalGlobalState from './signInModalGlobalState';
 import VoterEmailAddressEntry from './VoterEmailAddressEntry';
 import VoterPhoneEmailCordovaEntryModal from './VoterPhoneEmailCordovaEntryModal';
 import VoterPhoneVerificationEntry from './VoterPhoneVerificationEntry';
@@ -67,7 +67,7 @@ export default class SettingsAccount extends Component {
   // Set up this component upon first entry
   // componentWillMount is used in WebApp
   componentDidMount () {
-    console.log('SettingsAccount componentDidMount');
+    // console.log('SettingsAccount componentDidMount');
     initializejQuery(() => {
       this.setState({ jqueryLoaded: true });
 

@@ -39,16 +39,21 @@ class CampaignCardForList extends Component {
 
   onCampaignClick = () => {
     const { campaignX } = this.state;
+    // console.log('campaignX:', campaignX);
     if (!campaignX) {
       return null;
     }
     const {
       in_draft_mode: inDraftMode,
+      seo_friendly_path: SEOFriendlyPath,
+      campaignx_we_vote_id: campaignXWeVoteId,
     } = campaignX;
     if (inDraftMode) {
       historyPush('/start-a-campaign-preview');
+    } else if (SEOFriendlyPath) {
+      historyPush(`/c/${SEOFriendlyPath}`);
     } else {
-      return null;
+      historyPush(`/id/${campaignXWeVoteId}`);
     }
     return null;
   }

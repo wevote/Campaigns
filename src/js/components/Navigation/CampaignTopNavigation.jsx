@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function CampaignHeader (incomingVariables) {
+export default function CampaignTopNavigation (incomingVariables) {
   const [value, setValue] = React.useState(0);
   const classes = useStyles();
   const history = useHistory();
@@ -33,26 +33,26 @@ export default function CampaignHeader (incomingVariables) {
     },
   });
 
-  const { campaignIdentifier } = incomingVariables;
+  const { campaignSEOFriendlyPath } = incomingVariables;
   // console.log('incomingVariables:', incomingVariables);
-  // console.log('campaignIdentifier:', campaignIdentifier);
+  // console.log('campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   const { location: { pathname } } = window;
   if (startsWith('/c/', pathname) && value !== 0) {
-    // console.log('Render CampaignHeader, initial value set to 0');
+    // console.log('Render CampaignTopNavigation, initial value set to 0');
     setValue(0);
   } else if (startsWith('/comments', pathname) && value !== 1) {
-    // console.log('Render CampaignHeader, initial value set to 1');
+    // console.log('Render CampaignTopNavigation, initial value set to 1');
     setValue(1);
   } else if (startsWith('/updates', pathname) && value !== 2) {
-    // console.log('Render CampaignHeader, initial value set to 2');
+    // console.log('Render CampaignTopNavigation, initial value set to 2');
     setValue(2);
   }
 
-  // console.log('Render CampaignHeader.jsx');
+  // console.log('Render CampaignTopNavigation.jsx');
 
   return (
     <div className={classes.root}>
@@ -64,9 +64,9 @@ export default function CampaignHeader (incomingVariables) {
         <ThemeProvider theme={theme}>
           <Toolbar className={classes.toolbarRoot} disableGutters>
             <Tabs value={value} onChange={handleChange} aria-label="Tab menu">
-              <Tab id="weTarget-0" label="Campaign details" onClick={() => history.push(`/c/${campaignIdentifier}`)} />
-              <Tab id="weTarget-1" label="Comments" onClick={() => history.push(`/c/${campaignIdentifier}/comments`)} />
-              <Tab id="weTarget-2" label="Updates" onClick={() => history.push(`/c/${campaignIdentifier}/updates`)} />
+              <Tab id="weTarget-0" label="Campaign details" onClick={() => history.push(`/c/${campaignSEOFriendlyPath}`)} />
+              <Tab id="weTarget-1" label="Comments" onClick={() => history.push(`/c/${campaignSEOFriendlyPath}/comments`)} />
+              <Tab id="weTarget-2" label="Updates" onClick={() => history.push(`/c/${campaignSEOFriendlyPath}/updates`)} />
             </Tabs>
           </Toolbar>
         </ThemeProvider>

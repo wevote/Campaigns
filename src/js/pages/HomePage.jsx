@@ -40,9 +40,6 @@ class HomePage extends Component {
             </Button>
           </IntroductionMessageSection>
           <WhatIsHappeningSection>
-            <WhatIsHappeningTitle>
-              What&apos;s happening on WeVote.US
-            </WhatIsHappeningTitle>
             <HomeCampaignList />
           </WhatIsHappeningSection>
         </PageWrapper>
@@ -104,11 +101,6 @@ const PageWrapper = styled.div`
 
 const WhatIsHappeningSection = styled.div`
   margin: 0 0 25px 0;
-`;
-
-const WhatIsHappeningTitle = styled.h3`
-  font-size: 22px;
-  text-align: left;
 `;
 
 export default withStyles(styles)(HomePage);

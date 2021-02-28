@@ -7,6 +7,7 @@ class CampaignStore extends ReduceStore {
       allCachedCampaignXDicts: {},  // key == campaignXWeVoteId, value = campaignX data dict
       allCachedCampaignXOwners: {},  // key == campaignXWeVoteId, value = list of owners of this campaign
       allCachedCampaignXPoliticians: {},  // key == campaignXWeVoteId, value = list of politicians supported in this Campaign
+      allCachedCampaignXWeVoteIdsBySEOFriendlyPath: {},  // key == SEOFriendlyPath, value = campaignXWeVoteId
       promotedCampaignXWeVoteIds: [], // These are the campaignx_we_vote_id's of the campaigns this voter started
       voterStartedCampaignXWeVoteIds: [], // These are the campaignx_we_vote_id's of the campaigns this voter started
       voterSupportedCampaignXWeVoteIds: [], // These are the campaignx_we_vote_id's of the campaigns this voter supports
@@ -18,12 +19,21 @@ class CampaignStore extends ReduceStore {
     return this.getInitialState();
   }
 
-  getCampaignXByWeVoteId (campaignXWeVoteId) {
-    const campaignx = this.getState().allCachedCampaignXDicts[campaignXWeVoteId];
-    if (campaignx === undefined) {
+  getCampaignXBySEOFriendlyPath (SEOFriendlyPath) {
+    const campaignXWeVoteId = this.getState().allCachedCampaignXWeVoteIdsBySEOFriendlyPath[SEOFriendlyPath] || '';
+    const campaignX = this.getState().allCachedCampaignXDicts[campaignXWeVoteId];
+    if (campaignX === undefined) {
       return {};
     }
-    return campaignx;
+    return campaignX;
+  }
+
+  getCampaignXByWeVoteId (campaignXWeVoteId) {
+    const campaignX = this.getState().allCachedCampaignXDicts[campaignXWeVoteId];
+    if (campaignX === undefined) {
+      return {};
+    }
+    return campaignX;
   }
 
   getCampaignXFromListOfWeVoteIds (listOfCampaignXWeVoteIds) {
@@ -54,8 +64,9 @@ class CampaignStore extends ReduceStore {
   }
 
   reduce (state, action) {
-    const { allCachedCampaignXDicts } = state;
+    const { allCachedCampaignXDicts, allCachedCampaignXWeVoteIdsBySEOFriendlyPath } = state;
     let { promotedCampaignXWeVoteIds, voterStartedCampaignXWeVoteIds } = state;
+    let campaignX;
     let campaignXList;
     let revisedState;
     switch (action.type) {
@@ -75,23 +86,53 @@ class CampaignStore extends ReduceStore {
         }
 
         // console.log('action.res.voter_issues_only:', action.res.voter_issues_only);
-        campaignXList.forEach((campaignx) => {
-          allCachedCampaignXDicts[campaignx.campaignx_we_vote_id] = campaignx;
+        campaignXList.forEach((oneCampaignX) => {
+          allCachedCampaignXDicts[oneCampaignX.campaignx_we_vote_id] = oneCampaignX;
+          if (!(oneCampaignX.seo_friendly_path in allCachedCampaignXWeVoteIdsBySEOFriendlyPath)) {
+            allCachedCampaignXWeVoteIdsBySEOFriendlyPath[oneCampaignX.seo_friendly_path] = oneCampaignX.campaignx_we_vote_id;
+          }
+          if ('seo_friendly_path_list' in oneCampaignX) {
+            //
+            let onePath = '';
+            for (let i = 0; i < oneCampaignX.seo_friendly_path_list.length; ++i) {
+              onePath = oneCampaignX.seo_friendly_path_list[i];
+              if (onePath && onePath !== '') {
+                if (!(onePath in allCachedCampaignXWeVoteIdsBySEOFriendlyPath)) {
+                  allCachedCampaignXWeVoteIdsBySEOFriendlyPath[onePath] = oneCampaignX.campaignx_we_vote_id;
+                }
+              }
+            }
+          }
         });
+        // console.log('allCachedCampaignXWeVoteIdsBySEOFriendlyPath:', allCachedCampaignXWeVoteIdsBySEOFriendlyPath);
         revisedState = { ...revisedState, allCachedCampaignXDicts };
+        revisedState = { ...revisedState, allCachedCampaignXWeVoteIdsBySEOFriendlyPath };
         return revisedState;
 
       case 'campaignRetrieve':
+        if (!action.res || !action.res.success) return state;
+        revisedState = state;
         // console.log('CampaignStore campaignRetrieve');
-        return {
-          ...state,
-          campaignDescription: action.res.campaign_description,
-          campaignPhotoLargeUrl: action.res.we_vote_hosted_campaign_photo_large_url,
-          campaignPoliticianList: action.res.campaignx_politician_list,
-          campaignTitle: action.res.campaign_title,
-          campaignXOwnerList: action.res.campaignx_owner_list,
-          campaignXWeVoteId: action.res.campaignx_we_vote_id,
-        };
+        campaignX = action.res;
+        allCachedCampaignXDicts[campaignX.campaignx_we_vote_id] = campaignX;
+        if (!(campaignX.seo_friendly_path in allCachedCampaignXWeVoteIdsBySEOFriendlyPath)) {
+          allCachedCampaignXWeVoteIdsBySEOFriendlyPath[campaignX.seo_friendly_path] = campaignX.campaignx_we_vote_id;
+        }
+        if ('seo_friendly_path_list' in campaignX) {
+          //
+          let onePath = '';
+          for (let i = 0; i < campaignX.seo_friendly_path_list.length; ++i) {
+            onePath = campaignX.seo_friendly_path_list[i];
+            if (onePath && onePath !== '') {
+              if (!(onePath in allCachedCampaignXWeVoteIdsBySEOFriendlyPath)) {
+                allCachedCampaignXWeVoteIdsBySEOFriendlyPath[onePath] = campaignX.campaignx_we_vote_id;
+              }
+            }
+          }
+        }
+        revisedState = { ...revisedState, allCachedCampaignXDicts };
+        revisedState = { ...revisedState, allCachedCampaignXWeVoteIdsBySEOFriendlyPath };
+        return revisedState;
 
       default:
         return state;

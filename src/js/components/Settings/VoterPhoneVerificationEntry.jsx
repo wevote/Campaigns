@@ -12,7 +12,7 @@ import LoadingWheel from '../LoadingWheel';
 import { renderLog } from '../../utils/logging';
 import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
 import SettingsVerifySecretCode from './SettingsVerifySecretCode';
-import signInModalGlobalState from '../Widgets/signInModalGlobalState';
+import signInModalGlobalState from './signInModalGlobalState';
 import VoterActions from '../../actions/VoterActions';
 import VoterStore from '../../stores/VoterStore';
 

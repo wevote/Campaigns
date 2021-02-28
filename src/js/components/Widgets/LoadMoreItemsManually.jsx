@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { withTheme } from '@material-ui/core/styles';
+import { Button } from '@material-ui/core';
+import { withStyles, withTheme } from '@material-ui/core/styles';
 import { renderLog } from '../../utils/logging';
 
 class LoadMoreItemsManually extends Component {
@@ -11,63 +12,56 @@ class LoadMoreItemsManually extends Component {
   }
 
   render () {
-    renderLog('ShowMoreFooter');  // Set LOG_RENDER_EVENTS to log all renders
-    const { showMoreId, showMoreLink } = this.props;
+    renderLog('LoadMoreItemsManually');  // Set LOG_RENDER_EVENTS to log all renders
+    const { classes, loadMoreFunction, uniqueExternalId } = this.props;
 
-    let { showMoreText } = this.props;
-    if (!showMoreText) {
-      showMoreText = 'Show more';
+    let { loadMoreText } = this.props;
+    if (!loadMoreText) {
+      loadMoreText = 'Show more';
     }
 
     return (
-      <ShowMoreFooterStyled className="card-child" id={showMoreId} onClick={showMoreLink}>
-        <ShowMoreFooterText>
-          { showMoreText }
-        </ShowMoreFooterText>
-      </ShowMoreFooterStyled>
+      <LoadMoreItemsStyled>
+        <Button
+          classes={{ root: classes.buttonRoot }}
+          color="primary"
+          id={`loadMoreItems-${uniqueExternalId}`}
+          variant="outlined"
+          onClick={loadMoreFunction}
+        >
+          { loadMoreText }
+        </Button>
+      </LoadMoreItemsStyled>
     );
   }
 }
 LoadMoreItemsManually.propTypes = {
-  showMoreId: PropTypes.string.isRequired,
-  showMoreLink: PropTypes.func.isRequired,
-  showMoreText: PropTypes.string,
+  classes: PropTypes.object,
+  loadMoreFunction: PropTypes.func.isRequired,
+  loadMoreText: PropTypes.string,
+  uniqueExternalId: PropTypes.string,
 };
 
-const ShowMoreFooterStyled = styled.div`
-  border: 0px !important;
-  color: #2e3c5d;
-  cursor: pointer;
-  display: block !important;
-  background: #fff !important;
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 0px !important;
-  margin-top: 0px !important;
-  padding: 0px !important;
-  text-align: right !important;
-  user-select: none;
-  @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
-    font-size: 18px;
-  }
-  &:hover {
-    background-color: rgba(46, 60, 93, 0.15) !important;
-    transition-duration: .2s;
-  }
+const styles = (theme) => ({
+  buttonRoot: {
+    fontSize: 18,
+    textTransform: 'none',
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: 400,
+    },
+  },
+});
+
+const LoadMoreItemsStyled = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+  width: 100%;
   @media print{
     display: none;
   }
 `;
 
-const ShowMoreFooterText = styled.div`
-  margin-top: 8px !important;
-  padding: 8px !important;
-  padding-bottom: 0px !important;
-  text-align: right !important;
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-export default withTheme(LoadMoreItemsManually);
+export default withTheme(withStyles(styles)(LoadMoreItemsManually));
 

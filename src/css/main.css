@@ -7,6 +7,18 @@ body {
   z-index: 0;
 }
 
+.u-cursor--pointer:hover {
+  cursor: pointer;
+}
+
+.u-link-color {
+  color: #4371cc;
+}
+
+.u-no-break { /* Replacement for nobr and &nbsp */
+  white-space: nowrap;
+}
+
 /* Hide when 576px or greater
    At 576px we see tablet and larger */
 @media (min-width: 576px) {

@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import CampaignHeader from '../components/Navigation/CampaignHeader';
-import CampaignPhoto from '../../img/global/photos/SamDavisFamily2020-800x450.jpg';
+import CampaignActions from '../actions/CampaignActions';
+import CampaignTopNavigation from '../components/Navigation/CampaignTopNavigation';
+import CampaignStore from '../stores/CampaignStore';
 import { isCordova } from '../utils/cordovaUtils';
+import initializejQuery from '../utils/initializejQuery';
 import MainFooter from '../components/Navigation/MainFooter';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
@@ -14,20 +16,93 @@ import SupportButtonFooter from '../components/Campaign/SupportButtonFooter';
 
 
 class CampaignDetailsPage extends Component {
-  static getProps () {
-    return {};
+  constructor (props) {
+    super(props);
+    this.state = {
+      campaignPhoto: '',
+      campaignSEOFriendlyPath: '',
+      campaignTitle: '',
+      // campaignXWeVoteId: '',
+    };
   }
 
   componentDidMount () {
     // console.log('CampaignDetailsPage componentDidMount');
-    // const { match: { params } } = this.props;
-    // const { campaignIdentifier } = params;
-    // console.log('componentDidMount campaignIdentifier: ', campaignIdentifier);
-    // if (campaignIdentifier) {
-    //   this.setState({
-    //     campaignIdentifier,
-    //   });
-    // }
+    this.onCampaignStoreChange();
+    this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
+    const { match: { params } } = this.props;
+    const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
+    // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
+    let campaignX = {};
+    let mustRetrieveCampaign = false;
+    if (campaignSEOFriendlyPath) {
+      campaignX = CampaignStore.getCampaignXBySEOFriendlyPath(campaignSEOFriendlyPath);
+      // console.log('componentDidMount campaignX:', campaignX);
+      if (campaignX.constructor === Object) {
+        if (!campaignX.campaignx_we_vote_id) {
+          mustRetrieveCampaign = true;
+        }
+      } else {
+        mustRetrieveCampaign = true;
+      }
+      if (mustRetrieveCampaign) {
+        initializejQuery(() => {
+          CampaignActions.campaignRetrieveBySEOFriendlyPath(campaignSEOFriendlyPath);
+        });
+      }
+    } else if (campaignXWeVoteId) {
+      campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
+      if (campaignX.constructor === Object) {
+        if (!campaignX.campaignx_we_vote_id) {
+          mustRetrieveCampaign = true;
+        }
+      } else {
+        mustRetrieveCampaign = true;
+      }
+      if (mustRetrieveCampaign) {
+        initializejQuery(() => {
+          CampaignActions.campaignRetrieve(campaignXWeVoteId);
+        });
+      }
+    }
+  }
+
+  componentWillUnmount () {
+    this.campaignStoreListener.remove();
+  }
+
+  onCampaignStoreChange () {
+    const { match: { params } } = this.props;
+    let { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
+    // console.log('onCampaignStoreChange campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
+    let campaignX = {};
+    if (campaignSEOFriendlyPath) {
+      campaignX = CampaignStore.getCampaignXBySEOFriendlyPath(campaignSEOFriendlyPath);
+      ({ campaignx_we_vote_id: campaignXWeVoteId } = campaignX);
+      this.setState({
+        // campaignXWeVoteId,
+        campaignSEOFriendlyPath,
+      });
+    } else if (campaignXWeVoteId) {
+      campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
+      ({ seo_friendly_path: campaignSEOFriendlyPath } = campaignX);
+      this.setState({
+        // campaignXWeVoteId,
+        campaignSEOFriendlyPath,
+      });
+    }
+    if (campaignX.constructor === Object && campaignX.campaignx_we_vote_id) {
+      const {
+        campaign_description: campaignDescription,
+        campaign_title: campaignTitle,
+        we_vote_hosted_campaign_photo_large_url: campaignPhoto,
+      } = campaignX;
+      this.setState({
+        campaignDescription,
+        campaignPhoto,
+        campaignTitle,
+      });
+    }
   }
 
   render () {
@@ -36,42 +111,40 @@ class CampaignDetailsPage extends Component {
       console.log(`CampaignDetailsPage window.location.href: ${window.location.href}`);
     }
     // const { classes } = this.props;
-    const { match: { params } } = this.props;
-    const { campaignIdentifier } = params;
-    // console.log('render campaignIdentifier: ', campaignIdentifier);
+    const {
+      campaignDescription, campaignPhoto, campaignSEOFriendlyPath, campaignTitle,
+    } = this.state;
+    if (!campaignTitle) {
+      return null;
+    }
+    // console.log('render campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
     return (
       <div>
         <Helmet title="Campaign Home - We Vote Campaigns" />
         <MainHeaderBar />
         <PageWrapper cordova={isCordova()}>
-          <CampaignHeader campaignIdentifier={campaignIdentifier} />
+          <CampaignTopNavigation campaignSEOFriendlyPath={campaignSEOFriendlyPath} />
           <DetailsSectionMobile className="u-show-mobile">
             <CampaignImageWrapper>
-              <CampaignImage src={CampaignPhoto} alt="Campaign" />
+              <CampaignImage src={campaignPhoto} alt="Campaign" />
             </CampaignImageWrapper>
             <CampaignTitleAndScoreBar>
-              <CampaignTitleMobile>Sam Davis for Oakland School Board</CampaignTitleMobile>
+              <CampaignTitleMobile>{campaignTitle}</CampaignTitleMobile>
             </CampaignTitleAndScoreBar>
             <CampaignDescriptionWrapper>
               <CampaignDescription>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a arcu dui. Suspendisse sagittis lacus sit amet egestas ultricies. Fusce suscipit ac nisi vel malesuada. Etiam semper placerat enim, sed sollicitudin justo condimentum sed. Proin convallis ipsum eu quam porta, ut bibendum metus rutrum. Maecenas sed felis vel erat fermentum scelerisque id et lectus. Quisque erat magna, dignissim eget metus eget, convallis commodo risus. Proin mattis ante lacus, non placerat orci aliquet eleifend. Morbi accumsan tempor placerat. Nulla suscipit velit quis congue ornare. Vestibulum ipsum ipsum, tempor eu interdum non, dapibus et ex. Sed non auctor velit, at euismod dolor. Etiam enim diam, pellentesque vitae scelerisque suscipit, pharetra id ex. Pellentesque porta hendrerit blandit.
-                <br />
-                <br />
-                Etiam consectetur orci ac dui rhoncus sodales. Sed lectus neque, tincidunt vitae purus sit amet, malesuada dignissim augue. Nulla id gravida nisi, a convallis lectus. Etiam non erat a velit lacinia pellentesque id ut tortor. Morbi pulvinar id augue quis accumsan. Ut ut nisi in ante tristique maximus sed at nunc. Fusce faucibus eros vel ipsum sollicitudin, et consectetur elit hendrerit. Aenean venenatis eleifend eros, at mollis erat interdum a. Maecenas blandit orci sit amet mauris imperdiet, non mattis ex eleifend. Maecenas vehicula maximus est vitae tincidunt. Sed porta porttitor enim quis consequat.
+                {campaignDescription}
               </CampaignDescription>
             </CampaignDescriptionWrapper>
           </DetailsSectionMobile>
           <DetailsSectionDesktopTablet className="u-show-desktop-tablet">
-            <CampaignTitleDesktop>Sam Davis for Oakland School Board</CampaignTitleDesktop>
+            <CampaignTitleDesktop>{campaignTitle}</CampaignTitleDesktop>
             <ColumnsWrapper>
               <ColumnTwoThirds>
-                <CampaignImageDesktop src={CampaignPhoto} alt="Campaign" />
+                <CampaignImageDesktop src={campaignPhoto} alt="Campaign" />
                 <CampaignDescriptionDesktopWrapper>
                   <CampaignDescriptionDesktop>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a arcu dui. Suspendisse sagittis lacus sit amet egestas ultricies. Fusce suscipit ac nisi vel malesuada. Etiam semper placerat enim, sed sollicitudin justo condimentum sed. Proin convallis ipsum eu quam porta, ut bibendum metus rutrum. Maecenas sed felis vel erat fermentum scelerisque id et lectus. Quisque erat magna, dignissim eget metus eget, convallis commodo risus. Proin mattis ante lacus, non placerat orci aliquet eleifend. Morbi accumsan tempor placerat. Nulla suscipit velit quis congue ornare. Vestibulum ipsum ipsum, tempor eu interdum non, dapibus et ex. Sed non auctor velit, at euismod dolor. Etiam enim diam, pellentesque vitae scelerisque suscipit, pharetra id ex. Pellentesque porta hendrerit blandit.
-                    <br />
-                    <br />
-                    Etiam consectetur orci ac dui rhoncus sodales. Sed lectus neque, tincidunt vitae purus sit amet, malesuada dignissim augue. Nulla id gravida nisi, a convallis lectus. Etiam non erat a velit lacinia pellentesque id ut tortor. Morbi pulvinar id augue quis accumsan. Ut ut nisi in ante tristique maximus sed at nunc. Fusce faucibus eros vel ipsum sollicitudin, et consectetur elit hendrerit. Aenean venenatis eleifend eros, at mollis erat interdum a. Maecenas blandit orci sit amet mauris imperdiet, non mattis ex eleifend. Maecenas vehicula maximus est vitae tincidunt. Sed porta porttitor enim quis consequat.
+                    {campaignDescription}
                   </CampaignDescriptionDesktop>
                 </CampaignDescriptionDesktopWrapper>
               </ColumnTwoThirds>
