@@ -94,6 +94,7 @@ module.exports = {
     public: `localhost:${port}`,
     historyApiFallback: true,
     open: true,
+    disableHostCheck: true,
   } : {
     contentBase: path.resolve(__dirname, './build'),
     host: 'localhost',

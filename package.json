@@ -17,6 +17,7 @@
     "start-https": "node buildDateFile.js && PROTOCOL=HTTPS webpack serve --mode development",
     "start-https-analysis": "node buildDateFile.js && PROTOCOL=HTTPS && ANALYSIS=1 webpack serve --mode development",
     "start-minified": "webpack serve --mode production",
+    "start-minified-https": "node buildDateFile.js && PROTOCOL=HTTPS && webpack serve --mode production",
     "start-minified-analysis": "ANALYSIS=1 webpack serve --mode development",
     "test": "echo \"No test specified\" && exit 0"
   },

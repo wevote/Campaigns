@@ -25,9 +25,7 @@ export default {
   },
 
   donationRefreshDonationList () {
-    Dispatcher.loadEndpoint('donationHistory',
-      {
-      });
+    Dispatcher.loadEndpoint('donationHistory');
   },
 
   donationWithStripe (token, email, donationAmount, monthlyDonation, isOrganizationPlan, planType, couponCode) {
