@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import AppActions from '../../actions/AppActions';
 import AppStore from '../../stores/AppStore';
-import VoterActions from '../../actions/VoterActions';
+import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
 import SignInModal from './SignInModal';
-import initializejQuery from '../../utils/initializejQuery';
+import VoterActions from '../../actions/VoterActions';
 
 
 class SignInModalController extends Component {
@@ -18,10 +18,7 @@ class SignInModalController extends Component {
   componentDidMount () {
     const showSignInModal = AppStore.showSignInModal();
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
-    initializejQuery(() => {
-      VoterActions.voterRetrieve();
-      // console.log('SignInModalController, componentDidMount voterRetrieve fired ');
-    });
+    this.voterFirstRetrieve();
     // this.start = window.performance.now();
     this.setState({ showSignInModal });
   }
@@ -41,6 +38,17 @@ class SignInModalController extends Component {
     // console.log('closeSignInModal');
     this.setState({ showSignInModal: false });
   };
+
+  voterFirstRetrieve = () => {
+    initializejQuery(() => {
+      const voterFirstRetrieveInitiated = AppStore.voterFirstRetrieveInitiated();
+      // console.log('SignInModalController voterFirstRetrieveInitiated: ', voterFirstRetrieveInitiated);
+      if (!voterFirstRetrieveInitiated) {
+        AppActions.setVoterFirstRetrieveInitiated(true);
+        VoterActions.voterRetrieve();
+      }
+    });
+  }
 
   render () {
     renderLog('SignInModalController');  // Set LOG_RENDER_EVENTS to log all renders

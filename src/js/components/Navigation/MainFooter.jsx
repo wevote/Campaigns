@@ -205,8 +205,8 @@ const Column = styled.div`
   }
 `;
 
-const ColumnTitle = styled.h3`
-  color: #999;
+const ColumnTitle = styled.div`
+  color: #808080;
   font-size: 13px;
   font-weight: 700;
   margin-bottom: 15px;
@@ -240,7 +240,7 @@ const OuterWrapper = styled.div`
 `;
 
 const Text = styled.p`
-  color: #999;
+  color: #808080;
   font-size: 14px;
   margin-right: 0.5em;
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {

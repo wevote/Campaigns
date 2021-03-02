@@ -134,7 +134,7 @@ class CampaignStartPreview extends Component {
                   onClick={this.submitPublishNowMobile}
                   variant="contained"
                 >
-                  Publish Now
+                  Publish now
                 </Button>
               </div>
               <div className="u-show-desktop">
@@ -146,7 +146,7 @@ class CampaignStartPreview extends Component {
                   onClick={this.submitPublishNowDesktop}
                   variant="contained"
                 >
-                  Publish Now
+                  Publish now
                 </Button>
               </div>
             </SaveCancelButtonsWrapper>

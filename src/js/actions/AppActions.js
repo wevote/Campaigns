@@ -11,6 +11,10 @@ export default {
     Dispatcher.dispatch({ type: 'activityTidbitWeVoteIdForDrawerAndOpen', payload: activityTidbitWeVoteId });
   },
 
+  setCampaignListFirstRetrieveInitiated (value) {
+    Dispatcher.dispatch({ type: 'campaignListFirstRetrieveInitiated', payload: value });
+  },
+
   setGetStartedMode (getStartedMode) {
     Dispatcher.dispatch({ type: 'getStartedMode', payload: getStartedMode });
   },
@@ -114,6 +118,14 @@ export default {
     Dispatcher.dispatch({ type: 'viewingOrganizationVoterGuide', payload: isViewing });
   },
 
+  setVoterFirstRetrieveInitiated (value) {
+    Dispatcher.dispatch({ type: 'voterFirstRetrieveInitiated', payload: value });
+  },
+
+  signOutFromManyStores () {
+    DispatcherLoadEndpoint.loadEndpoint('voterSignOut', { sign_out_all_devices: false });
+  },
+
   siteConfigurationRetrieve (hostname, refresh_string = '') {
     Dispatcher.loadEndpoint('siteConfigurationRetrieve',
       {
@@ -128,9 +140,5 @@ export default {
 
   unsetStoreSignInStartFullUrl () {
     Dispatcher.dispatch({ type: 'unsetStoreSignInStartFullUrl', payload: false });
-  },
-
-  signOutFromManyStores () {
-    DispatcherLoadEndpoint.loadEndpoint('voterSignOut', { sign_out_all_devices: false });
   },
 };

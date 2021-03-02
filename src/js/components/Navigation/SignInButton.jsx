@@ -48,18 +48,22 @@ class SignInButton extends Component {
     const { voterIsSignedIn } = this.state;
 
     return (
-      <div>
+      <Wrapper>
         {voterIsSignedIn ? (
           <SignInText onClick={this.signOut}>Sign out</SignInText>
         ) : (
           <SignInText onClick={this.openSignInModal}>Sign in</SignInText>
         )}
-      </div>
+      </Wrapper>
     );
   }
 }
 
 const SignInText = styled.div`
+`;
+
+const Wrapper = styled.div`
+  width: 100%;
 `;
 
 export default SignInButton;

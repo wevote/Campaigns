@@ -33,6 +33,7 @@ class VoterStore extends ReduceStore {
       voterEmailQueuedToSaveSet: false,
       voterFirstNameQueuedToSave: '',
       voterFirstNameQueuedToSaveSet: false,
+      voterFirstRetrieveCompleted: false, // Has the first retrieve of the voter completed?
       voterFound: false,
       voterExternalIdHasBeenSavedOnce: {}, // Dict with externalVoterId and membershipOrganizationWeVoteId as keys, and true/false as value
       voterLastNameQueuedToSave: '',
@@ -372,6 +373,10 @@ class VoterStore extends ReduceStore {
     }
   }
 
+  voterFirstRetrieveCompleted () {
+    return this.getState().voterFirstRetrieveCompleted;
+  }
+
   reduce (state, action) {
     let facebookPhotoRetrieveLoopCount;
     let address;
@@ -387,6 +392,7 @@ class VoterStore extends ReduceStore {
     let secretCodeVerified;
     let voterDeviceId;
     // let voterExternalIdHasBeenSavedOnce;
+    let voterFirstRetrieveCompleted;
     let voterMustRequestNewCode;
     let voterSecretCodeRequestsLocked;
 
@@ -759,8 +765,10 @@ class VoterStore extends ReduceStore {
         // Preserve address within voter
         incomingVoter = action.res;
         incomingVoter.needsVoterRetrieve = false;
-
-        ({ facebookPhotoRetrieveLoopCount } = state);
+        ({ facebookPhotoRetrieveLoopCount, voterFirstRetrieveCompleted } = state);
+        if (!voterFirstRetrieveCompleted) {
+          voterFirstRetrieveCompleted = Boolean(action.res.success);
+        }
 
         currentVoterDeviceId = cookies.getItem('voter_device_id');
         if (!action.res.voter_found) {
@@ -800,6 +808,7 @@ class VoterStore extends ReduceStore {
           ...state,
           facebookPhotoRetrieveLoopCount: facebookPhotoRetrieveLoopCount + 1,
           voter: incomingVoter,
+          voterFirstRetrieveCompleted,
           voterFound: action.res.voter_found,
         };
 
