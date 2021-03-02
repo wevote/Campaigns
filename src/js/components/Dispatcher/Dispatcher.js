@@ -9,7 +9,7 @@ Dispatcher.prototype.$ajax = $ajax;
 Dispatcher.prototype.loadEndpoint = function (endpoint, data = {}) {
   if (this.$ajax instanceof Function !== true) throw new Error('$ajax handler not initialized');
 
-  // console.log("Ajax request in Dispatcher: " + endpoint);
+  // console.log(`Ajax request in Dispatcher: ${endpoint}`);
   return this.$ajax({
     endpoint,
     data,

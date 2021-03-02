@@ -1,37 +1,59 @@
 import React, { Component } from 'react';
 import { Button, InputAdornment, TextField } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { loadStripe } from '@stripe/stripe-js';
 import { Elements, ElementsConsumer } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
+import LoadingWheel from '../components/LoadingWheel';
 import MainFooter from '../components/Navigation/MainFooter';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import CheckoutForm from '../components/Widgets/CheckoutForm';
 import { isCordova } from '../utils/cordovaUtils';
+import initializejQuery from '../utils/initializejQuery';
 import { renderLog } from '../utils/logging';
 
-
-const InjectedCheckoutForm = (value) => (
-  <ElementsConsumer>
-    {({ stripe, elements }) => (
-      <CheckoutForm stripe={stripe} elements={elements} value={value} />
-    )}
-  </ElementsConsumer>
-);
+const InjectedCheckoutForm = (params) => {
+  const { value, classes } = params;
+  if (value && classes) {
+    return (
+      <ElementsConsumer>
+        {({ stripe, elements }) => (
+          <CheckoutForm stripe={stripe} elements={elements} value={value} classes={classes} />
+        )}
+      </ElementsConsumer>
+    );
+  } else {
+    return null;
+  }
+};
 
 class Membership extends Component {
   constructor (props) {
     super(props);
 
-    // const library = 'stripe';
     this.state = {
-      stripePromise: loadStripe('pk_test_6pRNASCoBOKtIshFeQd4XMUh'),
+      stripePromise: loadStripe('pk_test_bWuWGC3jrMIFH3wvRvHR6Z5H'),
       value: 0,
       joining: false,
+      loaded: false,
     };
     this.onFieldChange = this.onFieldChange.bind(this);
+  }
+
+  componentDidMount () {
+    initializejQuery(() => {
+      console.log('Membership, componentDidMount after init jQuery');
+      // DonateStore.resetState();  I don't think this does anything!
+      // 2/25/21 1pm hack TODO DonateActions.donationRefreshDonationList();
+      this.setState({ loaded: true });
+      // dumpCookies();
+    });
+  }
+
+  componentWillUnmount () {
+    // this.donateStoreListener.remove();
   }
 
   static getProps () {
@@ -40,8 +62,9 @@ class Membership extends Component {
 
   onFieldChange (event) {
     if (event && event.target) {
+      const val = event.target.value.length > 0 ? event.target.value : '0';
       this.setState({
-        value: event.target.value,
+        value: val,
       });
     }
   }
@@ -54,11 +77,11 @@ class Membership extends Component {
   }
 
   render () {
-    const { classes } = this.props;
-    const { value, joining, stripePromise } = this.state;
     renderLog('Membership');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`Membership window.location.href: ${window.location.href}`);
+    const { classes } = this.props;
+    const { joining, stripePromise, value, loaded } = this.state;
+    if (!loaded) {
+      return LoadingWheel;
     }
 
     return (
@@ -74,7 +97,10 @@ class Membership extends Component {
                   Voters come to WeVote.US to start and sign campaigns that encourage more people to vote.
                   Leading up to election day, review your ballot on ballot.WeVote.US, and discuss what is on your
                   ballot with your friends.
-                  Become a member today and fuel our mission to help every American to vote.
+                  {/* Become a member today and fuel our mission to help every American to vote. */}
+                  {/* Become a member today and fuel our mission to help every American vote with confidence. */}
+                  {/* Become a member today and fuel our mission to help every American feel motivated to vote. */}
+                  Become a member today and fuel our mission to help motivate every American to vote.
                 </PageSubStatement>
               </IntroductionMessageSection>
               <ContributeGridWrapper>
@@ -165,7 +191,7 @@ class Membership extends Component {
           <PaymentWrapper joining={joining}>
             <PaymentCenteredWrapper>
               <Elements stripe={stripePromise}>
-                <InjectedCheckoutForm value={value} />
+                <InjectedCheckoutForm value={value} classes={{}} />
               </Elements>
             </PaymentCenteredWrapper>
           </PaymentWrapper>
@@ -197,6 +223,26 @@ const styles = () => ({
     fontSize: 18,
     color: 'black',
     backgroundColor: 'white',
+  },
+  stripeAlertError: {
+    background: 'rgb(255, 177, 160)',
+    color: 'rgb(163, 40, 38)',
+    boxShadow: 'none',
+    pointerEvents: 'none',
+    fontWeight: 'bold',
+    marginBottom: 8,
+    // height: 40,
+    fontSize: 14,
+    width: '100%',
+    padding: '8px 16px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '4px',
+    '@media (max-width: 569px)': {
+      // height: 35,
+      fontSize: 14,
+    },
   },
 });
 
