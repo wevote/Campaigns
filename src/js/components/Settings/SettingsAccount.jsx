@@ -137,6 +137,8 @@ export default class SettingsAccount extends Component {
         isOnWeVoteSubdomainUrl: AppStore.isOnWeVoteSubdomainUrl(),
         isOnFacebookSupportedDomainUrl: AppStore.isOnFacebookSupportedDomainUrl(),
       });
+      signInModalGlobalState.set('facebookSignInStep', '');
+      signInModalGlobalState.set('facebookSignInStatus', '');
 
       const delayBeforeClearingStatus = 500;
       this.timer = setTimeout(() => {
@@ -299,6 +301,8 @@ export default class SettingsAccount extends Component {
 
   signOut () {
     // console.log('SettingsAccount.jsx signOut');
+    signInModalGlobalState.set('facebookSignInStep', '');
+    signInModalGlobalState.set('facebookSignInStatus', '');
     VoterSessionActions.voterSignOut();
     historyPush('/ballot');
   }
