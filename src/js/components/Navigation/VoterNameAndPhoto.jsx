@@ -3,13 +3,11 @@ import PropTypes from 'prop-types';
 import { AccountCircle } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
-import VoterActions from '../../actions/VoterActions';
-import VoterStore from '../../stores/VoterStore';
+import anonymous from '../../../img/global/icons/avatar-generic.png';
+import LazyImage from '../../utils/LazyImage';
 import { renderLog } from '../../utils/logging';
 import { shortenText } from '../../utils/textFormat';
-import anonymous from '../../../img/global/icons/avatar-generic.png';
-import initializejQuery from '../../utils/initializejQuery';
-import LazyImage from '../../utils/LazyImage';
+import VoterStore from '../../stores/VoterStore';
 
 
 class VoterNameAndPhoto extends Component {
@@ -20,12 +18,8 @@ class VoterNameAndPhoto extends Component {
   }
 
   componentDidMount () {
+    this.onVoterStoreChange();
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
-    initializejQuery(() => {
-      VoterActions.voterRetrieve();
-      // console.log('VoterNameAndPhoto, componentDidMount voterRetrieve fired ');
-    });
-    // this.start = window.performance.now();
   }
 
   componentWillUnmount () {
@@ -33,16 +27,7 @@ class VoterNameAndPhoto extends Component {
   }
 
   onVoterStoreChange () {
-    // console.log('VoterNameAndPhoto onVoterStoreChange');
     // console.log('VoterNameAndPhoto onVoterStoreChange voter:', VoterStore.getVoter());
-    // eslint-disable-next-line react/no-unused-state
-    this.setState({ voterLoaded: true });
-  }
-
-  render () {
-    renderLog('VoterNameAndPhoto');  // Set LOG_RENDER_EVENTS to log all renders
-    // console.log('VoterNameAndPhoto voterLoaded at start of render: ', voterLoaded);
-    const { classes } = this.props;
     const voter = VoterStore.getVoter();
     let voterIsSignedIn = false;
     let voterPhotoUrlMedium;
@@ -50,33 +35,42 @@ class VoterNameAndPhoto extends Component {
       const { is_signed_in: signedIn, voter_photo_url_medium: photoURL  } = voter;
       voterIsSignedIn  = signedIn;
       voterPhotoUrlMedium = photoURL;
-      // console.log('VoterNameAndPhoto at render, voter:', voter);
     }
-    // const end = window.performance.now();
-    // console.log(`Execution time: ${end - this.start} ms, ${voterPhotoUrlMedium}`);
     const voterFirstName = VoterStore.getFirstName();
+    this.setState({
+      voterFirstName,
+      voterIsSignedIn,
+      voterPhotoUrlMedium,
+    });
+  }
+
+  render () {
+    renderLog('VoterNameAndPhoto');  // Set LOG_RENDER_EVENTS to log all renders
+    // console.log('VoterNameAndPhoto voterIsSignedIn at start of render: ', voterIsSignedIn);
+    const { classes } = this.props;
+    const { voterFirstName, voterIsSignedIn, voterPhotoUrlMedium } = this.state;
 
     return (
       <Wrapper>
         {voterIsSignedIn && (
           <>
-            {voterPhotoUrlMedium ? (
-              <LazyImage
-                src={voterPhotoUrlMedium}
-                placeholder={anonymous}
-                className="header-nav__avatar"
-                height={34}
-                width={34}
-                alt="Your Settings"
-              />
-            ) : (
-              <NameAndPhotoWrapper id="nameAndPhotoWrapper">
-                <FirstNameWrapper id="firstNameWrapper">
-                  {shortenText(voterFirstName, 9)}
-                </FirstNameWrapper>
+            <NameAndPhotoWrapper id="nameAndPhotoWrapper">
+              <FirstNameWrapper id="firstNameWrapper">
+                {shortenText(voterFirstName, 9)}
+              </FirstNameWrapper>
+              {voterPhotoUrlMedium ? (
+                <LazyImage
+                  src={voterPhotoUrlMedium}
+                  placeholder={anonymous}
+                  className="profile-photo"
+                  height={24}
+                  width={24}
+                  alt="Your Settings"
+                />
+              ) : (
                 <AccountCircle classes={{ root: classes.accountCircleRoot }} />
-              </NameAndPhotoWrapper>
-            )}
+              )}
+            </NameAndPhotoWrapper>
           </>
         )}
       </Wrapper>
@@ -109,4 +103,3 @@ const Wrapper = styled.div`
 `;
 
 export default withStyles(styles)(VoterNameAndPhoto);
-

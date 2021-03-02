@@ -19,6 +19,10 @@ body {
   white-space: nowrap;
 }
 
+.profile-photo {
+  border-radius: 14px;
+}
+
 /* Hide when 576px or greater
    At 576px we see tablet and larger */
 @media (min-width: 576px) {

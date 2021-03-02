@@ -1,14 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import { renderLog } from '../../utils/logging';
-import CampaignActions from '../../actions/CampaignActions';
 import CampaignCardForList from '../Campaign/CampaignCardForList';
 import CampaignStore from '../../stores/CampaignStore';
-import initializejQuery from '../../utils/initializejQuery';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
+import { renderLog } from '../../utils/logging';
 
+const FirstCampaignListController = React.lazy(() => import('../Campaign/FirstCampaignListController'));
 
 const STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY = 1;
 
@@ -23,9 +22,6 @@ class HomeCampaignList extends Component {
   componentDidMount () {
     // console.log('HomeCampaignList componentDidMount');
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    initializejQuery(() => {
-      CampaignActions.campaignListRetrieve();
-    });
     if (this.props.startingNumberOfCampaignsToDisplay && this.props.startingNumberOfCampaignsToDisplay > 0) {
       this.setState({
         numberOfCampaignsToDisplay: this.props.startingNumberOfCampaignsToDisplay,
@@ -104,6 +100,9 @@ class HomeCampaignList extends Component {
             />
           )}
         </LoadMoreItemsManuallyWrapper>
+        <Suspense fallback={<span>&nbsp;</span>}>
+          <FirstCampaignListController />
+        </Suspense>
       </Wrapper>
     );
   }

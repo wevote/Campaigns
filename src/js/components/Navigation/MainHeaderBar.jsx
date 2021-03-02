@@ -59,6 +59,9 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('md')]: {
       display: 'none !important',
     },
+    [theme.breakpoints.down('md')]: {
+      minHeight: 'unset',
+    },
   },
   outerWrapper: {
     borderBottom: '1px solid #ddd',
@@ -83,21 +86,8 @@ export default function MainHeaderBar () {
   const open = Boolean(anchorEl) && anchorEl != null;
 
   const handleMenu = (event) => {
-    console.log('MainHeaderBar handleMenu event:', event);
-    // Prevent stray click events from coming in from the SignInModal, which are causing
-    // handleMenu to fire when we don't want it to.
-    // Limit opening the menu to click events initiated in this component.
-    // This is a bug and needs a more elegant solution.
-    if (event.target.id === 'firstNameWrapper' ||
-      event.target.id === 'mainHeaderBarDropDownMenuIcon' ||
-      event.target.id === 'nameAndPhotoWrapper' ||
-      event.target.id === 'openMainHeaderBarDropDown' ||
-      event.target.localName === 'path' ||
-      // event.target.localName === 'span' ||
-      event.target.localName === 'svg') {
-      // console.log('setAnchorEl');
-      setAnchorEl(event.currentTarget);
-    }
+    // console.log('MainHeaderBar handleMenu event:', event);
+    setAnchorEl(event.currentTarget);
   };
 
   const handleClose = (destination) => {
@@ -146,6 +136,9 @@ export default function MainHeaderBar () {
             <Typography variant="h6" className={classes.title}>
               &nbsp;
             </Typography>
+            <Suspense fallback={<span>&nbsp;</span>}>
+              <SignInModalController />
+            </Suspense>
             <div>
               <IconButton
                 edge="start"
@@ -156,7 +149,6 @@ export default function MainHeaderBar () {
                 aria-label="menu"
               >
                 <Suspense fallback={<span>&nbsp;</span>}>
-                  <SignInModalController />
                   <VoterNameAndPhoto />
                 </Suspense>
                 <MenuIcon id="mainHeaderBarDropDownMenuIcon" classes={{ root: classes.menuIconRoot }} />

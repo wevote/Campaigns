@@ -13,6 +13,7 @@ class AppStore extends ReduceStore {
   getInitialState () {
     return {
       activityTidbitWeVoteIdForDrawer: '',
+      campaignListFirstRetrieveInitiated: false,
       chosenPreventSharingOpinions: false,
       chosenReadyIntroductionText: '',
       chosenReadyIntroductionTitle: '',
@@ -47,11 +48,16 @@ class AppStore extends ReduceStore {
       storeSignInStartFullUrl: false,
       viewingOrganizationVoterGuide: false,
       voterExternalIdHasBeenSavedOnce: {}, // Dict with externalVoterId and membershipOrganizationWeVoteId as keys, and true/false as value
+      voterFirstRetrieveInitiated: false,
     };
   }
 
   activityTidbitWeVoteIdForDrawer () {
     return this.getState().activityTidbitWeVoteIdForDrawer;
+  }
+
+  campaignListFirstRetrieveInitiated () {
+    return this.getState().campaignListFirstRetrieveInitiated;
   }
 
   getChosenPreventSharingOpinions () {
@@ -246,6 +252,10 @@ class AppStore extends ReduceStore {
     }
   }
 
+  voterFirstRetrieveInitiated () {
+    return this.getState().voterFirstRetrieveInitiated;
+  }
+
   reduce (state, action) {
     let apiStatus;
     let apiSuccess;
@@ -267,6 +277,8 @@ class AppStore extends ReduceStore {
           activityTidbitWeVoteIdForDrawer: action.payload,
           showActivityTidbitDrawer: true,
         };
+      case 'campaignListFirstRetrieveInitiated':
+        return { ...state, campaignListFirstRetrieveInitiated: action.payload };
       case 'getStartedMode':
         return { ...state, getStartedMode: action.payload };
       case 'getVoterGuideSettingsDashboardEditMode':
@@ -399,6 +411,8 @@ class AppStore extends ReduceStore {
         return { ...state, storeSignInStartFullUrl: action.payload };
       case 'viewingOrganizationVoterGuide':
         return { ...state, viewingOrganizationVoterGuide: action.payload };
+      case 'voterFirstRetrieveInitiated':
+        return { ...state, voterFirstRetrieveInitiated: action.payload };
       default:
         return state;
     }
