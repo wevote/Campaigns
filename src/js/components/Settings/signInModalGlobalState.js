@@ -16,6 +16,7 @@ const simState = {
 
 export default {
   set (key, value) {
+    // console.log('signInModalGlobalState ----------------------- key:', key, ', value:', value);
     simState[key] = value;
   },
 
