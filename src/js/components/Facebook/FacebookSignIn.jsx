@@ -40,8 +40,7 @@ class FacebookSignIn extends Component {
 
   onFacebookStoreChange () {
     // console.log('FacebookSignIn onFacebookStoreChange');
-    // eslint-disable-next-line no-unused-vars
-    const fbState = signInModalGlobalState.getAll();  // For debug
+    // const fbState = signInModalGlobalState.getAll();  // For debug
     const facebookAuthResponse = FacebookStore.getFacebookAuthResponse();
 
     if (signInModalGlobalState.get('facebookSignInStep') === 'getVotersFacebookData') {
@@ -57,10 +56,17 @@ class FacebookSignIn extends Component {
       signInModalGlobalState.set('facebookSignInStep', 'checkForNeedToMerge');
       signInModalGlobalState.set('facebookSignInStatus', 'Retrieving sign in data...');
     } else if (signInModalGlobalState.get('facebookSignInStep') === 'checkForNeedToMerge') {
-      console.log('FacebookSignIn calling voterMergeTwoAccountsByFacebookKey, since the voter is authenticated with facebook');
-      signInModalGlobalState.set('facebookSignInStatus', 'Merging any changes made when not signed in...');
-      const { facebook_secret_key: facebookSecretKey } = facebookAuthResponse;
-      VoterActions.voterMergeTwoAccountsByFacebookKey(facebookSecretKey);
+      const { existing_facebook_account_found: existingFBAccountFound } = facebookAuthResponse;
+      if (existingFBAccountFound) {
+        console.log('FacebookSignIn calling voterMergeTwoAccountsByFacebookKey, since the voter is authenticated with facebook');
+        signInModalGlobalState.set('facebookSignInStatus', 'Merging any changes made when not signed in...');
+        const { facebook_secret_key: facebookSecretKey } = facebookAuthResponse;
+        VoterActions.voterMergeTwoAccountsByFacebookKey(facebookSecretKey);
+      } else {
+        console.log('FacebookSignIn calling voterFacebookSaveToCurrentAccount, since this is the first time this voter signed in with facebook');
+        signInModalGlobalState.set('facebookSignInStatus', 'Saving initial Facebook signin...');
+        VoterActions.voterFacebookSaveToCurrentAccount();
+      }
       signInModalGlobalState.set('facebookSignInStep', 'voterRefresh');
     } else if (signInModalGlobalState.get('facebookSignInStep') === 'voterRefresh') {
       console.log('FacebookSignIn facebookSignInStep === voterRefresh and calling voterRetrieve()');
@@ -70,9 +76,7 @@ class FacebookSignIn extends Component {
   }
 
   onVoterStoreChange () {
-    // console.log('FacebookSignIn onVoterStoreChange');
-    // eslint-disable-next-line no-unused-vars
-    const fbState = signInModalGlobalState.getAll();  // For debug
+    // const fbState = signInModalGlobalState.getAll();  // For debug
     // const voter = VoterStore.getVoter();  // for debug
     // console.log('FacebookSignIn onVoterStoreChange       voter:', voter);
     if (signInModalGlobalState.get('facebookSignInStep') === 'waitingForRetrieveVoterResponse') {
@@ -106,11 +110,6 @@ class FacebookSignIn extends Component {
     }
   };
 
-  voterFacebookSaveToCurrentAccount () {
-    console.log('In voterFacebookSaveToCurrentAccount');
-    VoterActions.voterFacebookSaveToCurrentAccount();
-  }
-
   voterFacebookSignInRetrieve () {
     oAuthLog('FacebookSignIn voterFacebookSignInRetrieve');
     if (!this.state.saving) {
@@ -126,8 +125,7 @@ class FacebookSignIn extends Component {
     const { buttonSubmittedText, buttonText } = this.props;
     const { facebookSignInSequenceStarted, redirectInProgress } = this.state;
     const facebookAuthResponse = FacebookStore.getFacebookAuthResponse();
-    // eslint-disable-next-line no-unused-vars
-    const fbState = signInModalGlobalState.getAll();     // For debug
+    // const fbState = signInModalGlobalState.getAll();     // For debug
     if (redirectInProgress) {
       return null;
     }
