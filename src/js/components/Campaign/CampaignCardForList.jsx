@@ -169,11 +169,13 @@ const OneCampaignTitle = styled.h4`
 
 const CampaignImage = styled.img`
   margin-top: 8px;
+  min-height: 175px;
   width: 100%;
   @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
     margin-left: 15px;
     margin-top: 0;
-    width: 275px;
+    min-height: 130px;
+    width: 225px;
   }
 `;
 

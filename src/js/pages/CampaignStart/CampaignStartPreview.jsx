@@ -247,7 +247,7 @@ const CampaignStartSectionWrapper = styled.div`
   justify-content: center;
 `;
 
-const CampaignTitleDesktop = styled.h3`
+const CampaignTitleDesktop = styled.h2`
   font-size: 28px;
   text-align: center;
   margin: 30px 20px 40px 20px;
@@ -260,7 +260,7 @@ const CampaignTitleMissing = styled.div`
   color: red;
 `;
 
-const CampaignTitleMobile = styled.h3`
+const CampaignTitleMobile = styled.h2`
   font-size: 18px;
   text-align: left;
   margin: 0;

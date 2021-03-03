@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Button } from '@material-ui/core';
 import { withStyles, withTheme } from '@material-ui/core/styles';
 import styled from 'styled-components';
+import AppActions from '../../actions/AppActions';
+import AppStore from '../../stores/AppStore';
 import { historyPush } from '../../utils/cordovaUtils';
 import initializejQuery from '../../utils/initializejQuery';
 import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
@@ -24,9 +26,9 @@ class CompleteYourProfile extends Component {
   }
 
   componentDidMount () {
+    this.voterFirstRetrieve();
     this.onVoterStoreChange();
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
-    initializejQuery();
   }
 
   componentDidCatch (error, info) {
@@ -155,6 +157,17 @@ class CompleteYourProfile extends Component {
     console.log('voterEmailQueuedToSaveLocal: ', voterEmailQueuedToSaveLocal);
     VoterActions.sendSignInCodeEmail(voterEmailQueuedToSaveLocal);
   };
+
+  voterFirstRetrieve = () => {
+    initializejQuery(() => {
+      const voterFirstRetrieveInitiated = AppStore.voterFirstRetrieveInitiated();
+      // console.log('SignInModalController voterFirstRetrieveInitiated: ', voterFirstRetrieveInitiated);
+      if (!voterFirstRetrieveInitiated) {
+        AppActions.setVoterFirstRetrieveInitiated(true);
+        VoterActions.voterRetrieve();
+      }
+    });
+  }
 
   render () {
     renderLog('CompleteYourProfile');  // Set LOG_RENDER_EVENTS to log all renders

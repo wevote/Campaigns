@@ -9,7 +9,7 @@ import { renderLog } from '../../utils/logging';
 
 const FirstCampaignListController = React.lazy(() => import('../Campaign/FirstCampaignListController'));
 
-const STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY = 1;
+const STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY = 3;
 
 class HomeCampaignList extends Component {
   constructor (props) {
@@ -124,7 +124,7 @@ const LoadMoreItemsManuallyWrapper = styled.div`
   }
 `;
 
-const WhatIsHappeningTitle = styled.h3`
+const WhatIsHappeningTitle = styled.h2`
   font-size: 22px;
   text-align: left;
 `;

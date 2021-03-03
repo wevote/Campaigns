@@ -16,7 +16,7 @@ const CampaignStartAddPolitician = React.lazy(() => import('./js/pages/CampaignS
 const CampaignStartAddDescription = React.lazy(() => import('./js/pages/CampaignStart/CampaignStartAddDescription'));
 const CampaignStartAddPhoto = React.lazy(() => import('./js/pages/CampaignStart/CampaignStartAddPhoto'));
 const CampaignStartAddTitle = React.lazy(() => import('./js/pages/CampaignStart/CampaignStartAddTitle'));
-const CampaignStartCompleteYourProfileMobile = React.lazy(() => import('./js/pages/CampaignStart/CampaignStartCompleteYourProfileMobile'));
+const CompleteYourProfileMobile = React.lazy(() => import('./js/pages/Settings/CompleteYourProfileMobile'));
 const CampaignStartEditAll = React.lazy(() => import('./js/pages/CampaignStart/CampaignStartEditAll'));
 const CampaignStartIntro = React.lazy(() => import('./js/pages/CampaignStart/CampaignStartIntro'));
 const CampaignStartPreview = React.lazy(() => import('./js/pages/CampaignStart/CampaignStartPreview'));
@@ -61,7 +61,7 @@ class App extends Component {
     // console.log('App render, pathname:', pathname);
     return (
       <ErrorBoundary>
-        <Suspense fallback={<span>Loading...</span>}>
+        <Suspense fallback={<span>&nbsp;</span>}>
           <MuiThemeProvider theme={muiTheme}>
             <ThemeProvider theme={styledTheme}>
               <WeVoteRouter>
@@ -88,10 +88,12 @@ class App extends Component {
                   <Route exact path="/start-a-campaign-why-winning-matters"><CampaignStartAddDescription /></Route>
                   <Route exact path="/start-a-campaign-add-photo"><CampaignStartAddPhoto /></Route>
                   <Route exact path="/start-a-campaign-add-title"><CampaignStartAddTitle /></Route>
-                  <Route exact path="/start-a-campaign-complete-your-profile"><CampaignStartCompleteYourProfileMobile /></Route>
+                  <Route exact path="/start-a-campaign-complete-your-profile" render={(props) => <CompleteYourProfileMobile match={props.match} startCampaign />} />
                   <Route exact path="/start-a-campaign-edit-all"><CampaignStartEditAll /></Route>
                   <Route exact path="/start-a-campaign-preview"><CampaignStartPreview /></Route>
                   <Route exact path="/styles"><StyleGuidePage /></Route>
+                  <Route exact path="/support-campaign-complete-your-profile/c/:campaignSEOFriendlyPath" render={(props) => <CompleteYourProfileMobile match={props.match} supportCampaign />} />
+                  <Route exact path="/support-campaign-complete-your-profile/id/:campaignXWeVoteId" render={(props) => <CompleteYourProfileMobile match={props.match} supportCampaign />} />
                   <Route exact path="/terms"><TermsOfService /></Route>
                   <Route exact path="/test/comments"><CommentsTestPage /></Route>
                   <Route exact path="/test/details"><DetailsTestPage /></Route>

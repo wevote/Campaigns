@@ -44,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('md')]: {
       minHeight: 'unset',
     },
+    '&:hover': {
+      color: '#4371cc',
+    },
   },
   menuExtraItem: {
     fontSize: 12,
@@ -54,6 +57,9 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('md')]: {
       minHeight: 'unset',
     },
+    '&:hover': {
+      color: '#4371cc',
+    },
   },
   menuItemMobileOnly: {
     [theme.breakpoints.up('md')]: {
@@ -61,6 +67,9 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down('md')]: {
       minHeight: 'unset',
+    },
+    '&:hover': {
+      color: '#4371cc',
     },
   },
   outerWrapper: {
