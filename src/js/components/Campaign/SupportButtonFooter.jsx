@@ -7,8 +7,31 @@ import { renderLog } from '../../utils/logging';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 
 class SupportButtonFooter extends Component {
-  static getProps () {
-    return {};
+  constructor (props) {
+    super(props);
+    this.state = {
+      voterFirstName: '',
+      voterLastName: '',
+      voterSignedInWithEmail: '',
+    };
+  }
+
+  submitSupportButtonMobile = () => {
+    const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.props;
+    const { voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
+    if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
+      // Navigate to the mobile complete your profile page
+      if (campaignSEOFriendlyPath) {
+        historyPush(`/support-campaign-complete-your-profile/c/${campaignSEOFriendlyPath}`);
+      } else {
+        historyPush(`/support-campaign-complete-your-profile/id/${campaignXWeVoteId}`);
+      }
+    } else {
+      // Mark the campaign as published
+      // const campaignWeVoteId = '';
+      // CampaignStartActions.inDraftModeSave(campaignWeVoteId, false);
+      // historyPush('/profile/started');
+    }
   }
 
   render () {
@@ -29,7 +52,7 @@ class SupportButtonFooter extends Component {
               classes={{ root: supportButtonClasses }}
               color="primary"
               id="supportButtonFooter"
-              onClick={() => historyPush('/c/')}
+              onClick={this.submitSupportButtonMobile}
               variant="contained"
             >
               Support this campaign
@@ -41,7 +64,9 @@ class SupportButtonFooter extends Component {
   }
 }
 SupportButtonFooter.propTypes = {
+  campaignXWeVoteId: PropTypes.string,
   classes: PropTypes.object,
+  campaignSEOFriendlyPath: PropTypes.string,
 };
 
 const styles = () => ({

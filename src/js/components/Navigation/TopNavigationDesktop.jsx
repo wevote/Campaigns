@@ -25,16 +25,25 @@ const useStyles = makeStyles((theme) => ({
     minHeight: 0,
     minWidth: 125,
     padding: '0 6px',
+    '&:hover': {
+      color: '#4371cc',
+    },
   },
   tabRootMembership: {
     minHeight: 0,
     minWidth: 100,
     padding: '0 6px',
+    '&:hover': {
+      color: '#4371cc',
+    },
   },
   tabRootSearch: {
     minHeight: 0,
     minWidth: 60,
     padding: '0 6px',
+    '&:hover': {
+      color: '#4371cc',
+    },
   },
   tabsRoot: {
     minHeight: 0,

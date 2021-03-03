@@ -22,7 +22,7 @@ class CampaignDetailsPage extends Component {
       campaignPhoto: '',
       campaignSEOFriendlyPath: '',
       campaignTitle: '',
-      // campaignXWeVoteId: '',
+      campaignXWeVoteId: '',
     };
   }
 
@@ -73,21 +73,19 @@ class CampaignDetailsPage extends Component {
 
   onCampaignStoreChange () {
     const { match: { params } } = this.props;
-    let { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
+    let { campaignSEOFriendlyPath } = params;
+    const { campaignXWeVoteId } = params;
     // console.log('onCampaignStoreChange campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
     let campaignX = {};
     if (campaignSEOFriendlyPath) {
       campaignX = CampaignStore.getCampaignXBySEOFriendlyPath(campaignSEOFriendlyPath);
-      ({ campaignx_we_vote_id: campaignXWeVoteId } = campaignX);
       this.setState({
-        // campaignXWeVoteId,
         campaignSEOFriendlyPath,
       });
     } else if (campaignXWeVoteId) {
       campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
       ({ seo_friendly_path: campaignSEOFriendlyPath } = campaignX);
       this.setState({
-        // campaignXWeVoteId,
         campaignSEOFriendlyPath,
       });
     }
@@ -95,12 +93,14 @@ class CampaignDetailsPage extends Component {
       const {
         campaign_description: campaignDescription,
         campaign_title: campaignTitle,
+        campaignx_we_vote_id: campaignXWeVoteIdFromObject,
         we_vote_hosted_campaign_photo_large_url: campaignPhoto,
       } = campaignX;
       this.setState({
         campaignDescription,
         campaignPhoto,
         campaignTitle,
+        campaignXWeVoteId: campaignXWeVoteIdFromObject,
       });
     }
   }
@@ -112,7 +112,7 @@ class CampaignDetailsPage extends Component {
     }
     // const { classes } = this.props;
     const {
-      campaignDescription, campaignPhoto, campaignSEOFriendlyPath, campaignTitle,
+      campaignDescription, campaignPhoto, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId,
     } = this.state;
     if (!campaignTitle) {
       return null;
@@ -156,7 +156,7 @@ class CampaignDetailsPage extends Component {
           </DetailsSectionDesktopTablet>
         </PageWrapper>
         <SupportButtonFooterWrapper className="u-show-mobile">
-          <SupportButtonFooter />
+          <SupportButtonFooter campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
         </SupportButtonFooterWrapper>
         <MainFooter />
       </div>
@@ -213,7 +213,7 @@ const CampaignTitleAndScoreBar = styled.div`
   }
 `;
 
-const CampaignTitleDesktop = styled.h3`
+const CampaignTitleDesktop = styled.h2`
   font-size: 28px;
   text-align: center;
   margin: 30px 20px 40px 20px;
@@ -222,7 +222,7 @@ const CampaignTitleDesktop = styled.h3`
   }
 `;
 
-const CampaignTitleMobile = styled.h3`
+const CampaignTitleMobile = styled.h2`
   font-size: 18px;
   text-align: left;
   margin: 0;

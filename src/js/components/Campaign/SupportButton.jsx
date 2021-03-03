@@ -3,12 +3,26 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { renderLog } from '../../utils/logging';
+import AppActions from '../../actions/AppActions';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import { renderLog } from '../../utils/logging';
 
 class SupportButton extends Component {
   static getProps () {
     return {};
+  }
+
+  submitSupportButtonDesktop = () => {
+    const { voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
+    if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
+      // Open complete your profile modal
+      AppActions.setShowCampaignStartCompleteYourProfileModal(true);
+    } else {
+      // Mark the campaign as published
+      // const campaignWeVoteId = '';
+      // CampaignStartActions.inDraftModeSave(campaignWeVoteId, false);
+      historyPush('/profile/started');
+    }
   }
 
   render () {
@@ -29,7 +43,7 @@ class SupportButton extends Component {
               classes={{ root: supportButtonClasses }}
               color="primary"
               id="supportButtonDesktop"
-              onClick={() => historyPush('/c/')}
+              onClick={this.submitSupportButtonDesktop}
               variant="contained"
             >
               Support this campaign

@@ -9,22 +9,43 @@ import CompleteYourProfile from '../../components/CampaignStart/CompleteYourProf
 import { historyPush } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 
-class CampaignStartCompleteYourProfileMobile extends Component {
+class CompleteYourProfileMobile extends Component {
   static getProps () {
     return {};
   }
 
+  componentDidMount () {
+    // console.log('CampaignDetailsPage componentDidMount');
+    const { match: { params } } = this.props;
+    const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
+    // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
+    this.setState({
+      campaignSEOFriendlyPath,
+      campaignXWeVoteId,
+    });
+  }
+
   cancelFunction = () => {
-    // console.log('CampaignStartCompleteYourProfileMobile cancelFunction');
-    historyPush('/start-a-campaign-preview');
+    // console.log('CompleteYourProfileMobile cancelFunction');
+    const { becomeMember, startCampaign, supportCampaign } = this.props;
+    const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
+    if (becomeMember) {
+      historyPush('/start-a-campaign-preview');
+    } else if (startCampaign) {
+      historyPush('/start-a-campaign-preview');
+    } else if (supportCampaign && campaignSEOFriendlyPath) {
+      historyPush(`/c/${campaignSEOFriendlyPath}`);
+    } else if (supportCampaign && campaignXWeVoteId) {
+      historyPush(`/id/${campaignXWeVoteId}`);
+    }
   };
 
   render () {
-    renderLog('About');  // Set LOG_RENDER_EVENTS to log all renders
+    renderLog('CompleteYourProfileMobile');  // Set LOG_RENDER_EVENTS to log all renders
     const { classes } = this.props;
     return (
       <div>
-        <Helmet title="About - We Vote Campaigns" />
+        <Helmet title="Complete Your Profile - We Vote Campaigns" />
         <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>
@@ -34,7 +55,7 @@ class CampaignStartCompleteYourProfileMobile extends Component {
                   aria-label="Close"
                   classes={{ root: classes.closeButton }}
                   onClick={() => { this.cancelFunction(); }}
-                  id="campaignStartCompleteYourProfileModalClose"
+                  id="completeYourProfileMobileClose"
                 >
                   <Close />
                 </IconButton>
@@ -47,8 +68,12 @@ class CampaignStartCompleteYourProfileMobile extends Component {
     );
   }
 }
-CampaignStartCompleteYourProfileMobile.propTypes = {
+CompleteYourProfileMobile.propTypes = {
   classes: PropTypes.object,
+  becomeMember: PropTypes.bool,
+  match: PropTypes.object,
+  startCampaign: PropTypes.bool,
+  supportCampaign: PropTypes.bool,
 };
 
 const styles = () => ({
@@ -85,4 +110,4 @@ const PageWrapper = styled.div`
   max-width: 480px;
 `;
 
-export default withStyles(styles)(CampaignStartCompleteYourProfileMobile);
+export default withStyles(styles)(CompleteYourProfileMobile);
