@@ -5,23 +5,40 @@ import styled from 'styled-components';
 import { Close } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import CompleteYourProfile from '../../components/CampaignStart/CompleteYourProfile';
+import CompleteYourProfile from '../../components/Settings/CompleteYourProfile';
 import { historyPush } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 
 class CompleteYourProfileMobile extends Component {
-  static getProps () {
-    return {};
+  constructor (props) {
+    super(props);
+    this.state = {
+      campaignSEOFriendlyPath: '',
+      campaignXWeVoteId: '',
+      pathToUseWhenProfileComplete: '',
+    };
   }
 
   componentDidMount () {
     // console.log('CampaignDetailsPage componentDidMount');
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
+    const { becomeMember, startCampaign, supportCampaign } = this.props;
+    let pathToUseWhenProfileComplete = '';
+    if (becomeMember) {
+      pathToUseWhenProfileComplete = '/DONATE-PATH-HERE';
+    } else if (startCampaign) {
+      pathToUseWhenProfileComplete = '/profile/started';
+    } else if (supportCampaign && campaignSEOFriendlyPath) {
+      pathToUseWhenProfileComplete = `/c/${campaignSEOFriendlyPath}/why-do-you-support`;
+    } else if (supportCampaign && campaignXWeVoteId) {
+      pathToUseWhenProfileComplete = `/id/${campaignXWeVoteId}/why-do-you-support`;
+    }
     // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
     this.setState({
       campaignSEOFriendlyPath,
       campaignXWeVoteId,
+      pathToUseWhenProfileComplete,
     });
   }
 
@@ -42,15 +59,28 @@ class CompleteYourProfileMobile extends Component {
 
   render () {
     renderLog('CompleteYourProfileMobile');  // Set LOG_RENDER_EVENTS to log all renders
-    const { classes } = this.props;
+    const { becomeMember, classes, startCampaign, supportCampaign } = this.props;
+    const { pathToUseWhenProfileComplete } = this.state;
+    let completeProfileTitle = <span>&nbsp;</span>;
+    let htmlPageTitle = 'Complete Your Profile - We Vote Campaigns';
+    if (becomeMember) {
+      completeProfileTitle = <span>becomeMember</span>;
+      htmlPageTitle = 'Complete Your Profile - We Vote Campaigns';
+    } else if (startCampaign) {
+      completeProfileTitle = <span>Complete your profile</span>;
+      htmlPageTitle = 'Complete Your Profile - We Vote Campaigns';
+    } else if (supportCampaign) {
+      completeProfileTitle = <span>Complete your support</span>;
+      htmlPageTitle = 'Complete Your Support - We Vote Campaigns';
+    }
     return (
       <div>
-        <Helmet title="Complete Your Profile - We Vote Campaigns" />
+        <Helmet title={htmlPageTitle} />
         <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>
               <ContentTitle>
-                Complete Your Profile
+                {completeProfileTitle}
                 <IconButton
                   aria-label="Close"
                   classes={{ root: classes.closeButton }}
@@ -60,7 +90,12 @@ class CompleteYourProfileMobile extends Component {
                   <Close />
                 </IconButton>
               </ContentTitle>
-              <CompleteYourProfile />
+              <CompleteYourProfile
+                becomeMember={becomeMember}
+                pathToUseWhenProfileComplete={pathToUseWhenProfileComplete}
+                startCampaign={startCampaign}
+                supportCampaign={supportCampaign}
+              />
             </InnerWrapper>
           </OuterWrapper>
         </PageWrapper>

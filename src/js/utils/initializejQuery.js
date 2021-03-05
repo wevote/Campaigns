@@ -1,6 +1,6 @@
 const initializejQuery = (afterFunction) => {
   if (window.$) {
-    console.log('jQuery ALREADY LOADED, SO NOT RELOADING');
+    // console.log('jQuery ALREADY LOADED, SO NOT RELOADING');
     if (afterFunction) {
       afterFunction();
     }
@@ -8,7 +8,7 @@ const initializejQuery = (afterFunction) => {
     import('jquery').then(({ default: jquery }) => {
       window.jQuery = jquery;
       window.$ = jquery;
-      console.log('jquery loaded');
+      // console.log('jquery loaded');
       if (afterFunction) {
         afterFunction();
       }

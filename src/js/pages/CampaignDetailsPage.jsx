@@ -1,18 +1,20 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import CampaignActions from '../actions/CampaignActions';
 import CampaignTopNavigation from '../components/Navigation/CampaignTopNavigation';
 import CampaignStore from '../stores/CampaignStore';
+import CompleteYourProfileModalController from '../components/Settings/CompleteYourProfileModalController';
+import DelayedLoad from '../components/Widgets/DelayedLoad';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../utils/campaignUtils';
 import { isCordova } from '../utils/cordovaUtils';
-import initializejQuery from '../utils/initializejQuery';
-import MainFooter from '../components/Navigation/MainFooter';
-import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
-import SupportButton from '../components/Campaign/SupportButton';
-import SupportButtonFooter from '../components/Campaign/SupportButtonFooter';
+import SupportButton from '../components/CampaignSupport/SupportButton';
+import SupportButtonFooter from '../components/CampaignSupport/SupportButtonFooter';
+
+const MainFooter = React.lazy(() => import('../components/Navigation/MainFooter'));
+const MainHeaderBar = React.lazy(() => import('../components/Navigation/MainHeaderBar'));
 
 
 class CampaignDetailsPage extends Component {
@@ -23,6 +25,7 @@ class CampaignDetailsPage extends Component {
       campaignSEOFriendlyPath: '',
       campaignTitle: '',
       campaignXWeVoteId: '',
+      pathToUseWhenProfileComplete: '',
     };
   }
 
@@ -33,38 +36,16 @@ class CampaignDetailsPage extends Component {
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
-    let campaignX = {};
-    let mustRetrieveCampaign = false;
+    retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
+    let pathToUseWhenProfileComplete = '';
     if (campaignSEOFriendlyPath) {
-      campaignX = CampaignStore.getCampaignXBySEOFriendlyPath(campaignSEOFriendlyPath);
-      // console.log('componentDidMount campaignX:', campaignX);
-      if (campaignX.constructor === Object) {
-        if (!campaignX.campaignx_we_vote_id) {
-          mustRetrieveCampaign = true;
-        }
-      } else {
-        mustRetrieveCampaign = true;
-      }
-      if (mustRetrieveCampaign) {
-        initializejQuery(() => {
-          CampaignActions.campaignRetrieveBySEOFriendlyPath(campaignSEOFriendlyPath);
-        });
-      }
-    } else if (campaignXWeVoteId) {
-      campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
-      if (campaignX.constructor === Object) {
-        if (!campaignX.campaignx_we_vote_id) {
-          mustRetrieveCampaign = true;
-        }
-      } else {
-        mustRetrieveCampaign = true;
-      }
-      if (mustRetrieveCampaign) {
-        initializejQuery(() => {
-          CampaignActions.campaignRetrieve(campaignXWeVoteId);
-        });
-      }
+      pathToUseWhenProfileComplete = `/c/${campaignSEOFriendlyPath}/why-do-you-support`;
+    } else {
+      pathToUseWhenProfileComplete = `/id/${campaignXWeVoteId}/why-do-you-support`;
     }
+    this.setState({
+      pathToUseWhenProfileComplete,
+    });
   }
 
   componentWillUnmount () {
@@ -73,36 +54,29 @@ class CampaignDetailsPage extends Component {
 
   onCampaignStoreChange () {
     const { match: { params } } = this.props;
-    let { campaignSEOFriendlyPath } = params;
-    const { campaignXWeVoteId } = params;
-    // console.log('onCampaignStoreChange campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
-    let campaignX = {};
+    const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
+    // console.log('onCampaignStoreChange campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
+    const {
+      campaignDescription,
+      campaignPhoto,
+      campaignSEOFriendlyPath,
+      campaignTitle,
+      campaignXWeVoteId,
+    } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
+    let pathToUseWhenProfileComplete = '';
     if (campaignSEOFriendlyPath) {
-      campaignX = CampaignStore.getCampaignXBySEOFriendlyPath(campaignSEOFriendlyPath);
-      this.setState({
-        campaignSEOFriendlyPath,
-      });
-    } else if (campaignXWeVoteId) {
-      campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
-      ({ seo_friendly_path: campaignSEOFriendlyPath } = campaignX);
-      this.setState({
-        campaignSEOFriendlyPath,
-      });
+      pathToUseWhenProfileComplete = `/c/${campaignSEOFriendlyPath}/why-do-you-support`;
+    } else {
+      pathToUseWhenProfileComplete = `/id/${campaignXWeVoteId}/why-do-you-support`;
     }
-    if (campaignX.constructor === Object && campaignX.campaignx_we_vote_id) {
-      const {
-        campaign_description: campaignDescription,
-        campaign_title: campaignTitle,
-        campaignx_we_vote_id: campaignXWeVoteIdFromObject,
-        we_vote_hosted_campaign_photo_large_url: campaignPhoto,
-      } = campaignX;
-      this.setState({
-        campaignDescription,
-        campaignPhoto,
-        campaignTitle,
-        campaignXWeVoteId: campaignXWeVoteIdFromObject,
-      });
-    }
+    this.setState({
+      campaignDescription,
+      campaignPhoto,
+      campaignSEOFriendlyPath,
+      campaignTitle,
+      campaignXWeVoteId,
+      pathToUseWhenProfileComplete,
+    });
   }
 
   render () {
@@ -113,6 +87,7 @@ class CampaignDetailsPage extends Component {
     // const { classes } = this.props;
     const {
       campaignDescription, campaignPhoto, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId,
+      pathToUseWhenProfileComplete,
     } = this.state;
     if (!campaignTitle) {
       return null;
@@ -121,7 +96,11 @@ class CampaignDetailsPage extends Component {
     return (
       <div>
         <Helmet title="Campaign Home - We Vote Campaigns" />
-        <MainHeaderBar />
+        <MainHeaderBarWrapper>
+          <Suspense fallback={<span>&nbsp;</span>}>
+            <MainHeaderBar />
+          </Suspense>
+        </MainHeaderBarWrapper>
         <PageWrapper cordova={isCordova()}>
           <CampaignTopNavigation campaignSEOFriendlyPath={campaignSEOFriendlyPath} />
           <DetailsSectionMobile className="u-show-mobile">
@@ -150,15 +129,27 @@ class CampaignDetailsPage extends Component {
               </ColumnTwoThirds>
               <ColumnOneThird>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                <SupportButton />
+                <SupportButton pathToUseWhenProfileComplete={pathToUseWhenProfileComplete} />
               </ColumnOneThird>
             </ColumnsWrapper>
           </DetailsSectionDesktopTablet>
         </PageWrapper>
         <SupportButtonFooterWrapper className="u-show-mobile">
-          <SupportButtonFooter campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
+          <SupportButtonFooter
+            campaignSEOFriendlyPath={campaignSEOFriendlyPath}
+            campaignXWeVoteId={campaignXWeVoteId}
+            pathToUseWhenProfileComplete={pathToUseWhenProfileComplete}
+          />
         </SupportButtonFooterWrapper>
-        <MainFooter />
+        <DelayedLoad waitBeforeShow={500}>
+          <Suspense fallback={<span>&nbsp;</span>}>
+            <MainFooter />
+          </Suspense>
+        </DelayedLoad>
+        <CompleteYourProfileModalController
+          pathToUseWhenProfileComplete={pathToUseWhenProfileComplete}
+          supportCampaign
+        />
       </div>
     );
   }
@@ -204,6 +195,7 @@ const CampaignImage = styled.img`
 `;
 
 const CampaignImageDesktop = styled.img`
+  border-radius: 5px;
   width: 100%;
 `;
 
@@ -213,7 +205,7 @@ const CampaignTitleAndScoreBar = styled.div`
   }
 `;
 
-const CampaignTitleDesktop = styled.h2`
+const CampaignTitleDesktop = styled.h1`
   font-size: 28px;
   text-align: center;
   margin: 30px 20px 40px 20px;
@@ -222,7 +214,7 @@ const CampaignTitleDesktop = styled.h2`
   }
 `;
 
-const CampaignTitleMobile = styled.h2`
+const CampaignTitleMobile = styled.h1`
   font-size: 18px;
   text-align: left;
   margin: 0;
@@ -257,6 +249,11 @@ const DetailsSectionDesktopTablet = styled.div`
 const DetailsSectionMobile = styled.div`
   display: flex;
   flex-flow: column;
+`;
+
+const MainHeaderBarWrapper = styled.div`
+  border-bottom: 1px solid #ddd;
+  height: 42px;
 `;
 
 const PageWrapper = styled.div`

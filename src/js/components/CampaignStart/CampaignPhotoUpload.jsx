@@ -37,7 +37,7 @@ class CampaignPhotoUpload extends Component {
       const fileReader = new FileReader();
       fileReader.addEventListener('load', () => {
         const photoFromFileReader = fileReader.result;
-        console.log('photoFromFileReader:', photoFromFileReader);
+        // console.log('photoFromFileReader:', photoFromFileReader);
         CampaignStartActions.campaignPhotoQueuedToSave(photoFromFileReader);
       });
       fileReader.readAsDataURL(fileFromDropzone);

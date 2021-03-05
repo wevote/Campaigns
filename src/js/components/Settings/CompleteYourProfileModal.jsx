@@ -14,7 +14,7 @@ import VoterStore from '../../stores/VoterStore';
 import { renderLog } from '../../utils/logging';
 
 
-class CampaignStartCompleteYourProfileModal extends Component {
+class CompleteYourProfileModal extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -28,17 +28,17 @@ class CampaignStartCompleteYourProfileModal extends Component {
 
   componentDidCatch (error, info) {
     // We should get this information to Splunk!
-    console.error('CampaignStartCompleteYourProfileModal caught error: ', `${error} with info: `, info);
+    console.error('CompleteYourProfileModal caught error: ', `${error} with info: `, info);
   }
 
   componentWillUnmount () {
-    // console.log('CampaignStartCompleteYourProfileModal componentWillUnmount');
+    // console.log('CompleteYourProfileModal componentWillUnmount');
     this.voterStoreListener.remove();
   }
 
   // See https://reactjs.org/docs/error-boundaries.html
   static getDerivedStateFromError (error) { // eslint-disable-line no-unused-vars
-    console.error('Error caught in CampaignStartCompleteYourProfileModal: ', error);
+    console.error('Error caught in CompleteYourProfileModal: ', error);
     // Update state so the next render will show the fallback UI, We should have a "Oh snap" page
     return { hasError: true };
   }
@@ -51,7 +51,7 @@ class CampaignStartCompleteYourProfileModal extends Component {
   }
 
   closeModalFunction = () => {
-    // console.log('CampaignStartCompleteYourProfileModal closeModalFunction');
+    // console.log('CompleteYourProfileModal closeModalFunction');
     if (this.props.closeFunction) {
       this.props.closeFunction();
     }
@@ -62,18 +62,29 @@ class CampaignStartCompleteYourProfileModal extends Component {
   };
 
   render () {
-    renderLog('CampaignStartCompleteYourProfileModal');  // Set LOG_RENDER_EVENTS to log all renders
-    const { classes } = this.props;
+    renderLog('CompleteYourProfileModal');  // Set LOG_RENDER_EVENTS to log all renders
+    const {
+      becomeMember, classes, pathToUseWhenProfileComplete,
+      startCampaign, supportCampaign,
+    } = this.props;
 
     const { voter } = this.state;
     if (!voter) {
-      // console.log('CampaignStartCompleteYourProfileModal render voter NOT found');
+      // console.log('CompleteYourProfileModal render voter NOT found');
       return <div className="undefined-props" />;
     }
-    // console.log('CampaignStartCompleteYourProfileModal render voter found');
+    // console.log('CompleteYourProfileModal render voter found');
+    let completeProfileTitle = <span>&nbsp;</span>;
+    if (becomeMember) {
+      completeProfileTitle = <span>becomeMember</span>;
+    } else if (startCampaign) {
+      completeProfileTitle = <span>Complete your profile</span>;
+    } else if (supportCampaign) {
+      completeProfileTitle = <span>Complete your support</span>;
+    }
     return (
       <Dialog
-        id="campaignStartCompleteYourProfileModalDialog"
+        id="completeYourProfileModalDialog"
         classes={{
           paper: classes.dialogPaper,
           root: classes.dialogRoot,
@@ -83,30 +94,39 @@ class CampaignStartCompleteYourProfileModal extends Component {
       >
         <DialogTitle classes={{ root: classes.dialogTitle }}>
           <DialogTitleText>
-            Complete your profile
+            {completeProfileTitle}
           </DialogTitleText>
           <IconButton
             aria-label="Close"
             classes={{ root: classes.closeButton }}
             onClick={() => { this.closeModalFunction(); }}
-            id="campaignStartCompleteYourProfileModalClose"
+            id="completeYourProfileModalClose"
           >
             <Close />
           </IconButton>
         </DialogTitle>
         <DialogContent classes={{ root: classes.dialogContent }}>
           <section>
-            <CompleteYourProfile />
+            <CompleteYourProfile
+              becomeMember={becomeMember}
+              pathToUseWhenProfileComplete={pathToUseWhenProfileComplete}
+              startCampaign={startCampaign}
+              supportCampaign={supportCampaign}
+            />
           </section>
         </DialogContent>
       </Dialog>
     );
   }
 }
-CampaignStartCompleteYourProfileModal.propTypes = {
+CompleteYourProfileModal.propTypes = {
   classes: PropTypes.object,
-  show: PropTypes.bool,
   closeFunction: PropTypes.func.isRequired,
+  becomeMember: PropTypes.bool,
+  pathToUseWhenProfileComplete: PropTypes.string.isRequired,
+  show: PropTypes.bool,
+  startCampaign: PropTypes.bool,
+  supportCampaign: PropTypes.bool,
 };
 
 const styles = () => ({
@@ -143,4 +163,4 @@ const DialogTitleText = styled.span`
   display: block;
 `;
 
-export default withTheme(withStyles(styles)(CampaignStartCompleteYourProfileModal));
+export default withTheme(withStyles(styles)(CompleteYourProfileModal));

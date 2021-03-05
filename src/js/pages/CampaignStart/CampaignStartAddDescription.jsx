@@ -4,6 +4,15 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
+import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../components/Style/AdviceBoxStyles';
+import {
+  CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
+} from '../../components/Style/CampaignProcessStyles';
+import {
+  CampaignStartDesktopButtonPanel, CampaignStartDesktopButtonWrapper,
+  CampaignStartMobileButtonPanel, CampaignStartMobileButtonWrapper,
+  CampaignStartSection, CampaignStartSectionWrapper,
+} from '../../components/Style/CampaignStartStyles';
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import CampaignStartSteps from '../../components/Navigation/CampaignStartSteps';
 import CampaignStartStore from '../../stores/CampaignStartStore';
@@ -56,17 +65,17 @@ class CampaignStartAddDescription extends Component {
           <OuterWrapper>
             <InnerWrapper>
               <CampaignStartSteps atStepNumber3 />
-              <ContentTitle>
+              <CampaignProcessStepTitle>
                 Explain why winning matters
-              </ContentTitle>
-              <ContentIntroductionText>
+              </CampaignProcessStepTitle>
+              <CampaignProcessStepIntroductionText>
                 People are more likely to support your campaign if it’s clear why you care. Explain how this candidate winning will impact you, your family, or your community.
-              </ContentIntroductionText>
+              </CampaignProcessStepIntroductionText>
               <CampaignStartSectionWrapper>
                 <CampaignStartSection>
                   <CampaignDescriptionInputField />
-                  <DesktopButtonWrapper className="u-show-desktop-tablet">
-                    <DesktopButtonPanel>
+                  <CampaignStartDesktopButtonWrapper className="u-show-desktop-tablet">
+                    <CampaignStartDesktopButtonPanel>
                       <Button
                         classes={{ root: classes.buttonDesktop }}
                         color="primary"
@@ -76,8 +85,8 @@ class CampaignStartAddDescription extends Component {
                       >
                         Continue
                       </Button>
-                    </DesktopButtonPanel>
-                  </DesktopButtonWrapper>
+                    </CampaignStartDesktopButtonPanel>
+                  </CampaignStartDesktopButtonWrapper>
                   <AdviceBoxWrapper>
                     <AdviceBox>
                       <AdviceBoxTitle>
@@ -102,7 +111,7 @@ class CampaignStartAddDescription extends Component {
                         Make it personal
                       </AdviceBoxTitle>
                       <AdviceBoxText>
-                        Readers are more likely to sign and support your campaign if it’s clear why you care.
+                        Voters are more likely to sign and support your campaign if it’s clear why you care.
                       </AdviceBoxText>
                       <AdviceBoxText>
                         &nbsp;
@@ -120,8 +129,8 @@ class CampaignStartAddDescription extends Component {
             </InnerWrapper>
           </OuterWrapper>
         </PageWrapper>
-        <MobileButtonWrapper className="u-show-mobile">
-          <MobileButtonPanel>
+        <CampaignStartMobileButtonWrapper className="u-show-mobile">
+          <CampaignStartMobileButtonPanel>
             <Button
               classes={{ root: mobileButtonClasses }}
               color="primary"
@@ -131,8 +140,8 @@ class CampaignStartAddDescription extends Component {
             >
               Continue
             </Button>
-          </MobileButtonPanel>
-        </MobileButtonWrapper>
+          </CampaignStartMobileButtonPanel>
+        </CampaignStartMobileButtonWrapper>
         <MainFooter />
       </div>
     );
@@ -172,90 +181,7 @@ const styles = () => ({
   },
 });
 
-const AdviceBox = styled.div`
-  margin: 25px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    margin: 20px;
-  }
-`;
-
-const AdviceBoxText = styled.div`
-  font-size: 14px;
-  line-height: 1.4;
-  margin-bottom: 4px;
-`;
-
-const AdviceBoxTitle = styled.div`
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 4px;
-`;
-
-const AdviceBoxWrapper = styled.div`
-  background-color: #f8f8f8;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  margin-top: 20px;
-`;
-
-const CampaignStartSection = styled.div`
-  margin-bottom: 60px !important;
-  max-width: 620px;
-  width: 100%;
-`;
-
-const CampaignStartSectionWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
-const ContentIntroductionText = styled.div`
-  color: #555;
-  font-size: 16px;
-  max-width: 620px;
-  text-align: left;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    font-size: 16px;
-  }
-`;
-
-const ContentTitle = styled.div`
-  font-size: 32px;
-  font-weight: 600;
-  margin: 20px 0 10px 0;
-  max-width: 620px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    font-size: 24px;
-  }
-`;
-
-const DesktopButtonPanel = styled.div`
-  background-color: #fff;
-  padding: 10px 0;
-  // width: 100%;
-`;
-
-const DesktopButtonWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin: 30px 0 0 0;
-  width: 100%;
-`;
-
 const InnerWrapper = styled.div`
-`;
-
-const MobileButtonPanel = styled.div`
-  background-color: #fff;
-  border-top: 1px solid #ddd;
-  padding: 10px;
-`;
-
-const MobileButtonWrapper = styled.div`
-  position: fixed;
-  width: 100%;
-  bottom: 0;
-  display: block;
 `;
 
 const OuterWrapper = styled.div`

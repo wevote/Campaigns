@@ -1,0 +1,247 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { withStyles } from '@material-ui/core/styles';
+import { Done } from '@material-ui/icons';
+import CampaignSupportStore from '../../stores/CampaignSupportStore';
+import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import { renderLog } from '../../utils/logging';
+
+
+class CampaignSupportSteps extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      step1Completed: true,
+      step2Completed: false,
+      payToPromoteStepCompleted: false,
+      payToPromoteStepTurnedOn: false,
+      sharingStepCompleted: false,
+    };
+  }
+
+  componentDidMount () {
+    // console.log('CampaignSupportSteps, componentDidMount');
+    this.campaignSupportStoreListener = CampaignSupportStore.addListener(this.onCampaignSupportStoreChange.bind(this));
+    const {
+      atSharingStep,
+    } = this.props;
+    const step1Completed = true;
+    const step2Completed = CampaignSupportStore.supportEndorsementExists();
+    const payToPromoteStepCompleted = atSharingStep;
+    const payToPromoteStepTurnedOn = true;
+    const sharingStepCompleted = false;
+    this.setState({
+      step1Completed,
+      step2Completed,
+      payToPromoteStepCompleted,
+      payToPromoteStepTurnedOn,
+      sharingStepCompleted,
+    });
+  }
+
+  componentWillUnmount () {
+    this.campaignSupportStoreListener.remove();
+  }
+
+  onCampaignSupportStoreChange () {
+    const {
+      atPayToPromoteStep, atSharingStep,
+    } = this.props;
+    const step2Completed = atPayToPromoteStep || atSharingStep;
+    const payToPromoteStepCompleted = atSharingStep;
+    const payToPromoteStepTurnedOn = true;
+    const sharingStepCompleted = false;
+    // console.log('onCampaignSupportStoreChange step1Completed: ', step1Completed, ', step2Completed: ', step2Completed, ', payToPromoteStepCompleted:', payToPromoteStepCompleted);
+    this.setState({
+      step2Completed,
+      payToPromoteStepCompleted,
+      payToPromoteStepTurnedOn,
+      sharingStepCompleted,
+    });
+  }
+
+  render () {
+    renderLog('CampaignSupportSteps');  // Set LOG_RENDER_EVENTS to log all renders
+    if (isCordova()) {
+      console.log(`CampaignSupportSteps window.location.href: ${window.location.href}`);
+    }
+    const {
+      atStepNumber1, atStepNumber2, atPayToPromoteStep, atSharingStep,
+      campaignBasePath, classes,
+    } = this.props;
+    const {
+      step1Completed, step2Completed, payToPromoteStepCompleted, payToPromoteStepTurnedOn, sharingStepCompleted,
+    } = this.state;
+    return (
+      <div>
+        <OuterWrapperPageTitle>
+          <InnerWrapper>
+            <PageTitle>
+              Complete Your Support
+            </PageTitle>
+          </InnerWrapper>
+        </OuterWrapperPageTitle>
+        <OuterWrapperSteps>
+          <InnerWrapper>
+            <StepWrapper>
+              {step1Completed ? (
+                <StepCircle>
+                  <StepNumber>
+                    <Done classes={{ root: classes.doneIcon }} />
+                  </StepNumber>
+                </StepCircle>
+              ) : (
+                <StepCircle inverseColor={atStepNumber1}>
+                  <StepNumber inverseColor={atStepNumber1}>1</StepNumber>
+                </StepCircle>
+              )}
+            </StepWrapper>
+            <StepWrapper>
+              {step2Completed ? (
+                <StepCircle
+                  className="u-cursor--pointer"
+                  onClick={() => historyPush(`${campaignBasePath}/why-do-you-support`)}
+                >
+                  <StepNumber>
+                    <Done classes={{ root: classes.doneIcon }} />
+                  </StepNumber>
+                </StepCircle>
+              ) : (
+                <StepCircle
+                  className="u-cursor--pointer"
+                  inverseColor={atStepNumber2}
+                  onClick={() => historyPush(`${campaignBasePath}/why-do-you-support`)}
+                >
+                  <StepNumber inverseColor={atStepNumber2}>2</StepNumber>
+                </StepCircle>
+              )}
+            </StepWrapper>
+            {payToPromoteStepTurnedOn && (
+              <StepWrapper>
+                {payToPromoteStepCompleted ? (
+                  <StepCircle
+                    className="u-cursor--pointer"
+                    onClick={() => historyPush(`${campaignBasePath}/pay-to-promote`)}
+                  >
+                    <StepNumber>
+                      <Done classes={{ root: classes.doneIcon }} />
+                    </StepNumber>
+                  </StepCircle>
+                ) : (
+                  <StepCircle
+                    className="u-cursor--pointer"
+                    inverseColor={atPayToPromoteStep}
+                    onClick={() => historyPush(`${campaignBasePath}/pay-to-promote`)}
+                  >
+                    <StepNumber inverseColor={atPayToPromoteStep}>3</StepNumber>
+                  </StepCircle>
+                )}
+              </StepWrapper>
+            )}
+            <StepWrapper>
+              {sharingStepCompleted ? (
+                <StepCircle
+                  className="u-cursor--pointer"
+                  onClick={() => historyPush(`${campaignBasePath}/share-campaign`)}
+                >
+                  <StepNumber>
+                    <Done classes={{ root: classes.doneIcon }} />
+                  </StepNumber>
+                </StepCircle>
+              ) : (
+                <StepCircle
+                  className="u-cursor--pointer"
+                  inverseColor={atSharingStep}
+                  onClick={() => historyPush(`${campaignBasePath}/share-campaign`)}
+                >
+                  <StepNumber inverseColor={atSharingStep}>
+                    {payToPromoteStepTurnedOn ? '4' : '3'}
+                  </StepNumber>
+                </StepCircle>
+              )}
+            </StepWrapper>
+          </InnerWrapper>
+        </OuterWrapperSteps>
+      </div>
+    );
+  }
+}
+CampaignSupportSteps.propTypes = {
+  classes: PropTypes.object,
+  atStepNumber1: PropTypes.bool,
+  atStepNumber2: PropTypes.bool,
+  atPayToPromoteStep: PropTypes.bool,
+  atSharingStep: PropTypes.bool,
+  campaignBasePath: PropTypes.string,
+};
+
+const styles = (theme) => ({
+  doneIcon: {
+    fontSize: 28,
+    [theme.breakpoints.down('lg')]: {
+      fontSize: 28,
+    },
+    paddingTop: '5px',
+  },
+});
+
+const InnerWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+`;
+
+const OuterWrapperPageTitle = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 15px 0 0 0;
+`;
+
+const OuterWrapperSteps = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 20px 0 35px;
+`;
+
+const PageTitle = styled.div`
+  color: #808080;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+`;
+
+const StepCircle = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  background: ${(props) => (props.inverseColor ? props.theme.colors.brandBlue : 'white')};
+  border: 2px solid ${(props) => props.theme.colors.brandBlue};
+  border-radius: 18px;
+  width: 30px;
+  height: 30px;
+`;
+
+const StepNumber = styled.div`
+  color: ${(props) => (props.inverseColor ? 'white' : props.theme.colors.brandBlue)};
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: -2px;
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    font-size: 14px;
+  }
+`;
+
+const StepWrapper = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  width: 90px;
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    width: 70px;
+  }
+`;
+
+export default withStyles(styles)(CampaignSupportSteps);
