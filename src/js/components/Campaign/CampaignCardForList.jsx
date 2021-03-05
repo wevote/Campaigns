@@ -162,12 +162,13 @@ const OneCampaignPhotoColumn = styled.div`
 const OneCampaignTextColumn = styled.div`
 `;
 
-const OneCampaignTitle = styled.h4`
+const OneCampaignTitle = styled.h1`
   font-size: 18px;
   margin: 0;
 `;
 
 const CampaignImage = styled.img`
+  border-radius: 5px;
   margin-top: 8px;
   min-height: 175px;
   width: 100%;

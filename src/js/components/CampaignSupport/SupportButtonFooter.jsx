@@ -5,6 +5,7 @@ import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { renderLog } from '../../utils/logging';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import VoterStore from '../../stores/VoterStore';
 
 class SupportButtonFooter extends Component {
   constructor (props) {
@@ -16,21 +17,40 @@ class SupportButtonFooter extends Component {
     };
   }
 
+  componentDidMount () {
+    this.onVoterStoreChange();
+    this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
+  }
+
+  componentWillUnmount () {
+    // console.log('CompleteYourProfile componentWillUnmount');
+    this.voterStoreListener.remove();
+  }
+
+  onVoterStoreChange () {
+    const voterFirstName = VoterStore.getFirstName();
+    const voterLastName = VoterStore.getLastName();
+    const voterSignedInWithEmail = VoterStore.getVoterIsSignedInWithEmail();
+    this.setState({
+      voterFirstName,
+      voterLastName,
+      voterSignedInWithEmail,
+    });
+  }
+
   submitSupportButtonMobile = () => {
-    const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.props;
+    const { campaignSEOFriendlyPath, campaignXWeVoteId, pathToUseWhenProfileComplete } = this.props;
     const { voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
     if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
       // Navigate to the mobile complete your profile page
       if (campaignSEOFriendlyPath) {
-        historyPush(`/support-campaign-complete-your-profile/c/${campaignSEOFriendlyPath}`);
+        historyPush(`/complete-your-support-for-this-campaign/c/${campaignSEOFriendlyPath}`);
       } else {
-        historyPush(`/support-campaign-complete-your-profile/id/${campaignXWeVoteId}`);
+        historyPush(`/complete-your-support-for-this-campaign/id/${campaignXWeVoteId}`);
       }
     } else {
-      // Mark the campaign as published
-      // const campaignWeVoteId = '';
-      // CampaignStartActions.inDraftModeSave(campaignWeVoteId, false);
-      // historyPush('/profile/started');
+      // TODO: Mark that voter supports this campaign
+      historyPush(pathToUseWhenProfileComplete);
     }
   }
 
@@ -67,6 +87,7 @@ SupportButtonFooter.propTypes = {
   campaignXWeVoteId: PropTypes.string,
   classes: PropTypes.object,
   campaignSEOFriendlyPath: PropTypes.string,
+  pathToUseWhenProfileComplete: PropTypes.string.isRequired,
 };
 
 const styles = () => ({

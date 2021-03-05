@@ -12,14 +12,16 @@ import WeVoteRouter from './js/components/Widgets/WeVoteRouter';
 const About = React.lazy(() => import('./js/pages/About'));
 const Attributions = React.lazy(() => import('./js/pages/Attributions'));
 const CampaignDetailsPage = React.lazy(() => import('./js/pages/CampaignDetailsPage'));
-const CampaignStartAddPolitician = React.lazy(() => import('./js/pages/CampaignStart/CampaignStartAddPolitician'));
 const CampaignStartAddDescription = React.lazy(() => import('./js/pages/CampaignStart/CampaignStartAddDescription'));
 const CampaignStartAddPhoto = React.lazy(() => import('./js/pages/CampaignStart/CampaignStartAddPhoto'));
+const CampaignStartAddPolitician = React.lazy(() => import('./js/pages/CampaignStart/CampaignStartAddPolitician'));
 const CampaignStartAddTitle = React.lazy(() => import('./js/pages/CampaignStart/CampaignStartAddTitle'));
-const CompleteYourProfileMobile = React.lazy(() => import('./js/pages/Settings/CompleteYourProfileMobile'));
 const CampaignStartEditAll = React.lazy(() => import('./js/pages/CampaignStart/CampaignStartEditAll'));
 const CampaignStartIntro = React.lazy(() => import('./js/pages/CampaignStart/CampaignStartIntro'));
 const CampaignStartPreview = React.lazy(() => import('./js/pages/CampaignStart/CampaignStartPreview'));
+const CampaignSupportEndorsement = React.lazy(() => import('./js/pages/CampaignSupport/CampaignSupportEndorsement'));
+const CampaignSupportPayToPromote = React.lazy(() => import('./js/pages/CampaignSupport/CampaignSupportPayToPromote'));
+const CompleteYourProfileMobile = React.lazy(() => import('./js/pages/Settings/CompleteYourProfileMobile'));
 const Credits = React.lazy(() => import('./js/pages/Credits'));
 const FAQ = React.lazy(() => import('./js/pages/FAQ'));
 const HomePage = React.lazy(() => import('./js/pages/HomePage'));
@@ -71,12 +73,18 @@ class App extends Component {
                   <Route exact path="/c/:campaignSEOFriendlyPath" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/comments" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/updates" render={(props) => <CampaignDetailsPage match={props.match} />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/complete-your-support-for-this-campaign" render={(props) => <CompleteYourProfileMobile match={props.match} supportCampaign />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/pay-to-promote" render={(props) => <CampaignSupportPayToPromote match={props.match} />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/why-do-you-support" render={(props) => <CampaignSupportEndorsement match={props.match} />} />
                   <Route exact path="/credits"><Credits /></Route>
                   <Route exact path="/edit-profile"><SettingsEditProfile /></Route>
                   <Route exact path="/faq"><FAQ /></Route>
                   <Route exact path="/id/:campaignXWeVoteId" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/id/:campaignXWeVoteId/comments" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/id/:campaignXWeVoteId/updates" render={(props) => <CampaignDetailsPage match={props.match} />} />
+                  <Route exact path="/id/:campaignXWeVoteId/complete-your-support-for-this-campaign" render={(props) => <CompleteYourProfileMobile match={props.match} supportCampaign />} />
+                  <Route exact path="/id/:campaignXWeVoteId/pay-to-promote" render={(props) => <CampaignSupportPayToPromote match={props.match} />} />
+                  <Route exact path="/id/:campaignXWeVoteId/why-do-you-support" render={(props) => <CampaignSupportEndorsement match={props.match} />} />
                   <Route exact path="/impact"><Impact /></Route>
                   <Route exact path="/membership"><Membership /></Route>
                   <Route exact path="/privacy"><Privacy /></Route>
@@ -92,8 +100,6 @@ class App extends Component {
                   <Route exact path="/start-a-campaign-edit-all"><CampaignStartEditAll /></Route>
                   <Route exact path="/start-a-campaign-preview"><CampaignStartPreview /></Route>
                   <Route exact path="/styles"><StyleGuidePage /></Route>
-                  <Route exact path="/support-campaign-complete-your-profile/c/:campaignSEOFriendlyPath" render={(props) => <CompleteYourProfileMobile match={props.match} supportCampaign />} />
-                  <Route exact path="/support-campaign-complete-your-profile/id/:campaignXWeVoteId" render={(props) => <CompleteYourProfileMobile match={props.match} supportCampaign />} />
                   <Route exact path="/terms"><TermsOfService /></Route>
                   <Route exact path="/test/comments"><CommentsTestPage /></Route>
                   <Route exact path="/test/details"><DetailsTestPage /></Route>

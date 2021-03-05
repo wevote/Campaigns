@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import AppActions from '../../actions/AppActions';
 import CampaignStartActions from '../../actions/CampaignStartActions';
-import CampaignStartCompleteYourProfileController from '../../components/CampaignStart/CampaignStartCompleteYourProfileController';
+import CompleteYourProfileModalController from '../../components/Settings/CompleteYourProfileModalController';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import MainFooter from '../../components/Navigation/MainFooter';
@@ -19,6 +19,14 @@ class CampaignStartPreview extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      campaignDescription: '',
+      campaignPhotoLargeUrl: '',
+      campaignTitle: '',
+      pathToUseWhenProfileComplete: '/profile/started',
+      readyToPublish: false,
+      voterFirstName: '',
+      voterLastName: '',
+      voterSignedInWithEmail: false,
     };
   }
 
@@ -74,20 +82,20 @@ class CampaignStartPreview extends Component {
   }
 
   submitPublishNowDesktop = () => {
-    const { voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
+    const { pathToUseWhenProfileComplete, voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
     if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
       // Open complete your profile modal
-      AppActions.setShowCampaignStartCompleteYourProfileModal(true);
+      AppActions.setShowCompleteYourProfileModal(true);
     } else {
       // Mark the campaign as published
       const campaignWeVoteId = '';
       CampaignStartActions.inDraftModeSave(campaignWeVoteId, false);
-      historyPush('/profile/started');
+      historyPush(pathToUseWhenProfileComplete);
     }
   }
 
   submitPublishNowMobile = () => {
-    const { voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
+    const { pathToUseWhenProfileComplete, voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
     if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
       // Navigate to the mobile complete your profile page
       historyPush('/start-a-campaign-complete-your-profile');
@@ -95,7 +103,7 @@ class CampaignStartPreview extends Component {
       // Mark the campaign as published
       const campaignWeVoteId = '';
       CampaignStartActions.inDraftModeSave(campaignWeVoteId, false);
-      historyPush('/profile/started');
+      historyPush(pathToUseWhenProfileComplete);
     }
   }
 
@@ -106,8 +114,8 @@ class CampaignStartPreview extends Component {
     }
     const { classes } = this.props;
     const {
-      campaignDescription, campaignPhotoLargeUrl, campaignTitle, readyToPublish,
-      // voterFirstName, voterLastName, voterSignedInWithEmail,
+      campaignDescription, campaignPhotoLargeUrl, campaignTitle,
+      pathToUseWhenProfileComplete, readyToPublish,
     } = this.state;
     return (
       <div>
@@ -180,8 +188,11 @@ class CampaignStartPreview extends Component {
             </InnerWrapper>
           </OuterWrapper>
         </PageWrapper>
-        <CampaignStartCompleteYourProfileController />
         <MainFooter />
+        <CompleteYourProfileModalController
+          pathToUseWhenProfileComplete={pathToUseWhenProfileComplete}
+          startCampaign
+        />
       </div>
     );
   }
@@ -247,7 +258,7 @@ const CampaignStartSectionWrapper = styled.div`
   justify-content: center;
 `;
 
-const CampaignTitleDesktop = styled.h2`
+const CampaignTitleDesktop = styled.h1`
   font-size: 28px;
   text-align: center;
   margin: 30px 20px 40px 20px;
@@ -260,7 +271,7 @@ const CampaignTitleMissing = styled.div`
   color: red;
 `;
 
-const CampaignTitleMobile = styled.h2`
+const CampaignTitleMobile = styled.h1`
   font-size: 18px;
   text-align: left;
   margin: 0;

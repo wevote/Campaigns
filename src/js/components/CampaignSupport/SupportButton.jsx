@@ -6,22 +6,48 @@ import { withStyles } from '@material-ui/core/styles';
 import AppActions from '../../actions/AppActions';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
+import VoterStore from '../../stores/VoterStore';
 
 class SupportButton extends Component {
-  static getProps () {
-    return {};
+  constructor (props) {
+    super(props);
+    this.state = {
+      voterFirstName: '',
+      voterLastName: '',
+      voterSignedInWithEmail: false,
+    };
+  }
+
+  componentDidMount () {
+    this.onVoterStoreChange();
+    this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
+  }
+
+  componentWillUnmount () {
+    // console.log('CompleteYourProfile componentWillUnmount');
+    this.voterStoreListener.remove();
+  }
+
+  onVoterStoreChange () {
+    const voterFirstName = VoterStore.getFirstName();
+    const voterLastName = VoterStore.getLastName();
+    const voterSignedInWithEmail = VoterStore.getVoterIsSignedInWithEmail();
+    this.setState({
+      voterFirstName,
+      voterLastName,
+      voterSignedInWithEmail,
+    });
   }
 
   submitSupportButtonDesktop = () => {
+    const { pathToUseWhenProfileComplete } = this.props;
     const { voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
     if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
       // Open complete your profile modal
-      AppActions.setShowCampaignStartCompleteYourProfileModal(true);
+      AppActions.setShowCompleteYourProfileModal(true);
     } else {
-      // Mark the campaign as published
-      // const campaignWeVoteId = '';
-      // CampaignStartActions.inDraftModeSave(campaignWeVoteId, false);
-      historyPush('/profile/started');
+      // TODO: Mark that voter supports this campaign
+      historyPush(pathToUseWhenProfileComplete);
     }
   }
 
@@ -56,6 +82,7 @@ class SupportButton extends Component {
 }
 SupportButton.propTypes = {
   classes: PropTypes.object,
+  pathToUseWhenProfileComplete: PropTypes.string.isRequired,
 };
 
 const styles = (theme) => ({
