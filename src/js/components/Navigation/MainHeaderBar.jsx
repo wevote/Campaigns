@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
   outerWrapper: {
     borderBottom: '1px solid #ddd',
     flexGrow: 1,
-    minHeight: 42,
+    minHeight: 36,
   },
   title: {
     flexGrow: 1,

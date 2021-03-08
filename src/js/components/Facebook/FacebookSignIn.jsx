@@ -153,11 +153,6 @@ class FacebookSignIn extends Component {
         signInModalGlobalState.set('facebookSignInStatus', 'Internal error...');
       }
     }
-    // } else {
-    //   oAuthLog('Setting up new Facebook entry - voterFacebookSaveToCurrentAccount');
-    //   this.voterFacebookSaveToCurrentAccount();
-    //   signInModalGlobalState.set('facebookSignInStatus', 'Saving your account...');
-    // }
 
     const statusMessage = signInModalGlobalState.get('facebookSignInStatus') || '';
     // console.log('FacebookSignIn immediately before render, statusMessage:', statusMessage);
