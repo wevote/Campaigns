@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: '0',
   },
   innerWrapper: {
-    margin: '0 auto',
+    marginLeft: 'calc((100vw -960px)/4)',
     maxWidth: '960px',
   },
   logoLinkRoot: {
