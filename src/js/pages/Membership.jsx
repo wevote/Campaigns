@@ -6,6 +6,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
+import DonationListForm from '../components/Donation/DonationListForm';
 import LoadingWheel from '../components/LoadingWheel';
 import MainFooter from '../components/Navigation/MainFooter';
 import MainHeaderBar from '../components/Navigation/MainHeaderBar';
@@ -44,7 +45,7 @@ class Membership extends Component {
 
   componentDidMount () {
     initializejQuery(() => {
-      console.log('Membership, componentDidMount after init jQuery');
+      // console.log('Membership, componentDidMount after init jQuery');
       // DonateStore.resetState();  I don't think this does anything!
       // 2/25/21 1pm hack TODO DonateActions.donationRefreshDonationList();
       this.setState({ loaded: true });
@@ -195,6 +196,7 @@ class Membership extends Component {
               </Elements>
             </PaymentCenteredWrapper>
           </PaymentWrapper>
+          <DonationListForm waitForWebhook />
         </PageWrapper>
         <MainFooter displayFooter={!joining} />
       </div>

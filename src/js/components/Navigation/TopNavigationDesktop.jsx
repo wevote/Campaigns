@@ -1,71 +1,14 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { AppBar, Tab, Tabs, Toolbar } from '@material-ui/core';
-import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 import startsWith from '../../utils/startsWith';
-
-
-const useStyles = makeStyles((theme) => ({
-  appBarRoot: {
-    borderBottom: 0,
-    boxShadow: 'none',
-  },
-  hideUnderline: {
-    borderBottom: 0,
-    boxShadow: 'none',
-  },
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-    [theme.breakpoints.down('sm')]: {
-      display: 'none !important',
-    },
-  },
-  tabRoot: {
-    minHeight: 0,
-    minWidth: 125,
-    padding: '0 6px',
-    '&:hover': {
-      color: '#4371cc',
-    },
-  },
-  tabRootMembership: {
-    minHeight: 0,
-    minWidth: 100,
-    padding: '0 6px',
-    '&:hover': {
-      color: '#4371cc',
-    },
-  },
-  tabRootSearch: {
-    minHeight: 0,
-    minWidth: 60,
-    padding: '0 6px',
-    '&:hover': {
-      color: '#4371cc',
-    },
-  },
-  tabsRoot: {
-    minHeight: 0,
-  },
-  toolbarRoot: {
-    minHeight: 0,
-  },
-}));
+import { campaignTheme } from '../Style/campaignTheme';
 
 
 export default function TopNavigationDesktop () {
   const [value, setValue] = React.useState(0);
-  const classes = useStyles();
   const history = useHistory();
-
-  const theme = createMuiTheme({
-    typography: {
-      button: {
-        textTransform: 'none',
-      },
-    },
-  });
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -99,14 +42,13 @@ export default function TopNavigationDesktop () {
 
   // console.log('Render TopNavigationDesktop.jsx');
   return (
-    <div className={classes.root}>
-      <AppBar
-        position="relative"
-        color="default"
-        className={classes.appBarRoot}
-      >
-        <ThemeProvider theme={theme}>
-          <Toolbar className={classes.toolbarRoot} disableGutters>
+    <div>
+      <ThemeProvider theme={campaignTheme(true, 30)}>
+        <AppBar
+          position="relative"
+          color="default"
+        >
+          <Toolbar disableGutters>
             <Tabs
               value={value}
               onChange={handleChange}
@@ -120,16 +62,15 @@ export default function TopNavigationDesktop () {
                   },
                 }
               )}
-              className={classes.tabsRoot}
             >
-              <Tab className={classes.tabRoot} id="topNav-0" label="Start a campaign" onClick={() => history.push('/start-a-campaign')} />
-              <Tab className={classes.tabRoot} id="topNav-1" label="My campaigns" onClick={() => history.push('/profile/started')} />
-              <Tab className={classes.tabRootMembership} id="topNav-2" label="Membership" onClick={() => history.push('/membership')} />
-              <Tab className={classes.tabRootSearch} id="topNav-3" label="Search" onClick={() => history.push('/search')} />
+              <Tab id="topNav-0" label="Start a campaign" style={{ minWidth: 125 }} onClick={() => history.push('/start-a-campaign')} />
+              <Tab id="topNav-1" label="My campaigns" style={{ minWidth: 125 }} onClick={() => history.push('/profile/started')} />
+              <Tab id="topNav-2" label="Membership" style={{ minWidth: 100 }} onClick={() => history.push('/membership')} />
+              <Tab id="topNav-3" label="Search" style={{ minWidth: 60 }} onClick={() => history.push('/search')} />
             </Tabs>
           </Toolbar>
-        </ThemeProvider>
-      </AppBar>
+        </AppBar>
+      </ThemeProvider>
     </div>
   );
 }

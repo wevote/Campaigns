@@ -10,6 +10,7 @@ const HeaderBarLogo = ({ classes, logoURL, light }) => (
   <HeaderBarWrapper>
     {logoURL ? (
       <img
+        height="35"
         alt="Logo"
         src={logoURL}
       />
@@ -35,13 +36,15 @@ HeaderBarLogo.propTypes = {
 };
 
 const HeaderBarWrapper = styled.div`
-  height: 42px;     // So the size of the bar doesn't jump when the twitter picture icon appears
+  height: 30px;
   @media print{
   }
 `;
 
 const WeVoteLogoWrapper = styled.div`
-  margin-top: -2px;
+  margin-top: -6px;
+  margin-bottom: -6px;
+  height: 33px;
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
   }
 `;
