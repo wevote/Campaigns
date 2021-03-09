@@ -6,8 +6,6 @@ import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AppActions from '../../actions/AppActions';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
-import MainFooter from '../../components/Navigation/MainFooter';
-import MainHeaderBar from '../../components/Navigation/MainHeaderBar';
 import { renderLog } from '../../utils/logging';
 import VoterActions from '../../actions/VoterActions';
 import VoterFirstNameInputField from '../../components/Settings/VoterFirstNameInputField';
@@ -64,7 +62,6 @@ class SettingsEditProfile extends Component {
     return (
       <div>
         <Helmet title="Edit Your Profile - We Vote Campaigns" />
-        <MainHeaderBar />
         <SaveCancelOuterWrapper>
           <SaveCancelInnerWrapper>
             <SaveCancelButtonsWrapper>
@@ -115,7 +112,6 @@ class SettingsEditProfile extends Component {
             </SaveInnerWrapper>
           </SaveOuterWrapper>
         </PageWrapper>
-        <MainFooter />
       </div>
     );
   }

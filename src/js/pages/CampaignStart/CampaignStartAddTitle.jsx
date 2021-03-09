@@ -18,8 +18,6 @@ import CampaignStartSteps from '../../components/Navigation/CampaignStartSteps';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import CampaignTitleInputField from '../../components/CampaignStart/CampaignTitleInputField';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
-import MainFooter from '../../components/Navigation/MainFooter';
-import MainHeaderBar from '../../components/Navigation/MainHeaderBar';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
 
@@ -61,7 +59,6 @@ class CampaignStartAddTitle extends Component {
     return (
       <div>
         <Helmet title="Start a Campaign - We Vote Campaigns" />
-        <MainHeaderBar />
         <PageWrapper cordova={isCordova()}>
           <OuterWrapper>
             <InnerWrapper>
@@ -119,7 +116,6 @@ class CampaignStartAddTitle extends Component {
             </Button>
           </CampaignStartMobileButtonPanel>
         </CampaignStartMobileButtonWrapper>
-        <MainFooter />
       </div>
     );
   }

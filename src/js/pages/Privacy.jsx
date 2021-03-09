@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import MainFooter from '../components/Navigation/MainFooter';
-import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../utils/logging';
 
@@ -17,7 +15,6 @@ class Privacy extends Component {
     return (
       <div>
         <Helmet title="Privacy Policy - We Vote Campaigns" />
-        <MainHeaderBar />
         <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>
@@ -161,7 +158,6 @@ class Privacy extends Component {
             </InnerWrapper>
           </OuterWrapper>
         </PageWrapper>
-        <MainFooter />
       </div>
     );
   }

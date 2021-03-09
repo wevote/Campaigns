@@ -18,8 +18,6 @@ import CampaignStartSteps from '../../components/Navigation/CampaignStartSteps';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import CampaignPhotoUpload from '../../components/CampaignStart/CampaignPhotoUpload';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
-import MainFooter from '../../components/Navigation/MainFooter';
-import MainHeaderBar from '../../components/Navigation/MainHeaderBar';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
 
@@ -60,7 +58,6 @@ class CampaignStartAddPhoto extends Component {
     return (
       <div>
         <Helmet title="Start a Campaign - We Vote Campaigns" />
-        <MainHeaderBar />
         <PageWrapper cordova={isCordova()}>
           <OuterWrapper>
             <InnerWrapper>
@@ -133,7 +130,6 @@ class CampaignStartAddPhoto extends Component {
             </Button>
           </CampaignStartMobileButtonPanel>
         </CampaignStartMobileButtonWrapper>
-        <MainFooter />
       </div>
     );
   }

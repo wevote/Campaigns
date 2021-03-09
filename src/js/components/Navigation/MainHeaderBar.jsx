@@ -3,6 +3,7 @@ import loadable from '@loadable/component';
 import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
+import styled from 'styled-components';
 import { historyPush } from '../../utils/cordovaUtils';
 import initializeFacebookSDK from '../../utils/initializeFacebookSDK';
 import initializeAppleSDK from '../../utils/initializeAppleSDK';
@@ -72,11 +73,6 @@ const useStyles = makeStyles((theme) => ({
       color: '#4371cc',
     },
   },
-  outerWrapper: {
-    borderBottom: '1px solid #ddd',
-    flexGrow: 1,
-    minHeight: 36,
-  },
   title: {
     flexGrow: 1,
   },
@@ -88,11 +84,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MainHeaderBar () {
+export default function MainHeaderBar (displayHeader) {
   const classes = useStyles();
   // const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl) && anchorEl != null;
+  const displayThis = displayHeader.displayHeader;
 
   const handleMenu = (event) => {
     // console.log('MainHeaderBar handleMenu event:', event);
@@ -130,9 +127,9 @@ export default function MainHeaderBar () {
 
   const chosenSiteLogoUrl = '';  // {AppStore.getChosenSiteLogoUrl()}
   const light = false;
-  // console.log('MainHeaderBar open: ', open);
+  // console.log('MainHeaderBar displayHeader: ', displayHeader);
   return (
-    <div className={classes.outerWrapper}>
+    <OuterWrapper displayHeader={displayThis}>
       <div className={classes.innerWrapper}>
         <AppBar className={classes.appBarRoot} position="static" color="default">
           <Toolbar className={classes.toolbarRoot} disableGutters>
@@ -202,6 +199,12 @@ export default function MainHeaderBar () {
           </Toolbar>
         </AppBar>
       </div>
-    </div>
+    </OuterWrapper>
   );
 }
+const OuterWrapper = styled.div`
+  border-bottom: 1px solid #ddd;
+  flex-grow: 1;
+  min-height: 36px;
+  display: ${({ displayHeader }) => ((displayHeader) ? '' : 'none')};
+`;

@@ -189,6 +189,7 @@ class TwitterStore extends ReduceStore {
         return this.resetVoterSpecificData();
 
       default:
+        // console.log('TwitterStore DEFAULT action.type', action);
         return {
           ...state,
         };

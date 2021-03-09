@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { lazyLoader, libraryNeedsLoading } from '../utils/lazyLoader';
 import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
-import MainFooter from '../components/Navigation/MainFooter';
-import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
 
 class FAQ extends Component {
@@ -31,7 +29,6 @@ class FAQ extends Component {
     return (
       <div>
         <Helmet title="FAQ - We Vote Campaigns" />
-        <MainHeaderBar />
         <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>
@@ -252,7 +249,6 @@ class FAQ extends Component {
             </InnerWrapper>
           </OuterWrapper>
         </PageWrapper>
-        <MainFooter />
       </div>
     );
   }

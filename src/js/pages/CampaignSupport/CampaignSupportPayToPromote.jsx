@@ -37,13 +37,16 @@ class CampaignSupportPayToPromote extends Component {
     // console.log('CampaignSupportPayToPromote componentDidMount');
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    const { match: { params } } = this.props;
+    const { match: { params }, setShowHeaderFooter } = this.props;
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
     retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
+    setShowHeaderFooter(false);
   }
 
   componentWillUnmount () {
+    const { setShowHeaderFooter } = this.props;
+    setShowHeaderFooter(true);
     this.campaignStoreListener.remove();
   }
 
@@ -214,6 +217,7 @@ class CampaignSupportPayToPromote extends Component {
 CampaignSupportPayToPromote.propTypes = {
   classes: PropTypes.object,
   match: PropTypes.object,
+  setShowHeaderFooter: PropTypes.func,
 };
 
 const styles = () => ({

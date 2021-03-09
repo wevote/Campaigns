@@ -43,9 +43,11 @@ class CampaignSupportEndorsement extends Component {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
     retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
+    this.props.setShowHeaderFooter(false);
   }
 
   componentWillUnmount () {
+    this.props.setShowHeaderFooter(true);
     this.campaignStoreListener.remove();
   }
 
@@ -221,6 +223,7 @@ class CampaignSupportEndorsement extends Component {
 CampaignSupportEndorsement.propTypes = {
   classes: PropTypes.object,
   match: PropTypes.object,
+  setShowHeaderFooter: PropTypes.func,
 };
 
 const styles = () => ({
