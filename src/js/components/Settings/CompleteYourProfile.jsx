@@ -5,11 +5,11 @@ import { withStyles, withTheme } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import AppActions from '../../actions/AppActions';
 import AppStore from '../../stores/AppStore';
-import { historyPush } from '../../utils/cordovaUtils';
 import initializejQuery from '../../utils/initializejQuery';
 import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
 import { renderLog } from '../../utils/logging';
 import SettingsVerifySecretCode from './SettingsVerifySecretCode';
+import VisibleToPublicCheckbox from '../CampaignSupport/VisibleToPublicCheckbox';
 import VoterActions from '../../actions/VoterActions';
 import VoterEmailInputField from './VoterEmailInputField';
 import VoterFirstNameInputField from './VoterFirstNameInputField';
@@ -49,7 +49,6 @@ class CompleteYourProfile extends Component {
   }
 
   onVoterStoreChange () {
-    const { pathToUseWhenProfileComplete } = this.props;
     const emailAddressStatus = VoterStore.getEmailAddressStatus();
     // const { secret_code_system_locked_for_this_voter_device_id: secretCodeSystemLocked } = emailAddressStatus;
     const secretCodeVerificationStatus = VoterStore.getSecretCodeVerificationStatus();
@@ -65,7 +64,8 @@ class CompleteYourProfile extends Component {
         voterWeVoteId,
       });
     } else if (secretCodeVerified) {
-      historyPush(pathToUseWhenProfileComplete);
+      // Mark that voter supports this campaign
+      this.props.functionToUseWhenProfileComplete();
     } else if (emailAddressStatus.sign_in_code_email_sent) {
       this.setState({
         showVerifyModal: true,
@@ -97,7 +97,6 @@ class CompleteYourProfile extends Component {
   };
 
   submitCompleteYourProfile = (event) => {
-    const { pathToUseWhenProfileComplete } = this.props;
     let voterEmailMissing = false;
     let voterFirstNameMissing = false;
     let voterLastNameMissing = false;
@@ -144,7 +143,7 @@ class CompleteYourProfile extends Component {
       // All required fields were found
       this.sendSignInCodeEmail(event, voterEmailQueuedToSave);
     } else {
-      historyPush(pathToUseWhenProfileComplete);
+      this.props.functionToUseWhenProfileComplete();
     }
   }
 
@@ -169,7 +168,7 @@ class CompleteYourProfile extends Component {
 
   render () {
     renderLog('CompleteYourProfile');  // Set LOG_RENDER_EVENTS to log all renders
-    const { becomeMember, classes, startCampaign, supportCampaign } = this.props;
+    const { becomeMember, classes, startCampaign, supportCampaign, supportCampaignOnCampaignHome } = this.props;
 
     const {
       showVerifyModal, voterWeVoteId, voterEmailMissing,
@@ -181,7 +180,8 @@ class CompleteYourProfile extends Component {
     }
     // console.log('CompleteYourProfile render voter found');
     let buttonText = 'Continue';
-    let introductionText = <span>&nbsp;</span>;
+    let introductionText = null;
+    let outerMarginsOff = false;
     if (becomeMember) {
       buttonText = 'Continue';
       introductionText = <span>becomeMember</span>;
@@ -191,19 +191,27 @@ class CompleteYourProfile extends Component {
     } else if (supportCampaign) {
       buttonText = 'I support this campaign';
       introductionText = <span>Leading up to election day, WeVote.US will remind you to vote for all of the candidates you support. We keep your email secure and confidential.</span>;
+    } else if (supportCampaignOnCampaignHome) {
+      buttonText = 'I support this campaign';
+      outerMarginsOff = true;
     }
     return (
       <Wrapper>
         <section>
-          <IntroductionText>
-            {introductionText}
-          </IntroductionText>
-          <InputFieldsWrapper>
+          {!!(introductionText) && (
+            <IntroductionText>
+              {introductionText}
+            </IntroductionText>
+          )}
+          <InputFieldsWrapper outerMarginsOff={outerMarginsOff}>
             <VoterFirstNameInputField voterFirstNameMissing={voterFirstNameMissing} />
             <VoterLastNameInputField voterLastNameMissing={voterLastNameMissing} />
             <VoterEmailInputField voterEmailMissing={voterEmailMissing} />
           </InputFieldsWrapper>
-          <ButtonWrapper>
+          <CheckboxWrapper outerMarginsOff={outerMarginsOff}>
+            <VisibleToPublicCheckbox />
+          </CheckboxWrapper>
+          <ButtonWrapper outerMarginsOff={outerMarginsOff}>
             <Button
               classes={{ root: classes.buttonDesktop }}
               color="primary"
@@ -214,7 +222,7 @@ class CompleteYourProfile extends Component {
               {buttonText}
             </Button>
           </ButtonWrapper>
-          <FinePrint>
+          <FinePrint outerMarginsOff={outerMarginsOff}>
             By continuing, you accept WeVote.US&apos;s
             {' '}
             <OpenExternalWebSite
@@ -256,9 +264,10 @@ class CompleteYourProfile extends Component {
 CompleteYourProfile.propTypes = {
   classes: PropTypes.object,
   becomeMember: PropTypes.bool,
-  pathToUseWhenProfileComplete: PropTypes.string.isRequired,
+  functionToUseWhenProfileComplete: PropTypes.func.isRequired, // pathToUseWhenProfileComplete
   startCampaign: PropTypes.bool,
   supportCampaign: PropTypes.bool,
+  supportCampaignOnCampaignHome: PropTypes.bool,
 };
 
 const styles = () => ({
@@ -280,23 +289,26 @@ const styles = () => ({
 
 const ButtonWrapper = styled.div`
   background-color: #fff;
-  margin: 35px 15px 0 15px;
-  padding: 10px 0;
+  margin: ${(props) => (props.outerMarginsOff ? '8px 0 0 0' : '8px 15px 0 15px')};
 `;
 
-const IntroductionText = styled.div`
-  font-size: 15px;
-  margin: 10px 15px;
+const CheckboxWrapper = styled.div`
+  margin: ${(props) => (props.outerMarginsOff ? '25px 0 0 0' : '25px 15px 0 15px')};
 `;
 
 const FinePrint = styled.div`
   color: #999;
   font-size: 13px;
-  margin: 10px 15px 15px 15px;
+  margin: ${(props) => (props.outerMarginsOff ? '10px 0 15px 0' : '10px 15px 15px 15px')};
 `;
 
 const InputFieldsWrapper = styled.div`
-  margin: 0 15px !important;
+  margin: ${(props) => (props.outerMarginsOff ? '0 0 !important' : '0 15px !important')};
+`;
+
+const IntroductionText = styled.div`
+  font-size: 15px;
+  margin: 10px 15px;
 `;
 
 const Wrapper = styled.div`

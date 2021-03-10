@@ -27,7 +27,7 @@ class CampaignSupportSteps extends Component {
       atSharingStep,
     } = this.props;
     const step1Completed = true;
-    const step2Completed = CampaignSupportStore.supportEndorsementExists();
+    const step2Completed = CampaignSupportStore.supporterEndorsementExists();
     const payToPromoteStepCompleted = atSharingStep;
     const payToPromoteStepTurnedOn = true;
     const sharingStepCompleted = false;

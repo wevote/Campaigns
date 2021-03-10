@@ -39,18 +39,18 @@ class SupportButtonFooter extends Component {
   }
 
   submitSupportButtonMobile = () => {
-    const { campaignSEOFriendlyPath, campaignXWeVoteId, pathToUseWhenProfileComplete } = this.props;
+    const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.props;
     const { voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
     if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
       // Navigate to the mobile complete your profile page
       if (campaignSEOFriendlyPath) {
-        historyPush(`/complete-your-support-for-this-campaign/c/${campaignSEOFriendlyPath}`);
+        historyPush(`/c/${campaignSEOFriendlyPath}/complete-your-support-for-this-campaign`);
       } else {
-        historyPush(`/complete-your-support-for-this-campaign/id/${campaignXWeVoteId}`);
+        historyPush(`/id/${campaignXWeVoteId}/complete-your-support-for-this-campaign`);
       }
     } else {
-      // TODO: Mark that voter supports this campaign
-      historyPush(pathToUseWhenProfileComplete);
+      // Mark that voter supports this campaign
+      this.props.functionToUseWhenProfileComplete();
     }
   }
 
@@ -87,7 +87,7 @@ SupportButtonFooter.propTypes = {
   campaignXWeVoteId: PropTypes.string,
   classes: PropTypes.object,
   campaignSEOFriendlyPath: PropTypes.string,
-  pathToUseWhenProfileComplete: PropTypes.string.isRequired,
+  functionToUseWhenProfileComplete: PropTypes.func.isRequired, // pathToUseWhenProfileComplete
 };
 
 const styles = () => ({

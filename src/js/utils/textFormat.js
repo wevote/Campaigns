@@ -48,39 +48,6 @@ export function arrayUnique (array) {
   return a;
 }
 
-export function calculateBallotBaseUrl (incomingBallotBaseUrl, incomingPathname) {
-  const incomingPathnameExists = incomingPathname && incomingPathname !== '';
-  const ballotBaseUrlEmpty = !incomingBallotBaseUrl || incomingBallotBaseUrl === '';
-  let ballotBaseUrl = '';
-  if (incomingBallotBaseUrl === '/ready') {
-    ballotBaseUrl = '/ready';
-  } else if (incomingPathnameExists && ballotBaseUrlEmpty) {
-    // console.log("incomingPathname:", incomingPathname);
-    // Strip off everything after these path strings "/ballot" "/positions" "/followers" "/followed"
-    const temp1 = incomingPathname.toLowerCase().split('/ballot')[0];
-    const temp2 = temp1.split('/positions')[0];
-    const temp3 = temp2.split('/followers')[0];
-    const temp4 = temp3.split('/followed')[0];
-    ballotBaseUrl = `${temp4}/ballot`;
-    // console.log("ballotBaseUrl:", ballotBaseUrl);
-  } else {
-    ballotBaseUrl = incomingBallotBaseUrl || '/ballot';
-  }
-  return ballotBaseUrl;
-}
-
-export function calculateBallotBaseUrlForVoterGuide (incomingBallotBaseUrl, incomingPathname) {
-  const incomingPathnameExists = incomingPathname && incomingPathname !== '';
-  let ballotBaseUrl = '';
-  if (incomingPathnameExists) {
-    ballotBaseUrl = incomingPathname;
-    // console.log("ballotBaseUrl:", ballotBaseUrl);
-  } else {
-    ballotBaseUrl = incomingBallotBaseUrl || '/ballot';
-  }
-  return ballotBaseUrl;
-}
-
 export function convertNameToSlug (incomingString) {
   // This is used to turn issue/value names into URL paths
   if (!incomingString || incomingString === '') {

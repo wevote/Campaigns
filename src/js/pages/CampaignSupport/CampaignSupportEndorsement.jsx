@@ -81,29 +81,29 @@ class CampaignSupportEndorsement extends Component {
 
   goToNextStep = () => {
     const payToPromoteStepTurnedOn = true;
-    let pathToUseWhenProfileComplete = this.getCampaignBasePath();
+    let pathForNextStep = this.getCampaignBasePath();
     if (payToPromoteStepTurnedOn) {
-      pathToUseWhenProfileComplete += '/pay-to-promote';
+      pathForNextStep += '/pay-to-promote';
     } else {
-      pathToUseWhenProfileComplete += '/sharing-options';
+      pathForNextStep += '/sharing-options';
     }
 
-    historyPush(pathToUseWhenProfileComplete);
+    historyPush(pathForNextStep);
   }
 
   submitSkipForNow = () => {
     this.goToNextStep();
   }
 
-  submitSupportEndorsement = () => {
+  submitSupporterEndorsement = () => {
     const { campaignXWeVoteId } = this.state;
-    const supportEndorsementQueuedToSave = CampaignSupportStore.getSupportEndorsementQueuedToSave();
-    const supportEndorsementQueuedToSaveSet = CampaignSupportStore.getSupportEndorsementQueuedToSaveSet();
-    if (supportEndorsementQueuedToSaveSet && campaignXWeVoteId) {
-      // console.log('CampaignSupportEndorsement, supportEndorsementQueuedToSave:', supportEndorsementQueuedToSave);
+    const supporterEndorsementQueuedToSave = CampaignSupportStore.getSupporterEndorsementQueuedToSave();
+    const supporterEndorsementQueuedToSaveSet = CampaignSupportStore.getSupporterEndorsementQueuedToSaveSet();
+    if (supporterEndorsementQueuedToSaveSet && campaignXWeVoteId) {
+      // console.log('CampaignSupportEndorsement, supporterEndorsementQueuedToSave:', supporterEndorsementQueuedToSave);
       initializejQuery(() => {
-        CampaignSupportActions.supportEndorsementSave(campaignXWeVoteId, supportEndorsementQueuedToSave);
-        CampaignSupportActions.supportEndorsementQueuedToSave(undefined);
+        CampaignSupportActions.supporterEndorsementSave(campaignXWeVoteId, supporterEndorsementQueuedToSave);
+        CampaignSupportActions.supporterEndorsementQueuedToSave(undefined);
       });
     }
     this.goToNextStep();
@@ -138,8 +138,8 @@ class CampaignSupportEndorsement extends Component {
                       <Button
                         classes={{ root: classes.buttonDesktop }}
                         color="primary"
-                        id="saveSupportEndorsement"
-                        onClick={this.submitSupportEndorsement}
+                        id="saveSupporterEndorsement"
+                        onClick={this.submitSupporterEndorsement}
                         variant="contained"
                       >
                         Save and continue
@@ -151,7 +151,7 @@ class CampaignSupportEndorsement extends Component {
                       <Button
                         classes={{ root: classes.buttonDefault }}
                         color="primary"
-                        id="saveSupportEndorsementMobile"
+                        id="saveSupporterEndorsementMobile"
                         onClick={this.submitCampaignDescription}
                         variant="contained"
                       >
@@ -201,7 +201,7 @@ class CampaignSupportEndorsement extends Component {
                       <Button
                         classes={{ root: classes.buttonSimpleLink }}
                         color="primary"
-                        id="saveSupportEndorsementMobile"
+                        id="skipSupporterEndorsementMobile"
                         onClick={this.submitSkipForNow}
                       >
                         Skip for now

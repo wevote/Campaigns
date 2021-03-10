@@ -7,8 +7,11 @@ import startsWith from '../../utils/startsWith';
 
 const useStyles = makeStyles((theme) => ({
   appBarRoot: {
-    borderBottom: '1px solid #ddd',
+    borderBottom: 0,
     boxShadow: 'none',
+    [theme.breakpoints.up('sm')]: {
+      borderBottom: '1px solid #ddd',
+    },
   },
   root: {
     flexGrow: 1,

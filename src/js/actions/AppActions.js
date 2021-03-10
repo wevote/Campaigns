@@ -11,6 +11,10 @@ export default {
     Dispatcher.dispatch({ type: 'activityTidbitWeVoteIdForDrawerAndOpen', payload: activityTidbitWeVoteId });
   },
 
+  setCampaignFirstRetrieveInitiated (value) {
+    Dispatcher.dispatch({ type: 'campaignFirstRetrieveInitiated', payload: value });
+  },
+
   setCampaignListFirstRetrieveInitiated (value) {
     Dispatcher.dispatch({ type: 'campaignListFirstRetrieveInitiated', payload: value });
   },

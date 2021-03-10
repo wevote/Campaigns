@@ -11,19 +11,19 @@ class CampaignEndorsementInputField extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      supportEndorsement: '',
+      supporterEndorsement: '',
     };
 
     this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.updateSupportEndorsement = this.updateSupportEndorsement.bind(this);
+    this.updateSupporterEndorsement = this.updateSupporterEndorsement.bind(this);
   }
 
   componentDidMount () {
     // console.log('CampaignEndorsementInputField, componentDidMount');
     this.campaignSupportStoreListener = CampaignSupportStore.addListener(this.onCampaignSupportStoreChange.bind(this));
-    const supportEndorsement = CampaignSupportStore.getSupportEndorsement();
+    const supporterEndorsement = CampaignSupportStore.getSupporterEndorsement();
     this.setState({
-      supportEndorsement,
+      supporterEndorsement,
     });
   }
 
@@ -36,24 +36,24 @@ class CampaignEndorsementInputField extends Component {
   }
 
   onCampaignSupportStoreChange () {
-    const supportEndorsement = CampaignSupportStore.getSupportEndorsement();
-    const supportEndorsementQueuedToSave = CampaignSupportStore.getSupportEndorsementQueuedToSave();
-    const supportEndorsementQueuedToSaveSet = CampaignSupportStore.getSupportEndorsementQueuedToSaveSet();
-    let supportEndorsementAdjusted = supportEndorsement;
-    if (supportEndorsementQueuedToSaveSet) {
-      supportEndorsementAdjusted = supportEndorsementQueuedToSave;
+    const supporterEndorsement = CampaignSupportStore.getSupporterEndorsement();
+    const supporterEndorsementQueuedToSave = CampaignSupportStore.getSupporterEndorsementQueuedToSave();
+    const supporterEndorsementQueuedToSaveSet = CampaignSupportStore.getSupporterEndorsementQueuedToSaveSet();
+    let supporterEndorsementAdjusted = supporterEndorsement;
+    if (supporterEndorsementQueuedToSaveSet) {
+      supporterEndorsementAdjusted = supporterEndorsementQueuedToSave;
     }
-    // console.log('onCampaignSupportStoreChange supportEndorsement: ', supportEndorsement, ', supportEndorsementQueuedToSave: ', supportEndorsementQueuedToSave, ', supportEndorsementAdjusted:', supportEndorsementAdjusted);
+    // console.log('onCampaignSupportStoreChange supporterEndorsement: ', supporterEndorsement, ', supporterEndorsementQueuedToSave: ', supporterEndorsementQueuedToSave, ', supporterEndorsementAdjusted:', supporterEndorsementAdjusted);
     this.setState({
-      supportEndorsement: supportEndorsementAdjusted,
+      supporterEndorsement: supporterEndorsementAdjusted,
     });
   }
 
-  updateSupportEndorsement (event) {
-    if (event.target.name === 'supportEndorsement') {
-      CampaignSupportActions.supportEndorsementQueuedToSave(event.target.value);
+  updateSupporterEndorsement (event) {
+    if (event.target.name === 'supporterEndorsement') {
+      CampaignSupportActions.supporterEndorsementQueuedToSave(event.target.value);
       this.setState({
-        supportEndorsement: event.target.value,
+        supporterEndorsement: event.target.value,
       });
     }
   }
@@ -62,7 +62,7 @@ class CampaignEndorsementInputField extends Component {
     renderLog('CampaignEndorsementInputField');  // Set LOG_RENDER_EVENTS to log all renders
 
     const { classes, externalUniqueId } = this.props;
-    const { supportEndorsement } = this.state;
+    const { supporterEndorsement } = this.state;
     const candidateNameString = 'Candidate One';
     const moreThanOneCandidate = false;
     let placeholderText = `I am supporting ${candidateNameString}.`;
@@ -79,16 +79,16 @@ class CampaignEndorsementInputField extends Component {
               <FormControl classes={{ root: classes.formControl }}>
                 <TextField
                   // classes={{ root: classes.textField }} // Not working yet
-                  id={`supportEndorsementTextArea-${externalUniqueId}`}
-                  name="supportEndorsement"
+                  id={`supporterEndorsementTextArea-${externalUniqueId}`}
+                  name="supporterEndorsement"
                   margin="dense"
                   multiline
                   rows={8}
                   variant="outlined"
                   placeholder={placeholderText}
-                  value={supportEndorsement}
+                  value={supporterEndorsement}
                   onKeyDown={this.handleKeyPress}
-                  onChange={this.updateSupportEndorsement}
+                  onChange={this.updateSupporterEndorsement}
                 />
               </FormControl>
             </ColumnFullWidth>
