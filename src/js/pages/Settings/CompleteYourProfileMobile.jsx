@@ -21,7 +21,7 @@ class CompleteYourProfileMobile extends Component {
 
   componentDidMount () {
     // console.log('CampaignDetailsPage componentDidMount');
-    const { match: { params } } = this.props;
+    const { match: { params }, setShowHeaderFooter } = this.props;
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     const { becomeMember, startCampaign, supportCampaign } = this.props;
     let pathToUseWhenProfileComplete = '';
@@ -40,6 +40,12 @@ class CompleteYourProfileMobile extends Component {
       campaignXWeVoteId,
       pathToUseWhenProfileComplete,
     });
+    setShowHeaderFooter(false);
+  }
+
+  componentWillUnmount () {
+    const { setShowHeaderFooter } = this.props;
+    setShowHeaderFooter(true);
   }
 
   cancelFunction = () => {
@@ -109,6 +115,7 @@ CompleteYourProfileMobile.propTypes = {
   match: PropTypes.object,
   startCampaign: PropTypes.bool,
   supportCampaign: PropTypes.bool,
+  setShowHeaderFooter: PropTypes.func,
 };
 
 const styles = () => ({

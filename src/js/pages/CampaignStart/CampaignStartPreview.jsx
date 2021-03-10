@@ -9,8 +9,6 @@ import CampaignStartActions from '../../actions/CampaignStartActions';
 import CompleteYourProfileModalController from '../../components/Settings/CompleteYourProfileModalController';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
-import MainFooter from '../../components/Navigation/MainFooter';
-import MainHeaderBar from '../../components/Navigation/MainHeaderBar';
 import { renderLog } from '../../utils/logging';
 import VoterStore from '../../stores/VoterStore';
 
@@ -120,7 +118,6 @@ class CampaignStartPreview extends Component {
     return (
       <div>
         <Helmet title="Preview Your Campaign - We Vote Campaigns" />
-        <MainHeaderBar />
         <SaveCancelOuterWrapper>
           <SaveCancelInnerWrapper>
             <SaveCancelButtonsWrapper>
@@ -188,7 +185,6 @@ class CampaignStartPreview extends Component {
             </InnerWrapper>
           </OuterWrapper>
         </PageWrapper>
-        <MainFooter />
         <CompleteYourProfileModalController
           pathToUseWhenProfileComplete={pathToUseWhenProfileComplete}
           startCampaign

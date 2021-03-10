@@ -16,8 +16,6 @@ import {
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import AddCandidateInputField from '../../components/CampaignStart/AddPoliticianInputField';
 import CampaignStartSteps from '../../components/Navigation/CampaignStartSteps';
-import MainFooter from '../../components/Navigation/MainFooter';
-import MainHeaderBar from '../../components/Navigation/MainHeaderBar';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import initializejQuery from '../../utils/initializejQuery';
@@ -63,7 +61,6 @@ class CampaignStartAddPolitician extends Component {
     return (
       <div>
         <Helmet title="Add Candidate - We Vote Campaigns" />
-        <MainHeaderBar />
         <PageWrapper cordova={isCordova()}>
           <OuterWrapper>
             <InnerWrapper>
@@ -136,7 +133,6 @@ class CampaignStartAddPolitician extends Component {
             </Button>
           </CampaignStartMobileButtonPanel>
         </CampaignStartMobileButtonWrapper>
-        <MainFooter />
       </div>
     );
   }

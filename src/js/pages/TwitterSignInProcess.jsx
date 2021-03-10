@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import AppActions from '../actions/AppActions';
@@ -37,9 +38,13 @@ export default class TwitterSignInProcess extends Component {
         jqueryLoading: false,
       });
     });
+    const { setShowHeaderFooter } = this.props;
+    setShowHeaderFooter(false);
   }
 
   componentWillUnmount () {
+    const { setShowHeaderFooter } = this.props;
+    setShowHeaderFooter(true);
     this.appStoreListener.remove();
     this.twitterStoreListener.remove();
     this.voterStoreListener.remove();
@@ -59,13 +64,15 @@ export default class TwitterSignInProcess extends Component {
     });
     // 2/11/21:  This was in TwitterStore.jsx (untangling app code from stores)
     if (twitterAuthResponse.twitter_sign_in_found && twitterAuthResponse.twitter_sign_in_verified) {
+      // console.log('onTwitterStoreChange fired voterRetrieve -- since twitter_sign_in_found -- twitterAuthResponse:', twitterAuthResponse);
       VoterActions.voterRetrieve();
-      // VoterActions.twitterRetrieveIdsIfollow();
     }
     // 2/11/21, Moved from render (since it sets state)
-    if (twitterAuthResponse.twitter_sign_in_failed) {
+    if (twitterAuthResponse.twitter_sign_in_failed === true) {
       oAuthLog('Twitter sign in failed - push to /settings/account');  // TODO: /settings/account does not exist in Campaign
       this.setState({ redirectInProcess: true });
+      const { setShowHeaderFooter } = this.props;
+      setShowHeaderFooter(true);
       historyPush({
         pathname: '/settings/account',
         state: {
@@ -75,9 +82,11 @@ export default class TwitterSignInProcess extends Component {
       });
     }
 
-    if (!twitterAuthResponse.twitter_sign_in_found) {
+    if (twitterAuthResponse.twitter_sign_in_found === false) {
       this.setState({ redirectInProcess: true });
       oAuthLog('twitterAuthResponse.twitter_sign_in_found: ', twitterAuthResponse.twitter_sign_in_found);  // TODO: /settings/account does not exist in Campaign
+      const { setShowHeaderFooter } = this.props;
+      setShowHeaderFooter(true);
       historyPush({
         pathname: '/settings/account',
         state: {
@@ -124,7 +133,8 @@ export default class TwitterSignInProcess extends Component {
               console.log('newRedirectPathname:', newRedirectPathname);
               this.setState({ redirectInProcess: true });
               oAuthLog(`Twitter sign in (1), onVoterStoreChange - push to ${newRedirectPathname}`);
-
+              const { setShowHeaderFooter } = this.props;
+              setShowHeaderFooter(true);
               historyPush({
                 pathname: newRedirectPathname,
                 state: {
@@ -145,6 +155,8 @@ export default class TwitterSignInProcess extends Component {
           this.setState({ redirectInProcess: true });
           const redirectPathname = '/';
           oAuthLog(`Twitter sign in (2), onVoterStoreChange - push to ${redirectPathname}`);
+          const { setShowHeaderFooter } = this.props;
+          setShowHeaderFooter(true);
           historyPush({
             pathname: redirectPathname,
             // query: {voter_refresh_timer_on: voterHasDataToPreserve ? 0 : 1},
@@ -177,6 +189,7 @@ export default class TwitterSignInProcess extends Component {
     VoterActions.voterTwitterSaveToCurrentAccount();
     if (VoterStore.getVoterPhotoUrlMedium().length === 0) {
       // This only fires once, for brand new users on their very first login
+      // console.log('voterTwitterSaveToCurrentAccount fired voterRetrieve -- should not normally happen');
       VoterActions.voterRetrieve();
     }
   }
@@ -196,7 +209,7 @@ export default class TwitterSignInProcess extends Component {
         </div>
       );
     }
-    console.log('TwitterSignInProcess render, after jquery loading $', window.$.fn.jquery);
+    // console.log('TwitterSignInProcess render, after jquery loading $', window.$.fn.jquery);
 
     if (redirectInProgress || !hostname || hostname === '') {
       return null;
@@ -205,7 +218,7 @@ export default class TwitterSignInProcess extends Component {
     oAuthLog('TwitterSignInProcess render');
     if (!twitterAuthResponse ||
       !twitterAuthResponse.twitter_retrieve_attempted) {
-      oAuthLog('STOPPED, missing twitter_retrieve_attempted: twitterAuthResponse:', twitterAuthResponse);
+      oAuthLog('Pause, missing twitter_retrieve_attempted: twitterAuthResponse:', twitterAuthResponse);
       return (
         <SpinnerPage topWords="Waiting for a response from Twitter..." bottomWords="Please wait..." />
       );
@@ -232,3 +245,6 @@ export default class TwitterSignInProcess extends Component {
     }
   }
 }
+TwitterSignInProcess.propTypes = {
+  setShowHeaderFooter: PropTypes.func,
+};

@@ -84,7 +84,7 @@ To test performance on your local computer, first run `npm run build` to create 
 Then run `node server-prod-local` to start a local express server that serves minified source, and compresses it before sending.
 (Like our production webservers.)
 
-```angular2html
+```
 stevepodell@Steves-MacBook-Pro-32GB-Oct-2109 Campaigns % npm run build
 ...
 webpack 5.19.0 compiled with 1 warning in 32886 ms
@@ -112,6 +112,25 @@ There is a throttling setting, that defaults to "Online" that lets you experimen
 
 ![ScreenShot](./docs/images/DevToolsNetworkTabSpeedPopUp.png)
 
+## Performance Snapshots
+* Terminal commands:
+   ```
+    npm run build
+    node server-prod-local
+  ```
+* User IS NOT signed into the Campaign app.
+* All the logging is turned off in config.js
+* No throttling.
+* Run in Desktop mode within Lighthouse
+* Article on [User-centric performance metrics](https://web.dev/user-centric-performance-metrics/#user-centric_performance_metrics)
+* "Largest Contentful Paint (LCP) is an important, user-centric metric for measuring perceived load speed because it marks the point in the page load timeline when the page's main content has likely loaded—a fast LCP helps reassure the user that the page is useful."
+
+| Date          | main.js | Performance | First Contentful Paint | Speed Index | Largest CP | Time to Interactive | Blocking | Cumulative Layout Shift | Largest CP (View Original Trace) | Onload Event (VOT) |
+| ---           | ---     | ---         | ---                    | ---         | ---        | ---                 | ---      | ---                     | ---                              | ---                |
+| March 9, 2021 | 338 KiB | 96          | 0.6s                   | 1.1s        | 1.3s       | 0.8s                | 60 ms    | 0.004                   | 291 ms (38,200)                  | 425 ms             |
+
+![ScreenShot](./docs/images/LighthousePerformance.png)
+![ScreenShot](./docs/images/LighthouseViewOriginalTrace.png)
 
 ## Installation
 

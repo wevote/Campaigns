@@ -1,4 +1,4 @@
-import React, { Component, Suspense } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
@@ -6,15 +6,11 @@ import { withStyles } from '@material-ui/core/styles';
 import CampaignTopNavigation from '../components/Navigation/CampaignTopNavigation';
 import CampaignStore from '../stores/CampaignStore';
 import CompleteYourProfileModalController from '../components/Settings/CompleteYourProfileModalController';
-import DelayedLoad from '../components/Widgets/DelayedLoad';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../utils/campaignUtils';
 import { isCordova } from '../utils/cordovaUtils';
 import { renderLog } from '../utils/logging';
 import SupportButton from '../components/CampaignSupport/SupportButton';
 import SupportButtonFooter from '../components/CampaignSupport/SupportButtonFooter';
-
-const MainFooter = React.lazy(() => import('../components/Navigation/MainFooter'));
-const MainHeaderBar = React.lazy(() => import('../components/Navigation/MainHeaderBar'));
 
 
 class CampaignDetailsPage extends Component {
@@ -96,11 +92,11 @@ class CampaignDetailsPage extends Component {
     return (
       <div>
         <Helmet title="Campaign Home - We Vote Campaigns" />
-        <MainHeaderBarWrapper>
-          <Suspense fallback={<span>&nbsp;</span>}>
-            <MainHeaderBar />
-          </Suspense>
-        </MainHeaderBarWrapper>
+        {/* <MainHeaderBarWrapper> */}
+        {/*  <Suspense fallback={<span>&nbsp;</span>}> */}
+        {/*    <MainHeaderBar /> */}
+        {/*  </Suspense> */}
+        {/* </MainHeaderBarWrapper> */}
         <PageWrapper cordova={isCordova()}>
           <CampaignTopNavigation campaignSEOFriendlyPath={campaignSEOFriendlyPath} />
           <DetailsSectionMobile className="u-show-mobile">
@@ -141,11 +137,11 @@ class CampaignDetailsPage extends Component {
             pathToUseWhenProfileComplete={pathToUseWhenProfileComplete}
           />
         </SupportButtonFooterWrapper>
-        <DelayedLoad waitBeforeShow={500}>
-          <Suspense fallback={<span>&nbsp;</span>}>
-            <MainFooter />
-          </Suspense>
-        </DelayedLoad>
+        {/* <DelayedLoad waitBeforeShow={500}> */}
+        {/*  <Suspense fallback={<span>&nbsp;</span>}> */}
+        {/*    <MainFooter /> */}
+        {/*  </Suspense> */}
+        {/* </DelayedLoad> */}
         <CompleteYourProfileModalController
           pathToUseWhenProfileComplete={pathToUseWhenProfileComplete}
           supportCampaign
@@ -251,10 +247,10 @@ const DetailsSectionMobile = styled.div`
   flex-flow: column;
 `;
 
-const MainHeaderBarWrapper = styled.div`
-  border-bottom: 1px solid #ddd;
-  height: 42px;
-`;
+// const MainHeaderBarWrapper = styled.div`
+//   border-bottom: 1px solid #ddd;
+//   height: 42px;
+// `;
 
 const PageWrapper = styled.div`
   margin: 0 auto;

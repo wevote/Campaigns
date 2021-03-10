@@ -3,8 +3,6 @@ import Helmet from 'react-helmet';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import MainFooter from '../components/Navigation/MainFooter';
-import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
 import { organizationalDonors, teamOfVolunteers } from '../constants/people';
 import { isWebApp } from '../utils/cordovaUtils';
@@ -20,7 +18,6 @@ class Credits extends Component {
     return (
       <div>
         <Helmet title="Credits and Thanks - We Vote Campaigns" />
-        <MainHeaderBar />
         <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>
@@ -128,7 +125,6 @@ class Credits extends Component {
             </InnerWrapper>
           </OuterWrapper>
         </PageWrapper>
-        <MainFooter />
       </div>
     );
   }

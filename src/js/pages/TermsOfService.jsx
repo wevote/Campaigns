@@ -3,8 +3,6 @@ import Helmet from 'react-helmet';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import MainFooter from '../components/Navigation/MainFooter';
-import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import { renderLog } from '../utils/logging';
 
 class TermsOfService extends Component {
@@ -17,7 +15,6 @@ class TermsOfService extends Component {
     return (
       <div>
         <Helmet title="Terms of Service - We Vote Campaigns" />
-        <MainHeaderBar />
         <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>
@@ -116,7 +113,6 @@ class TermsOfService extends Component {
             </InnerWrapper>
           </OuterWrapper>
         </PageWrapper>
-        <MainFooter />
       </div>
     );
   }

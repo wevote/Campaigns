@@ -6,8 +6,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { renderLog } from '../utils/logging';
 import attributionText from '../constants/attributionText';
 import compileDate from '../compiledDate';
-import MainFooter from '../components/Navigation/MainFooter';
-import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 
 class Attributions extends Component {
   static getProps () {
@@ -42,7 +40,6 @@ class Attributions extends Component {
     return (
       <div>
         <Helmet title="Attributions - We Vote Campaigns" />
-        <MainHeaderBar />
         <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>
@@ -67,7 +64,6 @@ class Attributions extends Component {
             </InnerWrapper>
           </OuterWrapper>
         </PageWrapper>
-        <MainFooter />
       </div>
     );
   }

@@ -8,8 +8,6 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import DonationListForm from '../components/Donation/DonationListForm';
 import LoadingWheel from '../components/LoadingWheel';
-import MainFooter from '../components/Navigation/MainFooter';
-import MainHeaderBar from '../components/Navigation/MainHeaderBar';
 import CheckoutForm from '../components/Widgets/CheckoutForm';
 import { isCordova } from '../utils/cordovaUtils';
 import initializejQuery from '../utils/initializejQuery';
@@ -71,6 +69,11 @@ class Membership extends Component {
   }
 
   changeValue (newValue) {
+    const { joining } = this.state;
+    if (!joining) {
+      const { showFooter } = this.props;
+      showFooter(false);
+    }
     this.setState({
       value: newValue,
       joining: true,
@@ -88,7 +91,6 @@ class Membership extends Component {
     return (
       <div>
         <Helmet title="Membership - We Vote Campaigns" />
-        <MainHeaderBar />
         <PageWrapper cordova={isCordova()}>
           <OuterWrapper>
             <InnerWrapper>
@@ -198,13 +200,13 @@ class Membership extends Component {
           </PaymentWrapper>
           <DonationListForm waitForWebhook />
         </PageWrapper>
-        <MainFooter displayFooter={!joining} />
       </div>
     );
   }
 }
 Membership.propTypes = {
   classes: PropTypes.object,
+  showFooter: PropTypes.func,
 };
 
 const styles = () => ({

@@ -2,11 +2,15 @@ import React, { Component, Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { ThemeProvider } from 'styled-components';
+import MainHeaderBar from './js/components/Navigation/MainHeaderBar';
 import muiTheme from './js/components/Widgets/mui-theme';
 import ErrorBoundary from './js/components/Widgets/ErrorBoundary';
 import { renderLog } from './js/utils/logging';
 import styledTheme from './js/components/Widgets/styled-theme';
 import WeVoteRouter from './js/components/Widgets/WeVoteRouter';
+
+// Lazy loaded component(s) on this page
+const MainFooter  = React.lazy(() => import('./js/components/Navigation/MainFooter'));
 
 // Root URL pages
 const About = React.lazy(() => import('./js/pages/About'));
@@ -35,15 +39,19 @@ const StyleGuidePage = React.lazy(() => import('./js/pages/StyleGuidePage'));
 const TermsOfService = React.lazy(() => import('./js/pages/TermsOfService'));
 const TwitterSignInProcess = React.lazy(() => import('./js/pages/TwitterSignInProcess'));
 
-// ////////////
-// Test Pages
-const CommentsTestPage = React.lazy(() => import('./js/pages/test/CommentsPage'));
-const DetailsTestPage = React.lazy(() => import('./js/pages/test/DetailsPage'));
-const HomeTestPage = React.lazy(() => import('./js/pages/test/HomeTest'));
-const UpdatesTestPage = React.lazy(() => import('./js/pages/test/UpdatesPage'));
-
 
 class App extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      doShowHeader: true,
+      doShowFooter: true,
+    };
+    this.setShowHeader = this.setShowHeader.bind(this);
+    this.setShowFooter = this.setShowFooter.bind(this);
+    this.setShowHeaderFooter = this.setShowHeaderFooter.bind(this);
+  }
+
   // See https://reactjs.org/docs/error-boundaries.html
   static getDerivedStateFromError (error) { // eslint-disable-line no-unused-vars
     // Update state so the next render will show the fallback UI, We should have a "Oh snap" page
@@ -56,37 +64,54 @@ class App extends Component {
     console.error('App caught error: ', `${error} with info: `, info);
   }
 
+  setShowHeader (doShowHeader) {
+    this.setState({ doShowHeader });
+  }
+
+  setShowFooter (doShowFooter) {
+    this.setState({ doShowFooter });
+  }
+
+  setShowHeaderFooter (doShow) {
+    // console.log('setShowHeaderFooter -------------- doShow:', doShow);
+    this.setState({
+      doShowHeader: doShow,
+      doShowFooter: doShow,
+    });
+  }
+
   render () {
-    renderLog('App');  // Set LOG_RENDER_EVENTS to log all renders
-    // const { location: { pathname } } = window;
-    // const { params } = this.props;
-    // console.log('App render, pathname:', pathname);
+    renderLog('App');
+    const { doShowHeader, doShowFooter } = this.state;
+    // console.log(`App doShowHeader: ${doShowHeader}, doShowFooter:${doShowFooter}`);
+
     return (
       <ErrorBoundary>
         <Suspense fallback={<span>&nbsp;</span>}>
           <MuiThemeProvider theme={muiTheme}>
             <ThemeProvider theme={styledTheme}>
               <WeVoteRouter>
+                <MainHeaderBar displayHeader={doShowHeader} />
                 <Switch>
                   <Route exact path="/about"><About /></Route>
                   <Route exact path="/attributions"><Attributions /></Route>
                   <Route exact path="/c/:campaignSEOFriendlyPath" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/comments" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/updates" render={(props) => <CampaignDetailsPage match={props.match} />} />
-                  <Route exact path="/c/:campaignSEOFriendlyPath/complete-your-support-for-this-campaign" render={(props) => <CompleteYourProfileMobile match={props.match} supportCampaign />} />
-                  <Route exact path="/c/:campaignSEOFriendlyPath/pay-to-promote" render={(props) => <CampaignSupportPayToPromote match={props.match} />} />
-                  <Route exact path="/c/:campaignSEOFriendlyPath/why-do-you-support" render={(props) => <CampaignSupportEndorsement match={props.match} />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/complete-your-support-for-this-campaign" render={(props) => <CompleteYourProfileMobile match={props.match} supportCampaign setShowHeaderFooter={this.setShowHeaderFooter} />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/pay-to-promote" render={(props) => <CampaignSupportPayToPromote match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/why-do-you-support" render={(props) => <CampaignSupportEndorsement match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/credits"><Credits /></Route>
                   <Route exact path="/edit-profile"><SettingsEditProfile /></Route>
                   <Route exact path="/faq"><FAQ /></Route>
                   <Route exact path="/id/:campaignXWeVoteId" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/id/:campaignXWeVoteId/comments" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/id/:campaignXWeVoteId/updates" render={(props) => <CampaignDetailsPage match={props.match} />} />
-                  <Route exact path="/id/:campaignXWeVoteId/complete-your-support-for-this-campaign" render={(props) => <CompleteYourProfileMobile match={props.match} supportCampaign />} />
-                  <Route exact path="/id/:campaignXWeVoteId/pay-to-promote" render={(props) => <CampaignSupportPayToPromote match={props.match} />} />
-                  <Route exact path="/id/:campaignXWeVoteId/why-do-you-support" render={(props) => <CampaignSupportEndorsement match={props.match} />} />
+                  <Route exact path="/id/:campaignXWeVoteId/complete-your-support-for-this-campaign" render={(props) => <CompleteYourProfileMobile match={props.match} supportCampaign setShowHeaderFooter={this.setShowHeaderFooter} />} />
+                  <Route exact path="/id/:campaignXWeVoteId/pay-to-promote" render={(props) => <CampaignSupportPayToPromote match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
+                  <Route exact path="/id/:campaignXWeVoteId/why-do-you-support" render={(props) => <CampaignSupportEndorsement match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/impact"><Impact /></Route>
-                  <Route exact path="/membership"><Membership /></Route>
+                  <Route exact path="/membership"><Membership showFooter={this.setShowFooter} /></Route>
                   <Route exact path="/privacy"><Privacy /></Route>
                   <Route exact path="/profile/started"><SettingsYourCampaigns /></Route>
                   <Route exact path="/profile/supported"><SettingsYourCampaigns /></Route>
@@ -96,19 +121,18 @@ class App extends Component {
                   <Route exact path="/start-a-campaign-why-winning-matters"><CampaignStartAddDescription /></Route>
                   <Route exact path="/start-a-campaign-add-photo"><CampaignStartAddPhoto /></Route>
                   <Route exact path="/start-a-campaign-add-title"><CampaignStartAddTitle /></Route>
-                  <Route exact path="/start-a-campaign-complete-your-profile" render={(props) => <CompleteYourProfileMobile match={props.match} startCampaign />} />
+                  <Route exact path="/start-a-campaign-complete-your-profile" render={(props) => <CompleteYourProfileMobile match={props.match} startCampaign setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/start-a-campaign-edit-all"><CampaignStartEditAll /></Route>
                   <Route exact path="/start-a-campaign-preview"><CampaignStartPreview /></Route>
                   <Route exact path="/styles"><StyleGuidePage /></Route>
                   <Route exact path="/terms"><TermsOfService /></Route>
-                  <Route exact path="/test/comments"><CommentsTestPage /></Route>
-                  <Route exact path="/test/details"><DetailsTestPage /></Route>
-                  <Route exact path="/test/home"><HomeTestPage /></Route>
-                  <Route exact path="/test/updates"><UpdatesTestPage /></Route>
-                  <Route path="/twitter_sign_in"><TwitterSignInProcess /></Route>
+                  <Route path="/twitter_sign_in"><TwitterSignInProcess setShowHeaderFooter={this.setShowHeaderFooter} /></Route>
                   <Route exact path="/"><HomePage /></Route>
                   <Route path="*" component={PageNotFound} />
                 </Switch>
+                <Suspense fallback={<span>&nbsp;</span>}>
+                  <MainFooter displayFooter={doShowFooter} />
+                </Suspense>
               </WeVoteRouter>
             </ThemeProvider>
           </MuiThemeProvider>

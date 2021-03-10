@@ -4,13 +4,10 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import DelayedLoad from '../components/Widgets/DelayedLoad';
 import { renderLog } from '../utils/logging';
 import { historyPush } from '../utils/cordovaUtils';
 
 const HomeCampaignList = React.lazy(() => import('../components/Home/HomeCampaignList'));
-const MainFooter = React.lazy(() => import('../components/Navigation/MainFooter'));
-const MainHeaderBar = React.lazy(() => import('../components/Navigation/MainHeaderBar'));
 
 class HomePage extends Component {
   static getProps () {
@@ -26,11 +23,11 @@ class HomePage extends Component {
     return (
       <div>
         <Helmet title="Home - We Vote Campaigns" />
-        <MainHeaderBarWrapper>
-          <Suspense fallback={<span>&nbsp;</span>}>
-            <MainHeaderBar />
-          </Suspense>
-        </MainHeaderBarWrapper>
+        {/* <MainHeaderBarWrapper> */}
+        {/*  <Suspense fallback={<span>&nbsp;</span>}> */}
+        {/*    <MainHeaderBar /> */}
+        {/*  </Suspense> */}
+        {/* </MainHeaderBarWrapper> */}
         <PageWrapper>
           <IntroductionMessageSection>
             <PageStatement>Helping the best candidates win votes</PageStatement>
@@ -50,11 +47,11 @@ class HomePage extends Component {
             </Suspense>
           </WhatIsHappeningSection>
         </PageWrapper>
-        <DelayedLoad waitBeforeShow={500}>
-          <Suspense fallback={<span>&nbsp;</span>}>
-            <MainFooter />
-          </Suspense>
-        </DelayedLoad>
+        {/* <DelayedLoad waitBeforeShow={500}> */}
+        {/*  <Suspense fallback={<span>&nbsp;</span>}> */}
+        {/*    <MainFooter /> */}
+        {/*  </Suspense> */}
+        {/* </DelayedLoad> */}
       </div>
     );
   }
@@ -79,10 +76,6 @@ const IntroductionMessageSection = styled.div`
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     padding: 1em 0;
   }
-`;
-
-const MainHeaderBarWrapper = styled.div`
-  height: 42px;
 `;
 
 const PageStatement = styled.h1`
