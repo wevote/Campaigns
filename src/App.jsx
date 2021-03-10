@@ -2,6 +2,7 @@ import React, { Component, Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { ThemeProvider } from 'styled-components';
+import DelayedLoad from './js/components/Widgets/DelayedLoad';
 import MainHeaderBar from './js/components/Navigation/MainHeaderBar';
 import muiTheme from './js/components/Widgets/mui-theme';
 import ErrorBoundary from './js/components/Widgets/ErrorBoundary';
@@ -130,9 +131,11 @@ class App extends Component {
                   <Route exact path="/"><HomePage /></Route>
                   <Route path="*" component={PageNotFound} />
                 </Switch>
-                <Suspense fallback={<span>&nbsp;</span>}>
-                  <MainFooter displayFooter={doShowFooter} />
-                </Suspense>
+                <DelayedLoad waitBeforeShow={500}>
+                  <Suspense fallback={<span>&nbsp;</span>}>
+                    <MainFooter displayFooter={doShowFooter} />
+                  </Suspense>
+                </DelayedLoad>
               </WeVoteRouter>
             </ThemeProvider>
           </MuiThemeProvider>

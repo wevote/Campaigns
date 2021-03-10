@@ -20,7 +20,6 @@ class CampaignStartPreview extends Component {
       campaignDescription: '',
       campaignPhotoLargeUrl: '',
       campaignTitle: '',
-      pathToUseWhenProfileComplete: '/profile/started',
       readyToPublish: false,
       voterFirstName: '',
       voterLastName: '',
@@ -80,7 +79,7 @@ class CampaignStartPreview extends Component {
   }
 
   submitPublishNowDesktop = () => {
-    const { pathToUseWhenProfileComplete, voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
+    const { voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
     if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
       // Open complete your profile modal
       AppActions.setShowCompleteYourProfileModal(true);
@@ -88,21 +87,25 @@ class CampaignStartPreview extends Component {
       // Mark the campaign as published
       const campaignWeVoteId = '';
       CampaignStartActions.inDraftModeSave(campaignWeVoteId, false);
-      historyPush(pathToUseWhenProfileComplete);
+      historyPush('/profile/started');
     }
   }
 
   submitPublishNowMobile = () => {
-    const { pathToUseWhenProfileComplete, voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
+    const { voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
     if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
       // Navigate to the mobile complete your profile page
       historyPush('/start-a-campaign-complete-your-profile');
     } else {
-      // Mark the campaign as published
-      const campaignWeVoteId = '';
-      CampaignStartActions.inDraftModeSave(campaignWeVoteId, false);
-      historyPush(pathToUseWhenProfileComplete);
+      this.functionToUseWhenProfileComplete();
     }
+  }
+
+  functionToUseWhenProfileComplete = () => {
+    // Mark the campaign as published
+    const campaignWeVoteId = '';
+    CampaignStartActions.inDraftModeSave(campaignWeVoteId, false);
+    historyPush('/profile/started');
   }
 
   render () {
@@ -112,8 +115,7 @@ class CampaignStartPreview extends Component {
     }
     const { classes } = this.props;
     const {
-      campaignDescription, campaignPhotoLargeUrl, campaignTitle,
-      pathToUseWhenProfileComplete, readyToPublish,
+      campaignDescription, campaignPhotoLargeUrl, campaignTitle, readyToPublish,
     } = this.state;
     return (
       <div>
@@ -186,7 +188,7 @@ class CampaignStartPreview extends Component {
           </OuterWrapper>
         </PageWrapper>
         <CompleteYourProfileModalController
-          pathToUseWhenProfileComplete={pathToUseWhenProfileComplete}
+          functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
           startCampaign
         />
       </div>

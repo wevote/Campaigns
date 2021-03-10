@@ -4,10 +4,13 @@ import Dispatcher from '../components/Dispatcher/Dispatcher';
 class CampaignSupportStore extends ReduceStore {
   getInitialState () {
     return {
-      supportEndorsement: '',
-      supportEndorsementQueuedToSave: '',
-      supportEndorsementQueuedToSaveSet: false,
       campaignXWeVoteId: '',
+      supporterEndorsement: '',
+      supporterEndorsementQueuedToSave: '',
+      supporterEndorsementQueuedToSaveSet: false,
+      visibleToPublic: true, // Default setting
+      visibleToPublicQueuedToSave: true, // Default setting
+      visibleToPublicQueuedToSaveSet: false,
       voterSignedInWithEmail: false,
     };
   }
@@ -16,24 +19,36 @@ class CampaignSupportStore extends ReduceStore {
     return this.getInitialState();
   }
 
-  supportEndorsementExists () {
-    if (this.getState().supportEndorsement) {
-      return Boolean(this.getState().supportEndorsement.length > 10);
+  supporterEndorsementExists () {
+    if (this.getState().supporterEndorsement) {
+      return Boolean(this.getState().supporterEndorsement.length > 10);
     } else {
       return false;
     }
   }
 
-  getSupportEndorsement () {
-    return this.getState().supportEndorsement || '';
+  getSupporterEndorsement () {
+    return this.getState().supporterEndorsement || '';
   }
 
-  getSupportEndorsementQueuedToSave () {
-    return this.getState().supportEndorsementQueuedToSave;
+  getSupporterEndorsementQueuedToSave () {
+    return this.getState().supporterEndorsementQueuedToSave;
   }
 
-  getSupportEndorsementQueuedToSaveSet () {
-    return this.getState().supportEndorsementQueuedToSaveSet;
+  getSupporterEndorsementQueuedToSaveSet () {
+    return this.getState().supporterEndorsementQueuedToSaveSet;
+  }
+
+  getVisibleToPublic () {
+    return Boolean(this.getState().visibleToPublic);
+  }
+
+  getVisibleToPublicQueuedToSave () {
+    return Boolean(this.getState().visibleToPublicQueuedToSave);
+  }
+
+  getVisibleToPublicQueuedToSaveSet () {
+    return this.getState().visibleToPublicQueuedToSaveSet;
   }
 
   getVoterSignedInWithEmail () {
@@ -42,29 +57,46 @@ class CampaignSupportStore extends ReduceStore {
 
   reduce (state, action) {
     switch (action.type) {
-      case 'supportEndorsementQueuedToSave':
-        // console.log('CampaignSupportStore supportEndorsementQueuedToSave: ', action.payload);
+      case 'supporterEndorsementQueuedToSave':
+        // console.log('CampaignSupportStore supporterEndorsementQueuedToSave: ', action.payload);
         if (action.payload === undefined) {
           return {
             ...state,
-            supportEndorsementQueuedToSave: '',
-            supportEndorsementQueuedToSaveSet: false,
+            supporterEndorsementQueuedToSave: '',
+            supporterEndorsementQueuedToSaveSet: false,
           };
         } else {
           return {
             ...state,
-            supportEndorsementQueuedToSave: action.payload,
-            supportEndorsementQueuedToSaveSet: true,
+            supporterEndorsementQueuedToSave: action.payload,
+            supporterEndorsementQueuedToSaveSet: true,
           };
         }
 
-      case 'campaignSupportSave':
-        // console.log('CampaignSupportStore campaignSupportSave');
+      case 'visibleToPublicQueuedToSave':
+        // console.log('CampaignSupportStore visibleToPublicQueuedToSave: ', action.payload);
+        if (action.payload === undefined) {
+          return {
+            ...state,
+            visibleToPublicQueuedToSave: true,
+            visibleToPublicQueuedToSaveSet: false,
+          };
+        } else {
+          return {
+            ...state,
+            visibleToPublicQueuedToSave: Boolean(action.payload),
+            visibleToPublicQueuedToSaveSet: true,
+          };
+        }
+
+      case 'campaignSupporterSave':
+        // console.log('CampaignSupportStore campaignSupporterSave');
         return {
           ...state,
-          supportEndorsement: action.res.support_endorsement,
+          supporterEndorsement: action.res.support_endorsement,
           campaignXWeVoteId: action.res.campaignx_we_vote_id,
-          voterSignedInWithEmail: action.res.voter_signed_in_with_email,
+          visibleToPublic: Boolean(action.res.visible_to_public),
+          voterSignedInWithEmail: Boolean(action.res.voter_signed_in_with_email),
         };
 
       default:

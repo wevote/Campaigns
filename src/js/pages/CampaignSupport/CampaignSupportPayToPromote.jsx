@@ -81,35 +81,35 @@ class CampaignSupportPayToPromote extends Component {
   goToNextStep = () => {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
     const payToPromoteStepTurnedOn = true;
-    let pathToUseWhenProfileComplete = '';
+    let pathForNextStep = '';
     if (payToPromoteStepTurnedOn) {
       if (campaignSEOFriendlyPath) {
-        pathToUseWhenProfileComplete = `/c/${campaignSEOFriendlyPath}/pay-to-promote`;
+        pathForNextStep = `/c/${campaignSEOFriendlyPath}/pay-to-promote`;
       } else {
-        pathToUseWhenProfileComplete = `/id/${campaignXWeVoteId}/pay-to-promote`;
+        pathForNextStep = `/id/${campaignXWeVoteId}/pay-to-promote`;
       }
     } else if (campaignSEOFriendlyPath) {
-      pathToUseWhenProfileComplete = `/c/${campaignSEOFriendlyPath}/sharing-options`;
+      pathForNextStep = `/c/${campaignSEOFriendlyPath}/sharing-options`;
     } else {
-      pathToUseWhenProfileComplete = `/id/${campaignXWeVoteId}/sharing-options`;
+      pathForNextStep = `/id/${campaignXWeVoteId}/sharing-options`;
     }
 
-    historyPush(pathToUseWhenProfileComplete);
+    historyPush(pathForNextStep);
   }
 
   submitSkipForNow = () => {
     this.goToNextStep();
   }
 
-  submitSupportEndorsement = () => {
+  submitSupporterEndorsement = () => {
     const { campaignXWeVoteId } = this.state;
-    const supportEndorsementQueuedToSave = CampaignSupportStore.getSupportEndorsementQueuedToSave();
-    const supportEndorsementQueuedToSaveSet = CampaignSupportStore.getSupportEndorsementQueuedToSaveSet();
-    if (supportEndorsementQueuedToSaveSet && campaignXWeVoteId) {
-      // console.log('CampaignSupportPayToPromote, supportEndorsementQueuedToSave:', supportEndorsementQueuedToSave);
+    const supporterEndorsementQueuedToSave = CampaignSupportStore.getSupporterEndorsementQueuedToSave();
+    const supporterEndorsementQueuedToSaveSet = CampaignSupportStore.getSupporterEndorsementQueuedToSaveSet();
+    if (supporterEndorsementQueuedToSaveSet && campaignXWeVoteId) {
+      // console.log('CampaignSupportPayToPromote, supporterEndorsementQueuedToSave:', supporterEndorsementQueuedToSave);
       initializejQuery(() => {
-        CampaignSupportActions.supportEndorsementSave(campaignXWeVoteId, supportEndorsementQueuedToSave);
-        CampaignSupportActions.supportEndorsementQueuedToSave(undefined);
+        CampaignSupportActions.supporterEndorsementSave(campaignXWeVoteId, supporterEndorsementQueuedToSave);
+        CampaignSupportActions.supporterEndorsementQueuedToSave(undefined);
       });
     }
     this.goToNextStep();
@@ -143,8 +143,8 @@ class CampaignSupportPayToPromote extends Component {
                       <Button
                         classes={{ root: classes.buttonDesktop }}
                         color="primary"
-                        id="saveSupportEndorsement"
-                        onClick={this.submitSupportEndorsement}
+                        id="submitPayToPromoteDesktop"
+                        onClick={this.submitSupporterEndorsement}
                         variant="contained"
                       >
                         Yes, I&apos;ll chip in $3 to boost this campaign
@@ -156,7 +156,7 @@ class CampaignSupportPayToPromote extends Component {
                       <Button
                         classes={{ root: classes.buttonDefault }}
                         color="primary"
-                        id="saveSupportEndorsementMobile"
+                        id="submitPayToPromoteMobile"
                         onClick={this.submitCampaignDescription}
                         variant="contained"
                       >
@@ -169,7 +169,7 @@ class CampaignSupportPayToPromote extends Component {
                       <Button
                         classes={{ root: classes.buttonDesktop }}
                         color="primary"
-                        id="saveSupportEndorsement"
+                        id="shareInsteadOfPayToPromoteDesktop"
                         onClick={this.submitSkipForNow}
                         variant="outlined"
                       >
@@ -182,7 +182,7 @@ class CampaignSupportPayToPromote extends Component {
                       <Button
                         classes={{ root: classes.buttonDefault }}
                         color="primary"
-                        id="saveSupportEndorsementMobile"
+                        id="shareInsteadOfPayToPromoteMobile"
                         onClick={this.submitSkipForNow}
                         variant="outlined"
                       >
@@ -195,7 +195,7 @@ class CampaignSupportPayToPromote extends Component {
                       <Button
                         classes={{ root: classes.buttonSimpleLink }}
                         color="primary"
-                        id="saveSupportEndorsementMobile"
+                        id="skipPayToPromote"
                         onClick={this.submitSkipForNow}
                       >
                         Sorry, I can&apos;t do anything right now

@@ -1,16 +1,23 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import CampaignTopNavigation from '../components/Navigation/CampaignTopNavigation';
 import CampaignStore from '../stores/CampaignStore';
+import CampaignSupportActions from '../actions/CampaignSupportActions';
+import CampaignSupportStore from '../stores/CampaignSupportStore';
 import CompleteYourProfileModalController from '../components/Settings/CompleteYourProfileModalController';
-import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../utils/campaignUtils';
-import { isCordova } from '../utils/cordovaUtils';
+import DelayedLoad from '../components/Widgets/DelayedLoad';
+import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
+import { historyPush, isCordova } from '../utils/cordovaUtils';
+import initializejQuery from '../utils/initializejQuery';
 import { renderLog } from '../utils/logging';
-import SupportButton from '../components/CampaignSupport/SupportButton';
 import SupportButtonFooter from '../components/CampaignSupport/SupportButtonFooter';
+
+const CampaignSupportThermometer = React.lazy(() => import('../components/CampaignSupport/CampaignSupportThermometer'));
+const CompleteYourProfileOnCampaignDetails = React.lazy(() => import('../components/CampaignSupport/CompleteYourProfileOnCampaignDetails'));
+const FirstCampaignController = React.lazy(() => import('../components/Campaign/FirstCampaignController'));
 
 
 class CampaignDetailsPage extends Component {
@@ -28,11 +35,11 @@ class CampaignDetailsPage extends Component {
   componentDidMount () {
     // console.log('CampaignDetailsPage componentDidMount');
     this.onCampaignStoreChange();
-    this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
-    retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
+    this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
+    // retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
     let pathToUseWhenProfileComplete = '';
     if (campaignSEOFriendlyPath) {
       pathToUseWhenProfileComplete = `/c/${campaignSEOFriendlyPath}/why-do-you-support`;
@@ -40,12 +47,18 @@ class CampaignDetailsPage extends Component {
       pathToUseWhenProfileComplete = `/id/${campaignXWeVoteId}/why-do-you-support`;
     }
     this.setState({
+      campaignSEOFriendlyPath,
+      campaignXWeVoteId,
       pathToUseWhenProfileComplete,
     });
   }
 
   componentWillUnmount () {
     this.campaignStoreListener.remove();
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
   }
 
   onCampaignStoreChange () {
@@ -75,6 +88,30 @@ class CampaignDetailsPage extends Component {
     });
   }
 
+  goToNextPage = () => {
+    const { pathToUseWhenProfileComplete } = this.state;
+    this.timer = setTimeout(() => {
+      historyPush(pathToUseWhenProfileComplete);
+    }, 500);
+  }
+
+  functionToUseWhenProfileComplete = () => {
+    const { campaignXWeVoteId } = this.state;
+    const campaignSupported = true;
+    const campaignSupportedChanged = true;
+    // From this page we always send value for 'visibleToPublic'
+    const visibleToPublicChanged = CampaignSupportStore.getVisibleToPublicQueuedToSaveSet();
+    let visibleToPublic = CampaignSupportStore.getVisibleToPublic();
+    if (visibleToPublicChanged) {
+      // If it has changed, use new value
+      visibleToPublic = CampaignSupportStore.getVisibleToPublicQueuedToSave();
+    }
+    console.log('functionToUseWhenProfileComplete, visibleToPublic:', visibleToPublic, ', visibleToPublicChanged:', visibleToPublicChanged);
+    initializejQuery(() => {
+      CampaignSupportActions.supportCampaignSave(campaignXWeVoteId, campaignSupported, campaignSupportedChanged, visibleToPublic, visibleToPublicChanged);
+    }, this.goToNextPage());
+  }
+
   render () {
     renderLog('CampaignDetailsPage');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
@@ -83,28 +120,36 @@ class CampaignDetailsPage extends Component {
     // const { classes } = this.props;
     const {
       campaignDescription, campaignPhoto, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId,
-      pathToUseWhenProfileComplete,
     } = this.state;
-    if (!campaignTitle) {
-      return null;
-    }
     // console.log('render campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
+    const htmlTitle = `${campaignTitle} - We Vote Campaigns`;
     return (
       <div>
-        <Helmet title="Campaign Home - We Vote Campaigns" />
-        {/* <MainHeaderBarWrapper> */}
-        {/*  <Suspense fallback={<span>&nbsp;</span>}> */}
-        {/*    <MainHeaderBar /> */}
-        {/*  </Suspense> */}
-        {/* </MainHeaderBarWrapper> */}
+        <Suspense fallback={<span>&nbsp;</span>}>
+          <FirstCampaignController campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
+        </Suspense>
+        <Helmet title={htmlTitle} />
         <PageWrapper cordova={isCordova()}>
           <CampaignTopNavigation campaignSEOFriendlyPath={campaignSEOFriendlyPath} />
           <DetailsSectionMobile className="u-show-mobile">
             <CampaignImageWrapper>
-              <CampaignImage src={campaignPhoto} alt="Campaign" />
+              {campaignPhoto ? (
+                <CampaignImage src={campaignPhoto} alt="Campaign" />
+              ) : (
+                <DelayedLoad waitBeforeShow={1000}>
+                  <CampaignImagePlaceholder>
+                    <CampaignImagePlaceholderText>
+                      No image provided
+                    </CampaignImagePlaceholderText>
+                  </CampaignImagePlaceholder>
+                </DelayedLoad>
+              )}
             </CampaignImageWrapper>
             <CampaignTitleAndScoreBar>
               <CampaignTitleMobile>{campaignTitle}</CampaignTitleMobile>
+              <Suspense fallback={<span>&nbsp;</span>}>
+                <CampaignSupportThermometer />
+              </Suspense>
             </CampaignTitleAndScoreBar>
             <CampaignDescriptionWrapper>
               <CampaignDescription>
@@ -116,7 +161,19 @@ class CampaignDetailsPage extends Component {
             <CampaignTitleDesktop>{campaignTitle}</CampaignTitleDesktop>
             <ColumnsWrapper>
               <ColumnTwoThirds>
-                <CampaignImageDesktop src={campaignPhoto} alt="Campaign" />
+                <CampaignImageDesktopWrapper>
+                  {campaignPhoto ? (
+                    <CampaignImageDesktop src={campaignPhoto} alt="Campaign" />
+                  ) : (
+                    <DelayedLoad waitBeforeShow={1000}>
+                      <CampaignImagePlaceholder>
+                        <CampaignImagePlaceholderText>
+                          No image provided
+                        </CampaignImagePlaceholderText>
+                      </CampaignImagePlaceholder>
+                    </DelayedLoad>
+                  )}
+                </CampaignImageDesktopWrapper>
                 <CampaignDescriptionDesktopWrapper>
                   <CampaignDescriptionDesktop>
                     {campaignDescription}
@@ -124,8 +181,16 @@ class CampaignDetailsPage extends Component {
                 </CampaignDescriptionDesktopWrapper>
               </ColumnTwoThirds>
               <ColumnOneThird>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                <SupportButton pathToUseWhenProfileComplete={pathToUseWhenProfileComplete} />
+                <Suspense fallback={<span>&nbsp;</span>}>
+                  <CampaignSupportThermometer />
+                </Suspense>
+                <Suspense fallback={<span>&nbsp;</span>}>
+                  <CompleteYourProfileOnCampaignDetails
+                    campaignSEOFriendlyPath={campaignSEOFriendlyPath}
+                    campaignXWeVoteId={campaignXWeVoteId}
+                    functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
+                  />
+                </Suspense>
               </ColumnOneThird>
             </ColumnsWrapper>
           </DetailsSectionDesktopTablet>
@@ -134,16 +199,11 @@ class CampaignDetailsPage extends Component {
           <SupportButtonFooter
             campaignSEOFriendlyPath={campaignSEOFriendlyPath}
             campaignXWeVoteId={campaignXWeVoteId}
-            pathToUseWhenProfileComplete={pathToUseWhenProfileComplete}
+            functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
           />
         </SupportButtonFooterWrapper>
-        {/* <DelayedLoad waitBeforeShow={500}> */}
-        {/*  <Suspense fallback={<span>&nbsp;</span>}> */}
-        {/*    <MainFooter /> */}
-        {/*  </Suspense> */}
-        {/* </DelayedLoad> */}
         <CompleteYourProfileModalController
-          pathToUseWhenProfileComplete={pathToUseWhenProfileComplete}
+          functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
           supportCampaign
         />
       </div>
@@ -164,11 +224,13 @@ const styles = () => ({
 const CampaignDescription = styled.div`
   font-size: 15px;
   text-align: left;
+  white-space: pre-wrap;
 `;
 
 const CampaignDescriptionDesktop = styled.div`
   font-size: 15px;
   text-align: left;
+  white-space: pre-wrap;
 `;
 
 const CampaignDescriptionWrapper = styled.div`
@@ -176,13 +238,46 @@ const CampaignDescriptionWrapper = styled.div`
 `;
 
 const CampaignDescriptionDesktopWrapper = styled.div`
-  margin: 10px 0;
+  margin-bottom: 10px;
+  margin-top: 2px;
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
   }
 `;
 
+const CampaignImagePlaceholder = styled.div`
+  background-color: #eee;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 170px;
+  @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
+    min-height: 235px;
+  }
+  @media (min-width: ${({ theme }) => theme.breakpoints.lg}) {
+    min-height: 300px;
+  }
+`;
+
+const CampaignImagePlaceholderText = styled.div`
+  color: #ccc;
+`;
+
+const CampaignImageDesktopWrapper = styled.div`
+  margin-bottom: 10px;
+  min-height: 170px;
+  @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
+    min-height: 235px;
+  }
+  @media (min-width: ${({ theme }) => theme.breakpoints.lg}) {
+    min-height: 300px;
+  }
+`;
+
 const CampaignImageWrapper = styled.div`
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  min-height: 173px;
+  @media (max-width: ${({ theme }) => theme.breakpoints.xs}) {
+    min-height: 152px;
   }
 `;
 
@@ -205,21 +300,23 @@ const CampaignTitleDesktop = styled.h1`
   font-size: 28px;
   text-align: center;
   margin: 30px 20px 40px 20px;
+  min-height: 29px;
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     font-size: 24px;
   }
 `;
 
 const CampaignTitleMobile = styled.h1`
-  font-size: 18px;
+  font-size: 22px;
   text-align: left;
   margin: 0;
+  margin-bottom: 10px;
 `;
 
 const ColumnOneThird = styled.div`
   flex: 1;
   flex-direction: column;
-  flex-basis: 33%;
+  flex-basis: 40%;
   margin: 0 0 0 25px;
 `;
 
@@ -234,7 +331,7 @@ const ColumnsWrapper = styled.div`
 const ColumnTwoThirds = styled.div`
   flex: 2;
   flex-direction: column;
-  flex-basis: 66%;
+  flex-basis: 60%;
 `;
 
 const DetailsSectionDesktopTablet = styled.div`
@@ -246,11 +343,6 @@ const DetailsSectionMobile = styled.div`
   display: flex;
   flex-flow: column;
 `;
-
-// const MainHeaderBarWrapper = styled.div`
-//   border-bottom: 1px solid #ddd;
-//   height: 42px;
-// `;
 
 const PageWrapper = styled.div`
   margin: 0 auto;

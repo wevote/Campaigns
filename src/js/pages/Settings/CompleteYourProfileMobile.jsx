@@ -63,10 +63,14 @@ class CompleteYourProfileMobile extends Component {
     }
   };
 
+  functionToUseWhenProfileComplete = () => {
+    const { pathToUseWhenProfileComplete } = this.state;
+    historyPush(pathToUseWhenProfileComplete);
+  }
+
   render () {
     renderLog('CompleteYourProfileMobile');  // Set LOG_RENDER_EVENTS to log all renders
     const { becomeMember, classes, startCampaign, supportCampaign } = this.props;
-    const { pathToUseWhenProfileComplete } = this.state;
     let completeProfileTitle = <span>&nbsp;</span>;
     let htmlPageTitle = 'Complete Your Profile - We Vote Campaigns';
     if (becomeMember) {
@@ -98,7 +102,7 @@ class CompleteYourProfileMobile extends Component {
               </ContentTitle>
               <CompleteYourProfile
                 becomeMember={becomeMember}
-                pathToUseWhenProfileComplete={pathToUseWhenProfileComplete}
+                functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
                 startCampaign={startCampaign}
                 supportCampaign={supportCampaign}
               />

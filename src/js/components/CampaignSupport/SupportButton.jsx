@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AppActions from '../../actions/AppActions';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import { isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 import VoterStore from '../../stores/VoterStore';
 
@@ -40,14 +40,13 @@ class SupportButton extends Component {
   }
 
   submitSupportButtonDesktop = () => {
-    const { pathToUseWhenProfileComplete } = this.props;
     const { voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
     if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
       // Open complete your profile modal
       AppActions.setShowCompleteYourProfileModal(true);
     } else {
-      // TODO: Mark that voter supports this campaign
-      historyPush(pathToUseWhenProfileComplete);
+      // Mark that voter supports this campaign
+      this.props.functionToUseWhenProfileComplete();
     }
   }
 
@@ -72,7 +71,7 @@ class SupportButton extends Component {
               onClick={this.submitSupportButtonDesktop}
               variant="contained"
             >
-              Support this campaign
+              I support this campaign
             </Button>
           </ButtonPanel>
         </Wrapper>
@@ -82,7 +81,7 @@ class SupportButton extends Component {
 }
 SupportButton.propTypes = {
   classes: PropTypes.object,
-  pathToUseWhenProfileComplete: PropTypes.string.isRequired,
+  functionToUseWhenProfileComplete: PropTypes.func.isRequired, // pathToUseWhenProfileComplete
 };
 
 const styles = (theme) => ({

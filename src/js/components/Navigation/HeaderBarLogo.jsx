@@ -36,17 +36,11 @@ HeaderBarLogo.propTypes = {
 };
 
 const HeaderBarWrapper = styled.div`
-  height: 30px;
-  @media print{
-  }
+  height: 42px;
 `;
 
 const WeVoteLogoWrapper = styled.div`
-  margin-top: -6px;
-  margin-bottom: -6px;
-  height: 33px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-  }
+  height: 42px;
 `;
 
 export default HeaderBarLogo;

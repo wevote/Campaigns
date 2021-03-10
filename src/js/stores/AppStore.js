@@ -13,6 +13,7 @@ class AppStore extends ReduceStore {
   getInitialState () {
     return {
       activityTidbitWeVoteIdForDrawer: '',
+      campaignFirstRetrieveInitiated: false,
       campaignListFirstRetrieveInitiated: false,
       chosenPreventSharingOpinions: false,
       chosenReadyIntroductionText: '',
@@ -54,6 +55,10 @@ class AppStore extends ReduceStore {
 
   activityTidbitWeVoteIdForDrawer () {
     return this.getState().activityTidbitWeVoteIdForDrawer;
+  }
+
+  campaignFirstRetrieveInitiated () {
+    return this.getState().campaignFirstRetrieveInitiated;
   }
 
   campaignListFirstRetrieveInitiated () {
@@ -277,6 +282,8 @@ class AppStore extends ReduceStore {
           activityTidbitWeVoteIdForDrawer: action.payload,
           showActivityTidbitDrawer: true,
         };
+      case 'campaignFirstRetrieveInitiated':
+        return { ...state, campaignFirstRetrieveInitiated: action.payload };
       case 'campaignListFirstRetrieveInitiated':
         return { ...state, campaignListFirstRetrieveInitiated: action.payload };
       case 'getStartedMode':
