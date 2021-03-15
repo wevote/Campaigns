@@ -1,6 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
+import CampaignStore from '../../stores/CampaignStore';
 import { renderLog } from '../../utils/logging';
 import { numberWithCommas } from '../../utils/textFormat';
 
@@ -9,13 +11,12 @@ class CampaignSupportThermometer extends React.Component {
     super(props);
     this.state = {
       numberOfSupportersGoal: 10000,
-      supportersCount: 7237,
-      shareNameAndEmail: false,
+      supportersCount: 0,
     };
-    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount () {
+    this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     if (this.timeInterval) {
       clearInterval(this.timeInterval);
       this.timeInterval = null;
@@ -24,15 +25,27 @@ class CampaignSupportThermometer extends React.Component {
   }
 
   componentWillUnmount () {
+    this.campaignStoreListener.remove();
     if (this.timeInterval) {
       clearInterval(this.timeInterval);
       this.timeInterval = null;
     }
   }
 
-  handleChange () {
-    const { shareNameAndEmail } = this.state;
-    this.setState({ shareNameAndEmail: !shareNameAndEmail });
+  onCampaignStoreChange () {
+    const { campaignXWeVoteId } = this.props;
+    if (campaignXWeVoteId) {
+      const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
+      const {
+        supporters_count: supportersCount,
+        campaignx_we_vote_id: campaignXWeVoteIdFromDict,
+      } = campaignX;
+      if (campaignXWeVoteIdFromDict) {
+        this.setState({
+          supportersCount,
+        });
+      }
+    }
   }
 
   render () {
@@ -45,7 +58,7 @@ class CampaignSupportThermometer extends React.Component {
           <SupportersText>
             {numberWithCommas(supportersCount)}
             {' '}
-            have supported.
+            {supportersCount === 1 ? 'supporter.' : 'have supported.'}
           </SupportersText>
           {' '}
           <GoalText>
@@ -65,6 +78,9 @@ class CampaignSupportThermometer extends React.Component {
     );
   }
 }
+CampaignSupportThermometer.propTypes = {
+  campaignXWeVoteId: PropTypes.string,
+};
 
 const styles = () => ({
   label: {

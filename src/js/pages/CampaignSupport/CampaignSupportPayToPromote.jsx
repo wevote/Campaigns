@@ -23,6 +23,7 @@ import initializejQuery from '../../utils/initializejQuery';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
 
+const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
 const VoterFirstRetrieveController = loadable(() => import('../../components/Settings/VoterFirstRetrieveController'));
 
 
@@ -35,18 +36,43 @@ class CampaignSupportPayToPromote extends Component {
 
   componentDidMount () {
     // console.log('CampaignSupportPayToPromote componentDidMount');
-    this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    const { match: { params }, setShowHeaderFooter } = this.props;
-    const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
-    // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
+    const { match: { params } } = this.props;
+    const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
+    // console.log('componentDidMount campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
+    const {
+      campaignPhoto,
+      campaignSEOFriendlyPath,
+      campaignXWeVoteId,
+    } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
+    this.setState({
+      campaignPhoto,
+    });
+    if (campaignSEOFriendlyPath) {
+      this.setState({
+        campaignSEOFriendlyPath,
+      });
+    } else if (campaignSEOFriendlyPathFromParams) {
+      this.setState({
+        campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams,
+      });
+    }
+    if (campaignXWeVoteId) {
+      this.setState({
+        campaignXWeVoteId,
+      });
+    } else if (campaignXWeVoteIdFromParams) {
+      this.setState({
+        campaignXWeVoteId: campaignXWeVoteIdFromParams,
+      });
+    }
+    // Take the "calculated" identifiers and retrieve if missing
     retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
-    setShowHeaderFooter(false);
+    this.props.setShowHeaderFooter(false);
   }
 
   componentWillUnmount () {
-    const { setShowHeaderFooter } = this.props;
-    setShowHeaderFooter(true);
+    this.props.setShowHeaderFooter(true);
     this.campaignStoreListener.remove();
   }
 
@@ -61,9 +87,25 @@ class CampaignSupportPayToPromote extends Component {
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     this.setState({
       campaignPhoto,
-      campaignSEOFriendlyPath,
-      campaignXWeVoteId,
     });
+    if (campaignSEOFriendlyPath) {
+      this.setState({
+        campaignSEOFriendlyPath,
+      });
+    } else if (campaignSEOFriendlyPathFromParams) {
+      this.setState({
+        campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams,
+      });
+    }
+    if (campaignXWeVoteId) {
+      this.setState({
+        campaignXWeVoteId,
+      });
+    } else if (campaignXWeVoteIdFromParams) {
+      this.setState({
+        campaignXWeVoteId: campaignXWeVoteIdFromParams,
+      });
+    }
   }
 
   getCampaignBasePath = () => {
@@ -78,22 +120,13 @@ class CampaignSupportPayToPromote extends Component {
     return campaignBasePath;
   }
 
-  goToNextStep = () => {
-    const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
-    const payToPromoteStepTurnedOn = true;
-    let pathForNextStep = '';
-    if (payToPromoteStepTurnedOn) {
-      if (campaignSEOFriendlyPath) {
-        pathForNextStep = `/c/${campaignSEOFriendlyPath}/pay-to-promote`;
-      } else {
-        pathForNextStep = `/id/${campaignXWeVoteId}/pay-to-promote`;
-      }
-    } else if (campaignSEOFriendlyPath) {
-      pathForNextStep = `/c/${campaignSEOFriendlyPath}/sharing-options`;
-    } else {
-      pathForNextStep = `/id/${campaignXWeVoteId}/sharing-options`;
-    }
+  goToIWillShare = () => {
+    const pathForNextStep = `${this.getCampaignBasePath()}/i-will-share-campaign`;
+    historyPush(pathForNextStep);
+  }
 
+  goToNextStep = () => {
+    const pathForNextStep = `${this.getCampaignBasePath()}/share-campaign`;
     historyPush(pathForNextStep);
   }
 
@@ -121,15 +154,24 @@ class CampaignSupportPayToPromote extends Component {
       console.log(`CampaignSupportPayToPromote window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
-    const { campaignPhoto } = this.state;
+    const { campaignPhoto, campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
     return (
       <div>
+        <Suspense fallback={<span>&nbsp;</span>}>
+          <CampaignRetrieveController campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
+        </Suspense>
         <Helmet title="Why Do You Support? - We Vote Campaigns" />
         <PageWrapperDefault cordova={isCordova()}>
           <ContentOuterWrapperDefault>
             <ContentInnerWrapperDefault>
-              <CampaignSupportSteps atPayToPromoteStep campaignBasePath={this.getCampaignBasePath()} />
-              <CampaignImage src={campaignPhoto} alt="Campaign" />
+              <CampaignSupportSteps
+                atPayToPromoteStep
+                campaignBasePath={this.getCampaignBasePath()}
+                campaignXWeVoteId={campaignXWeVoteId}
+              />
+              {campaignPhoto && (
+                <CampaignImage src={campaignPhoto} alt="Campaign" />
+              )}
               <CampaignProcessStepTitle>
                 Can you chip in $3 to get this campaign in front of more people?
               </CampaignProcessStepTitle>
@@ -170,7 +212,7 @@ class CampaignSupportPayToPromote extends Component {
                         classes={{ root: classes.buttonDesktop }}
                         color="primary"
                         id="shareInsteadOfPayToPromoteDesktop"
-                        onClick={this.submitSkipForNow}
+                        onClick={this.goToIWillShare}
                         variant="outlined"
                       >
                         No, I&apos;ll share instead
@@ -183,7 +225,7 @@ class CampaignSupportPayToPromote extends Component {
                         classes={{ root: classes.buttonDefault }}
                         color="primary"
                         id="shareInsteadOfPayToPromoteMobile"
-                        onClick={this.submitSkipForNow}
+                        onClick={this.goToIWillShare}
                         variant="outlined"
                       >
                         No, I&apos;ll share instead

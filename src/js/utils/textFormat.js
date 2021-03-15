@@ -194,7 +194,9 @@ export function mergeTwoObjectLists (obj1, obj2) {
 }
 
 export function numberWithCommas (rawNumber) {
-  if (rawNumber) {
+  if (rawNumber === 0) {
+    return 0;
+  } else if (rawNumber) {
     const parts = rawNumber.toString().split('.');
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     return parts.join('.');

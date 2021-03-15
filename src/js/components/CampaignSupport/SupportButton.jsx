@@ -81,7 +81,7 @@ class SupportButton extends Component {
 }
 SupportButton.propTypes = {
   classes: PropTypes.object,
-  functionToUseWhenProfileComplete: PropTypes.func.isRequired, // pathToUseWhenProfileComplete
+  functionToUseWhenProfileComplete: PropTypes.func.isRequired,
 };
 
 const styles = (theme) => ({

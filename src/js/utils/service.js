@@ -59,8 +59,7 @@ export default function $ajax (options) {
     options.method = 'GET';
   }
   // Switch between master API server and CDN
-  if (options.endpoint === 'campaignRetrieve' ||
-      options.endpoint === 'candidateRetrieve' ||
+  if (options.endpoint === 'candidateRetrieve' ||
       options.endpoint === 'candidatesRetrieve' ||
       options.endpoint === 'defaultPricing' ||
       options.endpoint === 'measureRetrieve' ||

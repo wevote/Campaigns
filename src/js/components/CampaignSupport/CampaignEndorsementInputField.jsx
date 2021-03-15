@@ -20,11 +20,23 @@ class CampaignEndorsementInputField extends Component {
 
   componentDidMount () {
     // console.log('CampaignEndorsementInputField, componentDidMount');
+    this.onCampaignSupportStoreChange();
     this.campaignSupportStoreListener = CampaignSupportStore.addListener(this.onCampaignSupportStoreChange.bind(this));
-    const supporterEndorsement = CampaignSupportStore.getSupporterEndorsement();
-    this.setState({
-      supporterEndorsement,
-    });
+  }
+
+  componentDidUpdate (prevProps) {
+    // console.log('CampaignDetailsActionSideBox componentDidUpdate');
+    const {
+      campaignXWeVoteId: campaignXWeVoteIdPrevious,
+    } = prevProps;
+    const {
+      campaignXWeVoteId,
+    } = this.props;
+    if (campaignXWeVoteId) {
+      if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
+        this.onCampaignSupportStoreChange();
+      }
+    }
   }
 
   componentWillUnmount () {
@@ -36,7 +48,13 @@ class CampaignEndorsementInputField extends Component {
   }
 
   onCampaignSupportStoreChange () {
-    const supporterEndorsement = CampaignSupportStore.getSupporterEndorsement();
+    const { campaignXWeVoteId } = this.props;
+    let supporterEndorsement = '';
+    if (campaignXWeVoteId) {
+      const campaignXSupporter = CampaignSupportStore.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
+      // console.log('campaignXSupporter:', campaignXSupporter);
+      ({ supporter_endorsement: supporterEndorsement } = campaignXSupporter);
+    }
     const supporterEndorsementQueuedToSave = CampaignSupportStore.getSupporterEndorsementQueuedToSave();
     const supporterEndorsementQueuedToSaveSet = CampaignSupportStore.getSupporterEndorsementQueuedToSaveSet();
     let supporterEndorsementAdjusted = supporterEndorsement;
@@ -86,7 +104,7 @@ class CampaignEndorsementInputField extends Component {
                   rows={8}
                   variant="outlined"
                   placeholder={placeholderText}
-                  value={supporterEndorsement}
+                  value={supporterEndorsement || ''}
                   onKeyDown={this.handleKeyPress}
                   onChange={this.updateSupporterEndorsement}
                 />
@@ -99,6 +117,7 @@ class CampaignEndorsementInputField extends Component {
   }
 }
 CampaignEndorsementInputField.propTypes = {
+  campaignXWeVoteId: PropTypes.string,
   classes: PropTypes.object,
   externalUniqueId: PropTypes.string,
 };
@@ -114,7 +133,7 @@ const styles = () => ({
 });
 
 const ColumnFullWidth = styled.div`
-  padding: 8px 12px;
+  padding: 8px 12px 0 12px;
   width: 100%;
 `;
 

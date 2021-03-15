@@ -168,7 +168,10 @@ class CompleteYourProfile extends Component {
 
   render () {
     renderLog('CompleteYourProfile');  // Set LOG_RENDER_EVENTS to log all renders
-    const { becomeMember, classes, startCampaign, supportCampaign, supportCampaignOnCampaignHome } = this.props;
+    const {
+      becomeMember, campaignXWeVoteId, classes,
+      startCampaign, supportCampaign, supportCampaignOnCampaignHome,
+    } = this.props;
 
     const {
       showVerifyModal, voterWeVoteId, voterEmailMissing,
@@ -208,9 +211,11 @@ class CompleteYourProfile extends Component {
             <VoterLastNameInputField voterLastNameMissing={voterLastNameMissing} />
             <VoterEmailInputField voterEmailMissing={voterEmailMissing} />
           </InputFieldsWrapper>
-          <CheckboxWrapper outerMarginsOff={outerMarginsOff}>
-            <VisibleToPublicCheckbox />
-          </CheckboxWrapper>
+          {!!(supportCampaign || supportCampaignOnCampaignHome) && (
+            <CheckboxWrapper outerMarginsOff={outerMarginsOff}>
+              <VisibleToPublicCheckbox campaignXWeVoteId={campaignXWeVoteId} />
+            </CheckboxWrapper>
+          )}
           <ButtonWrapper outerMarginsOff={outerMarginsOff}>
             <Button
               classes={{ root: classes.buttonDesktop }}
@@ -262,9 +267,10 @@ class CompleteYourProfile extends Component {
   }
 }
 CompleteYourProfile.propTypes = {
-  classes: PropTypes.object,
   becomeMember: PropTypes.bool,
-  functionToUseWhenProfileComplete: PropTypes.func.isRequired, // pathToUseWhenProfileComplete
+  campaignXWeVoteId: PropTypes.string,
+  classes: PropTypes.object,
+  functionToUseWhenProfileComplete: PropTypes.func.isRequired,
   startCampaign: PropTypes.bool,
   supportCampaign: PropTypes.bool,
   supportCampaignOnCampaignHome: PropTypes.bool,

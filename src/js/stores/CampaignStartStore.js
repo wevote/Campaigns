@@ -223,6 +223,10 @@ class CampaignStartStore extends ReduceStore {
           };
         }
 
+      case 'voterSignOut':
+        // console.log("resetting Campaign");
+        return this.resetState();
+
       default:
         return state;
     }

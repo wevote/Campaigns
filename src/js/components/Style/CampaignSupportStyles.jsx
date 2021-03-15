@@ -29,6 +29,7 @@ const CampaignSupportSection = styled.div`
 const CampaignSupportSectionWrapper = styled.div`
   display: flex;
   justify-content: center;
+  margin-top: 20px;
   max-width: 620px;
 `;
 

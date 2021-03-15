@@ -36,6 +36,10 @@ class CampaignStore extends ReduceStore {
     return campaignX;
   }
 
+  getCampaignXWeVoteIdFromCampaignSEOFriendlyPath (SEOFriendlyPath) {
+    return this.getState().allCachedCampaignXWeVoteIdsBySEOFriendlyPath[SEOFriendlyPath] || '';
+  }
+
   getCampaignXFromListOfWeVoteIds (listOfCampaignXWeVoteIds) {
     const { allCachedCampaignXDicts } = this.getState();
     // console.log('getCampaignXFromListOfWeVoteIds listOfCampaignXWeVoteIds: ', listOfCampaignXWeVoteIds);
@@ -73,7 +77,6 @@ class CampaignStore extends ReduceStore {
       case 'campaignListRetrieve':
         if (!action.res || !action.res.success) return state;
         revisedState = state;
-
         campaignXList = action.res.campaignx_list || [];
 
         if (action.res.promoted_campaignx_we_vote_ids) {
@@ -133,6 +136,10 @@ class CampaignStore extends ReduceStore {
         revisedState = { ...revisedState, allCachedCampaignXDicts };
         revisedState = { ...revisedState, allCachedCampaignXWeVoteIdsBySEOFriendlyPath };
         return revisedState;
+
+      case 'voterSignOut':
+        // TODO: We will need to call resetVoterSpecificData in this store
+        return state;
 
       default:
         return state;

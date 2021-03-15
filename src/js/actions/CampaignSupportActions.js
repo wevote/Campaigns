@@ -28,13 +28,15 @@ export default {
     Dispatcher.dispatch({ type: 'visibleToPublicQueuedToSave', payload: visibleToPublic });
   },
 
-  supporterEndorsementSave (campaignWeVoteId, supporterEndorsement) {
+  supporterEndorsementSave (campaignWeVoteId, supporterEndorsement, visibleToPublic, visibleToPublicChanged) {
     // console.log('supporterEndorsementSave: ', supporterEndorsement);
     Dispatcher.loadEndpoint('campaignSupporterSave',
       {
+        campaignx_we_vote_id: campaignWeVoteId,
         supporter_endorsement: supporterEndorsement,
         supporter_endorsement_changed: true,
-        campaignx_we_vote_id: campaignWeVoteId,
+        visible_to_public: visibleToPublic,
+        visible_to_public_changed: visibleToPublicChanged,
       });
   },
 };
