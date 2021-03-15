@@ -64,7 +64,7 @@ class CompleteYourProfileModal extends Component {
   render () {
     renderLog('CompleteYourProfileModal');  // Set LOG_RENDER_EVENTS to log all renders
     const {
-      becomeMember, classes, startCampaign, supportCampaign,
+      becomeMember, campaignXWeVoteId, classes, startCampaign, supportCampaign,
     } = this.props;
 
     const { voter } = this.state;
@@ -108,6 +108,7 @@ class CompleteYourProfileModal extends Component {
           <section>
             <CompleteYourProfile
               becomeMember={becomeMember}
+              campaignXWeVoteId={campaignXWeVoteId}
               functionToUseWhenProfileComplete={this.props.functionToUseWhenProfileComplete}
               startCampaign={startCampaign}
               supportCampaign={supportCampaign}
@@ -119,10 +120,11 @@ class CompleteYourProfileModal extends Component {
   }
 }
 CompleteYourProfileModal.propTypes = {
+  campaignXWeVoteId: PropTypes.string,
   classes: PropTypes.object,
   closeFunction: PropTypes.func.isRequired,
   becomeMember: PropTypes.bool,
-  functionToUseWhenProfileComplete: PropTypes.func.isRequired, // pathToUseWhenProfileComplete
+  functionToUseWhenProfileComplete: PropTypes.func.isRequired,
   show: PropTypes.bool,
   startCampaign: PropTypes.bool,
   supportCampaign: PropTypes.bool,

@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import {
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-} from '@material-ui/core';
+import { Checkbox, FormControl, FormControlLabel } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import CampaignSupportActions from '../../actions/CampaignSupportActions';
 import CampaignSupportStore from '../../stores/CampaignSupportStore';
@@ -24,11 +20,23 @@ class VisibleToPublicCheckbox extends Component {
 
   componentDidMount () {
     // console.log('VisibleToPublicCheckbox, componentDidMount');
+    this.onCampaignSupportStoreChange();
     this.campaignSupportStoreListener = CampaignSupportStore.addListener(this.onCampaignSupportStoreChange.bind(this));
-    const visibleToPublic = CampaignSupportStore.getVisibleToPublic();
-    this.setState({
-      visibleToPublic,
-    });
+  }
+
+  componentDidUpdate (prevProps) {
+    // console.log('CampaignDetailsActionSideBox componentDidUpdate');
+    const {
+      campaignXWeVoteId: campaignXWeVoteIdPrevious,
+    } = prevProps;
+    const {
+      campaignXWeVoteId,
+    } = this.props;
+    if (campaignXWeVoteId) {
+      if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
+        this.onCampaignSupportStoreChange();
+      }
+    }
   }
 
   componentWillUnmount () {
@@ -40,17 +48,27 @@ class VisibleToPublicCheckbox extends Component {
   }
 
   onCampaignSupportStoreChange () {
-    const visibleToPublic = CampaignSupportStore.getVisibleToPublic();
+    const { campaignXWeVoteId } = this.props;
+    let visibleToPublicFromDatabase;
+    if (campaignXWeVoteId) {
+      const campaignXSupporter = CampaignSupportStore.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
+      // console.log('campaignXSupporter:', campaignXSupporter);
+      if ('visible_to_public' in campaignXSupporter) {
+        ({ visible_to_public: visibleToPublicFromDatabase } = campaignXSupporter);
+      }
+    }
     const visibleToPublicQueuedToSave = CampaignSupportStore.getVisibleToPublicQueuedToSave();
     const visibleToPublicQueuedToSaveSet = CampaignSupportStore.getVisibleToPublicQueuedToSaveSet();
-    let visibleToPublicAdjusted = visibleToPublic;
+    // console.log('onCampaignSupportStoreChange visibleToPublicFromDatabase: ', visibleToPublicFromDatabase, ', visibleToPublicQueuedToSave: ', visibleToPublicQueuedToSave);
     if (visibleToPublicQueuedToSaveSet) {
-      visibleToPublicAdjusted = visibleToPublicQueuedToSave;
+      this.setState({
+        visibleToPublic: visibleToPublicQueuedToSave,
+      });
+    } else if (visibleToPublicFromDatabase !== undefined) {
+      this.setState({
+        visibleToPublic: visibleToPublicFromDatabase,
+      });
     }
-    // console.log('onCampaignSupportStoreChange visibleToPublic: ', visibleToPublic, ', visibleToPublicQueuedToSave: ', visibleToPublicQueuedToSave, ', visibleToPublicAdjusted:', visibleToPublicAdjusted);
-    this.setState({
-      visibleToPublic: visibleToPublicAdjusted,
-    });
   }
 
   updateVisibleToPublic (event) {
@@ -66,38 +84,41 @@ class VisibleToPublicCheckbox extends Component {
   render () {
     renderLog('VisibleToPublicCheckbox');  // Set LOG_RENDER_EVENTS to log all renders
 
-    const { classes, externalUniqueId } = this.props;
+    const { campaignXWeVoteId, classes, externalUniqueId } = this.props;
     const { visibleToPublic } = this.state;
     return (
       <div className="">
-        <form onSubmit={(e) => { e.preventDefault(); }}>
-          <Wrapper>
-            <ColumnFullWidth>
-              <FormControl classes={{ root: classes.formControl }}>
-                <CheckboxLabel
-                  classes={{ label: classes.checkboxLabel }}
-                  control={(
-                    <Checkbox
-                      checked={visibleToPublic}
-                      classes={{ root: classes.checkboxRoot }}
-                      color="primary"
-                      id={`visibleToPublicCheckbox-${externalUniqueId}`}
-                      name="visibleToPublic"
-                      onChange={this.updateVisibleToPublic}
-                      onKeyDown={this.handleKeyPress}
-                    />
-                  )}
-                  label="Display my name and comment with this campaign"
-                />
-              </FormControl>
-            </ColumnFullWidth>
-          </Wrapper>
-        </form>
+        {!!(campaignXWeVoteId) && (
+          <form onSubmit={(e) => { e.preventDefault(); }}>
+            <Wrapper>
+              <ColumnFullWidth>
+                <FormControl classes={{ root: classes.formControl }}>
+                  <CheckboxLabel
+                    classes={{ label: classes.checkboxLabel }}
+                    control={(
+                      <Checkbox
+                        checked={visibleToPublic}
+                        classes={{ root: classes.checkboxRoot }}
+                        color="primary"
+                        id={`visibleToPublicCheckbox-${externalUniqueId}`}
+                        name="visibleToPublic"
+                        onChange={this.updateVisibleToPublic}
+                        onKeyDown={this.handleKeyPress}
+                      />
+                    )}
+                    label="Display my name and comment with this campaign"
+                  />
+                </FormControl>
+              </ColumnFullWidth>
+            </Wrapper>
+          </form>
+        )}
       </div>
     );
   }
 }
 VisibleToPublicCheckbox.propTypes = {
+  campaignXWeVoteId: PropTypes.string,
   classes: PropTypes.object,
   externalUniqueId: PropTypes.string,
 };
@@ -122,7 +143,7 @@ const CheckboxLabel = styled(FormControlLabel)`
 `;
 
 const ColumnFullWidth = styled.div`
-  padding: 8px 12px 0 12px;
+  padding: 0 12px;
   width: 100%;
 `;
 

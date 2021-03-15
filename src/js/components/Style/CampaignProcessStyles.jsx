@@ -23,7 +23,7 @@ const CampaignProcessStepTitle = styled.div`
   margin: 20px 0 10px 0;
   max-width: 620px;
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    font-size: 24px;
+    font-size: 22px;
   }
 `;
 

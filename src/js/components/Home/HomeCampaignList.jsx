@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import CampaignCardForList from '../Campaign/CampaignCardForList';
 import CampaignStore from '../../stores/CampaignStore';
+import CampaignSupportStore from '../../stores/CampaignSupportStore';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
 import { renderLog } from '../../utils/logging';
 
@@ -21,6 +22,7 @@ class HomeCampaignList extends Component {
 
   componentDidMount () {
     // console.log('HomeCampaignList componentDidMount');
+    this.campaignSupportStoreListener = CampaignSupportStore.addListener(this.onCampaignSupportStoreChange.bind(this));
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     if (this.props.startingNumberOfCampaignsToDisplay && this.props.startingNumberOfCampaignsToDisplay > 0) {
       this.setState({
@@ -34,7 +36,12 @@ class HomeCampaignList extends Component {
   }
 
   componentWillUnmount () {
+    this.campaignSupportStoreListener.remove();
     this.campaignStoreListener.remove();
+  }
+
+  onCampaignSupportStoreChange () {
+    // We need to instantiate CampaignSupportStore before we call campaignListRetrieve so that store gets filled with data
   }
 
   onCampaignStoreChange () {

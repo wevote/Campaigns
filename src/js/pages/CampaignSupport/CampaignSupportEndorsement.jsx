@@ -25,6 +25,8 @@ import initializejQuery from '../../utils/initializejQuery';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
 
+const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
+const VisibleToPublicCheckbox = React.lazy(() => import('../../components/CampaignSupport/VisibleToPublicCheckbox'));
 const VoterFirstRetrieveController = loadable(() => import('../../components/Settings/VoterFirstRetrieveController'));
 
 
@@ -32,6 +34,9 @@ class CampaignSupportEndorsement extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      campaignPhoto: '',
+      campaignSEOFriendlyPath: '',
+      campaignXWeVoteId: '',
     };
   }
 
@@ -40,8 +45,35 @@ class CampaignSupportEndorsement extends Component {
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     const { match: { params } } = this.props;
-    const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
-    // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
+    const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
+    // console.log('componentDidMount campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
+    const {
+      campaignPhoto,
+      campaignSEOFriendlyPath,
+      campaignXWeVoteId,
+    } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
+    this.setState({
+      campaignPhoto,
+    });
+    if (campaignSEOFriendlyPath) {
+      this.setState({
+        campaignSEOFriendlyPath,
+      });
+    } else if (campaignSEOFriendlyPathFromParams) {
+      this.setState({
+        campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams,
+      });
+    }
+    if (campaignXWeVoteId) {
+      this.setState({
+        campaignXWeVoteId,
+      });
+    } else if (campaignXWeVoteIdFromParams) {
+      this.setState({
+        campaignXWeVoteId: campaignXWeVoteIdFromParams,
+      });
+    }
+    // Take the "calculated" identifiers and retrieve if missing
     retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
     this.props.setShowHeaderFooter(false);
   }
@@ -62,9 +94,25 @@ class CampaignSupportEndorsement extends Component {
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     this.setState({
       campaignPhoto,
-      campaignSEOFriendlyPath,
-      campaignXWeVoteId,
     });
+    if (campaignSEOFriendlyPath) {
+      this.setState({
+        campaignSEOFriendlyPath,
+      });
+    } else if (campaignSEOFriendlyPathFromParams) {
+      this.setState({
+        campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams,
+      });
+    }
+    if (campaignXWeVoteId) {
+      this.setState({
+        campaignXWeVoteId,
+      });
+    } else if (campaignXWeVoteIdFromParams) {
+      this.setState({
+        campaignXWeVoteId: campaignXWeVoteIdFromParams,
+      });
+    }
   }
 
   getCampaignBasePath = () => {
@@ -81,32 +129,41 @@ class CampaignSupportEndorsement extends Component {
 
   goToNextStep = () => {
     const payToPromoteStepTurnedOn = true;
-    let pathForNextStep = this.getCampaignBasePath();
     if (payToPromoteStepTurnedOn) {
-      pathForNextStep += '/pay-to-promote';
+      historyPush(`${this.getCampaignBasePath()}/pay-to-promote`);
     } else {
-      pathForNextStep += '/sharing-options';
+      historyPush(`${this.getCampaignBasePath()}/share-campaign`);
     }
-
-    historyPush(pathForNextStep);
   }
 
   submitSkipForNow = () => {
+    initializejQuery(() => {
+      CampaignSupportActions.supporterEndorsementQueuedToSave(undefined);
+    });
     this.goToNextStep();
   }
 
   submitSupporterEndorsement = () => {
     const { campaignXWeVoteId } = this.state;
-    const supporterEndorsementQueuedToSave = CampaignSupportStore.getSupporterEndorsementQueuedToSave();
-    const supporterEndorsementQueuedToSaveSet = CampaignSupportStore.getSupporterEndorsementQueuedToSaveSet();
-    if (supporterEndorsementQueuedToSaveSet && campaignXWeVoteId) {
-      // console.log('CampaignSupportEndorsement, supporterEndorsementQueuedToSave:', supporterEndorsementQueuedToSave);
-      initializejQuery(() => {
-        CampaignSupportActions.supporterEndorsementSave(campaignXWeVoteId, supporterEndorsementQueuedToSave);
-        CampaignSupportActions.supporterEndorsementQueuedToSave(undefined);
-      });
+    if (campaignXWeVoteId) {
+      const supporterEndorsementQueuedToSave = CampaignSupportStore.getSupporterEndorsementQueuedToSave();
+      const supporterEndorsementQueuedToSaveSet = CampaignSupportStore.getSupporterEndorsementQueuedToSaveSet();
+      let visibleToPublic = CampaignSupportStore.getVisibleToPublic();
+      const visibleToPublicChanged = CampaignSupportStore.getVisibleToPublicQueuedToSaveSet();
+      if (visibleToPublicChanged) {
+        // If it has changed, use new value
+        visibleToPublic = CampaignSupportStore.getVisibleToPublicQueuedToSave();
+      }
+      if (supporterEndorsementQueuedToSaveSet || visibleToPublicChanged) {
+        // console.log('CampaignSupportEndorsement, supporterEndorsementQueuedToSave:', supporterEndorsementQueuedToSave);
+        const saveVisibleToPublic = true;
+        initializejQuery(() => {
+          CampaignSupportActions.supporterEndorsementSave(campaignXWeVoteId, supporterEndorsementQueuedToSave, visibleToPublic, saveVisibleToPublic);
+          CampaignSupportActions.supporterEndorsementQueuedToSave(undefined);
+        });
+      }
+      this.goToNextStep();
     }
-    this.goToNextStep();
   }
 
   render () {
@@ -115,15 +172,24 @@ class CampaignSupportEndorsement extends Component {
       console.log(`CampaignSupportEndorsement window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
-    const { campaignPhoto } = this.state;
+    const { campaignPhoto, campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
     return (
       <div>
+        <Suspense fallback={<span>&nbsp;</span>}>
+          <CampaignRetrieveController campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
+        </Suspense>
         <Helmet title="Why Do You Support? - We Vote Campaigns" />
         <PageWrapperDefault cordova={isCordova()}>
           <ContentOuterWrapperDefault>
             <ContentInnerWrapperDefault>
-              <CampaignSupportSteps atStepNumber2 campaignBasePath={this.getCampaignBasePath()} />
-              <CampaignImage src={campaignPhoto} alt="Campaign" />
+              <CampaignSupportSteps
+                atStepNumber2
+                campaignBasePath={this.getCampaignBasePath()}
+                campaignXWeVoteId={campaignXWeVoteId}
+              />
+              {campaignPhoto && (
+                <CampaignImage src={campaignPhoto} alt="Campaign" />
+              )}
               <CampaignProcessStepTitle>
                 Why do you support these candidates?
               </CampaignProcessStepTitle>
@@ -132,7 +198,10 @@ class CampaignSupportEndorsement extends Component {
               </CampaignProcessStepIntroductionText>
               <CampaignSupportSectionWrapper>
                 <CampaignSupportSection>
-                  <CampaignEndorsementInputField />
+                  <CampaignEndorsementInputField campaignXWeVoteId={campaignXWeVoteId} />
+                  <Suspense fallback={<span>&nbsp;</span>}>
+                    <VisibleToPublicCheckbox campaignXWeVoteId={campaignXWeVoteId} />
+                  </Suspense>
                   <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                     <CampaignSupportDesktopButtonPanel>
                       <Button
@@ -152,7 +221,7 @@ class CampaignSupportEndorsement extends Component {
                         classes={{ root: classes.buttonDefault }}
                         color="primary"
                         id="saveSupporterEndorsementMobile"
-                        onClick={this.submitCampaignDescription}
+                        onClick={this.submitSupporterEndorsement}
                         variant="contained"
                       >
                         Save and continue

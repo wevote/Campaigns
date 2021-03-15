@@ -13,11 +13,11 @@ import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
 import initializejQuery from '../utils/initializejQuery';
 import { renderLog } from '../utils/logging';
-import SupportButtonFooter from '../components/CampaignSupport/SupportButtonFooter';
 
 const CampaignSupportThermometer = React.lazy(() => import('../components/CampaignSupport/CampaignSupportThermometer'));
-const CompleteYourProfileOnCampaignDetails = React.lazy(() => import('../components/CampaignSupport/CompleteYourProfileOnCampaignDetails'));
-const FirstCampaignController = React.lazy(() => import('../components/Campaign/FirstCampaignController'));
+const CampaignDetailsActionButtonFooter = React.lazy(() => import('../components/CampaignSupport/CampaignDetailsActionButtonFooter'));
+const CampaignDetailsActionSideBox = React.lazy(() => import('../components/CampaignSupport/CampaignDetailsActionSideBox'));
+const CampaignRetrieveController = React.lazy(() => import('../components/Campaign/CampaignRetrieveController'));
 
 
 class CampaignDetailsPage extends Component {
@@ -29,6 +29,10 @@ class CampaignDetailsPage extends Component {
       campaignTitle: '',
       campaignXWeVoteId: '',
       pathToUseWhenProfileComplete: '',
+      payToPromoteStepCompleted: false,
+      payToPromoteStepTurnedOn: false,
+      sharingStepCompleted: false,
+      step2Completed: false,
     };
   }
 
@@ -39,8 +43,9 @@ class CampaignDetailsPage extends Component {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
+    this.campaignSupportStoreListener = CampaignSupportStore.addListener(this.onCampaignSupportStoreChange.bind(this));
     // retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
-    let pathToUseWhenProfileComplete = '';
+    let pathToUseWhenProfileComplete;
     if (campaignSEOFriendlyPath) {
       pathToUseWhenProfileComplete = `/c/${campaignSEOFriendlyPath}/why-do-you-support`;
     } else {
@@ -55,6 +60,7 @@ class CampaignDetailsPage extends Component {
 
   componentWillUnmount () {
     this.campaignStoreListener.remove();
+    this.campaignSupportStoreListener.remove();
     if (this.timer) {
       clearTimeout(this.timer);
       this.timer = null;
@@ -72,7 +78,7 @@ class CampaignDetailsPage extends Component {
       campaignTitle,
       campaignXWeVoteId,
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
-    let pathToUseWhenProfileComplete = '';
+    let pathToUseWhenProfileComplete;
     if (campaignSEOFriendlyPath) {
       pathToUseWhenProfileComplete = `/c/${campaignSEOFriendlyPath}/why-do-you-support`;
     } else {
@@ -88,6 +94,33 @@ class CampaignDetailsPage extends Component {
     });
   }
 
+  onCampaignSupportStoreChange () {
+    const { campaignXWeVoteId } = this.state;
+    const step2Completed = CampaignSupportStore.supporterEndorsementExists(campaignXWeVoteId);
+    const payToPromoteStepCompleted = false;
+    const payToPromoteStepTurnedOn = true;
+    const sharingStepCompleted = false;
+    // console.log('onCampaignSupportStoreChange sharingStepCompleted: ', sharingStepCompleted, ', step2Completed: ', step2Completed, ', payToPromoteStepCompleted:', payToPromoteStepCompleted);
+    this.setState({
+      sharingStepCompleted,
+      step2Completed,
+      payToPromoteStepCompleted,
+      payToPromoteStepTurnedOn,
+    });
+  }
+
+  getCampaignBasePath = () => {
+    const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
+    let campaignBasePath;
+    if (campaignSEOFriendlyPath) {
+      campaignBasePath = `/c/${campaignSEOFriendlyPath}`;
+    } else {
+      campaignBasePath = `/id/${campaignXWeVoteId}`;
+    }
+
+    return campaignBasePath;
+  }
+
   goToNextPage = () => {
     const { pathToUseWhenProfileComplete } = this.state;
     this.timer = setTimeout(() => {
@@ -95,20 +128,35 @@ class CampaignDetailsPage extends Component {
     }, 500);
   }
 
+  functionToUseToKeepHelping = () => {
+    // console.log('functionToUseToKeepHelping');
+    const { payToPromoteStepCompleted, payToPromoteStepTurnedOn, sharingStepCompleted, step2Completed } = this.state;
+    if (!sharingStepCompleted) {
+      historyPush(`${this.getCampaignBasePath()}/share-campaign`);
+    } else if (payToPromoteStepTurnedOn && !payToPromoteStepCompleted) {
+      historyPush(`${this.getCampaignBasePath()}/pay-to-promote`);
+    } else if (!step2Completed) {
+      historyPush(`${this.getCampaignBasePath()}/why-do-you-support`);
+    } else {
+      historyPush(`${this.getCampaignBasePath()}/share-campaign`);
+    }
+  }
+
   functionToUseWhenProfileComplete = () => {
     const { campaignXWeVoteId } = this.state;
     const campaignSupported = true;
     const campaignSupportedChanged = true;
     // From this page we always send value for 'visibleToPublic'
-    const visibleToPublicChanged = CampaignSupportStore.getVisibleToPublicQueuedToSaveSet();
     let visibleToPublic = CampaignSupportStore.getVisibleToPublic();
+    const visibleToPublicChanged = CampaignSupportStore.getVisibleToPublicQueuedToSaveSet();
     if (visibleToPublicChanged) {
       // If it has changed, use new value
       visibleToPublic = CampaignSupportStore.getVisibleToPublicQueuedToSave();
     }
-    console.log('functionToUseWhenProfileComplete, visibleToPublic:', visibleToPublic, ', visibleToPublicChanged:', visibleToPublicChanged);
+    // console.log('functionToUseWhenProfileComplete, visibleToPublic:', visibleToPublic, ', visibleToPublicChanged:', visibleToPublicChanged);
+    const saveVisibleToPublic = true;
     initializejQuery(() => {
-      CampaignSupportActions.supportCampaignSave(campaignXWeVoteId, campaignSupported, campaignSupportedChanged, visibleToPublic, visibleToPublicChanged);
+      CampaignSupportActions.supportCampaignSave(campaignXWeVoteId, campaignSupported, campaignSupportedChanged, visibleToPublic, saveVisibleToPublic);
     }, this.goToNextPage());
   }
 
@@ -126,7 +174,7 @@ class CampaignDetailsPage extends Component {
     return (
       <div>
         <Suspense fallback={<span>&nbsp;</span>}>
-          <FirstCampaignController campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
+          <CampaignRetrieveController campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
         </Suspense>
         <Helmet title={htmlTitle} />
         <PageWrapper cordova={isCordova()}>
@@ -148,7 +196,7 @@ class CampaignDetailsPage extends Component {
             <CampaignTitleAndScoreBar>
               <CampaignTitleMobile>{campaignTitle}</CampaignTitleMobile>
               <Suspense fallback={<span>&nbsp;</span>}>
-                <CampaignSupportThermometer />
+                <CampaignSupportThermometer campaignXWeVoteId={campaignXWeVoteId} />
               </Suspense>
             </CampaignTitleAndScoreBar>
             <CampaignDescriptionWrapper>
@@ -182,12 +230,13 @@ class CampaignDetailsPage extends Component {
               </ColumnTwoThirds>
               <ColumnOneThird>
                 <Suspense fallback={<span>&nbsp;</span>}>
-                  <CampaignSupportThermometer />
+                  <CampaignSupportThermometer campaignXWeVoteId={campaignXWeVoteId} />
                 </Suspense>
                 <Suspense fallback={<span>&nbsp;</span>}>
-                  <CompleteYourProfileOnCampaignDetails
+                  <CampaignDetailsActionSideBox
                     campaignSEOFriendlyPath={campaignSEOFriendlyPath}
                     campaignXWeVoteId={campaignXWeVoteId}
+                    functionToUseToKeepHelping={this.functionToUseToKeepHelping}
                     functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
                   />
                 </Suspense>
@@ -196,13 +245,15 @@ class CampaignDetailsPage extends Component {
           </DetailsSectionDesktopTablet>
         </PageWrapper>
         <SupportButtonFooterWrapper className="u-show-mobile">
-          <SupportButtonFooter
+          <CampaignDetailsActionButtonFooter
             campaignSEOFriendlyPath={campaignSEOFriendlyPath}
             campaignXWeVoteId={campaignXWeVoteId}
+            functionToUseToKeepHelping={this.functionToUseToKeepHelping}
             functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
           />
         </SupportButtonFooterWrapper>
         <CompleteYourProfileModalController
+          campaignXWeVoteId={campaignXWeVoteId}
           functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
           supportCampaign
         />

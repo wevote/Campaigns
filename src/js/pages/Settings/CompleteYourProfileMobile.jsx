@@ -71,6 +71,7 @@ class CompleteYourProfileMobile extends Component {
   render () {
     renderLog('CompleteYourProfileMobile');  // Set LOG_RENDER_EVENTS to log all renders
     const { becomeMember, classes, startCampaign, supportCampaign } = this.props;
+    const { campaignXWeVoteId } = this.state;
     let completeProfileTitle = <span>&nbsp;</span>;
     let htmlPageTitle = 'Complete Your Profile - We Vote Campaigns';
     if (becomeMember) {
@@ -102,6 +103,7 @@ class CompleteYourProfileMobile extends Component {
               </ContentTitle>
               <CompleteYourProfile
                 becomeMember={becomeMember}
+                campaignXWeVoteId={campaignXWeVoteId}
                 functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
                 startCampaign={startCampaign}
                 supportCampaign={supportCampaign}

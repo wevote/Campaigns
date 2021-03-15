@@ -67,14 +67,6 @@ export default {
       });
   },
 
-  campaignPublishNow (campaignWeVoteId) {
-    Dispatcher.loadEndpoint('campaignStartSave',
-      {
-        campaign_publish_now: true,
-        campaignx_we_vote_id: campaignWeVoteId,
-      });
-  },
-
   campaignRetrieveAsOwner (campaignWeVoteId) {
     Dispatcher.loadEndpoint('campaignRetrieveAsOwner',
       {

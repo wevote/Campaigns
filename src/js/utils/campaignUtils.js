@@ -33,6 +33,20 @@ export function getCampaignXValuesFromIdentifiers (campaignSEOFriendlyPath, camp
   };
 }
 
+export function retrieveCampaignXFromIdentifiers (campaignSEOFriendlyPath, campaignXWeVoteId) {
+  // console.log('retrieveCampaignXFromIdentifiersIfNeeded campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
+  if (campaignSEOFriendlyPath) {
+    initializejQuery(() => {
+      CampaignActions.campaignRetrieveBySEOFriendlyPath(campaignSEOFriendlyPath);
+    });
+  } else if (campaignXWeVoteId) {
+    initializejQuery(() => {
+      CampaignActions.campaignRetrieve(campaignXWeVoteId);
+    });
+  }
+  return true;
+}
+
 export function retrieveCampaignXFromIdentifiersIfNeeded (campaignSEOFriendlyPath, campaignXWeVoteId) {
   // console.log('retrieveCampaignXFromIdentifiersIfNeeded campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
   let campaignX = {};
@@ -47,6 +61,7 @@ export function retrieveCampaignXFromIdentifiersIfNeeded (campaignSEOFriendlyPat
     } else {
       mustRetrieveCampaign = true;
     }
+    // console.log('retrieveCampaignXFromIdentifiersIfNeeded mustRetrieveCampaign:', mustRetrieveCampaign, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
     if (mustRetrieveCampaign) {
       initializejQuery(() => {
         CampaignActions.campaignRetrieveBySEOFriendlyPath(campaignSEOFriendlyPath);
@@ -61,10 +76,12 @@ export function retrieveCampaignXFromIdentifiersIfNeeded (campaignSEOFriendlyPat
     } else {
       mustRetrieveCampaign = true;
     }
+    // console.log('retrieveCampaignXFromIdentifiersIfNeeded mustRetrieveCampaign:', mustRetrieveCampaign, ', campaignXWeVoteId:', campaignXWeVoteId);
     if (mustRetrieveCampaign) {
       initializejQuery(() => {
         CampaignActions.campaignRetrieve(campaignXWeVoteId);
       });
     }
   }
+  return true;
 }
