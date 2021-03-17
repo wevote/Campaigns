@@ -74,6 +74,7 @@ class Membership extends Component {
     } else {
       console.log('onDonateStoreChange unsuccessful donation');
     }
+    this.forceUpdate();
   }
 
   static getProps () {
