@@ -22,8 +22,8 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: '0',
   },
   innerWrapper: {
-    marginLeft: 'calc((100vw -960px)/4)',
-    maxWidth: '960px',
+    marginLeft: 'calc((100vw -960px)/4.2)',
+    maxWidth: '980px',
   },
   logoLinkRoot: {
     height: 0,
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   menuButton: {
     fontSize: '4px',
     marginLeft: 0,
-    marginRight: theme.spacing(2),
+    marginRight: 0,
     padding: '0',
   },
   menuIconRoot: {

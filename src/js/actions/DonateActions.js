@@ -16,7 +16,7 @@ export default {
     Dispatcher.loadEndpoint('donationCancelSubscription',
       {
         plan_type_enum: planTypeEnum,
-        subscription_id: subscriptionId,
+        stripe_subscription_id: subscriptionId,
       });
   },
 
@@ -28,9 +28,10 @@ export default {
     Dispatcher.loadEndpoint('donationHistory');
   },
 
-  donationWithStripe (token, email, donationAmount, monthlyDonation, isOrganizationPlan, planType, couponCode) {
+  donationWithStripe (token,  clientIP, email, donationAmount, monthlyDonation, isOrganizationPlan, planType, couponCode) {
     Dispatcher.loadEndpoint('donationWithStripe', {
       token,
+      client_ip: clientIP,
       email,
       donation_amount: donationAmount,
       monthly_donation: monthlyDonation,

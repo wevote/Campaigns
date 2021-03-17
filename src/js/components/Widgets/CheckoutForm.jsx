@@ -95,7 +95,7 @@ class CheckoutForm extends React.Component {
   };
 
   submitStripePayment = async (emailFromVoter) => {
-    const { stripe, value, elements } = this.props;
+    const { stripe, value, elements, onBecomeAMember } = this.props;
     const { emailFieldError, emailFieldText } = this.state;
 
     // if (emailFromVoter === '') {
@@ -121,7 +121,8 @@ class CheckoutForm extends React.Component {
 
         const donationPennies = moneyStringToPennies(value);
 
-        DonateActions.donationWithStripe(token.id, email, donationPennies, donateMonthly, isOrganizationPlan, '', '');
+        DonateActions.donationWithStripe(token.id, token.client_ip, email, donationPennies, donateMonthly, isOrganizationPlan, '', '');
+        onBecomeAMember();
         this.setState({
           donationWithStripeSubmitted: true,
         });
@@ -204,14 +205,14 @@ class CheckoutForm extends React.Component {
           />
           <SplitIconButton
             buttonText="Become a member"
-            backgroundColor="rgba(236, 42, 32, .9)"
-            separatorColor="rgba(236, 42, 32, .9)"
+            backgroundColor="rgb(33, 95, 254)"
+            separatorColor="rgb(33, 95, 254)"
             styles={iconButtonStyles}
             adjustedIconWidth={30}
             disabled={donationWithStripeSubmitted}
             externalUniqueId="facebookSignIn"
             icon={<ReactSVG src={whiteLock} />}
-            id="facebookSignIn"
+            id="stripeCheckOutForm"
             onClick={() => this.submitStripePayment(emailFromVoter)}
             // onKeyDown={this.onKeyDown}
           />
@@ -229,6 +230,7 @@ CheckoutForm.propTypes = {
   elements: PropTypes.object,
   value: PropTypes.string,
   classes: PropTypes.object,
+  onBecomeAMember: PropTypes.func,
 };
 
 const StripeTagLine = styled.div`

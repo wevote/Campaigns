@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { AppBar, Tab, Tabs } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
-import * as PropTypes from 'prop-types';
 import DonateActions from '../../actions/DonateActions';
 import DonateStore from '../../stores/DonateStore';
 import { renderLog } from '../../utils/logging';
@@ -15,80 +14,33 @@ class DonationListForm extends Component {
     super(props);
     this.state = {
       activeKey: 1,
-      initialDonationCount: -1,
       value: 0,
     };
   }
 
   componentDidMount () {
-    this.onDonateStoreChange();
-    this.donateStoreListener = DonateStore.addListener(this.onDonateStoreChange.bind(this));
     DonateActions.donationRefreshDonationList();  // kick off an initial refresh
-    if (this.props.waitForWebhook) {
-      this.pollForWebhookCompletion(60);
-    }
   }
 
-  componentWillUnmount () {
-    this.donateStoreListener.remove();
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = null;
-    }
-  }
-
-  onDonateStoreChange () {
-    if (this.state.initialDonationCount < 0) {
-      const count = DonateStore.getVoterDonationHistory() ? DonateStore.getVoterDonationHistory().length : -1;
-      this.setState({ donationJournalList: DonateStore.getVoterDonationHistory(), initialDonationCount: count });
-    } else {
-      this.setState({ donationJournalList: DonateStore.getVoterDonationHistory() });
-    }
-  }
-
-  handleSelect = (selectedKey) => {
-    this.setState({
-      activeKey: selectedKey,
-    });
-    if (selectedKey === '2') {
-      // It takes a 2 to 30 seconds for the charge to come back from the first charge on a subscription,
-      DonateActions.donationRefreshDonationList();
-    }
-  };
 
   handleChange = (event, newValue) => {
     this.setState({ value: newValue });
   };
 
-  pollForWebhookCompletion (pollCount) {
-    // console.log(`pollForWebhookCompletion polling -- start: ${this.state.donationJournalList ? this.state.donationJournalList.length : -1}`);
-    // console.log(`pollForWebhookCompletion polling -- start pollCount: ${pollCount}`);
-    this.timer = setTimeout(() => {
-      if (pollCount < 0 || (this.state.donationJournalList && (this.state.initialDonationCount !== this.state.donationJournalList.length))) {
-        // console.log(`pollForWebhookCompletion polling -- clearTimeout: ${this.state.donationJournalList.length}`);
-        // console.log(`pollForWebhookCompletion polling -- pollCount: ${pollCount}`);
-        clearTimeout(this.timer);
-        return;
-      }
-      // console.log(`pollForWebhookCompletion polling ----- ${pollCount}`);
-      DonateActions.donationRefreshDonationList();
-      this.pollForWebhookCompletion(pollCount - 1);
-    }, 500);
-  }
 
   render () {
     renderLog('DonationListForm');  // Set LOG_RENDER_EVENTS to log all renders
-    const { value, donationJournalList } = this.state;
-    console.log('this.value =========', value);
-    // const { classes } = this.props;
+    const { value } = this.state;
+    // console.log('this.value =========', value);
 
-    if (donationJournalList === undefined || donationJournalList.length === 0) {
-      console.log('donationJournalList had no rows, so returned null');
+    const donationPaymentHistory = DonateStore.getVoterSubscriptionHistory();
+    if (donationPaymentHistory === undefined || donationPaymentHistory.length === 0) {
+      console.log('donationPaymentHistory had no rows, so returned null');
       return null;
     }
 
 
-    if (this.state && this.state.donationJournalList && this.state.donationJournalList.length > 0) {
+    if (donationPaymentHistory && donationPaymentHistory.length > 0) {
       return (
         <div>
           <h4>Existing memberships and prior payments:</h4>
@@ -112,10 +64,10 @@ class DonationListForm extends Component {
             </AppBar>
             <div style={{ paddingBottom: 16 }}>
               <TabPanel value={value} index={0}>
-                <DonationList displayDonations={false} showOrganizationPlan={false} />
+                <DonationList membershipTabShown showOrganizationPlan={false} />
               </TabPanel>
               <TabPanel value={value} index={1}>
-                <DonationList displayDonations showOrganizationPlan={false} />
+                <DonationList membershipTabShown={false} showOrganizationPlan={false} />
               </TabPanel>
             </div>
           </ThemeProvider>
@@ -126,8 +78,5 @@ class DonationListForm extends Component {
     }
   }
 }
-DonationListForm.propTypes = {
-  waitForWebhook: PropTypes.bool.isRequired,
-};
 
 export default DonationListForm;
