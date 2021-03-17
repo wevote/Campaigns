@@ -24,6 +24,10 @@ const useStyles = makeStyles((theme) => ({
   innerWrapper: {
     marginLeft: 'calc((100vw -960px)/4.2)',
     maxWidth: '980px',
+    [theme.breakpoints.down('md')]: {
+      marginLeft: '2px',
+      marginRight: '15px',
+    },
   },
   logoLinkRoot: {
     height: 0,
