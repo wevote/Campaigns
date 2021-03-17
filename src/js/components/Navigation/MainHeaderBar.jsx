@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
   innerWrapper: {
     marginLeft: 'calc((100vw -960px)/4.2)',
-    maxWidth: '980px',
+    maxWidth: '980px', // The WeVote icon extends beyond the visible area, and we want to line up the visible
     [theme.breakpoints.down('md')]: {
       marginLeft: '2px',
       marginRight: '15px',
