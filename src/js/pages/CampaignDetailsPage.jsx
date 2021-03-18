@@ -47,24 +47,28 @@ class CampaignDetailsPage extends Component {
     // retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
     let pathToUseWhenProfileComplete;
     if (campaignSEOFriendlyPath) {
+      this.setState({
+        campaignSEOFriendlyPath,
+      });
       pathToUseWhenProfileComplete = `/c/${campaignSEOFriendlyPath}/why-do-you-support`;
     } else {
+      this.setState({
+        campaignXWeVoteId,
+      });
       pathToUseWhenProfileComplete = `/id/${campaignXWeVoteId}/why-do-you-support`;
     }
     this.setState({
-      campaignSEOFriendlyPath,
-      campaignXWeVoteId,
       pathToUseWhenProfileComplete,
     });
   }
 
   componentWillUnmount () {
-    this.campaignStoreListener.remove();
-    this.campaignSupportStoreListener.remove();
     if (this.timer) {
       clearTimeout(this.timer);
       this.timer = null;
     }
+    this.campaignStoreListener.remove();
+    this.campaignSupportStoreListener.remove();
   }
 
   onCampaignStoreChange () {
@@ -81,16 +85,22 @@ class CampaignDetailsPage extends Component {
     let pathToUseWhenProfileComplete;
     if (campaignSEOFriendlyPath) {
       pathToUseWhenProfileComplete = `/c/${campaignSEOFriendlyPath}/why-do-you-support`;
-    } else {
+      this.setState({
+        campaignSEOFriendlyPath,
+        pathToUseWhenProfileComplete,
+      });
+    } else if (campaignXWeVoteId) {
       pathToUseWhenProfileComplete = `/id/${campaignXWeVoteId}/why-do-you-support`;
+    }
+    if (campaignXWeVoteId) {
+      this.setState({
+        campaignXWeVoteId,
+      });
     }
     this.setState({
       campaignDescription,
       campaignPhoto,
-      campaignSEOFriendlyPath,
       campaignTitle,
-      campaignXWeVoteId,
-      pathToUseWhenProfileComplete,
     });
   }
 
@@ -178,9 +188,9 @@ class CampaignDetailsPage extends Component {
         </Suspense>
         <Helmet title={htmlTitle} />
         <PageWrapper cordova={isCordova()}>
-          <CampaignTopNavigation campaignSEOFriendlyPath={campaignSEOFriendlyPath} />
+          <CampaignTopNavigation campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
           <DetailsSectionMobile className="u-show-mobile">
-            <CampaignImageWrapper>
+            <CampaignImageMobileWrapper>
               {campaignPhoto ? (
                 <CampaignImage src={campaignPhoto} alt="Campaign" />
               ) : (
@@ -192,7 +202,7 @@ class CampaignDetailsPage extends Component {
                   </CampaignImagePlaceholder>
                 </DelayedLoad>
               )}
-            </CampaignImageWrapper>
+            </CampaignImageMobileWrapper>
             <CampaignTitleAndScoreBar>
               <CampaignTitleMobile>{campaignTitle}</CampaignTitleMobile>
               <Suspense fallback={<span>&nbsp;</span>}>
@@ -301,12 +311,15 @@ const CampaignImagePlaceholder = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 170px;
+  min-height: 183px;
+  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+    min-height: 174px;
+  }
   @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
-    min-height: 235px;
+    min-height: 239px;
   }
   @media (min-width: ${({ theme }) => theme.breakpoints.lg}) {
-    min-height: 300px;
+    min-height: 319px;
   }
 `;
 
@@ -316,19 +329,22 @@ const CampaignImagePlaceholderText = styled.div`
 
 const CampaignImageDesktopWrapper = styled.div`
   margin-bottom: 10px;
-  min-height: 170px;
+  min-height: 180px;
+  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+    min-height: 174px;
+  }
   @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
-    min-height: 235px;
+    min-height: 239px;
   }
   @media (min-width: ${({ theme }) => theme.breakpoints.lg}) {
     min-height: 300px;
   }
 `;
 
-const CampaignImageWrapper = styled.div`
-  min-height: 173px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.xs}) {
-    min-height: 152px;
+const CampaignImageMobileWrapper = styled.div`
+  min-height: 174px;
+  @media (min-width: ${({ theme }) => theme.breakpoints.xs}) {
+    min-height: 175px;
   }
 `;
 
@@ -359,9 +375,10 @@ const CampaignTitleDesktop = styled.h1`
 
 const CampaignTitleMobile = styled.h1`
   font-size: 22px;
-  text-align: left;
   margin: 0;
   margin-bottom: 10px;
+  min-height: 27px;
+  text-align: left;
 `;
 
 const ColumnOneThird = styled.div`

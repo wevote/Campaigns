@@ -16,26 +16,47 @@ class CampaignSupportThermometer extends React.Component {
   }
 
   componentDidMount () {
+    this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    if (this.timeInterval) {
-      clearInterval(this.timeInterval);
-      this.timeInterval = null;
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    const {
+      campaignXWeVoteId: campaignXWeVoteIdPrevious,
+    } = prevProps;
+    const {
+      campaignXWeVoteId,
+    } = this.props;
+    const {
+      supportersCount: supportersCountPrevious,
+    } = prevState;
+    // console.log('CampaignSupportThermometer componentDidUpdate campaignXWeVoteId:', campaignXWeVoteId);
+    if (campaignXWeVoteId) {
+      const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
+      const {
+        supporters_count: supportersCount,
+        campaignx_we_vote_id: campaignXWeVoteIdFromDict,
+      } = campaignX;
+      let supportersCountChanged = false;
+      if (campaignXWeVoteIdFromDict) {
+        supportersCountChanged = supportersCount !== supportersCountPrevious;
+      }
+      if (campaignXWeVoteId !== campaignXWeVoteIdPrevious || supportersCountChanged) {
+        this.onCampaignStoreChange();
+      }
     }
-    // this.timeInterval = setInterval(() => this.setCommentsToDisplay(), 3000);
   }
 
   componentWillUnmount () {
     this.campaignStoreListener.remove();
-    if (this.timeInterval) {
-      clearInterval(this.timeInterval);
-      this.timeInterval = null;
-    }
   }
 
   onCampaignStoreChange () {
     const { campaignXWeVoteId } = this.props;
+    // console.log('CampaignSupportThermometer onCampaignStoreChange campaignXWeVoteId:', campaignXWeVoteId);
     if (campaignXWeVoteId) {
       const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
+      // console.log('CampaignSupportThermometer onCampaignStoreChange campaignX:', campaignX);
       const {
         supporters_count: supportersCount,
         campaignx_we_vote_id: campaignXWeVoteIdFromDict,
@@ -51,6 +72,9 @@ class CampaignSupportThermometer extends React.Component {
   render () {
     renderLog('CampaignSupportThermometer');  // Set LOG_RENDER_EVENTS to log all renders
     const { numberOfSupportersGoal, supportersCount } = this.state;
+    const calculatedPercentage = (supportersCount / numberOfSupportersGoal) * 100;
+    const minimumPercentageForDisplay = 5;
+    const percentageForDisplay = (calculatedPercentage < minimumPercentageForDisplay) ? minimumPercentageForDisplay : calculatedPercentage;
 
     return (
       <Wrapper>
@@ -69,7 +93,7 @@ class CampaignSupportThermometer extends React.Component {
           </GoalText>
         </TextWrapper>
         <ProgressBarWrapper>
-          <ProgressBar percentage={(supportersCount / numberOfSupportersGoal) * 100}>
+          <ProgressBar percentage={percentageForDisplay}>
             <span id="progress-bar" />
             <span id="right-arrow" />
           </ProgressBar>

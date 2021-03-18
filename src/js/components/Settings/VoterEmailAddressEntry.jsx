@@ -71,6 +71,10 @@ class VoterEmailAddressEntry extends Component {
 
   componentWillUnmount () {
     // console.log('VoterEmailAddressEntry componentWillUnmount voter:', VoterStore.getVoter());
+    if (this.closeVerifyModalTimer) {
+      clearTimeout(this.closeVerifyModalTimer);
+      this.closeVerifyModalTimer = null;
+    }
     const { is_signed_in: isSignedIn, needsVoterRetrieve } = VoterStore.getVoter();
     if (!isSignedIn && needsVoterRetrieve) {
       // Refresh voter after sign-in by SMS or Email
@@ -223,8 +227,6 @@ class VoterEmailAddressEntry extends Component {
 
   closeVerifyModal = () => {
     // console.log('VoterEmailAddressEntry closeVerifyModal');
-    VoterActions.clearEmailAddressStatus();
-    VoterActions.clearSecretCodeVerificationStatus();
     this.setState({
       displayEmailVerificationButton: false,
       emailAddressStatus: {
@@ -233,6 +235,12 @@ class VoterEmailAddressEntry extends Component {
       showVerifyModal: false,
       signInCodeEmailSentAndWaitingForResponse: false,
     });
+    const delayBeforeClearingVerificationStatus = 200;
+    this.closeVerifyModalTimer = setTimeout(() => {
+      VoterActions.clearEmailAddressStatus();
+      VoterActions.clearSecretCodeVerificationStatus();
+      VoterActions.voterRetrieve();
+    }, delayBeforeClearingVerificationStatus);
   };
 
   updateVoterEmailAddress = (event) => {

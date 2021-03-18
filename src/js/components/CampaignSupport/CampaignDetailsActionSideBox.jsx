@@ -101,12 +101,12 @@ class CampaignDetailsActionSideBox extends Component {
     const voterWeVoteId = VoterStore.getVoterWeVoteId();
     const voterProfileIsComplete = (voterFirstName && voterLastName && voterIsSignedInWithEmail) || false;
     // console.log('CampaignDetailsActionSideBox onVoterStoreChange voterProfileIsComplete:', voterProfileIsComplete, ', voterWeVoteId:', voterWeVoteId);
-    if (voterProfileIsComplete !== voterProfileIsCompletePrevious || voterWeVoteId !== voterWeVoteIdPrevious) {
-      this.setState({
-        voterProfileIsComplete,
-        voterWeVoteId,
-      });
-    }
+    // if (voterProfileIsComplete !== voterProfileIsCompletePrevious || voterWeVoteId !== voterWeVoteIdPrevious) {
+    this.setState({
+      voterProfileIsComplete,
+      voterWeVoteId,
+    });
+    // }
   }
 
   pullCampaignXSupporterVoterEntry = (campaignXWeVoteId) => {
@@ -123,7 +123,15 @@ class CampaignDetailsActionSideBox extends Component {
         this.setState({
           campaignSupported,
         });
+      } else {
+        this.setState({
+          campaignSupported: false,
+        });
       }
+    } else {
+      this.setState({
+        campaignSupported: false,
+      });
     }
   }
 

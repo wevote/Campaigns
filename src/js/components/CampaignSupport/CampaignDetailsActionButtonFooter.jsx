@@ -93,7 +93,7 @@ class CampaignDetailsActionSideBox extends Component {
   }
 
   onVoterStoreChange () {
-    const { voterProfileIsComplete: voterProfileIsCompletePrevious, voterWeVoteId: voterWeVoteIdPrevious } = this.state;
+    // const { voterProfileIsComplete: voterProfileIsCompletePrevious, voterWeVoteId: voterWeVoteIdPrevious } = this.state;
     const voterFirstName = VoterStore.getFirstName();
     const voterLastName = VoterStore.getLastName();
     const voterIsSignedInWithEmail = VoterStore.getVoterIsSignedInWithEmail();
@@ -105,12 +105,12 @@ class CampaignDetailsActionSideBox extends Component {
     });
     const voterProfileIsComplete = (voterFirstName && voterLastName && voterIsSignedInWithEmail) || false;
     // console.log('CampaignDetailsActionSideBox onVoterStoreChange voterProfileIsComplete:', voterProfileIsComplete, ', voterWeVoteId:', voterWeVoteId);
-    if (voterProfileIsComplete !== voterProfileIsCompletePrevious || voterWeVoteId !== voterWeVoteIdPrevious) {
-      this.setState({
-        voterProfileIsComplete,
-        voterWeVoteId,
-      });
-    }
+    // if (voterProfileIsComplete !== voterProfileIsCompletePrevious || voterWeVoteId !== voterWeVoteIdPrevious) {
+    this.setState({
+      voterProfileIsComplete,
+      voterWeVoteId,
+    });
+    // }
   }
 
   pullCampaignXSupporterVoterEntry = (campaignXWeVoteId) => {
@@ -127,12 +127,21 @@ class CampaignDetailsActionSideBox extends Component {
         this.setState({
           campaignSupported,
         });
+      } else {
+        this.setState({
+          campaignSupported: false,
+        });
       }
+    } else {
+      this.setState({
+        campaignSupported: false,
+      });
     }
   }
 
   submitSupportButtonMobile = () => {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.props;
+    // console.log('CampaignDetailsActionButtonFooter submitSupportButtonMobile');
     const { voterFirstName, voterLastName, voterIsSignedInWithEmail } = this.state;
     if (!voterFirstName || !voterLastName || !voterIsSignedInWithEmail) {
       // Navigate to the mobile complete your profile page

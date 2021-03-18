@@ -59,7 +59,7 @@ class SettingsVerifySecretCode extends Component {
       voterPhoneNumber,
     });
     const delayBeforeClearingVerificationStatus = 200;
-    this.timer = setTimeout(() => {
+    this.clearSecretCodeVerificationStatusTimer = setTimeout(() => {
       VoterActions.clearSecretCodeVerificationStatus();
     }, delayBeforeClearingVerificationStatus);
 
@@ -96,9 +96,13 @@ class SettingsVerifySecretCode extends Component {
       $('#textOrEmailEntryDialog').css('display', 'unset');  // Reveal the entry dialog
     }
     this.voterStoreListener.remove();
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = null;
+    if (this.closeVerifyModalLocalTimer) {
+      clearTimeout(this.closeVerifyModalLocalTimer);
+      this.closeVerifyModalLocalTimer = null;
+    }
+    if (this.clearSecretCodeVerificationStatusTimer) {
+      clearTimeout(this.clearSecretCodeVerificationStatusTimer);
+      this.clearSecretCodeVerificationStatusTimer = null;
     }
     window.removeEventListener('paste', this.onPaste);
   }
@@ -172,7 +176,9 @@ class SettingsVerifySecretCode extends Component {
     // console.log(`onVoterStoreChange secretCodeVerified: ${secretCodeVerified}`);
     if (secretCodeVerified) {
       // console.log('onVoterStoreChange secretCodeVerified: yes,   voter:', VoterStore.getVoter());
-      this.closeVerifyModalLocal();
+      this.closeVerifyModalLocalTimer = setTimeout(() => {
+        this.closeVerifyModalLocal();
+      }, 500);
     } else {
       let errorMessageToDisplay = '';
       let errorToDisplay = false;

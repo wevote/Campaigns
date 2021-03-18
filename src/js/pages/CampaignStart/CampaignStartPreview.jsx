@@ -93,6 +93,7 @@ class CampaignStartPreview extends Component {
 
   submitPublishNowMobile = () => {
     const { voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
+    // console.log('CampaignStartPreview submitPublishNowMobile');
     if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
       // Navigate to the mobile complete your profile page
       historyPush('/start-a-campaign-complete-your-profile');

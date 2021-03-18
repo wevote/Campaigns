@@ -2,6 +2,7 @@ import React, { Component, Suspense } from 'react';
 import loadable from '@loadable/component';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
+import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../components/Style/AdviceBoxStyles';
@@ -10,6 +11,7 @@ import {
 } from '../../components/Style/CampaignProcessStyles';
 import {
   CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper,
+  CampaignSupportImageWrapper, CampaignSupportImageWrapperText,
   CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper,
   CampaignSupportSection, CampaignSupportSectionWrapper,
   SkipForNowButtonPanel, SkipForNowButtonWrapper,
@@ -36,12 +38,14 @@ class CampaignSupportEndorsement extends Component {
     this.state = {
       campaignPhoto: '',
       campaignSEOFriendlyPath: '',
+      campaignTitle: '',
       campaignXWeVoteId: '',
     };
   }
 
   componentDidMount () {
     // console.log('CampaignSupportEndorsement componentDidMount');
+    this.props.setShowHeaderFooter(false);
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     const { match: { params } } = this.props;
@@ -75,7 +79,6 @@ class CampaignSupportEndorsement extends Component {
     }
     // Take the "calculated" identifiers and retrieve if missing
     retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
-    this.props.setShowHeaderFooter(false);
   }
 
   componentWillUnmount () {
@@ -90,10 +93,12 @@ class CampaignSupportEndorsement extends Component {
     const {
       campaignPhoto,
       campaignSEOFriendlyPath,
+      campaignTitle,
       campaignXWeVoteId,
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     this.setState({
       campaignPhoto,
+      campaignTitle,
     });
     if (campaignSEOFriendlyPath) {
       this.setState({
@@ -172,12 +177,9 @@ class CampaignSupportEndorsement extends Component {
       console.log(`CampaignSupportEndorsement window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
-    const { campaignPhoto, campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
+    const { campaignPhoto, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId } = this.state;
     return (
       <div>
-        <Suspense fallback={<span>&nbsp;</span>}>
-          <CampaignRetrieveController campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
-        </Suspense>
         <Helmet title="Why Do You Support? - We Vote Campaigns" />
         <PageWrapperDefault cordova={isCordova()}>
           <ContentOuterWrapperDefault>
@@ -187,9 +189,15 @@ class CampaignSupportEndorsement extends Component {
                 campaignBasePath={this.getCampaignBasePath()}
                 campaignXWeVoteId={campaignXWeVoteId}
               />
-              {campaignPhoto && (
-                <CampaignImage src={campaignPhoto} alt="Campaign" />
-              )}
+              <CampaignSupportImageWrapper>
+                {campaignPhoto ? (
+                  <CampaignImage src={campaignPhoto} alt="Campaign" />
+                ) : (
+                  <CampaignSupportImageWrapperText>
+                    {campaignTitle}
+                  </CampaignSupportImageWrapperText>
+                )}
+              </CampaignSupportImageWrapper>
               <CampaignProcessStepTitle>
                 Why do you support these candidates?
               </CampaignProcessStepTitle>
@@ -199,9 +207,11 @@ class CampaignSupportEndorsement extends Component {
               <CampaignSupportSectionWrapper>
                 <CampaignSupportSection>
                   <CampaignEndorsementInputField campaignXWeVoteId={campaignXWeVoteId} />
-                  <Suspense fallback={<span>&nbsp;</span>}>
-                    <VisibleToPublicCheckbox campaignXWeVoteId={campaignXWeVoteId} />
-                  </Suspense>
+                  <VisibleToPublicCheckboxWrapper>
+                    <Suspense fallback={<span>&nbsp;</span>}>
+                      <VisibleToPublicCheckbox campaignXWeVoteId={campaignXWeVoteId} />
+                    </Suspense>
+                  </VisibleToPublicCheckboxWrapper>
                   <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                     <CampaignSupportDesktopButtonPanel>
                       <Button
@@ -283,6 +293,9 @@ class CampaignSupportEndorsement extends Component {
           </ContentOuterWrapperDefault>
         </PageWrapperDefault>
         <Suspense fallback={<span>&nbsp;</span>}>
+          <CampaignRetrieveController campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
+        </Suspense>
+        <Suspense fallback={<span>&nbsp;</span>}>
           <VoterFirstRetrieveController />
         </Suspense>
       </div>
@@ -318,7 +331,7 @@ const styles = () => ({
     height: '45px !important',
     padding: '0 12px',
     textTransform: 'none',
-    width: 250,
+    minWidth: 300,
   },
   buttonRoot: {
     width: 250,
@@ -337,5 +350,9 @@ const styles = () => ({
     },
   },
 });
+
+const VisibleToPublicCheckboxWrapper = styled.div`
+  min-height: 25px;
+`;
 
 export default withStyles(styles)(CampaignSupportEndorsement);

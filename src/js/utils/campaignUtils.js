@@ -3,7 +3,7 @@ import CampaignStore from '../stores/CampaignStore';
 import initializejQuery from './initializejQuery';
 
 export function getCampaignXValuesFromIdentifiers (campaignSEOFriendlyPath, campaignXWeVoteId) {
-  // console.log('onCampaignStoreChange campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
+  // console.log('getCampaignXValuesFromIdentifiers campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
   let campaignX = {};
   let campaignDescription = '';
   let campaignPhoto = '';

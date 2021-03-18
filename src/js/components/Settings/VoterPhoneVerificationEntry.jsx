@@ -58,6 +58,10 @@ class VoterPhoneVerificationEntry extends Component {
 
   componentWillUnmount () {
     // console.log('VoterPhoneVerificationEntry componentWillUnmount voter:', VoterStore.getVoter());
+    if (this.closeVerifyModalTimer) {
+      clearTimeout(this.closeVerifyModalTimer);
+      this.closeVerifyModalTimer = null;
+    }
     const { is_signed_in: isSignedIn, needsVoterRetrieve } = VoterStore.getVoter();
     if (!isSignedIn && needsVoterRetrieve) {
       // Refresh voter after sign-in by SMS or Email
@@ -174,8 +178,6 @@ class VoterPhoneVerificationEntry extends Component {
 
   closeVerifyModal = () => {
     // console.log('VoterPhoneVerificationEntry closeVerifyModal voter: ', VoterStore.getVoter());
-    VoterActions.clearSMSPhoneNumberStatus();
-    VoterActions.clearSecretCodeVerificationStatus();
     this.setState({
       smsPhoneNumberStatus: {
         sign_in_code_sms_sent: false,
@@ -183,6 +185,12 @@ class VoterPhoneVerificationEntry extends Component {
       showVerifyModal: false,
       signInCodeSMSSentAndWaitingForResponse: false,
     });
+    const delayBeforeClearingVerificationStatus = 200;
+    this.closeVerifyModalTimer = setTimeout(() => {
+      VoterActions.clearSMSPhoneNumberStatus();
+      VoterActions.clearSecretCodeVerificationStatus();
+      VoterActions.voterRetrieve();
+    }, delayBeforeClearingVerificationStatus);
   };
 
   hidePhoneVerificationButton = () => {
