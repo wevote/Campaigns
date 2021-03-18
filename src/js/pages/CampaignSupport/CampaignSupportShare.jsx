@@ -9,6 +9,7 @@ import {
 } from '../../components/Style/CampaignProcessStyles';
 import {
   CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper,
+  CampaignSupportImageWrapper, CampaignSupportImageWrapperText,
   CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper,
   CampaignSupportSection, CampaignSupportSectionWrapper,
   SkipForNowButtonPanel, SkipForNowButtonWrapper,
@@ -28,11 +29,16 @@ class CampaignSupportShare extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      campaignPhoto: '',
+      campaignSEOFriendlyPath: '',
+      campaignTitle: '',
+      campaignXWeVoteId: '',
     };
   }
 
   componentDidMount () {
     // console.log('CampaignSupportShare componentDidMount');
+    this.props.setShowHeaderFooter(false);
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
@@ -65,18 +71,17 @@ class CampaignSupportShare extends Component {
     }
     // Take the "calculated" identifiers and retrieve if missing
     retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
-    this.props.setShowHeaderFooter(false);
   }
 
   componentDidUpdate (prevProps) {
     // console.log('CampaignDetailsActionSideBox componentDidUpdate');
     const {
-      showDirectMessageChoices: showDirectMessageChoicesPrevious,
+      showShareCampaignWithOneFriend: showShareCampaignWithOneFriendPrevious,
     } = prevProps;
     const {
-      showDirectMessageChoices,
+      showShareCampaignWithOneFriend,
     } = this.props;
-    if (showDirectMessageChoices !== showDirectMessageChoicesPrevious) {
+    if (showShareCampaignWithOneFriend !== showShareCampaignWithOneFriendPrevious) {
       // this.setState({});
     }
   }
@@ -93,10 +98,12 @@ class CampaignSupportShare extends Component {
     const {
       campaignPhoto,
       campaignSEOFriendlyPath,
+      campaignTitle,
       campaignXWeVoteId,
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     this.setState({
       campaignPhoto,
+      campaignTitle,
     });
     if (campaignSEOFriendlyPath) {
       this.setState({
@@ -135,8 +142,8 @@ class CampaignSupportShare extends Component {
   }
 
   goToNextStep = () => {
-    const { showDirectMessageChoices } = this.props;
-    if (showDirectMessageChoices) {
+    const { showShareCampaignWithOneFriend } = this.props;
+    if (showShareCampaignWithOneFriend) {
       // Since showing direct message choices is the final step, link should take voter back to the campaign updates page
       // NOTE: When we add the "recommended-campaigns" feature, change this
       historyPush(`${this.getCampaignBasePath()}/updates`);
@@ -162,14 +169,14 @@ class CampaignSupportShare extends Component {
     if (isCordova()) {
       console.log(`CampaignSupportShare window.location.href: ${window.location.href}`);
     }
-    const { classes, iWillShare, showDirectMessageChoices } = this.props;
-    const { campaignPhoto, campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
+    const { classes, iWillShare, showShareCampaignWithOneFriend } = this.props;
+    const { campaignPhoto, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId } = this.state;
     let campaignProcessStepIntroductionText = '200 new supporters joined this campaign thanks to the people who shared it. Join them and help this campaign grow!';
     let campaignProcessStepTitle = 'Sharing leads to way more support.';
     let skipForNowText = 'Skip for now';
     if (iWillShare) {
       campaignProcessStepTitle = 'Thank you for sharing! Sharing leads to way more support.';
-    } else if (showDirectMessageChoices) {
+    } else if (showShareCampaignWithOneFriend) {
       campaignProcessStepIntroductionText = 'Direct messages are 9 times more likely to convince people to support this campaign.';
       campaignProcessStepTitle = 'Before you go, can you help by recruiting a friend?';
       // Since showing direct message choices is the final step, link should take voter back to the campaign updates page
@@ -178,9 +185,6 @@ class CampaignSupportShare extends Component {
     }
     return (
       <div>
-        <Suspense fallback={<span>&nbsp;</span>}>
-          <CampaignRetrieveController campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
-        </Suspense>
         <Helmet title="Why Do You Support? - We Vote Campaigns" />
         <PageWrapperDefault cordova={isCordova()}>
           <ContentOuterWrapperDefault>
@@ -190,16 +194,22 @@ class CampaignSupportShare extends Component {
                 campaignBasePath={this.getCampaignBasePath()}
                 campaignXWeVoteId={campaignXWeVoteId}
               />
-              {campaignPhoto && (
-                <CampaignImage src={campaignPhoto} alt="Campaign" />
-              )}
+              <CampaignSupportImageWrapper>
+                {campaignPhoto ? (
+                  <CampaignImage src={campaignPhoto} alt="Campaign" />
+                ) : (
+                  <CampaignSupportImageWrapperText>
+                    {campaignTitle}
+                  </CampaignSupportImageWrapperText>
+                )}
+              </CampaignSupportImageWrapper>
               <CampaignProcessStepTitle>
                 {campaignProcessStepTitle}
               </CampaignProcessStepTitle>
               <CampaignProcessStepIntroductionText>
                 {campaignProcessStepIntroductionText}
               </CampaignProcessStepIntroductionText>
-              {showDirectMessageChoices ? (
+              {showShareCampaignWithOneFriend ? (
                 <CampaignSupportSectionWrapper>
                   <CampaignSupportSection>
                     <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
@@ -334,6 +344,9 @@ class CampaignSupportShare extends Component {
           </ContentOuterWrapperDefault>
         </PageWrapperDefault>
         <Suspense fallback={<span>&nbsp;</span>}>
+          <CampaignRetrieveController campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
+        </Suspense>
+        <Suspense fallback={<span>&nbsp;</span>}>
           <VoterFirstRetrieveController />
         </Suspense>
       </div>
@@ -345,7 +358,7 @@ CampaignSupportShare.propTypes = {
   iWillShare: PropTypes.bool,
   match: PropTypes.object,
   setShowHeaderFooter: PropTypes.func,
-  showDirectMessageChoices: PropTypes.bool,
+  showShareCampaignWithOneFriend: PropTypes.bool,
 };
 
 const styles = () => ({

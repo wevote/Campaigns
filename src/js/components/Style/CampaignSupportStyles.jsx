@@ -11,6 +11,25 @@ const CampaignSupportDesktopButtonWrapper = styled.div`
   width: 100%;
 `;
 
+const CampaignSupportImageWrapper = styled.div`
+  align-items: center;
+  background-color: #eee;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  min-height: 350px;
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    min-height: 300px;
+  }
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    min-height: 175px;
+  }
+`;
+
+const CampaignSupportImageWrapperText = styled.div`
+  color: #ccc;
+`;
+
 const CampaignSupportMobileButtonPanel = styled.div`
   background-color: #fff;
   margin-top: 8px;
@@ -47,6 +66,8 @@ const SkipForNowButtonWrapper = styled.div`
 export {
   CampaignSupportDesktopButtonPanel,
   CampaignSupportDesktopButtonWrapper,
+  CampaignSupportImageWrapper,
+  CampaignSupportImageWrapperText,
   CampaignSupportMobileButtonPanel,
   CampaignSupportMobileButtonWrapper,
   CampaignSupportSection,

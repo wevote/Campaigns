@@ -41,6 +41,7 @@ class SupportButton extends Component {
 
   submitSupportButtonDesktop = () => {
     const { voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
+    console.log('SupportButton submitSupportButtonDesktop');
     if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
       // Open complete your profile modal
       AppActions.setShowCompleteYourProfileModal(true);
@@ -68,7 +69,7 @@ class SupportButton extends Component {
               classes={{ root: supportButtonClasses }}
               color="primary"
               id="supportButtonDesktop"
-              onClick={this.submitSupportButtonDesktop}
+              onClick={this.submitSupportButtonDesktop} // () =>
               variant="contained"
             >
               I support this campaign

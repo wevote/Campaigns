@@ -150,6 +150,7 @@ class CampaignSupportStore extends ReduceStore {
 
       case 'voterSignOut':
         // console.log("resetting Campaign");
+        console.log('CampaignSupportStore voterSignOut, state:', state);
         return this.resetState();
 
       default:

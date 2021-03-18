@@ -39,6 +39,14 @@ class CompleteYourProfile extends Component {
   componentWillUnmount () {
     // console.log('CompleteYourProfile componentWillUnmount');
     this.voterStoreListener.remove();
+    if (this.closeVerifyModalTimer) {
+      clearTimeout(this.closeVerifyModalTimer);
+      this.closeVerifyModalTimer = null;
+    }
+    if (this.functionToUseWhenProfileCompleteTimer) {
+      clearTimeout(this.functionToUseWhenProfileCompleteTimer);
+      this.functionToUseWhenProfileCompleteTimer = null;
+    }
   }
 
   // See https://reactjs.org/docs/error-boundaries.html
@@ -49,6 +57,7 @@ class CompleteYourProfile extends Component {
   }
 
   onVoterStoreChange () {
+    const { voterWeVoteId: voterWeVoteIdPrevious } = this.state;
     const emailAddressStatus = VoterStore.getEmailAddressStatus();
     // const { secret_code_system_locked_for_this_voter_device_id: secretCodeSystemLocked } = emailAddressStatus;
     const secretCodeVerificationStatus = VoterStore.getSecretCodeVerificationStatus();
@@ -60,12 +69,18 @@ class CompleteYourProfile extends Component {
     // console.log(`VoterEmailAddressEntry onVoterStoreChange isSignedIn: ${isSignedIn}, voterIsSignedInWithEmail: ${voterIsSignedInWithEmail}`);
     if (voterIsSignedInWithEmail) {
       // console.log('VoterEmailAddressEntry onVoterStoreChange voterIsSignedInWithEmail');
-      this.setState({
-        voterWeVoteId,
-      });
+      if (voterWeVoteId !== voterWeVoteIdPrevious) {
+        this.setState({
+          voterWeVoteId,
+        });
+      }
     } else if (secretCodeVerified) {
       // Mark that voter supports this campaign
-      this.props.functionToUseWhenProfileComplete();
+      // console.log('CompleteYourProfile secretCodeVerified');
+      VoterActions.voterRetrieve();
+      this.functionToUseWhenProfileCompleteTimer = setTimeout(() => {
+        this.props.functionToUseWhenProfileComplete();
+      }, 500);
     } else if (emailAddressStatus.sign_in_code_email_sent) {
       this.setState({
         showVerifyModal: true,
@@ -76,7 +91,7 @@ class CompleteYourProfile extends Component {
         showVerifyModal: false,
         voterWeVoteId,
       });
-    } else {
+    } else if (voterWeVoteId !== voterWeVoteIdPrevious) {
       this.setState({
         voterWeVoteId,
       });
@@ -87,9 +102,13 @@ class CompleteYourProfile extends Component {
     // console.log('VoterEmailAddressEntry closeVerifyModal');
     VoterActions.clearEmailAddressStatus();
     VoterActions.clearSecretCodeVerificationStatus();
-    this.setState({
-      showVerifyModal: false,
-    });
+    VoterActions.voterRetrieve();
+    const delayBeforeClosingVerifyModal = 400;
+    this.closeVerifyModalTimer = setTimeout(() => {
+      this.setState({
+        showVerifyModal: false,
+      });
+    }, delayBeforeClosingVerifyModal);
   };
 
   onKeyDown = (event) => {
@@ -97,6 +116,7 @@ class CompleteYourProfile extends Component {
   };
 
   submitCompleteYourProfile = (event) => {
+    // console.log('CompleteYourProfile submitCompleteYourProfile');
     let voterEmailMissing = false;
     let voterFirstNameMissing = false;
     let voterLastNameMissing = false;
@@ -143,7 +163,10 @@ class CompleteYourProfile extends Component {
       // All required fields were found
       this.sendSignInCodeEmail(event, voterEmailQueuedToSave);
     } else {
-      this.props.functionToUseWhenProfileComplete();
+      VoterActions.voterRetrieve();
+      this.functionToUseWhenProfileCompleteTimer = setTimeout(() => {
+        this.props.functionToUseWhenProfileComplete();
+      }, 500);
     }
   }
 

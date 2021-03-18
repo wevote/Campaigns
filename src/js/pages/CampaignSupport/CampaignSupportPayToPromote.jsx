@@ -9,6 +9,7 @@ import {
 } from '../../components/Style/CampaignProcessStyles';
 import {
   CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper,
+  CampaignSupportImageWrapper, CampaignSupportImageWrapperText,
   CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper,
   CampaignSupportSection, CampaignSupportSectionWrapper,
   SkipForNowButtonPanel, SkipForNowButtonWrapper,
@@ -31,11 +32,16 @@ class CampaignSupportPayToPromote extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      campaignPhoto: '',
+      campaignSEOFriendlyPath: '',
+      campaignTitle: '',
+      campaignXWeVoteId: '',
     };
   }
 
   componentDidMount () {
     // console.log('CampaignSupportPayToPromote componentDidMount');
+    this.props.setShowHeaderFooter(false);
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
@@ -68,7 +74,6 @@ class CampaignSupportPayToPromote extends Component {
     }
     // Take the "calculated" identifiers and retrieve if missing
     retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
-    this.props.setShowHeaderFooter(false);
   }
 
   componentWillUnmount () {
@@ -83,10 +88,12 @@ class CampaignSupportPayToPromote extends Component {
     const {
       campaignPhoto,
       campaignSEOFriendlyPath,
+      campaignTitle,
       campaignXWeVoteId,
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     this.setState({
       campaignPhoto,
+      campaignTitle,
     });
     if (campaignSEOFriendlyPath) {
       this.setState({
@@ -131,7 +138,8 @@ class CampaignSupportPayToPromote extends Component {
   }
 
   submitSkipForNow = () => {
-    this.goToNextStep();
+    const pathForNextStep = `${this.getCampaignBasePath()}/share-campaign-with-one-friend`;
+    historyPush(pathForNextStep);
   }
 
   submitSupporterEndorsement = () => {
@@ -154,12 +162,9 @@ class CampaignSupportPayToPromote extends Component {
       console.log(`CampaignSupportPayToPromote window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
-    const { campaignPhoto, campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
+    const { campaignPhoto, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId } = this.state;
     return (
       <div>
-        <Suspense fallback={<span>&nbsp;</span>}>
-          <CampaignRetrieveController campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
-        </Suspense>
         <Helmet title="Why Do You Support? - We Vote Campaigns" />
         <PageWrapperDefault cordova={isCordova()}>
           <ContentOuterWrapperDefault>
@@ -169,9 +174,15 @@ class CampaignSupportPayToPromote extends Component {
                 campaignBasePath={this.getCampaignBasePath()}
                 campaignXWeVoteId={campaignXWeVoteId}
               />
-              {campaignPhoto && (
-                <CampaignImage src={campaignPhoto} alt="Campaign" />
-              )}
+              <CampaignSupportImageWrapper>
+                {campaignPhoto ? (
+                  <CampaignImage src={campaignPhoto} alt="Campaign" />
+                ) : (
+                  <CampaignSupportImageWrapperText>
+                    {campaignTitle}
+                  </CampaignSupportImageWrapperText>
+                )}
+              </CampaignSupportImageWrapper>
               <CampaignProcessStepTitle>
                 Can you chip in $3 to get this campaign in front of more people?
               </CampaignProcessStepTitle>
@@ -250,6 +261,9 @@ class CampaignSupportPayToPromote extends Component {
           </ContentOuterWrapperDefault>
         </PageWrapperDefault>
         <Suspense fallback={<span>&nbsp;</span>}>
+          <CampaignRetrieveController campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
+        </Suspense>
+        <Suspense fallback={<span>&nbsp;</span>}>
           <VoterFirstRetrieveController />
         </Suspense>
       </div>
@@ -285,7 +299,7 @@ const styles = () => ({
     height: '45px !important',
     padding: '0 12px',
     textTransform: 'none',
-    minWidth: 250,
+    minWidth: 300,
   },
   buttonRoot: {
     width: 250,
