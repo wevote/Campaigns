@@ -36,18 +36,18 @@ class DonateStore extends ReduceStore {
       //   status: 'From getInitialState',
       //   success: true,
       // },
-      donationJournalList: [
-        {
-          created: '',
-          amount: '',
-        },
-      ],
-      subscriptionJournalHistory: [
-        {
-          created: '',
-          amount: '',
-        },
-      ],
+      // donationJournalList: [
+      //   {
+      //     created: '',
+      //     amount: '',
+      //   },
+      // ],
+      // subscriptionJournalHistory: [
+      //   {
+      //     created: '',
+      //     amount: '',
+      //   },
+      // ],
       // lastCouponResponseReceived: {
       //   couponAppliedMessage: '',
       //   couponCodeString: '',
@@ -87,6 +87,28 @@ class DonateStore extends ReduceStore {
   // Voter's donation history
   getVoterDonationHistory () {
     return this.getState().donationJournalList || [];
+  }
+
+  getVoterPaymentHistory () {
+    return this.getState().donationPaymentsList || [];
+  }
+
+  getVoterSubscriptionHistory () {
+    return this.getState().donationSubscriptionList || [];
+  }
+
+  getNumberOfActiveSubscriptions () {
+    const subscriptions = this.getVoterSubscriptionHistory();
+    let count = 0;
+    subscriptions.forEach((item) => {
+      const {
+        subscription_canceled_at: subscriptionCanceledAt,
+        subscription_ended_at: subscriptionEndedAt,
+      } = item;
+      const isActive = subscriptionCanceledAt === 'None' && subscriptionEndedAt === 'None';
+      count = isActive ? count + 1 : count;
+    });
+    return count;
   }
 
   // // Organization's subscription payment history
@@ -142,18 +164,21 @@ class DonateStore extends ReduceStore {
   // doesOrgHavePaidPlan () {
   //   return this.getState().doesOrgHavePaidPlan || false;
   // }
+  getAll () {
+    return this.getState();
+  }
 
   reduce (state, action) {
     if (!action.res) return state;
     // DALE 2019-09-19 Migrate away from orgSubsAlreadyExists and doesOrgHavePaidPlan -- donationHistory/activePaidPlan provides what we need
     const {
-      charge_id: charge,
+      // charge_id: charge,
       donation_amount: donationAmount,
       monthly_donation: monthlyDonation,
       // org_subs_already_exists: orgSubsAlreadyExists,
       // org_has_active_paid_plan: doesOrgHavePaidPlan,
       saved_stripe_donation: savedStripeDonation,
-      subscription_id: subscriptionId,
+      // subscription_id: subscriptionId,
       success,
     } = action.res;
     const donationAmountSafe = donationAmount || '';
@@ -162,12 +187,14 @@ class DonateStore extends ReduceStore {
     let amountPaidViaStripe = 0;
     let apiStatus = '';
     let apiSuccess = false;
-    let completeDonationJournalList = [];
+    // let completeDonationJournalList = [];
+    let donationPaymentsList = [];
+    let donationSubscriptionList = [];
     // let couponAppliedMessage = '';
     // let couponCodeString = '';
     // let couponMatchFound = '';
     // let couponStillValid = '';
-    let donationJournalList = [];
+    // let donationJournalList = [];
     // let enterprisePlanCouponPricePerMonthPayMonthly = '';
     // let enterprisePlanCouponPricePerMonthPayYearly = '';
     // let enterprisePlanFullPricePerMonthPayMonthly = '';
@@ -179,7 +206,7 @@ class DonateStore extends ReduceStore {
     // let proPlanFullPricePerMonthPayMonthly = '';
     // let proPlanFullPricePerMonthPayYearly = '';
     let stripeErrorMessageForVoter = '';
-    let subscriptionJournalHistory = [];
+    // let subscriptionJournalHistory = [];
     // let validForProfessionalPlan = '';
     // let validForEnterprisePlan = '';
     switch (action.type) {
@@ -187,7 +214,7 @@ class DonateStore extends ReduceStore {
         ({
           // active_paid_plan: activePaidPlan,
           amount_paid: amountPaidViaStripe,
-          donation_list: completeDonationJournalList,
+          // donation_list: completeDonationJournalList,
           error_message_for_voter: stripeErrorMessageForVoter,
           // organization_saved: organizationSaved,
           // plan_type_enum: planTypeEnum,
@@ -195,8 +222,8 @@ class DonateStore extends ReduceStore {
           // eslint-disable-next-line no-unused-vars
           success: apiSuccess,
         } = action.res);
-        donationJournalList = completeDonationJournalList.filter((item) => (item.is_organization_plan === false));
-        subscriptionJournalHistory = completeDonationJournalList.filter((item) => (item.is_organization_plan === true));
+        // donationJournalList = completeDonationJournalList.filter((item) => (item.is_organization_plan === false));
+        // subscriptionJournalHistory = completeDonationJournalList.filter((item) => (item.is_organization_plan === true));
         if (success === false) {
           console.log(`donation with stripe failed:  ${stripeErrorMessageForVoter}  ---  ${apiStatus}`);
         }
@@ -206,12 +233,12 @@ class DonateStore extends ReduceStore {
           amountPaidViaStripe,
           apiStatus,
           donationAmount: donationAmountSafe,
-          donationJournalList,
+          // donationJournalList,
           stripeErrorMessageForVoter,
           monthlyDonation,
           // planTypeEnum,
           savedStripeDonation,
-          subscriptionJournalHistory,
+          // subscriptionJournalHistory,
           success,
           // orgSubsAlreadyExists,
           donationResponseReceived: true,
@@ -221,56 +248,70 @@ class DonateStore extends ReduceStore {
         console.log(`error-donateRetrieve${action}`);
         return state;
 
-      case 'donationCancelSubscription':
-        // console.log(`donationCancelSubscription: ${action}`);
-        ({
-          // active_paid_plan: activePaidPlan,
-          donation_list: completeDonationJournalList,
-          // organization_saved: organizationSaved,
-        } = action.res);
-        donationJournalList = completeDonationJournalList.filter((item) => (item.is_organization_plan === false));
-        subscriptionJournalHistory = completeDonationJournalList.filter((item) => (item.is_organization_plan === true));
-        // if (organizationSaved) {
-        //   OrganizationActions.organizationRetrieve(VoterStore.getLinkedOrganizationWeVoteId());
-        // }
-        return {
-          ...state,
-          // activePaidPlan,
-          donationCancelCompleted: false,
-          donationJournalList,
-          subscriptionId,
-          subscriptionJournalHistory,
-        };
+        // case 'donationCancelSubscription':
+        //   // console.log(`donationCancelSubscription: ${action}`);
+        //   ({
+        //     active_paid_plan: activePaidPlan,
+        //     donation_list: completeDonationJournalList,
+        //     organization_saved: organizationSaved,
+        //   } = action.res);
+        //   // donationJournalList = completeDonationJournalList.filter((item) => (item.is_organization_plan === false));
+        //   // subscriptionJournalHistory = completeDonationJournalList.filter((item) => (item.is_organization_plan === true));
+        //   // if (organizationSaved) {
+        //   //   OrganizationActions.organizationRetrieve(VoterStore.getLinkedOrganizationWeVoteId());
+        //   // }
+        //   return {
+        //     ...state,
+        //     // activePaidPlan,
+        //     donationCancelCompleted: false,
+        //     // donationJournalList,
+        //     subscriptionId,
+        //     // subscriptionJournalHistory,
+        //   };
 
       case 'donationHistory':
         // console.log('Donate Store, donationHistory action.res: ', action.res);
         ({
           // active_paid_plan: activePaidPlan,
-          donation_list: completeDonationJournalList,
+          donation_payments_list: donationPaymentsList,
+          donation_subscription_list: donationSubscriptionList,
         } = action.res);
-        donationJournalList = completeDonationJournalList.filter((item) => (item.is_organization_plan === false));
-        subscriptionJournalHistory = completeDonationJournalList.filter((item) => (item.is_organization_plan === true));
         return {
           ...state,
           // activePaidPlan,
-          donationJournalList,
-          subscriptionJournalHistory,
+          donationPaymentsList,
+          donationSubscriptionList,
         };
 
-      case 'donationRefund':
-        // console.log(`donationRefund: ${action}`);
-        ({
-          donation_list: completeDonationJournalList,
-        } = action.res);
-        donationJournalList = completeDonationJournalList.filter((item) => (item.is_organization_plan === false));
-        subscriptionJournalHistory = completeDonationJournalList.filter((item) => (item.is_organization_plan === true));
-        return {
-          ...state,
-          charge,
-          donationJournalList,
-          donationRefundCompleted: false,
-          subscriptionJournalHistory,
-        };
+        // case 'donationHistory':
+        //    // console.log('Donate Store, donationHistory action.res: ', action.res);
+        //    ({
+        //      // active_paid_plan: activePaidPlan,
+        //      donation_list: completeDonationJournalList,
+        //    } = action.res);
+        //    donationJournalList = completeDonationJournalList.filter((item) => (item.is_organization_plan === false));
+        //    subscriptionJournalHistory = completeDonationJournalList.filter((item) => (item.is_organization_plan === true));
+        //    return {
+        //      ...state,
+        //      // activePaidPlan,
+        //      donationJournalList,
+        //      subscriptionJournalHistory,
+        //    };
+
+        // case 'donationRefund':
+        //   // console.log(`donationRefund: ${action}`);
+        //   ({
+        //     // donation_list: completeDonationJournalList,
+        //   } = action.res);
+        //   // donationJournalList = completeDonationJournalList.filter((item) => (item.is_organization_plan === false));
+        //   // subscriptionJournalHistory = completeDonationJournalList.filter((item) => (item.is_organization_plan === true));
+        //   return {
+        //     ...state,
+        //     charge,
+        //     // donationJournalList,
+        //     donationRefundCompleted: false,
+        //     subscriptionJournalHistory,
+        //   };
 
         // case 'doesOrgHavePaidPlan':
         //   // DALE 2019-09-19 Migrate away from this -- donationHistory provides what we need

@@ -27,10 +27,12 @@ export default class DonationCancelOrRefund extends Component {
 
   cancelOrRefund = (item) => {
     console.log(`cancel subscription or refund charge ${item}`);
-    const { charge_id: chargeId, subscription_id: subscriptionId } = item;
+    const { charge_id: chargeId, subscriptionId } = item;
     if (this.props.refundDonation) {
       DonateActions.donationRefund(chargeId);
     } else {
+      const { refreshRequired } = this.props;
+      refreshRequired();  // Tell the parent to refresh the history to show the results of this change
       DonateActions.donationCancelSubscriptionAction(subscriptionId);
     }
 
@@ -41,8 +43,8 @@ export default class DonationCancelOrRefund extends Component {
     renderLog('DonationCancelOrRefund');
 
     const { item, refundDonation, active, cancelText, showOrganizationPlan } = this.props;
-    const { amount, funding, brand, last4, exp_month: expMonth, exp_year: expYear } = item;
-    let label = refundDonation ? 'Refund Donation' : 'Cancel Subscription';
+    const { amount, funding, brand, last4, expires } = item;
+    let label = refundDonation ? 'Refund Donation' : 'Cancel Membership';
     if (showOrganizationPlan) {
       label = refundDonation ? 'Refund Plan Payment' : 'Cancel Paid Plan';
     }
@@ -75,26 +77,26 @@ export default class DonationCancelOrRefund extends Component {
               We Vote is a nonprofit and nonpartisan organization that relies the generous support from voters like you. Thank you!
             </p>
 
-            <Grid container spacing={1} style={{ padding: '8px', backgroundColor: '#08000008', margin: '8px 0 24px 0' }}>
+            <Grid container spacing={1} style={{ paddingLeft: '0px', backgroundColor: '#08000008', margin: '8px 0 24px 0' }}>
               <Grid item xs={6} style={{ maxWidth: '40%' }}>
                 <div>Created:</div>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs="auto">
                 <div>{moment.utc(item.created).local().format('MMM D, YYYY,  h:mm a')}</div>
               </Grid>
 
               <Grid item xs={6} style={{ maxWidth: '40%' }}>
-                <div>{refundDonation ? 'Amount:' : 'Monthly membership:'}</div>
+                <div>{refundDonation ? 'Amount:' : 'Monthly:'}</div>
               </Grid>
               <Grid item xs={6}>
-                <div>{amount}</div>
+                <div>{`$${amount}`}</div>
               </Grid>
 
               <Grid item xs={6} style={{ maxWidth: '40%' }}>
                 <div>Funding:</div>
               </Grid>
               <Grid item xs={6}>
-                <div>{funding}</div>
+                <div>{funding || 'Credit'}</div>
               </Grid>
 
               <Grid item xs={6} style={{ maxWidth: '40%' }}>
@@ -115,7 +117,7 @@ export default class DonationCancelOrRefund extends Component {
                 <div>Card expires:</div>
               </Grid>
               <Grid item xs={6}>
-                <div>{expMonth ? `${expMonth}/${expYear}` : '/'}</div>
+                <div>{expires}</div>
               </Grid>
             </Grid>
 
@@ -143,6 +145,7 @@ DonationCancelOrRefund.propTypes = {
   active: PropTypes.bool,
   cancelText: PropTypes.string,
   showOrganizationPlan: PropTypes.bool,
+  refreshRequired: PropTypes.func,
 };
 
 const StyledModalFrame = styled.div`

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import moment from 'moment';
 import * as PropTypes from 'prop-types';
@@ -7,7 +7,6 @@ import styled from 'styled-components';
 import DonateActions from '../../actions/DonateActions';
 import DonateStore from '../../stores/DonateStore';
 import { renderLog } from '../../utils/logging';
-import LoadingWheel from '../LoadingWheel';
 import DonationCancelOrRefund from './DonationCancelOrRefund';
 
 /* global $ */
@@ -16,133 +15,161 @@ class DonationList extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      donationJournalList: null,
+      enablePolling: false,
     };
     this.isMobile = this.isMobile.bind(this);
+    this.refreshRequired = this.refreshRequired.bind(this);
   }
 
   componentDidMount () {
     this.onDonateStoreChange();
     this.donateStoreListener = DonateStore.addListener(this.onDonateStoreChange.bind(this));
-    this.setState({ donationJournalList: DonateStore.getVoterDonationHistory() });
-    if (this.props.showOrganizationPlan) {
-      DonateActions.donationRefreshDonationList();
-    }
+    this.setState({
+      refreshCount: 0,
+      activeSubscriptionCount: DonateStore.getNumberOfActiveSubscriptions(),
+    });
+    DonateActions.donationRefreshDonationList();
   }
 
   componentWillUnmount () {
     this.donateStoreListener.remove();
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
   }
 
   onDonateStoreChange = () => {
-    this.setState({ donationJournalList: DonateStore.getVoterDonationHistory() });
+    const { refreshCount, activeSubscriptionCount, enablePolling } = this.state;
+    if (enablePolling && activeSubscriptionCount === DonateStore.getNumberOfActiveSubscriptions()) {
+      this.pollForWebhookCompletionAtList(60);
+    }
+    this.setState({
+      refreshCount: refreshCount + 1,
+    });
   };
+
+  refreshRequired = () => {
+    // refresh is required since the cancel subscription/membership button was pressed
+    // March 2021: Might need a conditional timer, since it is not clear that we get to donation_manager.mark_donation_journal_canceled_or_ended
+    // in donation_subscription_cancellation_for_api after results = subscription.delete() is called
+    DonateActions.donationRefreshDonationList();
+    this.setState({ enablePolling: true });
+  }
 
   isMobile = () => $(window).width() < 1280;
 
-  journalRows = () => {
-    const { displayDonations, showOrganizationPlan } = this.props;
-    const { donationJournalList } = this.state;
+  paymentRows = () => {
+    const donationPaymentHistory = DonateStore.getVoterPaymentHistory();
     const rows = [];
     let id = 0;
-    donationJournalList.forEach((item) => {
-      // console.log('donationJournalList item:', item);
+    donationPaymentHistory.forEach((item) => {
+      // console.log('paymentRows item:', item);
       const { record_enum: recordEnum, refund_days_limit: refundDaysLimit,
-        subscription_canceled_at: subscriptionCanceledAt, subscription_ended_at: subscriptionEndedAt,
-        created, amount, brand, last4, last_charged: lastCharged,
-        exp_month: expMonth, exp_year: expYear, stripe_status: stripeStatus, is_organization_plan: isOrgPlan } = item;
-      if (displayDonations) {
-        if ((recordEnum === 'PAYMENT_FROM_UI' || recordEnum === 'PAYMENT_AUTO_SUBSCRIPTION') &&
-          ((!showOrganizationPlan && !isOrgPlan) || (showOrganizationPlan && isOrgPlan))) {
-          const refundDays = parseInt(refundDaysLimit, 10);
-          const isActive = moment.utc(created).local().isAfter(moment(new Date()).subtract(refundDays, 'days')) &&
-            !stripeStatus.includes('refund');
-          const active = isActive ? 'Active' : 'No';
-          const waiting = amount === '0.00';
-          const cancelText = '';
-          rows.push({
-            id: id++,
-            date: moment.utc(created).format('MMM D, YYYY'),
-            amount,
-            monthly: !waiting ? amount : 'waiting',
-            isChip: false,
-            campaign: '',
-            payment: recordEnum === 'PAYMENT_FROM_UI' ? 'One time' : 'Subscription',
-            card: brand,
-            ends: `... ${last4}`,
-            expires: `${expMonth}/${expYear}`,
-            status: stripeStatus === 'succeeded' ? 'Paid' : stripeStatus,
-            item,
-            displayDonations,
-            active,
-            isActive,
-            cancelText,
-            showOrganizationPlan,
-          });
-        }
-      } else if (recordEnum === 'SUBSCRIPTION_SETUP_AND_INITIAL' &&
-        ((!showOrganizationPlan && !isOrgPlan) || (showOrganizationPlan && isOrgPlan))) {
-        const isActive = subscriptionCanceledAt === 'None' && subscriptionEndedAt === 'None';
-        const active = isActive ? 'Yes' : 'No';
-        const cancel = subscriptionCanceledAt !== 'None' ?
-          moment.utc(subscriptionCanceledAt).format('MMM D, YYYY') : '';
-        const lastcharged = lastCharged === 'None' ? '' :
-          moment.utc(lastCharged).format('MMM D, YYYY');
-        const waiting = amount === '0.00';
-        rows.push({
-          id: id++,
-          active,
-          isActive,
-          started: moment.utc(created)
-            .format('MMM D, YYYY'),
-          amount: !waiting ? amount : 'waiting',
-          lastCharged: !waiting ? lastcharged : 'waiting',
-          card: !waiting ? brand : 'waiting',
-          ends: !waiting ? `... ${last4}` : 'waiting',
-          expires: !waiting ? `${expMonth}/${expYear}` : 'waiting',
-          canceled: cancel,
-        });
-      }
-    });
-
-    // March 6, 2021 TODO: Remove the following block of test code, once the "Chip In" submission code is working.
-    if (displayDonations) {
+        created, amount, brand, last4, funding, last_charged: lastCharged,
+        exp_month: expMonth, exp_year: expYear, stripe_status: stripeStatus,
+        stripe_subscription_id: subscriptionId } = item;
+      const refundDays = parseInt(refundDaysLimit, 10);
+      const isActive = moment.utc(created).local().isAfter(moment(new Date()).subtract(refundDays, 'days')) &&
+          !stripeStatus.includes('refund');
+      const active = isActive ? 'Active' : 'No';
+      const waiting = amount === '0.00';
+      const cancelText = '';
+      const stripeStatusCap = stripeStatus.charAt(0).toUpperCase() + stripeStatus.slice(1);
+      const status = stripeStatusCap === 'Succeeded' ? 'Paid' : stripeStatusCap;
       rows.push({
         id: id++,
-        date: 'Mar 3, 2021',
-        amount: '$9.99',
-        monthly: '',
-        isChip: true,
-        campaign: 'Joe for School Board',
-        payment: 'One time',
-        card: 'Visa',
-        ends: '... 9999',
-        expires: '09/99',
-        status: 'Paid',
-        item: {},
-        displayDonations: true,
-        active: 'True',
-        isActive: true,
-        cancelText: 'nope',
-        showOrganizationPlan: false,
+        date: moment.utc(created).format('MMM D, YYYY'),
+        amount,
+        monthly: !waiting ? amount : 'waiting',
+        isChip: false,
+        payment: recordEnum === 'PAYMENT_FROM_UI' ? 'One time' : 'Subscription',
+        card: brand,
+        ends: last4,
+        expires: `${expMonth}/${expYear}`,
+        status,
+        funding,
+        lastCharged,
+        active,
+        isActive,
+        cancelText,
+        subscriptionId,
       });
-    }
+    });
     return rows;
   }
 
+  subscriptionRows = () => {
+    const { membershipTabShown, showOrganizationPlan } = this.props;
+    const subscriptions = DonateStore.getVoterSubscriptionHistory();
+    const rows = [];
+    let id = 0;
+    subscriptions.forEach((item) => {
+      // console.log('donationPaymentHistory item:', item);
+      const { record_enum: recordEnum,
+        subscription_canceled_at: subscriptionCanceledAt, subscription_ended_at: subscriptionEndedAt,
+        subscription_created_at: created, amount, brand, last4, last_charged: lastCharged,
+        exp_month: expMonth, exp_year: expYear, stripe_status: stripeStatus,
+        stripe_subscription_id: subscriptionId } = item;
+      // const refundDays = parseInt(refundDaysLimit, 10); No refunds in campaigns
+      const isActive = subscriptionCanceledAt === 'None' && subscriptionEndedAt === 'None';
+      const active = isActive ? 'Active' : 'No';
+      const waiting = amount === '0.00';
+      const cancelText = '';
+      const stripeStatusCap = stripeStatus.charAt(0).toUpperCase() + stripeStatus.slice(1);
+      const status = stripeStatusCap === 'Succeeded' ? 'Paid' : stripeStatusCap;
+      rows.push({
+        id: id++,
+        date: created.length > 5 ? moment.utc(created).format('MMM D, YYYY') : 'waiting',
+        amount,
+        monthly: !waiting ? amount : 'waiting',
+        isChip: false,
+        payment: recordEnum === 'PAYMENT_FROM_UI' ? 'One time' : 'Subscription',
+        brand: brand.length ? brand : 'waiting',
+        last4: last4.length ? last4 : 'waiting',
+        expires: expMonth > 0 ? `${expMonth}/${expYear}` : '/',
+        status,
+        lastCharged: lastCharged.length ? moment.utc(lastCharged).format('MMM D, YYYY') : 'waiting',
+        membershipTabShown,
+        active,
+        isActive,
+        cancelText,
+        showOrganizationPlan,
+        subscriptionId,
+      });
+    });
+    return rows;
+  }
+
+  pollForWebhookCompletionAtList (pollCount) {
+    const { enablePolling } = this.state;
+    const { activeSubscriptionCount } = this.state;
+    const latestCount = DonateStore.getNumberOfActiveSubscriptions();
+    console.log(`pollForWebhookCompletionAtList polling -- start: ${activeSubscriptionCount} ? ${latestCount}`);
+    this.timer = setTimeout(() => {
+      if (pollCount === 0 || (activeSubscriptionCount > latestCount)) {
+        // console.log(`pollForWebhookCompletionAtList polling -- pollCount: ${pollCount}`);
+        clearTimeout(this.timer);
+        this.setState({ activeSubscriptionCount, enablePolling: false });
+        return;
+      }
+      // console.log(`pollForWebhookCompletion polling ----- ${pollCount}`);
+      DonateActions.donationRefreshDonationList();
+
+      if (enablePolling) {
+        this.pollForWebhookCompletionAtList(pollCount - 1);  // recursive call
+      }
+    }, 500);
+  }
+
+
   render () {
     renderLog('DonationList');  // Set LOG_RENDER_EVENTS to log all renders
-    const { displayDonations, showOrganizationPlan } = this.props;
+    const { membershipTabShown, showOrganizationPlan } = this.props;
     const isDeskTop = !this.isMobile();
 
-    if (!this.state.donationJournalList) {
-      console.log('donationJournalList not yet received in DonationList render');
-      return LoadingWheel;
-    }
-
-    const rows = this.journalRows();
-
-    if (!displayDonations) {
+    if (membershipTabShown) {
+      const subscriptionRows = this.subscriptionRows();
       return (
         <TableContainer component={Paper}>
           <Table aria-label="Subscription table">
@@ -151,41 +178,42 @@ class DonationList extends Component {
                 {isDeskTop && <StyledTableHeaderCell align="center">Active</StyledTableHeaderCell>}
                 <StyledTableHeaderCell align="center">Started</StyledTableHeaderCell>
                 <StyledTableHeaderCell align="right">Monthly</StyledTableHeaderCell>
-                <StyledTableHeaderCell align="right">Last Charged</StyledTableHeaderCell>
+                <StyledTableHeaderCell align="center">Last Charged</StyledTableHeaderCell>
                 {isDeskTop && (
                   <>
-                    <StyledTableHeaderCell align="right">Card</StyledTableHeaderCell>
-                    <StyledTableHeaderCell align="right">Ends With</StyledTableHeaderCell>
-                    <StyledTableHeaderCell align="right">Exp</StyledTableHeaderCell>
-                    <StyledTableHeaderCell align="right">Canceled</StyledTableHeaderCell>
+                    <StyledTableHeaderCell align="center">Card</StyledTableHeaderCell>
+                    <StyledTableHeaderCell align="center">Ends With</StyledTableHeaderCell>
+                    <StyledTableHeaderCell align="center">Expires</StyledTableHeaderCell>
                   </>
                 )}
                 <StyledTableHeaderCell align="center">Info</StyledTableHeaderCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {subscriptionRows.map((row) => (
                 <TableRow key={row.id}>
                   {isDeskTop && (
                     <StyledTableCell align="center">{row.active}</StyledTableCell>
                   )}
-                  <StyledTableCell align="center">{row.started}</StyledTableCell>
-                  <StyledTableCell align="right">{row.amount}</StyledTableCell>
-                  <StyledTableCell align="right">{row.lastCharged}</StyledTableCell>
+                  <StyledTableCell align="center">{row.date}</StyledTableCell>
+                  <StyledTableCell align="right">{`$${row.amount}`}</StyledTableCell>
+                  <StyledTableCell align="center">{row.lastCharged}</StyledTableCell>
                   {isDeskTop && (
                     <>
-                      <StyledTableCell align="right">{row.card}</StyledTableCell>
-                      <StyledTableCell align="right">{row.last4}</StyledTableCell>
-                      <StyledTableCell align="right">{row.expires}</StyledTableCell>
-                      <StyledTableCell align="right">{row.canceled}</StyledTableCell>
+                      <StyledTableCell align="center">
+                        <Tooltip title={row.subscriptionId || 'Toolman Taylor'} placement="right"><span>{row.brand}</span></Tooltip>
+                      </StyledTableCell>
+                      <StyledTableCell align="center">{row.last4}</StyledTableCell>
+                      <StyledTableCell align="center">{row.expires}</StyledTableCell>
                     </>
                   )}
                   <StyledTableCell align="center">
                     <DonationCancelOrRefund item={row}
-                                            refundDonation={displayDonations}
+                                            refundDonation={!membershipTabShown}
                                             active={row.isActive}
                                             cancelText=""
                                             showOrganizationPlan={showOrganizationPlan}
+                                            refreshRequired={this.refreshRequired}
                     />
                   </StyledTableCell>
                 </TableRow>
@@ -195,48 +223,49 @@ class DonationList extends Component {
         </TableContainer>
       );
     } else {
+      const paymentRows = this.paymentRows();
       return (
         <TableContainer component={Paper}>
           <Table aria-label="Donation table">
             <TableHead>
               <TableRow>
-                <StyledTableHeaderCell align="left">Date</StyledTableHeaderCell>
+                <StyledTableHeaderCell align="left">Date Paid</StyledTableHeaderCell>
                 <StyledTableHeaderCell align="center">Donation Type</StyledTableHeaderCell>
-                <StyledTableHeaderCell align="center">Campaign</StyledTableHeaderCell>
                 <StyledTableHeaderCell align="right">Amount</StyledTableHeaderCell>
                 {isDeskTop && (
                   <>
-                    <StyledTableHeaderCell align="right">Monthly</StyledTableHeaderCell>
-                    <StyledTableHeaderCell align="right">Payment</StyledTableHeaderCell>
-                    <StyledTableHeaderCell align="right">Card</StyledTableHeaderCell>
-                    <StyledTableHeaderCell align="right">Ends</StyledTableHeaderCell>
-                    <StyledTableHeaderCell align="right">Exp</StyledTableHeaderCell>
-                    <StyledTableHeaderCell align="right">Status</StyledTableHeaderCell>
+                    <StyledTableHeaderCell align="center">Payment</StyledTableHeaderCell>
+                    <StyledTableHeaderCell align="center">Card</StyledTableHeaderCell>
+                    <StyledTableHeaderCell align="center">Ends</StyledTableHeaderCell>
+                    <StyledTableHeaderCell align="center">Exp</StyledTableHeaderCell>
+                    <StyledTableHeaderCell align="center">Status</StyledTableHeaderCell>
+                    <StyledTableHeaderCell align="center">Funding</StyledTableHeaderCell>
                   </>
                 )}
                 {/* <StyledTableHeaderCell align="center">Info</StyledTableHeaderCell> */}
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {paymentRows.map((row) => (
                 <TableRow key={row.id}>
                   <StyledTableCell align="left">{row.date}</StyledTableCell>
                   <StyledTableCell align="center">{row.isChip ? 'Chip In' : 'Membership Payment'}</StyledTableCell>
-                  <StyledTableCell align="right">{row.campaign}</StyledTableCell>
-                  <StyledTableCell align="right">{row.amount}</StyledTableCell>
+                  <StyledTableCell align="right">{`$${row.amount}`}</StyledTableCell>
                   {isDeskTop && (
                     <>
-                      <StyledTableCell align="right">{row.monthly}</StyledTableCell>
-                      <StyledTableCell align="right">{row.payment}</StyledTableCell>
-                      <StyledTableCell align="right">{row.card}</StyledTableCell>
-                      <StyledTableCell align="right">{row.ends}</StyledTableCell>
-                      <StyledTableCell align="right">{row.expires}</StyledTableCell>
-                      <StyledTableCell align="right">{row.status}</StyledTableCell>
+                      <StyledTableCell align="center">
+                        <Tooltip title={row.subscriptionId || 'Toolman Taylor'} placement="right"><span>{row.payment}</span></Tooltip>
+                      </StyledTableCell>
+                      <StyledTableCell align="center">{row.card}</StyledTableCell>
+                      <StyledTableCell align="center">{row.ends}</StyledTableCell>
+                      <StyledTableCell align="center">{row.expires}</StyledTableCell>
+                      <StyledTableCell align="center">{row.status}</StyledTableCell>
+                      <StyledTableCell align="center">{row.funding}</StyledTableCell>
                     </>
                   )}
                   {/* <StyledTableCell align="center"> */}
                   {/*  <DonationCancelOrRefund item={row} */}
-                  {/*                          refundDonation={displayDonations} */}
+                  {/*                          refundDonation={membershipTabShown} */}
                   {/*                          active={row.isActive} */}
                   {/*                          cancelText="" */}
                   {/*                          showOrganizationPlan={showOrganizationPlan} */}
@@ -252,7 +281,7 @@ class DonationList extends Component {
   }
 }
 DonationList.propTypes = {
-  displayDonations: PropTypes.bool,
+  membershipTabShown: PropTypes.bool,
   showOrganizationPlan: PropTypes.bool,
 };
 

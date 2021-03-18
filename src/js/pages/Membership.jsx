@@ -6,20 +6,23 @@ import { loadStripe } from '@stripe/stripe-js';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
+import DonateActions from '../actions/DonateActions';
 import DonationListForm from '../components/Donation/DonationListForm';
 import LoadingWheel from '../components/LoadingWheel';
 import CheckoutForm from '../components/Widgets/CheckoutForm';
+import webAppConfig from '../config';
 import { isCordova } from '../utils/cordovaUtils';
 import initializejQuery from '../utils/initializejQuery';
 import { renderLog } from '../utils/logging';
+import DonateStore from '../stores/DonateStore';
 
 const InjectedCheckoutForm = (params) => {
-  const { value, classes } = params;
+  const { value, classes, onBecomeAMember } = params;
   if (value && classes) {
     return (
       <ElementsConsumer>
         {({ stripe, elements }) => (
-          <CheckoutForm stripe={stripe} elements={elements} value={value} classes={classes} />
+          <CheckoutForm stripe={stripe} elements={elements} value={value} classes={classes} onBecomeAMember={onBecomeAMember} />
         )}
       </ElementsConsumer>
     );
@@ -28,17 +31,20 @@ const InjectedCheckoutForm = (params) => {
   }
 };
 
+const stripePromise = loadStripe(webAppConfig.STRIPE_API_KEY);
+
 class Membership extends Component {
   constructor (props) {
     super(props);
 
     this.state = {
-      stripePromise: loadStripe('pk_test_bWuWGC3jrMIFH3wvRvHR6Z5H'),
       value: 0,
       joining: false,
       loaded: false,
+      subscriptionCount: -1,
     };
     this.onFieldChange = this.onFieldChange.bind(this);
+    this.onBecomeAMember = this.onBecomeAMember.bind(this);
   }
 
   componentDidMount () {
@@ -47,12 +53,28 @@ class Membership extends Component {
       // DonateStore.resetState();  I don't think this does anything!
       // 2/25/21 1pm hack TODO DonateActions.donationRefreshDonationList();
       this.setState({ loaded: true });
+      this.donateStoreListener = DonateStore.addListener(this.onDonateStoreChange.bind(this));
       // dumpCookies();
     });
   }
 
   componentWillUnmount () {
-    // this.donateStoreListener.remove();
+    this.donateStoreListener.remove();
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+  }
+
+  onDonateStoreChange () {
+    console.log('onDonateStore DonateStore:', DonateStore.getAll());
+    if (!DonateStore.donationSuccess()) {
+      console.log('onDonateStoreChange unsuccessful donation');
+      // this.setState({ donationErrorMessage: DonateStore.donationError() });
+    } else {
+      console.log('onDonateStoreChange unsuccessful donation');
+    }
+    this.forceUpdate();
   }
 
   static getProps () {
@@ -66,6 +88,36 @@ class Membership extends Component {
         value: val,
       });
     }
+  }
+
+  onBecomeAMember () {
+    // return Promise.then(() => {
+    console.log('onBecomeAMember in Membership ------------------------------');
+    console.log('Donation store changed in Membership, Checkout form removed');
+    this.setState({
+      joining: false,
+      subscriptionCount: DonateStore.getVoterSubscriptionHistory().length,
+    });
+    this.pollForWebhookCompletion(60);
+    // });
+  }
+
+  pollForWebhookCompletion (pollCount) {
+    // console.log(`pollForWebhookCompletion polling -- start: ${this.state.ddonationPaymentHistory ? this.state.donationPaymentHistory.length : -1}`);
+    // console.log(`pollForWebhookCompletion polling -- start pollCount: ${pollCount}`);
+    this.timer = setTimeout(() => {
+      const latestCount = DonateStore.getVoterSubscriptionHistory().length;
+      if (pollCount === 0 || (this.state.subscriptionCount < latestCount)) {
+        console.log(`pollForWebhookCompletion polling -- clearTimeout: ${latestCount}`);
+        console.log(`pollForWebhookCompletion polling -- pollCount: ${pollCount}`);
+        clearTimeout(this.timer);
+        this.setState({ subscriptionCount: -1 });
+        return;
+      }
+      console.log(`pollForWebhookCompletion polling ----- ${pollCount}`);
+      DonateActions.donationRefreshDonationList();
+      this.pollForWebhookCompletion(pollCount - 1);  // recursive
+    }, 500);
   }
 
   changeValue (newValue) {
@@ -83,7 +135,7 @@ class Membership extends Component {
   render () {
     renderLog('Membership');  // Set LOG_RENDER_EVENTS to log all renders
     const { classes } = this.props;
-    const { joining, stripePromise, value, loaded } = this.state;
+    const { joining, value, loaded } = this.state;
     if (!loaded) {
       return LoadingWheel;
     }
@@ -194,7 +246,7 @@ class Membership extends Component {
           <PaymentWrapper joining={joining}>
             <PaymentCenteredWrapper>
               <Elements stripe={stripePromise}>
-                <InjectedCheckoutForm value={value} classes={{}} />
+                <InjectedCheckoutForm value={value} classes={{}} onBecomeAMember={this.onBecomeAMember} />
               </Elements>
             </PaymentCenteredWrapper>
           </PaymentWrapper>
