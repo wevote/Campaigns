@@ -28,7 +28,7 @@ export function campaignTheme (topNav, heightOfBar) {
           flexGrow: 1,
           height: heightOfBar,
           paddingTop: topNav ? 14 : '',
-          [defaultTheme.breakpoints.down('sm')]: {
+          [defaultTheme.breakpoints.down('xs')]: {
             display: topNav ? 'none !important' : '',
           },
         },

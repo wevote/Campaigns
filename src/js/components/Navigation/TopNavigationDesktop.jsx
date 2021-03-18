@@ -66,7 +66,7 @@ export default function TopNavigationDesktop () {
               <Tab id="topNav-0" label="Start a campaign" style={{ minWidth: 125 }} onClick={() => history.push('/start-a-campaign')} />
               <Tab id="topNav-1" label="My campaigns" style={{ minWidth: 125 }} onClick={() => history.push('/profile/started')} />
               <Tab id="topNav-2" label="Membership" style={{ minWidth: 100 }} onClick={() => history.push('/membership')} />
-              <Tab id="topNav-3" label="Search" style={{ minWidth: 60 }} onClick={() => history.push('/search')} />
+              {/* <Tab id="topNav-3" label="Search" style={{ minWidth: 60 }} onClick={() => history.push('/search')} /> */}
             </Tabs>
           </Toolbar>
         </AppBar>
