@@ -22,12 +22,8 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: '0',
   },
   innerWrapper: {
-    marginLeft: 'calc((100vw -960px)/4.2)',
+    margin: '0 auto',
     maxWidth: '980px', // The WeVote icon extends beyond the visible area, and we want to line up the visible
-    [theme.breakpoints.down('md')]: {
-      marginLeft: '2px',
-      marginRight: '15px',
-    },
   },
   logoLinkRoot: {
     height: 0,
@@ -35,8 +31,8 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     fontSize: '4px',
-    marginLeft: 0,
-    marginRight: 0,
+    marginLeft: '-4px',
+    marginRight: 8,
     padding: '0',
   },
   menuIconRoot: {
@@ -188,7 +184,7 @@ export default function MainHeaderBar (displayHeader) {
                 <MenuItem className={classes.menuItem} onClick={() => handleClose('/edit-profile')}>Settings</MenuItem>
                 <MenuItem className={classes.menuItemMobileOnly} onClick={() => handleClose('/start-a-campaign')}>Start a campaign</MenuItem>
                 <MenuItem className={classes.menuItemMobileOnly} onClick={() => handleClose('/membership')}>Membership</MenuItem>
-                <MenuItem className={classes.menuItemMobileOnly} onClick={() => handleClose('/')}>Search</MenuItem>
+                <MenuItem className={classes.menuItem} onClick={() => handleClose('/search')}>Search</MenuItem>
                 <MenuItem className={classes.menuItem} onClick={() => handleCloseNoDestination()}>
                   <Suspense fallback={<span>&nbsp;</span>}>
                     <SignInButton classes={classes} />
