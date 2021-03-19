@@ -103,7 +103,8 @@ class CheckoutForm extends React.Component {
     } else {
       const email = (emailFromVoter && emailFromVoter.length > 0) ? emailFromVoter : emailFieldText;
 
-      const { error, paymentMethod: {id: paymentMethodId} } = await stripe.createPaymentMethod({
+      // eslint-disable-next-line no-unused-vars
+      const { error, paymentMethod: { id: paymentMethodId } } = await stripe.createPaymentMethod({
         type: 'card',
         card: elements.getElement(CardElement),
         billing_details: {
@@ -201,7 +202,7 @@ class CheckoutForm extends React.Component {
             }}
           />
           <SplitIconButton
-            buttonText={showWaiting ? <CircularProgress color={'white'} size={18} /> : 'Become a member'}
+            buttonText={showWaiting ? <CircularProgress color="white" size={18} /> : 'Become a member'}
             backgroundColor="rgb(33, 95, 254)"
             separatorColor="rgb(33, 95, 254)"
             styles={iconButtonStyles}
