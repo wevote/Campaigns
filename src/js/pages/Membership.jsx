@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, InputAdornment, TextField } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { Elements, ElementsConsumer } from '@stripe/react-stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
@@ -9,27 +9,12 @@ import styled from 'styled-components';
 import DonateActions from '../actions/DonateActions';
 import DonationListForm from '../components/Donation/DonationListForm';
 import LoadingWheel from '../components/LoadingWheel';
-import CheckoutForm from '../components/Widgets/CheckoutForm';
+import InjectedCheckoutForm from '../components/Donation/InjectedCheckoutForm';
 import webAppConfig from '../config';
 import { isCordova } from '../utils/cordovaUtils';
 import initializejQuery from '../utils/initializejQuery';
 import { renderLog } from '../utils/logging';
 import DonateStore from '../stores/DonateStore';
-
-const InjectedCheckoutForm = (params) => {
-  const { value, classes, onBecomeAMember } = params;
-  if (value && classes) {
-    return (
-      <ElementsConsumer>
-        {({ stripe, elements }) => (
-          <CheckoutForm stripe={stripe} elements={elements} value={value} classes={classes} onBecomeAMember={onBecomeAMember} />
-        )}
-      </ElementsConsumer>
-    );
-  } else {
-    return null;
-  }
-};
 
 const stripePromise = loadStripe(webAppConfig.STRIPE_API_KEY);
 
@@ -42,9 +27,12 @@ class Membership extends Component {
       joining: false,
       loaded: false,
       subscriptionCount: -1,
+      waitingForDonationWithStripe: false,
+      showWaiting: false,
     };
     this.onFieldChange = this.onFieldChange.bind(this);
     this.onBecomeAMember = this.onBecomeAMember.bind(this);
+    this.stopShowWaiting = this.stopShowWaiting.bind(this);
   }
 
   componentDidMount () {
@@ -68,11 +56,19 @@ class Membership extends Component {
 
   onDonateStoreChange () {
     console.log('onDonateStore DonateStore:', DonateStore.getAll());
-    if (!DonateStore.donationSuccess()) {
-      console.log('onDonateStoreChange unsuccessful donation');
-      // this.setState({ donationErrorMessage: DonateStore.donationError() });
+    if (DonateStore.donationSuccess()) {
+      if (this.state.waitingForDonationWithStripe) {
+        this.pollForWebhookCompletion(60);
+        this.setState({
+          waitingForDonationWithStripe: false,
+          joining: false,
+        });
+      }
+    } else if (this.state.waitingForDonationWithStripe) {
+      console.log('onDonateStoreChange donation unsuccessful at this point');
     } else {
       console.log('onDonateStoreChange unsuccessful donation');
+      this.setState({ showWaiting: false });
     }
     this.forceUpdate();
   }
@@ -95,15 +91,20 @@ class Membership extends Component {
     console.log('onBecomeAMember in Membership ------------------------------');
     console.log('Donation store changed in Membership, Checkout form removed');
     this.setState({
-      joining: false,
+      waitingForDonationWithStripe: true,
+      showWaiting: true,
       subscriptionCount: DonateStore.getVoterSubscriptionHistory().length,
     });
-    this.pollForWebhookCompletion(60);
-    // });
+  }
+
+  stopShowWaiting () {
+    this.setState({
+      showWaiting: false,
+    });
   }
 
   pollForWebhookCompletion (pollCount) {
-    // console.log(`pollForWebhookCompletion polling -- start: ${this.state.ddonationPaymentHistory ? this.state.donationPaymentHistory.length : -1}`);
+    // console.log(`pollForWebhookCompletion polling -- start: ${this.state.donationPaymentHistory ? this.state.donationPaymentHistory.length : -1}`);
     // console.log(`pollForWebhookCompletion polling -- start pollCount: ${pollCount}`);
     this.timer = setTimeout(() => {
       const latestCount = DonateStore.getVoterSubscriptionHistory().length;
@@ -135,7 +136,7 @@ class Membership extends Component {
   render () {
     renderLog('Membership');  // Set LOG_RENDER_EVENTS to log all renders
     const { classes } = this.props;
-    const { joining, value, loaded } = this.state;
+    const { joining, value, loaded, showWaiting } = this.state;
     if (!loaded) {
       return LoadingWheel;
     }
@@ -246,7 +247,13 @@ class Membership extends Component {
           <PaymentWrapper joining={joining}>
             <PaymentCenteredWrapper>
               <Elements stripe={stripePromise}>
-                <InjectedCheckoutForm value={value} classes={{}} onBecomeAMember={this.onBecomeAMember} />
+                <InjectedCheckoutForm
+                  value={value}
+                  classes={{}}
+                  stopShowWaiting={this.stopShowWaiting}
+                  onBecomeAMember={this.onBecomeAMember}
+                  showWaiting={showWaiting}
+                />
               </Elements>
             </PaymentCenteredWrapper>
           </PaymentWrapper>

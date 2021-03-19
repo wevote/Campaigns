@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button, Grid, Modal } from '@material-ui/core';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import DonateActions from '../../actions/DonateActions';
 import { renderLog } from '../../utils/logging';

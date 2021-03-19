@@ -41,7 +41,9 @@ class DonationList extends Component {
 
   onDonateStoreChange = () => {
     const { refreshCount, activeSubscriptionCount, enablePolling } = this.state;
-    if (enablePolling && activeSubscriptionCount === DonateStore.getNumberOfActiveSubscriptions()) {
+    const stripeSuccess = DonateStore.donationError().length === 0;
+    if (enablePolling && stripeSuccess &&
+        activeSubscriptionCount === DonateStore.getNumberOfActiveSubscriptions()) {
       this.pollForWebhookCompletionAtList(60);
     }
     this.setState({
@@ -50,9 +52,6 @@ class DonationList extends Component {
   };
 
   refreshRequired = () => {
-    // refresh is required since the cancel subscription/membership button was pressed
-    // March 2021: Might need a conditional timer, since it is not clear that we get to donation_manager.mark_donation_journal_canceled_or_ended
-    // in donation_subscription_cancellation_for_api after results = subscription.delete() is called
     DonateActions.donationRefreshDonationList();
     this.setState({ enablePolling: true });
   }

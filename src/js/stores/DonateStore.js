@@ -5,6 +5,7 @@ import Dispatcher from '../components/Dispatcher/Dispatcher';
 class DonateStore extends ReduceStore {
   getInitialState () {  // This is a mandatory override, so it can't be static.
     return {
+      stripeErrorMessageForVoter: '',
       activePaidPlan: {
         coupon_code: '',
         next_invoice: {
@@ -190,6 +191,7 @@ class DonateStore extends ReduceStore {
     // let completeDonationJournalList = [];
     let donationPaymentsList = [];
     let donationSubscriptionList = [];
+    let stripeFailureCode = '';
     // let couponAppliedMessage = '';
     // let couponCodeString = '';
     // let couponMatchFound = '';
@@ -212,37 +214,62 @@ class DonateStore extends ReduceStore {
     switch (action.type) {
       case 'donationWithStripe':
         ({
-          // active_paid_plan: activePaidPlan,
           amount_paid: amountPaidViaStripe,
-          // donation_list: completeDonationJournalList,
           error_message_for_voter: stripeErrorMessageForVoter,
-          // organization_saved: organizationSaved,
-          // plan_type_enum: planTypeEnum,
           status: apiStatus,
-          // eslint-disable-next-line no-unused-vars
           success: apiSuccess,
+          stripe_failure_code: stripeFailureCode,
         } = action.res);
-        // donationJournalList = completeDonationJournalList.filter((item) => (item.is_organization_plan === false));
-        // subscriptionJournalHistory = completeDonationJournalList.filter((item) => (item.is_organization_plan === true));
         if (success === false) {
           console.log(`donation with stripe failed:  ${stripeErrorMessageForVoter}  ---  ${apiStatus}`);
         }
         return {
           ...state,
-          // activePaidPlan,
           amountPaidViaStripe,
           apiStatus,
+          apiSuccess,
           donationAmount: donationAmountSafe,
-          // donationJournalList,
           stripeErrorMessageForVoter,
+          stripeFailureCode,
           monthlyDonation,
-          // planTypeEnum,
           savedStripeDonation,
-          // subscriptionJournalHistory,
           success,
-          // orgSubsAlreadyExists,
           donationResponseReceived: true,
         };
+
+        // case 'donationWithStripe':
+        //   ({
+        //     // active_paid_plan: activePaidPlan,
+        //     amount_paid: amountPaidViaStripe,
+        //     // donation_list: completeDonationJournalList,
+        //     error_message_for_voter: stripeErrorMessageForVoter,
+        //     // organization_saved: organizationSaved,
+        //     // plan_type_enum: planTypeEnum,
+        //     status: apiStatus,
+        //     // eslint-disable-next-line no-unused-vars
+        //     success: apiSuccess,
+        //   } = action.res);
+        //   // donationJournalList = completeDonationJournalList.filter((item) => (item.is_organization_plan === false));
+        //   // subscriptionJournalHistory = completeDonationJournalList.filter((item) => (item.is_organization_plan === true));
+        //   if (success === false) {
+        //     console.log(`donation with stripe failed:  ${stripeErrorMessageForVoter}  ---  ${apiStatus}`);
+        //   }
+        //   return {
+        //     ...state,
+        //     // activePaidPlan,
+        //     amountPaidViaStripe,
+        //     apiStatus,
+        //     donationAmount: donationAmountSafe,
+        //     // donationJournalList,
+        //     stripeErrorMessageForVoter,
+        //     monthlyDonation,
+        //     // planTypeEnum,
+        //     savedStripeDonation,
+        //     // subscriptionJournalHistory,
+        //     success,
+        //     // orgSubsAlreadyExists,
+        //     donationResponseReceived: true,
+        //   };
 
       case 'error-donateRetrieve':
         console.log(`error-donateRetrieve${action}`);
