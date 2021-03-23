@@ -28,10 +28,11 @@ export default {
     Dispatcher.loadEndpoint('donationHistory');
   },
 
-  donationWithStripe (token,  clientIP, email, donationAmount, monthlyDonation, isOrganizationPlan, planType, couponCode) {
+  donationWithStripe (token,  clientIP, paymentMethodId, email, donationAmount, monthlyDonation, isOrganizationPlan, planType, couponCode) {
     Dispatcher.loadEndpoint('donationWithStripe', {
       token,
       client_ip: clientIP,
+      payment_method_id: paymentMethodId,
       email,
       donation_amount: donationAmount,
       monthly_donation: monthlyDonation,

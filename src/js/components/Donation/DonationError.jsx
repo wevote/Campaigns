@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Badge } from '@material-ui/core';
+import PropTypes from 'prop-types';
 import { renderLog } from '../../utils/logging';
 
 export default class DonationError extends Component {

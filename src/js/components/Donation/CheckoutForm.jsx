@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField } from '@material-ui/core';
+import { CircularProgress, TextField } from '@material-ui/core';
 import { withStyles, withTheme } from '@material-ui/core/styles';
 import { CardElement } from '@stripe/react-stripe-js';
 import PropTypes from 'prop-types';
@@ -11,7 +11,7 @@ import DonateStore from '../../stores/DonateStore';
 import VoterStore from '../../stores/VoterStore';
 import { renderLog } from '../../utils/logging';
 import moneyStringToPennies from '../../utils/moneyStringToPennies';
-import SplitIconButton from './SplitIconButton';
+import SplitIconButton from '../Widgets/SplitIconButton';
 
 
 const iconButtonStyles = {
@@ -31,10 +31,12 @@ class CheckoutForm extends React.Component {
       emailValidationErrorText: '',
     };
     this.emailChange = this.emailChange.bind(this);
+    this.onDonateStoreChange = this.onDonateStoreChange.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount () {
-    this.donateStoreListener = DonateStore.addListener(this.onDonateStoreChange.bind(this));
+    this.donateStoreListener = DonateStore.addListener(this.onDonateStoreChange);
     DonateActions.donationRefreshDonationList();
   }
 
@@ -51,12 +53,14 @@ class CheckoutForm extends React.Component {
   }
 
   onDonateStoreChange = () => {
+    const { stopShowWaiting } = this.props;
     const { donationWithStripeSubmitted } = this.state;
     console.log('onDonateStoreChange');
     try {
+      // let all = DonateStore.getAll();
       let stripeErrorMessageForVoter = DonateStore.donationError();
       const getAmountPaidViaStripe = DonateStore.getAmountPaidViaStripe();
-      if (getAmountPaidViaStripe === 0  && donationWithStripeSubmitted) {
+      if (getAmountPaidViaStripe === 0  && donationWithStripeSubmitted  && stripeErrorMessageForVoter.length === 0) {
         stripeErrorMessageForVoter = 'The payment did not go through, please try again later.';
       }
       if (stripeErrorMessageForVoter) {
@@ -69,6 +73,7 @@ class CheckoutForm extends React.Component {
             paymentError: false,
             stripeErrorMessageForVoter: '',
           });
+          stopShowWaiting();
         }, 5000);
       }
       console.log('getAmountPaidViaStripe:', getAmountPaidViaStripe);
@@ -84,26 +89,11 @@ class CheckoutForm extends React.Component {
     }
   };
 
-  handleSubmit = async (event) => {
-    event.preventDefault();
-    const { stripe, elements } = this.props;
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: elements.getElement(CardElement),
-    });
-    console.log(`handleSubmit error: ${error}  paymentMethod: ${paymentMethod}`);
-  };
-
+  // See https://www.npmjs.com/package/@stripe/react-stripe-js#using-class-components
   submitStripePayment = async (emailFromVoter) => {
     const { stripe, value, elements, onBecomeAMember } = this.props;
     const { emailFieldError, emailFieldText } = this.state;
-
-    // if (emailFromVoter === '') {
-    //   // This is a rare case, save the email that the voter entered since his record does not have a primary email address
-    //   // The risk here, is that they mistyped their email and would then have to go to the settings page to correct it.
-    //   // The email is a unique key field in the Postgres Donation tables
-    //   VoterActions.voterEmailAddressSave(emailFieldText, false);
-    // }
+    console.log('submitStripePayment was called ==================');
 
     if (emailFieldError) {
       this.setState({
@@ -113,7 +103,17 @@ class CheckoutForm extends React.Component {
     } else {
       const email = (emailFromVoter && emailFromVoter.length > 0) ? emailFromVoter : emailFieldText;
 
-      const { token } = await stripe.createToken(elements.getElement(CardElement));
+      // eslint-disable-next-line no-unused-vars
+      const { error, paymentMethod: { id: paymentMethodId } } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: elements.getElement(CardElement),
+        billing_details: {
+          email,
+        },
+      });
+
+      const tokenResult = await stripe.createToken(elements.getElement(CardElement));
+      const { token } = tokenResult;
       console.log(`stripe token object from component/dialog: ${token}`);
       if (token) {
         const donateMonthly = true;
@@ -121,7 +121,8 @@ class CheckoutForm extends React.Component {
 
         const donationPennies = moneyStringToPennies(value);
 
-        DonateActions.donationWithStripe(token.id, token.client_ip, email, donationPennies, donateMonthly, isOrganizationPlan, '', '');
+        DonateActions.donationWithStripe(token.id, token.client_ip,
+          paymentMethodId, email, donationPennies, donateMonthly, isOrganizationPlan, '', '');
         onBecomeAMember();
         this.setState({
           donationWithStripeSubmitted: true,
@@ -130,9 +131,6 @@ class CheckoutForm extends React.Component {
         this.setState({
           paymentError: true,
         });
-        this.stripeSubmitTimer = setTimeout(() => {
-          this.setState({ paymentError: false });
-        }, 3000);
       }
     }
   }
@@ -151,8 +149,8 @@ class CheckoutForm extends React.Component {
 
   render () {
     renderLog('CheckoutForm');  // Set LOG_RENDER_EVENTS to log all renders
-    const { classes } = this.props;
-    const { donationWithStripeSubmitted, emailValidationErrorText, emailFieldError, paymentError, stripeErrorMessageForVoter } = this.state;
+    const { classes, showWaiting } = this.props;
+    const { emailValidationErrorText, emailFieldError, paymentError, stripeErrorMessageForVoter } = this.state;
     const voter = VoterStore.getVoter();
     const emailFromVoter = (voter && voter.email) || '';
     console.log('render emailFieldError:', emailFieldError);
@@ -180,7 +178,7 @@ class CheckoutForm extends React.Component {
             />
           </TextFieldContainer>
         ) : null}
-        <form onSubmit={this.handleSubmit}>
+        <form>
           <CardElement
             options={{
               style: {
@@ -204,17 +202,16 @@ class CheckoutForm extends React.Component {
             }}
           />
           <SplitIconButton
-            buttonText="Become a member"
+            buttonText={showWaiting ? <CircularProgress color="white" size={18} /> : 'Become a member'}
             backgroundColor="rgb(33, 95, 254)"
             separatorColor="rgb(33, 95, 254)"
             styles={iconButtonStyles}
             adjustedIconWidth={30}
-            disabled={donationWithStripeSubmitted}
+            disabled={showWaiting}
             externalUniqueId="facebookSignIn"
             icon={<ReactSVG src={whiteLock} />}
             id="stripeCheckOutForm"
             onClick={() => this.submitStripePayment(emailFromVoter)}
-            // onKeyDown={this.onKeyDown}
           />
           <StripeTagLine>
             Secure processing provided by Stripe
@@ -231,6 +228,8 @@ CheckoutForm.propTypes = {
   value: PropTypes.string,
   classes: PropTypes.object,
   onBecomeAMember: PropTypes.func,
+  showWaiting: PropTypes.bool,
+  stopShowWaiting: PropTypes.func,
 };
 
 const StripeTagLine = styled.div`
