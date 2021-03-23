@@ -91,6 +91,7 @@ class Membership extends Component {
     console.log('onBecomeAMember in Membership ------------------------------');
     console.log('Donation store changed in Membership, Checkout form removed');
     this.setState({
+      // joining: false,
       waitingForDonationWithStripe: true,
       showWaiting: true,
       subscriptionCount: DonateStore.getVoterSubscriptionHistory().length,

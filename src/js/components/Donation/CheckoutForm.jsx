@@ -79,10 +79,10 @@ class CheckoutForm extends React.Component {
       console.log('getAmountPaidViaStripe:', getAmountPaidViaStripe);
       if (getAmountPaidViaStripe) {
         // Tell the parent component to move past this step
-        // this.paymentProcessedFunction();
         this.setState({
           donationWithStripeSubmitted: false,
         });
+        stopShowWaiting();
       }
     } catch (err) {
       console.log('onDonateStoreChange caught error: ', err);
@@ -116,6 +116,9 @@ class CheckoutForm extends React.Component {
       const { token } = tokenResult;
       console.log(`stripe token object from component/dialog: ${token}`);
       if (token) {
+        // Flip donateMonthly to false, to test chip in donations { ChipIn, "Chip In", single, one-time }
+        // This test option, does not change the ui, simply the way the donation is stored
+        //
         const donateMonthly = true;
         const isOrganizationPlan = false;
 
