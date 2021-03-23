@@ -33,8 +33,10 @@ class DonationListForm extends Component {
     const { value } = this.state;
     // console.log('this.value =========', value);
 
-    const donationPaymentHistory = DonateStore.getVoterSubscriptionHistory();
-    if (donationPaymentHistory === undefined || donationPaymentHistory.length === 0) {
+    const donationSubscriptionHistory = DonateStore.getVoterSubscriptionHistory();
+    const donationPaymentHistory = DonateStore.getVoterPaymentHistory();
+    if ((donationSubscriptionHistory === undefined || donationSubscriptionHistory.length === 0) &&
+      (donationPaymentHistory === undefined || donationPaymentHistory.length === 0))  {
       console.log('donationPaymentHistory had no rows, so returned null');
       return null;
     }

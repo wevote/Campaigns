@@ -31,8 +31,6 @@ export default class DonationCancelOrRefund extends Component {
     if (this.props.refundDonation) {
       DonateActions.donationRefund(chargeId);
     } else {
-      const { refreshRequired } = this.props;
-      refreshRequired();  // Tell the parent to refresh the history to show the results of this change
       DonateActions.donationCancelSubscriptionAction(subscriptionId);
     }
 
@@ -145,7 +143,6 @@ DonationCancelOrRefund.propTypes = {
   active: PropTypes.bool,
   cancelText: PropTypes.string,
   showOrganizationPlan: PropTypes.bool,
-  refreshRequired: PropTypes.func,
 };
 
 const StyledModalFrame = styled.div`

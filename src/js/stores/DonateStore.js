@@ -112,6 +112,12 @@ class DonateStore extends ReduceStore {
     return count;
   }
 
+  getNumberOfPayments () {
+    // March 2021: We no longer have payment refunds at this point, so all are valid
+    const payments = this.getVoterPaymentHistory();
+    return payments.length;
+  }
+
   // // Organization's subscription payment history
   // getSubscriptionJournalHistory () {
   //   return this.getState().subscriptionJournalHistory || [];

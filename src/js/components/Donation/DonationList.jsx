@@ -6,6 +6,7 @@ import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 import DonateActions from '../../actions/DonateActions';
 import DonateStore from '../../stores/DonateStore';
+import VoterStore from '../../stores/VoterStore';
 import { renderLog } from '../../utils/logging';
 import DonationCancelOrRefund from './DonationCancelOrRefund';
 
@@ -24,6 +25,7 @@ class DonationList extends Component {
   componentDidMount () {
     this.onDonateStoreChange();
     this.donateStoreListener = DonateStore.addListener(this.onDonateStoreChange.bind(this));
+    this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
     this.setState({
       refreshCount: 0,
       activeSubscriptionCount: DonateStore.getNumberOfActiveSubscriptions(),
@@ -49,6 +51,11 @@ class DonationList extends Component {
     this.setState({
       refreshCount: refreshCount + 1,
     });
+  };
+
+  onVoterStoreChange = () => {
+    // In case you sign-in while viewing the Membership page
+    DonateActions.donationRefreshDonationList();
   };
 
   refreshRequired = () => {
