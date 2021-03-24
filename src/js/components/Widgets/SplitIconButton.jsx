@@ -26,7 +26,7 @@ class SplitIconButton extends PureComponent {
       fontSize: fontSize || '13px',
     };
 
-    let buttonStyles = {};
+    let buttonStyles;
     if (styles) {
       buttonStyles = {
         ...defaultButtonStyles,
@@ -83,7 +83,7 @@ class SplitIconButton extends PureComponent {
 SplitIconButton.propTypes = {
   adjustedIconWidth: PropTypes.number,
   backgroundColor: PropTypes.string,
-  buttonText: PropTypes.string,
+  buttonText: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   classes: PropTypes.object,
   compressedSize: PropTypes.bool,
   disabled: PropTypes.bool,

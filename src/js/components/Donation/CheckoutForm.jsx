@@ -57,10 +57,12 @@ class CheckoutForm extends React.Component {
     const { donationWithStripeSubmitted } = this.state;
     console.log('onDonateStoreChange');
     try {
-      // let all = DonateStore.getAll();
+      const { apiSuccess } = DonateStore.getAll();
+      // const all = DonateStore.getAll();
       let stripeErrorMessageForVoter = DonateStore.donationError();
       const getAmountPaidViaStripe = DonateStore.getAmountPaidViaStripe();
-      if (getAmountPaidViaStripe === 0  && donationWithStripeSubmitted  && stripeErrorMessageForVoter.length === 0) {
+      if (apiSuccess === false ||
+        (getAmountPaidViaStripe === 0 && donationWithStripeSubmitted && stripeErrorMessageForVoter.length === 0)) {
         stripeErrorMessageForVoter = 'The payment did not go through, please try again later.';
       }
       if (stripeErrorMessageForVoter) {
@@ -205,7 +207,7 @@ class CheckoutForm extends React.Component {
             }}
           />
           <SplitIconButton
-            buttonText={showWaiting ? <CircularProgress color="white" size={18} /> : 'Become a member'}
+            buttonText={showWaiting ? <CircularProgress style={{ color: 'white' }} size={18} /> : <>Become a member</>}
             backgroundColor="rgb(33, 95, 254)"
             separatorColor="rgb(33, 95, 254)"
             styles={iconButtonStyles}
