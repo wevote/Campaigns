@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Checkbox, FormControl, FormControlLabel } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import CampaignSupportActions from '../../actions/CampaignSupportActions';
-import CampaignSupportStore from '../../stores/CampaignSupportStore';
+import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
+import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { renderLog } from '../../utils/logging';
 
 class VisibleToPublicCheckbox extends Component {
@@ -20,8 +20,8 @@ class VisibleToPublicCheckbox extends Component {
 
   componentDidMount () {
     // console.log('VisibleToPublicCheckbox, componentDidMount');
-    this.onCampaignSupportStoreChange();
-    this.campaignSupportStoreListener = CampaignSupportStore.addListener(this.onCampaignSupportStoreChange.bind(this));
+    this.onCampaignSupporterStoreChange();
+    this.campaignSupportStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
   }
 
   componentDidUpdate (prevProps) {
@@ -34,7 +34,7 @@ class VisibleToPublicCheckbox extends Component {
     } = this.props;
     if (campaignXWeVoteId) {
       if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
-        this.onCampaignSupportStoreChange();
+        this.onCampaignSupporterStoreChange();
       }
     }
   }
@@ -47,19 +47,19 @@ class VisibleToPublicCheckbox extends Component {
     //
   }
 
-  onCampaignSupportStoreChange () {
+  onCampaignSupporterStoreChange () {
     const { campaignXWeVoteId } = this.props;
     let visibleToPublicFromDatabase;
     if (campaignXWeVoteId) {
-      const campaignXSupporter = CampaignSupportStore.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
+      const campaignXSupporter = CampaignSupporterStore.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
       // console.log('campaignXSupporter:', campaignXSupporter);
       if ('visible_to_public' in campaignXSupporter) {
         ({ visible_to_public: visibleToPublicFromDatabase } = campaignXSupporter);
       }
     }
-    const visibleToPublicQueuedToSave = CampaignSupportStore.getVisibleToPublicQueuedToSave();
-    const visibleToPublicQueuedToSaveSet = CampaignSupportStore.getVisibleToPublicQueuedToSaveSet();
-    // console.log('onCampaignSupportStoreChange visibleToPublicFromDatabase: ', visibleToPublicFromDatabase, ', visibleToPublicQueuedToSave: ', visibleToPublicQueuedToSave);
+    const visibleToPublicQueuedToSave = CampaignSupporterStore.getVisibleToPublicQueuedToSave();
+    const visibleToPublicQueuedToSaveSet = CampaignSupporterStore.getVisibleToPublicQueuedToSaveSet();
+    // console.log('onCampaignSupporterStoreChange visibleToPublicFromDatabase: ', visibleToPublicFromDatabase, ', visibleToPublicQueuedToSave: ', visibleToPublicQueuedToSave);
     if (visibleToPublicQueuedToSaveSet) {
       this.setState({
         visibleToPublic: visibleToPublicQueuedToSave,
@@ -74,7 +74,7 @@ class VisibleToPublicCheckbox extends Component {
   updateVisibleToPublic (event) {
     if (event.target.name === 'visibleToPublic') {
       const visibleToPublic = Boolean(event.target.checked);
-      CampaignSupportActions.visibleToPublicQueuedToSave(visibleToPublic);
+      CampaignSupporterActions.visibleToPublicQueuedToSave(visibleToPublic);
       this.setState({
         visibleToPublic,
       });

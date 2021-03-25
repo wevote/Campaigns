@@ -28,10 +28,29 @@ export default function CampaignTopNavigation (incomingVariables) {
   const classes = useStyles();
   const history = useHistory();
 
+  const defaultTheme = createMuiTheme();
+
   const theme = createMuiTheme({
     typography: {
       button: {
         textTransform: 'none',
+      },
+    },
+    overrides: {
+      MuiButtonBase: {
+        root: {
+          '&:hover': {
+            color: '#4371cc',
+          },
+        },
+      },
+      MuiTab: {
+        root: {
+          minWidth: 0,
+          [defaultTheme.breakpoints.up('xs')]: {
+            minWidth: 0,
+          },
+        },
       },
     },
   });

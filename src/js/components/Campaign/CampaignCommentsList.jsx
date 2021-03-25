@@ -1,37 +1,38 @@
 import React, { Component, Suspense } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import CampaignCardForList from '../Campaign/CampaignCardForList';
+import CampaignCardForList from './CampaignCardForList';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
 import { renderLog } from '../../utils/logging';
 
-const FirstCampaignListController = React.lazy(() => import('../Campaign/FirstCampaignListController'));
+const FirstCampaignListController = React.lazy(() => import('./FirstCampaignListController'));
 
-const STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY = 3;
+const STARTING_NUMBER_OF_COMMENTS_TO_DISPLAY = 10;
 
-class HomeCampaignList extends Component {
+class CampaignCommentsList extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      numberOfCampaignsToDisplay: STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY,
+      numberOfCommentsToDisplay: STARTING_NUMBER_OF_COMMENTS_TO_DISPLAY,
     };
   }
 
   componentDidMount () {
-    // console.log('HomeCampaignList componentDidMount');
+    // console.log('CampaignCommentsList componentDidMount');
     this.campaignSupportStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    if (this.props.startingNumberOfCampaignsToDisplay && this.props.startingNumberOfCampaignsToDisplay > 0) {
+    if (this.props.startingNumberOfCommentsToDisplay && this.props.startingNumberOfCommentsToDisplay > 0) {
       this.setState({
-        numberOfCampaignsToDisplay: this.props.startingNumberOfCampaignsToDisplay,
+        numberOfCommentsToDisplay: this.props.startingNumberOfCommentsToDisplay,
       });
     }
-    const promotedCampaignList = CampaignStore.getPromotedCampaignXDicts();
+    const supporterEndorsementsList = CampaignSupporterStore.getCampaignXSupporterEndorsementsList();
     this.setState({
-      promotedCampaignList,
+      supporterEndorsementsList,
     });
   }
 
@@ -41,52 +42,54 @@ class HomeCampaignList extends Component {
   }
 
   onCampaignSupporterStoreChange () {
-    // We need to instantiate CampaignSupporterStore before we call campaignListRetrieve so that store gets filled with data
-  }
-
-  onCampaignStoreChange () {
-    const promotedCampaignList = CampaignStore.getPromotedCampaignXDicts();
+    const supporterEndorsementsList = CampaignSupporterStore.getCampaignXSupporterEndorsementsList();
     this.setState({
-      promotedCampaignList,
+      supporterEndorsementsList,
     });
   }
 
+  onCampaignStoreChange () {
+  }
+
   increaseNumberOfCampaignsToDisplay = () => {
-    let { numberOfCampaignsToDisplay } = this.state;
-    numberOfCampaignsToDisplay += 2;
+    let { numberOfCommentsToDisplay } = this.state;
+    numberOfCommentsToDisplay += 2;
     this.setState({
-      numberOfCampaignsToDisplay,
+      numberOfCommentsToDisplay,
     });
   }
 
   render () {
-    renderLog('HomeCampaignList');  // Set LOG_RENDER_EVENTS to log all renders
-    // console.log('HomeCampaignList render');
-    const { promotedCampaignList, numberOfCampaignsToDisplay } = this.state;
+    renderLog('CampaignCommentsList');  // Set LOG_RENDER_EVENTS to log all renders
+    // console.log('CampaignCommentsList render');
+    const { supporterEndorsementsList, numberOfCommentsToDisplay } = this.state;
 
-    if (!promotedCampaignList) {
-      return null;
+    if (!supporterEndorsementsList || supporterEndorsementsList.length === 0) {
+      return (
+        <Wrapper>
+          <NoCommentsFound>
+            Be the first to add a comment!
+            {' '}
+            Click &apos;Campaign details&apos; above
+            {' '}
+            to support this campaign so you can add a comment.
+          </NoCommentsFound>
+        </Wrapper>
+      );
     }
     let numberOfCampaignsDisplayed = 0;
     return (
       <Wrapper>
-        {!!(promotedCampaignList &&
-            promotedCampaignList.length > 1) &&
-        (
-          <WhatIsHappeningTitle>
-            What&apos;s happening on WeVote.US
-          </WhatIsHappeningTitle>
-        )}
         <div>
-          {promotedCampaignList.map((oneCampaign) => {
+          {supporterEndorsementsList.map((oneCampaign) => {
             // console.log('oneCampaign:', oneCampaign);
             // console.log('numberOfCampaignsDisplayed:', numberOfCampaignsDisplayed);
-            if (numberOfCampaignsDisplayed >= numberOfCampaignsToDisplay) {
+            if (numberOfCampaignsDisplayed >= numberOfCommentsToDisplay) {
               return null;
             }
             numberOfCampaignsDisplayed += 1;
             // console.log('numberOfCampaignsDisplayed: ', numberOfCampaignsDisplayed);
-            // console.log('numberOfCampaignsToDisplay: ', numberOfCampaignsToDisplay);
+            // console.log('numberOfCommentsToDisplay: ', numberOfCommentsToDisplay);
             return (
               <div key={`oneCampaignItem-${oneCampaign.campaignx_we_vote_id}`}>
                 <CampaignCardForList
@@ -97,13 +100,13 @@ class HomeCampaignList extends Component {
           })}
         </div>
         <LoadMoreItemsManuallyWrapper>
-          {!!(promotedCampaignList &&
-              promotedCampaignList.length > 1 &&
-              numberOfCampaignsToDisplay < promotedCampaignList.length) &&
+          {!!(supporterEndorsementsList &&
+              supporterEndorsementsList.length > 1 &&
+              numberOfCommentsToDisplay < supporterEndorsementsList.length) &&
           (
             <LoadMoreItemsManually
               loadMoreFunction={this.increaseNumberOfCampaignsToDisplay}
-              uniqueExternalId="HomeCampaignList"
+              uniqueExternalId="CampaignCommentsList"
             />
           )}
         </LoadMoreItemsManuallyWrapper>
@@ -114,8 +117,8 @@ class HomeCampaignList extends Component {
     );
   }
 }
-HomeCampaignList.propTypes = {
-  startingNumberOfCampaignsToDisplay: PropTypes.number,
+CampaignCommentsList.propTypes = {
+  startingNumberOfCommentsToDisplay: PropTypes.number,
 };
 
 const styles = () => ({
@@ -131,6 +134,12 @@ const LoadMoreItemsManuallyWrapper = styled.div`
   }
 `;
 
+const NoCommentsFound = styled.div`
+  border-top: 1px solid #ddd;
+  margin-top: 25px;
+  padding-top: 25px;
+`;
+
 const WhatIsHappeningTitle = styled.h2`
   font-size: 22px;
   text-align: left;
@@ -139,4 +148,4 @@ const WhatIsHappeningTitle = styled.h2`
 const Wrapper = styled.div`
 `;
 
-export default withStyles(styles)(HomeCampaignList);
+export default withStyles(styles)(CampaignCommentsList);

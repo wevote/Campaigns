@@ -4,7 +4,7 @@ import { Button } from '@material-ui/core';
 import { withStyles, withTheme } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import CampaignStore from '../../stores/CampaignStore';
-import CampaignSupportStore from '../../stores/CampaignSupportStore';
+import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { historyPush } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 import VoterStore from '../../stores/VoterStore';
@@ -25,10 +25,10 @@ class CampaignDetailsActionSideBox extends Component {
 
   componentDidMount () {
     // console.log('CampaignDetailsActionSideBox componentDidMount');
-    this.onCampaignSupportStoreChange();
+    this.onCampaignSupporterStoreChange();
     this.onVoterStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    this.campaignSupportStoreListener = CampaignSupportStore.addListener(this.onCampaignSupportStoreChange.bind(this));
+    this.campaignSupportStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
   }
 
@@ -75,15 +75,15 @@ class CampaignDetailsActionSideBox extends Component {
   }
 
   onCampaignStoreChange () {
-    this.onCampaignSupportStoreChange();
+    this.onCampaignSupporterStoreChange();
   }
 
-  onCampaignSupportStoreChange () {
+  onCampaignSupporterStoreChange () {
     const {
       campaignSEOFriendlyPath,
       campaignXWeVoteId,
     } = this.props;
-    // console.log('CampaignDetailsActionSideBox onCampaignSupportStoreChange campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
+    // console.log('CampaignDetailsActionSideBox onCampaignSupporterStoreChange campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
     if (campaignXWeVoteId) {
       this.pullCampaignXSupporterVoterEntry(campaignXWeVoteId);
     } else if (campaignSEOFriendlyPath) {
@@ -116,13 +116,13 @@ class CampaignDetailsActionSideBox extends Component {
   pullCampaignXSupporterVoterEntry = (campaignXWeVoteId) => {
     // console.log('pullCampaignXSupporterVoterEntry campaignXWeVoteId:', campaignXWeVoteId);
     if (campaignXWeVoteId) {
-      const campaignXSupporterVoterEntry = CampaignSupportStore.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
-      // console.log('onCampaignSupportStoreChange campaignXSupporterVoterEntry:', campaignXSupporterVoterEntry);
+      const campaignXSupporterVoterEntry = CampaignSupporterStore.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
+      // console.log('onCampaignSupporterStoreChange campaignXSupporterVoterEntry:', campaignXSupporterVoterEntry);
       const {
         campaign_supported: campaignSupported,
         campaignx_we_vote_id: campaignXWeVoteIdFromCampaignXSupporter,
       } = campaignXSupporterVoterEntry;
-      // console.log('onCampaignSupportStoreChange campaignSupported: ', campaignSupported);
+      // console.log('onCampaignSupporterStoreChange campaignSupported: ', campaignSupported);
       if (campaignXWeVoteIdFromCampaignXSupporter) {
         this.setState({
           campaignSupported,

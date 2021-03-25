@@ -18,9 +18,9 @@ import {
 } from '../../components/Style/CampaignSupportStyles';
 import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import CampaignSupportActions from '../../actions/CampaignSupportActions';
+import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSteps';
-import CampaignSupportStore from '../../stores/CampaignSupportStore';
+import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import CampaignEndorsementInputField from '../../components/CampaignSupport/CampaignEndorsementInputField';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import initializejQuery from '../../utils/initializejQuery';
@@ -143,7 +143,7 @@ class CampaignSupportEndorsement extends Component {
 
   submitSkipForNow = () => {
     initializejQuery(() => {
-      CampaignSupportActions.supporterEndorsementQueuedToSave(undefined);
+      CampaignSupporterActions.supporterEndorsementQueuedToSave(undefined);
     });
     this.goToNextStep();
   }
@@ -151,20 +151,20 @@ class CampaignSupportEndorsement extends Component {
   submitSupporterEndorsement = () => {
     const { campaignXWeVoteId } = this.state;
     if (campaignXWeVoteId) {
-      const supporterEndorsementQueuedToSave = CampaignSupportStore.getSupporterEndorsementQueuedToSave();
-      const supporterEndorsementQueuedToSaveSet = CampaignSupportStore.getSupporterEndorsementQueuedToSaveSet();
-      let visibleToPublic = CampaignSupportStore.getVisibleToPublic();
-      const visibleToPublicChanged = CampaignSupportStore.getVisibleToPublicQueuedToSaveSet();
+      const supporterEndorsementQueuedToSave = CampaignSupporterStore.getSupporterEndorsementQueuedToSave();
+      const supporterEndorsementQueuedToSaveSet = CampaignSupporterStore.getSupporterEndorsementQueuedToSaveSet();
+      let visibleToPublic = CampaignSupporterStore.getVisibleToPublic();
+      const visibleToPublicChanged = CampaignSupporterStore.getVisibleToPublicQueuedToSaveSet();
       if (visibleToPublicChanged) {
         // If it has changed, use new value
-        visibleToPublic = CampaignSupportStore.getVisibleToPublicQueuedToSave();
+        visibleToPublic = CampaignSupporterStore.getVisibleToPublicQueuedToSave();
       }
       if (supporterEndorsementQueuedToSaveSet || visibleToPublicChanged) {
         // console.log('CampaignSupportEndorsement, supporterEndorsementQueuedToSave:', supporterEndorsementQueuedToSave);
         const saveVisibleToPublic = true;
         initializejQuery(() => {
-          CampaignSupportActions.supporterEndorsementSave(campaignXWeVoteId, supporterEndorsementQueuedToSave, visibleToPublic, saveVisibleToPublic);
-          CampaignSupportActions.supporterEndorsementQueuedToSave(undefined);
+          CampaignSupporterActions.supporterEndorsementSave(campaignXWeVoteId, supporterEndorsementQueuedToSave, visibleToPublic, saveVisibleToPublic);
+          CampaignSupporterActions.supporterEndorsementQueuedToSave(undefined);
         });
       }
       this.goToNextStep();

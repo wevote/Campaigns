@@ -16,9 +16,9 @@ import {
 } from '../../components/Style/CampaignSupportStyles';
 import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import CampaignSupportActions from '../../actions/CampaignSupportActions';
+import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSteps';
-import CampaignSupportStore from '../../stores/CampaignSupportStore';
+import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import initializejQuery from '../../utils/initializejQuery';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
@@ -144,13 +144,13 @@ class CampaignSupportPayToPromote extends Component {
 
   submitSupporterEndorsement = () => {
     const { campaignXWeVoteId } = this.state;
-    const supporterEndorsementQueuedToSave = CampaignSupportStore.getSupporterEndorsementQueuedToSave();
-    const supporterEndorsementQueuedToSaveSet = CampaignSupportStore.getSupporterEndorsementQueuedToSaveSet();
+    const supporterEndorsementQueuedToSave = CampaignSupporterStore.getSupporterEndorsementQueuedToSave();
+    const supporterEndorsementQueuedToSaveSet = CampaignSupporterStore.getSupporterEndorsementQueuedToSaveSet();
     if (supporterEndorsementQueuedToSaveSet && campaignXWeVoteId) {
       // console.log('CampaignSupportPayToPromote, supporterEndorsementQueuedToSave:', supporterEndorsementQueuedToSave);
       initializejQuery(() => {
-        CampaignSupportActions.supporterEndorsementSave(campaignXWeVoteId, supporterEndorsementQueuedToSave);
-        CampaignSupportActions.supporterEndorsementQueuedToSave(undefined);
+        CampaignSupporterActions.supporterEndorsementSave(campaignXWeVoteId, supporterEndorsementQueuedToSave);
+        CampaignSupporterActions.supporterEndorsementQueuedToSave(undefined);
       });
     }
     this.goToNextStep();
