@@ -5,8 +5,8 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import CampaignTopNavigation from '../components/Navigation/CampaignTopNavigation';
 import CampaignStore from '../stores/CampaignStore';
-import CampaignSupportActions from '../actions/CampaignSupportActions';
-import CampaignSupportStore from '../stores/CampaignSupportStore';
+import CampaignSupporterActions from '../actions/CampaignSupporterActions';
+import CampaignSupporterStore from '../stores/CampaignSupporterStore';
 import CompleteYourProfileModalController from '../components/Settings/CompleteYourProfileModalController';
 import DelayedLoad from '../components/Widgets/DelayedLoad';
 import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
@@ -43,7 +43,7 @@ class CampaignDetailsPage extends Component {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    this.campaignSupportStoreListener = CampaignSupportStore.addListener(this.onCampaignSupportStoreChange.bind(this));
+    this.campaignSupportStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     // retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
     let pathToUseWhenProfileComplete;
     if (campaignSEOFriendlyPath) {
@@ -104,13 +104,13 @@ class CampaignDetailsPage extends Component {
     });
   }
 
-  onCampaignSupportStoreChange () {
+  onCampaignSupporterStoreChange () {
     const { campaignXWeVoteId } = this.state;
-    const step2Completed = CampaignSupportStore.supporterEndorsementExists(campaignXWeVoteId);
+    const step2Completed = CampaignSupporterStore.supporterEndorsementExists(campaignXWeVoteId);
     const payToPromoteStepCompleted = false;
     const payToPromoteStepTurnedOn = true;
     const sharingStepCompleted = false;
-    // console.log('onCampaignSupportStoreChange sharingStepCompleted: ', sharingStepCompleted, ', step2Completed: ', step2Completed, ', payToPromoteStepCompleted:', payToPromoteStepCompleted);
+    // console.log('onCampaignSupporterStoreChange sharingStepCompleted: ', sharingStepCompleted, ', step2Completed: ', step2Completed, ', payToPromoteStepCompleted:', payToPromoteStepCompleted);
     this.setState({
       sharingStepCompleted,
       step2Completed,
@@ -157,16 +157,16 @@ class CampaignDetailsPage extends Component {
     const campaignSupported = true;
     const campaignSupportedChanged = true;
     // From this page we always send value for 'visibleToPublic'
-    let visibleToPublic = CampaignSupportStore.getVisibleToPublic();
-    const visibleToPublicChanged = CampaignSupportStore.getVisibleToPublicQueuedToSaveSet();
+    let visibleToPublic = CampaignSupporterStore.getVisibleToPublic();
+    const visibleToPublicChanged = CampaignSupporterStore.getVisibleToPublicQueuedToSaveSet();
     if (visibleToPublicChanged) {
       // If it has changed, use new value
-      visibleToPublic = CampaignSupportStore.getVisibleToPublicQueuedToSave();
+      visibleToPublic = CampaignSupporterStore.getVisibleToPublicQueuedToSave();
     }
     // console.log('functionToUseWhenProfileComplete, visibleToPublic:', visibleToPublic, ', visibleToPublicChanged:', visibleToPublicChanged);
     const saveVisibleToPublic = true;
     initializejQuery(() => {
-      CampaignSupportActions.supportCampaignSave(campaignXWeVoteId, campaignSupported, campaignSupportedChanged, visibleToPublic, saveVisibleToPublic);
+      CampaignSupporterActions.supportCampaignSave(campaignXWeVoteId, campaignSupported, campaignSupportedChanged, visibleToPublic, saveVisibleToPublic);
     }, this.goToNextPage());
   }
 

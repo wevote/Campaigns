@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { TextField, FormControl } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import CampaignSupportActions from '../../actions/CampaignSupportActions';
-import CampaignSupportStore from '../../stores/CampaignSupportStore';
+import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
+import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { renderLog } from '../../utils/logging';
 
 class CampaignEndorsementInputField extends Component {
@@ -20,8 +20,8 @@ class CampaignEndorsementInputField extends Component {
 
   componentDidMount () {
     // console.log('CampaignEndorsementInputField, componentDidMount');
-    this.onCampaignSupportStoreChange();
-    this.campaignSupportStoreListener = CampaignSupportStore.addListener(this.onCampaignSupportStoreChange.bind(this));
+    this.onCampaignSupporterStoreChange();
+    this.campaignSupportStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
   }
 
   componentDidUpdate (prevProps) {
@@ -34,7 +34,7 @@ class CampaignEndorsementInputField extends Component {
     } = this.props;
     if (campaignXWeVoteId) {
       if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
-        this.onCampaignSupportStoreChange();
+        this.onCampaignSupporterStoreChange();
       }
     }
   }
@@ -47,21 +47,21 @@ class CampaignEndorsementInputField extends Component {
     //
   }
 
-  onCampaignSupportStoreChange () {
+  onCampaignSupporterStoreChange () {
     const { campaignXWeVoteId } = this.props;
     let supporterEndorsement = '';
     if (campaignXWeVoteId) {
-      const campaignXSupporter = CampaignSupportStore.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
+      const campaignXSupporter = CampaignSupporterStore.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
       // console.log('campaignXSupporter:', campaignXSupporter);
       ({ supporter_endorsement: supporterEndorsement } = campaignXSupporter);
     }
-    const supporterEndorsementQueuedToSave = CampaignSupportStore.getSupporterEndorsementQueuedToSave();
-    const supporterEndorsementQueuedToSaveSet = CampaignSupportStore.getSupporterEndorsementQueuedToSaveSet();
+    const supporterEndorsementQueuedToSave = CampaignSupporterStore.getSupporterEndorsementQueuedToSave();
+    const supporterEndorsementQueuedToSaveSet = CampaignSupporterStore.getSupporterEndorsementQueuedToSaveSet();
     let supporterEndorsementAdjusted = supporterEndorsement;
     if (supporterEndorsementQueuedToSaveSet) {
       supporterEndorsementAdjusted = supporterEndorsementQueuedToSave;
     }
-    // console.log('onCampaignSupportStoreChange supporterEndorsement: ', supporterEndorsement, ', supporterEndorsementQueuedToSave: ', supporterEndorsementQueuedToSave, ', supporterEndorsementAdjusted:', supporterEndorsementAdjusted);
+    // console.log('onCampaignSupporterStoreChange supporterEndorsement: ', supporterEndorsement, ', supporterEndorsementQueuedToSave: ', supporterEndorsementQueuedToSave, ', supporterEndorsementAdjusted:', supporterEndorsementAdjusted);
     this.setState({
       supporterEndorsement: supporterEndorsementAdjusted,
     });
@@ -69,7 +69,7 @@ class CampaignEndorsementInputField extends Component {
 
   updateSupporterEndorsement (event) {
     if (event.target.name === 'supporterEndorsement') {
-      CampaignSupportActions.supporterEndorsementQueuedToSave(event.target.value);
+      CampaignSupporterActions.supporterEndorsementQueuedToSave(event.target.value);
       this.setState({
         supporterEndorsement: event.target.value,
       });

@@ -23,11 +23,6 @@ class HomePage extends Component {
     return (
       <div>
         <Helmet title="Home - We Vote Campaigns" />
-        {/* <MainHeaderBarWrapper> */}
-        {/*  <Suspense fallback={<span>&nbsp;</span>}> */}
-        {/*    <MainHeaderBar /> */}
-        {/*  </Suspense> */}
-        {/* </MainHeaderBarWrapper> */}
         <PageWrapper>
           <IntroductionMessageSection>
             <PageStatement>Helping the best candidates win votes</PageStatement>
@@ -47,11 +42,6 @@ class HomePage extends Component {
             </Suspense>
           </WhatIsHappeningSection>
         </PageWrapper>
-        {/* <DelayedLoad waitBeforeShow={500}> */}
-        {/*  <Suspense fallback={<span>&nbsp;</span>}> */}
-        {/*    <MainFooter /> */}
-        {/*  </Suspense> */}
-        {/* </DelayedLoad> */}
       </div>
     );
   }

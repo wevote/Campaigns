@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Done } from '@material-ui/icons';
-import CampaignSupportStore from '../../stores/CampaignSupportStore';
+import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 
@@ -22,10 +22,10 @@ class CampaignSupportSteps extends Component {
 
   componentDidMount () {
     // console.log('CampaignSupportSteps, componentDidMount');
-    this.campaignSupportStoreListener = CampaignSupportStore.addListener(this.onCampaignSupportStoreChange.bind(this));
+    this.campaignSupportStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     const { atPayToPromoteStep, atSharingStep, campaignXWeVoteId } = this.props;
     const step1Completed = true;
-    const step2Completed = atPayToPromoteStep || atSharingStep || CampaignSupportStore.supporterEndorsementExists(campaignXWeVoteId);
+    const step2Completed = atPayToPromoteStep || atSharingStep || CampaignSupporterStore.supporterEndorsementExists(campaignXWeVoteId);
     const payToPromoteStepCompleted = atSharingStep;
     const payToPromoteStepTurnedOn = true;
     const sharingStepCompleted = false;
@@ -48,7 +48,7 @@ class CampaignSupportSteps extends Component {
     } = this.props;
     if (campaignXWeVoteId) {
       if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
-        this.onCampaignSupportStoreChange();
+        this.onCampaignSupporterStoreChange();
       }
     }
   }
@@ -57,13 +57,13 @@ class CampaignSupportSteps extends Component {
     this.campaignSupportStoreListener.remove();
   }
 
-  onCampaignSupportStoreChange () {
+  onCampaignSupporterStoreChange () {
     const { atPayToPromoteStep, atSharingStep, campaignXWeVoteId } = this.props;
-    const step2Completed = atPayToPromoteStep || atSharingStep || CampaignSupportStore.supporterEndorsementExists(campaignXWeVoteId);
+    const step2Completed = atPayToPromoteStep || atSharingStep || CampaignSupporterStore.supporterEndorsementExists(campaignXWeVoteId);
     const payToPromoteStepCompleted = atSharingStep;
     const payToPromoteStepTurnedOn = true;
     const sharingStepCompleted = false;
-    // console.log('onCampaignSupportStoreChange step1Completed: ', step1Completed, ', step2Completed: ', step2Completed, ', payToPromoteStepCompleted:', payToPromoteStepCompleted);
+    // console.log('onCampaignSupporterStoreChange step1Completed: ', step1Completed, ', step2Completed: ', step2Completed, ', payToPromoteStepCompleted:', payToPromoteStepCompleted);
     this.setState({
       step2Completed,
       payToPromoteStepCompleted,
