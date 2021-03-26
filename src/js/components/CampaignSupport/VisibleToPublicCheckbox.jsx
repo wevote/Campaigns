@@ -21,11 +21,11 @@ class VisibleToPublicCheckbox extends Component {
   componentDidMount () {
     // console.log('VisibleToPublicCheckbox, componentDidMount');
     this.onCampaignSupporterStoreChange();
-    this.campaignSupportStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
+    this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
   }
 
   componentDidUpdate (prevProps) {
-    // console.log('CampaignDetailsActionSideBox componentDidUpdate');
+    // console.log('VisibleToPublicCheckbox componentDidUpdate');
     const {
       campaignXWeVoteId: campaignXWeVoteIdPrevious,
     } = prevProps;
@@ -40,7 +40,7 @@ class VisibleToPublicCheckbox extends Component {
   }
 
   componentWillUnmount () {
-    this.campaignSupportStoreListener.remove();
+    this.campaignSupporterStoreListener.remove();
   }
 
   handleKeyPress () {

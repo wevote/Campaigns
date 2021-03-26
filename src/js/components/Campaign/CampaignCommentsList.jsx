@@ -1,15 +1,12 @@
-import React, { Component, Suspense } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import CampaignCardForList from './CampaignCardForList';
+import CampaignCommentForList from './CampaignCommentForList';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
 import { renderLog } from '../../utils/logging';
-
-const FirstCampaignListController = React.lazy(() => import('./FirstCampaignListController'));
 
 const STARTING_NUMBER_OF_COMMENTS_TO_DISPLAY = 10;
 
@@ -22,33 +19,60 @@ class CampaignCommentsList extends Component {
   }
 
   componentDidMount () {
-    // console.log('CampaignCommentsList componentDidMount');
-    this.campaignSupportStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
+    this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    if (this.props.startingNumberOfCommentsToDisplay && this.props.startingNumberOfCommentsToDisplay > 0) {
+    const { campaignXWeVoteId, startingNumberOfCommentsToDisplay } = this.props;
+    // console.log('CampaignCommentsList componentDidMount campaignXWeVoteId:', campaignXWeVoteId);
+    if (startingNumberOfCommentsToDisplay && startingNumberOfCommentsToDisplay > 0) {
       this.setState({
-        numberOfCommentsToDisplay: this.props.startingNumberOfCommentsToDisplay,
+        numberOfCommentsToDisplay: startingNumberOfCommentsToDisplay,
       });
     }
-    const supporterEndorsementsList = CampaignSupporterStore.getCampaignXSupporterEndorsementsList();
+    const supporterEndorsementsList = CampaignSupporterStore.getCampaignXSupporterEndorsementsList(campaignXWeVoteId);
     this.setState({
       supporterEndorsementsList,
     });
   }
 
+  componentDidUpdate (prevProps) {
+    // console.log('CampaignCommentsList componentDidUpdate');
+    const {
+      campaignXWeVoteId: campaignXWeVoteIdPrevious,
+    } = prevProps;
+    const {
+      campaignXWeVoteId,
+    } = this.props;
+    if (campaignXWeVoteId) {
+      if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
+        const supporterEndorsementsList = CampaignSupporterStore.getCampaignXSupporterEndorsementsList(campaignXWeVoteId);
+        this.setState({
+          supporterEndorsementsList,
+        });
+      }
+    }
+  }
+
   componentWillUnmount () {
-    this.campaignSupportStoreListener.remove();
+    this.campaignSupporterStoreListener.remove();
     this.campaignStoreListener.remove();
   }
 
   onCampaignSupporterStoreChange () {
-    const supporterEndorsementsList = CampaignSupporterStore.getCampaignXSupporterEndorsementsList();
+    const { campaignXWeVoteId } = this.props;
+    // console.log('CampaignCommentsList onCampaignSupporterStoreChange campaignXWeVoteId:', campaignXWeVoteId);
+    const supporterEndorsementsList = CampaignSupporterStore.getCampaignXSupporterEndorsementsList(campaignXWeVoteId);
     this.setState({
       supporterEndorsementsList,
     });
   }
 
   onCampaignStoreChange () {
+    const { campaignXWeVoteId } = this.props;
+    // console.log('CampaignCommentsList onCampaignStoreChange campaignXWeVoteId:', campaignXWeVoteId);
+    const supporterEndorsementsList = CampaignSupporterStore.getCampaignXSupporterEndorsementsList(campaignXWeVoteId);
+    this.setState({
+      supporterEndorsementsList,
+    });
   }
 
   increaseNumberOfCampaignsToDisplay = () => {
@@ -61,8 +85,9 @@ class CampaignCommentsList extends Component {
 
   render () {
     renderLog('CampaignCommentsList');  // Set LOG_RENDER_EVENTS to log all renders
-    // console.log('CampaignCommentsList render');
+    const { campaignXWeVoteId } = this.props;
     const { supporterEndorsementsList, numberOfCommentsToDisplay } = this.state;
+    // console.log('CampaignCommentsList render numberOfCommentsToDisplay:', numberOfCommentsToDisplay);
 
     if (!supporterEndorsementsList || supporterEndorsementsList.length === 0) {
       return (
@@ -81,19 +106,16 @@ class CampaignCommentsList extends Component {
     return (
       <Wrapper>
         <div>
-          {supporterEndorsementsList.map((oneCampaign) => {
-            // console.log('oneCampaign:', oneCampaign);
-            // console.log('numberOfCampaignsDisplayed:', numberOfCampaignsDisplayed);
+          {supporterEndorsementsList.map((campaignXSupporter) => {
+            // console.log('campaignXSupporter:', campaignXSupporter);
             if (numberOfCampaignsDisplayed >= numberOfCommentsToDisplay) {
               return null;
             }
             numberOfCampaignsDisplayed += 1;
-            // console.log('numberOfCampaignsDisplayed: ', numberOfCampaignsDisplayed);
-            // console.log('numberOfCommentsToDisplay: ', numberOfCommentsToDisplay);
             return (
-              <div key={`oneCampaignItem-${oneCampaign.campaignx_we_vote_id}`}>
-                <CampaignCardForList
-                  campaignXWeVoteId={oneCampaign.campaignx_we_vote_id}
+              <div key={`campaignXSupporterItem-${campaignXWeVoteId}-${campaignXSupporter.voter_we_vote_id}`}>
+                <CampaignCommentForList
+                  campaignXSupporterId={campaignXSupporter.id}
                 />
               </div>
             );
@@ -110,14 +132,12 @@ class CampaignCommentsList extends Component {
             />
           )}
         </LoadMoreItemsManuallyWrapper>
-        <Suspense fallback={<span>&nbsp;</span>}>
-          <FirstCampaignListController />
-        </Suspense>
       </Wrapper>
     );
   }
 }
 CampaignCommentsList.propTypes = {
+  campaignXWeVoteId: PropTypes.string,
   startingNumberOfCommentsToDisplay: PropTypes.number,
 };
 
@@ -138,11 +158,6 @@ const NoCommentsFound = styled.div`
   border-top: 1px solid #ddd;
   margin-top: 25px;
   padding-top: 25px;
-`;
-
-const WhatIsHappeningTitle = styled.h2`
-  font-size: 22px;
-  text-align: left;
 `;
 
 const Wrapper = styled.div`
