@@ -4,9 +4,10 @@ import Dispatcher from '../components/Dispatcher/Dispatcher';
 class CampaignSupporterStore extends ReduceStore {
   getInitialState () {
     return {
-      allLatestCachedCampaignXSupporterEndorsements: {}, // Dict with key campaignx_we_vote_id and value of List of Dicts w/ latest campaignx_supporter entries with supporter_endorsement values
-      allLatestCachedCampaignXSupporters: {}, // Dict with key campaignx_we_vote_id and value of List of Dicts w/ latest campaignx_supporter entries, ordered newest to oldest
+      allCachedCampaignXSupporters: {}, // Dictionary with CampaignXSupporter simple id as key and the CampaignXSupporter as value
       allCachedCampaignXSupporterVoterEntries: {}, // Dictionary with campaignx_we_vote_id as key and the CampaignXSupporter for this voter as value
+      latestCampaignXSupporterEndorsements: {}, // Dict with key campaignx_we_vote_id and value of List of Dicts w/ latest campaignx_supporter entries with supporter_endorsement values
+      latestCampaignXSupporters: {}, // Dict with key campaignx_we_vote_id and value of List of Dicts w/ latest campaignx_supporter entries, ordered newest to oldest
       supporterEndorsementQueuedToSave: '',
       supporterEndorsementQueuedToSaveSet: false,
       visibleToPublic: true, // Default setting
@@ -31,12 +32,16 @@ class CampaignSupporterStore extends ReduceStore {
     return false;
   }
 
+  getCampaignXSupporterById (campaignXSupporterId) {
+    return this.getState().allCachedCampaignXSupporters[campaignXSupporterId] || {};
+  }
+
   getCampaignXSupporterEndorsementsList (campaignXWeVoteId) {
-    return this.getState().allLatestCachedCampaignXSupporterEndorsements[campaignXWeVoteId] || [];
+    return this.getState().latestCampaignXSupporterEndorsements[campaignXWeVoteId] || [];
   }
 
   getCampaignXSupportersList (campaignXWeVoteId) {
-    return this.getState().allLatestCachedCampaignXSupporters[campaignXWeVoteId] || [];
+    return this.getState().latestCampaignXSupporters[campaignXWeVoteId] || [];
   }
 
   getCampaignXSupporterVoterEntry (campaignXWeVoteId) {
@@ -75,8 +80,12 @@ class CampaignSupporterStore extends ReduceStore {
   }
 
   reduce (state, action) {
-    const { allCachedCampaignXSupporterVoterEntries, allLatestCachedCampaignXSupporterEndorsements, allLatestCachedCampaignXSupporters } = state;
+    const {
+      allCachedCampaignXSupporters, allCachedCampaignXSupporterVoterEntries,
+      latestCampaignXSupporterEndorsements, latestCampaignXSupporters,
+    } = state;
     let campaignXList;
+    let campaignXSupporter;
     let revisedState;
     switch (action.type) {
       case 'campaignListRetrieve':
@@ -89,31 +98,37 @@ class CampaignSupporterStore extends ReduceStore {
           //   allCachedCampaignXWeVoteIdsBySEOFriendlyPath[oneCampaignX.seo_friendly_path] = oneCampaignX.campaignx_we_vote_id;
           // }
           if ('latest_campaignx_supporter_endorsement_list' in oneCampaignX) {
-            if ('date_supported' in oneCampaignX.latest_campaignx_supporter_endorsement_list) {
-              if (oneCampaignX.campaignx_we_vote_id in allLatestCachedCampaignXSupporterEndorsements) {
-                // Merge with list retrieved previously
-              } else {
-                allLatestCachedCampaignXSupporterEndorsements[oneCampaignX.campaignx_we_vote_id] = oneCampaignX.latest_campaignx_supporter_endorsement_list;
-              }
+            if (oneCampaignX.campaignx_we_vote_id in latestCampaignXSupporterEndorsements) {
+              // Merge with list retrieved previously
+            } else {
+              latestCampaignXSupporterEndorsements[oneCampaignX.campaignx_we_vote_id] = oneCampaignX.latest_campaignx_supporter_endorsement_list;
+            }
+            for (let i = 0; i < oneCampaignX.latest_campaignx_supporter_endorsement_list.length; ++i) {
+              campaignXSupporter = oneCampaignX.latest_campaignx_supporter_endorsement_list[i];
+              allCachedCampaignXSupporters[campaignXSupporter.id] = campaignXSupporter;
             }
           }
           if ('latest_campaignx_supporter_list' in oneCampaignX) {
-            if ('date_supported' in oneCampaignX.latest_campaignx_supporter_list) {
-              if (oneCampaignX.campaignx_we_vote_id in allLatestCachedCampaignXSupporters) {
-                // Merge with list retrieved previously
-              } else {
-                allLatestCachedCampaignXSupporters[oneCampaignX.campaignx_we_vote_id] = oneCampaignX.latest_campaignx_supporter_list;
-              }
+            if (oneCampaignX.campaignx_we_vote_id in latestCampaignXSupporters) {
+              // Merge with list retrieved previously
+            } else {
+              latestCampaignXSupporters[oneCampaignX.campaignx_we_vote_id] = oneCampaignX.latest_campaignx_supporter_list;
+            }
+            for (let i = 0; i < oneCampaignX.latest_campaignx_supporter_list.length; ++i) {
+              campaignXSupporter = oneCampaignX.latest_campaignx_supporter_list[i];
+              allCachedCampaignXSupporters[campaignXSupporter.id] = campaignXSupporter;
             }
           }
           if ('voter_campaignx_supporter' in oneCampaignX) {
             if ('campaignx_we_vote_id' in oneCampaignX.voter_campaignx_supporter) {
               allCachedCampaignXSupporterVoterEntries[oneCampaignX.campaignx_we_vote_id] = oneCampaignX.voter_campaignx_supporter;
+              allCachedCampaignXSupporters[oneCampaignX.voter_campaignx_supporter.id] = oneCampaignX.voter_campaignx_supporter;
             }
           }
         });
         // console.log('allCachedCampaignXWeVoteIdsBySEOFriendlyPath:', allCachedCampaignXWeVoteIdsBySEOFriendlyPath);
         // console.log('allCachedCampaignXSupporterVoterEntries:', allCachedCampaignXSupporterVoterEntries);
+        revisedState = { ...revisedState, allCachedCampaignXSupporters };
         revisedState = { ...revisedState, allCachedCampaignXSupporterVoterEntries };
         return revisedState;
 
@@ -123,30 +138,36 @@ class CampaignSupporterStore extends ReduceStore {
         revisedState = state;
         if (action.res.campaignx_we_vote_id) {
           if ('latest_campaignx_supporter_endorsement_list' in action.res) {
-            if ('date_supported' in action.res.latest_campaignx_supporter_endorsement_list) {
-              if (action.res.campaignx_we_vote_id in allLatestCachedCampaignXSupporterEndorsements) {
-                // Merge with list retrieved previously
-              } else {
-                allLatestCachedCampaignXSupporterEndorsements[action.res.campaignx_we_vote_id] = action.res.latest_campaignx_supporter_endorsement_list;
-              }
+            if (action.res.campaignx_we_vote_id in latestCampaignXSupporterEndorsements) {
+              // Merge with list retrieved previously
+            } else {
+              latestCampaignXSupporterEndorsements[action.res.campaignx_we_vote_id] = action.res.latest_campaignx_supporter_endorsement_list;
+            }
+            for (let i = 0; i < action.res.latest_campaignx_supporter_endorsement_list.length; ++i) {
+              campaignXSupporter = action.res.latest_campaignx_supporter_endorsement_list[i];
+              allCachedCampaignXSupporters[campaignXSupporter.id] = campaignXSupporter;
             }
           }
           if ('latest_campaignx_supporter_list' in action.res) {
-            if ('date_supported' in action.res.latest_campaignx_supporter_list) {
-              if (action.res.campaignx_we_vote_id in allLatestCachedCampaignXSupporters) {
-                // Merge with list retrieved previously
-              } else {
-                allLatestCachedCampaignXSupporters[action.res.campaignx_we_vote_id] = action.res.latest_campaignx_supporter_list;
-              }
+            if (action.res.campaignx_we_vote_id in latestCampaignXSupporters) {
+              // Merge with list retrieved previously
+            } else {
+              latestCampaignXSupporters[action.res.campaignx_we_vote_id] = action.res.latest_campaignx_supporter_list;
+            }
+            for (let i = 0; i < action.res.latest_campaignx_supporter_list.length; ++i) {
+              campaignXSupporter = action.res.latest_campaignx_supporter_list[i];
+              allCachedCampaignXSupporters[campaignXSupporter.id] = campaignXSupporter;
             }
           }
           if ('voter_campaignx_supporter' in action.res) {
             if ('campaignx_we_vote_id' in action.res.voter_campaignx_supporter) {
               allCachedCampaignXSupporterVoterEntries[action.res.campaignx_we_vote_id] = action.res.voter_campaignx_supporter;
+              allCachedCampaignXSupporters[action.res.voter_campaignx_supporter.id] = action.res.voter_campaignx_supporter;
             }
           }
         }
-        // console.log('allCachedCampaignXSupporterVoterEntries:', allCachedCampaignXSupporterVoterEntries);
+        // console.log('allCachedCampaignXSupporters:', allCachedCampaignXSupporters);
+        revisedState = { ...revisedState, allCachedCampaignXSupporters };
         revisedState = { ...revisedState, allCachedCampaignXSupporterVoterEntries };
         return revisedState;
 

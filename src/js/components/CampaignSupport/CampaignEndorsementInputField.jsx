@@ -21,11 +21,11 @@ class CampaignEndorsementInputField extends Component {
   componentDidMount () {
     // console.log('CampaignEndorsementInputField, componentDidMount');
     this.onCampaignSupporterStoreChange();
-    this.campaignSupportStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
+    this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
   }
 
   componentDidUpdate (prevProps) {
-    // console.log('CampaignDetailsActionSideBox componentDidUpdate');
+    // console.log('CampaignEndorsementInputField componentDidUpdate');
     const {
       campaignXWeVoteId: campaignXWeVoteIdPrevious,
     } = prevProps;
@@ -40,7 +40,7 @@ class CampaignEndorsementInputField extends Component {
   }
 
   componentWillUnmount () {
-    this.campaignSupportStoreListener.remove();
+    this.campaignSupporterStoreListener.remove();
   }
 
   handleKeyPress () {

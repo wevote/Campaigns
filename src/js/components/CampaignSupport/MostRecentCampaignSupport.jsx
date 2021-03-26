@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { AccountCircle } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import anonymous from '../../../img/global/icons/avatar-generic.png';
+import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
+import CampaignStore from '../../stores/CampaignStore';
 import LazyImage from '../../utils/LazyImage';
 import { renderLog } from '../../utils/logging';
 import { timeFromDate } from '../../utils/dateFormat';
@@ -12,142 +14,204 @@ class MostRecentCampaignSupport extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      comments: [
-        {
-          id: 1,
-          name: 'Annie Brown',
-          time: new Date(new Date().getTime() - 27 * 60000),
-          comment: 'I vote because I care.',
-        },
-        {
-          id: 2,
-          name: 'Tony Shapiro',
-          time: new Date(new Date().getTime() - 30 * 60000),
-          comment: "I'm a voter because this is OUR country.",
-        },
-        {
-          id: 4,
-          name: 'Ben White',
-          time: new Date(new Date().getTime() - 40 * 60000),
-          comment: 'I vote because the country needs to change. All this stuff is awesome. A great voter always votes.',
-        },
-      ],
+      countOfStageQueueItemsMovedOnStage: 0,
+      stageQueue: [],
+      supportersOnStageNow: [],
+      waitingForInitialData: true,
     };
   }
 
   componentDidMount () {
-    const { comments } = this.state;
-
-    this.setState({ commentsToDisplay: [
-      comments[0] ? comments[0] : null,
-      comments[1] ? comments[1] : null,
-    ]});
+    // Both use onCampaignSupporterStoreChange
+    this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
+    this.campaignStoreListener = CampaignStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
+    const { campaignXWeVoteId } = this.props;
+    // console.log('componentDidMount campaignXWeVoteId:', campaignXWeVoteId);
+    if (campaignXWeVoteId) {
+      const allLatestSupporters = CampaignSupporterStore.getCampaignXSupportersList(campaignXWeVoteId);
+      // console.log('componentDidMount allLatestSupporters:', allLatestSupporters);
+      if (allLatestSupporters && allLatestSupporters.length) {
+        this.setState({
+          waitingForInitialData: false,
+        });
+        // The first time we aren't waiting for initial data, fill it
+        this.onFirstLoadOfSupporterData(allLatestSupporters);
+      }
+    }
 
     if (this.timeInterval) {
       clearInterval(this.timeInterval);
       this.timeInterval = null;
     }
-    this.timeInterval = setInterval(() => this.setCommentsToDisplay(), 3000);
+    // this.timeInterval = setInterval(() => this.setCommentsToDisplay(), 30000);
+    this.timeInterval = setInterval(() => this.moveSupportersOnStage(), 3000);
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    // console.log('MostRecentCampaignSupport componentDidUpdate');
+    const {
+      campaignXWeVoteId,
+    } = this.props;
+    const {
+      waitingForInitialData: waitingForInitialDataPrevious,
+    } = prevState;
+    // console.log('componentDidUpdate campaignXWeVoteId:', campaignXWeVoteId, ', waitingForInitialData:', waitingForInitialData);
+    if (campaignXWeVoteId) {
+      const allLatestSupporters = CampaignSupporterStore.getCampaignXSupportersList(campaignXWeVoteId);
+      // console.log('componentDidUpdate allLatestSupporters:', allLatestSupporters, ', waitingForInitialDataPrevious:', waitingForInitialDataPrevious, ', waitingForInitialData:', waitingForInitialData);
+      const dataExists = allLatestSupporters && allLatestSupporters.length > 0;
+      const waitingForInitialData = !dataExists;
+      // The first time we aren't waiting for initial data, fill it
+      if (!waitingForInitialData) {
+        if (waitingForInitialData !== waitingForInitialDataPrevious) {
+          this.setState({
+            waitingForInitialData: false,
+          });
+          this.onFirstLoadOfSupporterData(allLatestSupporters);
+        }
+      }
+    }
   }
 
   componentWillUnmount () {
+    this.campaignSupporterStoreListener.remove();
+    this.campaignStoreListener.remove();
     if (this.timeInterval) {
       clearInterval(this.timeInterval);
       this.timeInterval = null;
     }
   }
 
-  setCommentsToDisplay () {
-    const commentsWrapper = document.getElementById('comments-wrapper');
+  onFirstLoadOfSupporterData (allLatestSupporters) {
+    // The first time we aren't waiting for initial data, fill it
+    const stageQueue = this.fillStageQueue(allLatestSupporters);
+    let countOfStageQueueItemsMovedOnStage = 0;
+    // Reverse this so newest is at top of array
+    const supportersToMoveOnStage = [];
+    if (stageQueue.length === 0) {
+      // Do nothing
+    } else if (stageQueue.length === 1) {
+      supportersToMoveOnStage.push(stageQueue[0]);
+      countOfStageQueueItemsMovedOnStage = 1;
+    } else {
+      supportersToMoveOnStage.unshift(stageQueue[0]);
+      supportersToMoveOnStage.unshift(stageQueue[1]);
+      countOfStageQueueItemsMovedOnStage = 2;
+    }
+    this.setState({
+      countOfStageQueueItemsMovedOnStage,
+      stageQueue,
+      supportersOnStageNow: supportersToMoveOnStage,
+    });
+  }
 
-    let lastScroll;
-
-    if (this.state.commentsToDisplay.length < this.state.comments.length - 2) {
-      const newArray = [...this.state.commentsToDisplay];
-
-      if (this.state.comments[this.state.commentsToDisplay.length]) {
-        newArray.push(this.state.comments[this.state.commentsToDisplay.length]);
-
-        // commentsWrapper.scrollTop = commentsWrapper.scrollHeight - commentsWrapper.clientHeight + 64;
+  onCampaignSupporterStoreChange () {
+    const { campaignXWeVoteId } = this.props;
+    // console.log('onCampaignSupporterStoreChange campaignXWeVoteId:', campaignXWeVoteId);
+    if (campaignXWeVoteId) {
+      const allLatestSupporters = CampaignSupporterStore.getCampaignXSupportersList(campaignXWeVoteId);
+      if (allLatestSupporters && allLatestSupporters.length) {
+        const stageQueue = this.fillStageQueue(allLatestSupporters);
+        this.setState({
+          stageQueue,
+          waitingForInitialData: false,
+        });
       }
+    }
+  }
 
-      if (this.state.comments[this.state.commentsToDisplay.length + 1]) {
-        newArray.push(this.state.comments[this.state.commentsToDisplay.length + 1]);
-
-        // commentsWrapper.scrollTop = commentsWrapper.scrollHeight - commentsWrapper.clientHeight + 32;
-      } else {
-        lastScroll = true;
+  fillStageQueue (allLatestSupporters) {
+    const { stageQueue } = this.state;
+    // stageQueue is oldest-to-newest
+    // Find newest entry in stageQueue
+    let dateClosestToPresent;
+    for (let i = 0; i < stageQueue.length; ++i) {
+      if (!dateClosestToPresent) {
+        dateClosestToPresent = stageQueue[i].date_supported;
+      } else if (Date.parse(stageQueue[i].date_supported) > Date.parse(dateClosestToPresent)) {
+        dateClosestToPresent = stageQueue[i].date_supported;
       }
+    }
+    // console.log('dateClosestToPresent:', dateClosestToPresent);
 
-      this.setState({ commentsToDisplay: [...newArray]});
-
-      // let height = 0;
-      // commentsWrapper.childNodes.forEach((node) => {
-      //   height += node.clientHeight;
-      // });
-      // console.log('pledge height: ', height);
-
-      if (lastScroll) {
-        commentsWrapper.scrollTop = commentsWrapper.scrollHeight - commentsWrapper.clientHeight + 64;
-      } else {
-        commentsWrapper.scrollTop = commentsWrapper.scrollHeight - commentsWrapper.clientHeight + 64;
+    // Order allLatestSupporters oldest-to-newest
+    allLatestSupporters.sort((optionA, optionB) => Date.parse(optionA.date_supported) - Date.parse(optionB.date_supported));
+    // console.log('allLatestSupporters after sort:', allLatestSupporters);
+    for (let i = 0; i < allLatestSupporters.length; ++i) {
+      if (!dateClosestToPresent) {
+        stageQueue.push(allLatestSupporters[i]);
+      } else if (Date.parse(allLatestSupporters[i].date_supported) > Date.parse(dateClosestToPresent)) {
+        stageQueue.push(allLatestSupporters[i]);
       }
-
-      // commentsWrapper.scrollTop = commentsWrapper.scrollHeight - commentsWrapper.clientHeight;
     }
 
-    commentsWrapper.style.maxHeight = `${commentsWrapper.lastElementChild.clientHeight + commentsWrapper.lastElementChild.previousElementSibling.clientHeight + 16}px`;
+    // console.log('stageQueue at end:', stageQueue);
+    return stageQueue;
+  }
 
-    commentsWrapper.style.height = `${commentsWrapper.lastElementChild.clientHeight + commentsWrapper.lastElementChild.previousElementSibling.clientHeight + 16}px`;
+  moveSupportersOnStage () {
+    const { countOfStageQueueItemsMovedOnStage, stageQueue, supportersOnStageNow } = this.state;
+    if (stageQueue && countOfStageQueueItemsMovedOnStage < stageQueue.length) {
+      // console.log('moveSupportersOnStage, countOfStageQueueItemsMovedOnStage:', countOfStageQueueItemsMovedOnStage);
+      // Add the next most recent supporter to the top of the display array
+      supportersOnStageNow.unshift(stageQueue[countOfStageQueueItemsMovedOnStage]);
+      this.setState({
+        countOfStageQueueItemsMovedOnStage: countOfStageQueueItemsMovedOnStage + 1,
+        supportersOnStageNow,
+      });
+    }
   }
 
   render () {
     renderLog('MostRecentCampaignSupport');  // Set LOG_RENDER_EVENTS to log all renders
     const { classes } = this.props;
-    const { commentsToDisplay } = this.state;
+    const { supportersOnStageNow } = this.state;
 
     const voterPhotoUrlMedium = null;
     return (
       <Wrapper>
-        {commentsToDisplay && commentsToDisplay.length > 0 ? (
-          <CommentsWrapper id="comments-wrapper">
-            {commentsToDisplay.map((comment) => (
-              <CommentWrapper className="comment" key={comment.id}>
-                <CommentVoterPhotoWrapper>
-                  {voterPhotoUrlMedium ? (
-                    <LazyImage
-                      src={voterPhotoUrlMedium}
-                      placeholder={anonymous}
-                      className="profile-photo"
-                      height={24}
-                      width={24}
-                      alt="Your Settings"
-                    />
-                  ) : (
-                    <AccountCircle classes={{ root: classes.accountCircleRoot }} />
-                  )}
-                </CommentVoterPhotoWrapper>
-                <CommentTextWrapper>
-                  <Comment>{comment.comment}</Comment>
-                  <CommentNameWrapper>
-                    <CommentName>
-                      {comment.name}
-                    </CommentName>
-                    {' '}
-                    supported
-                    {' '}
-                    {timeFromDate(comment.time)}
-                  </CommentNameWrapper>
-                </CommentTextWrapper>
-              </CommentWrapper>
-            ))}
-          </CommentsWrapper>
-        ) : null }
+        <CommentsWrapper id="comments-wrapper">
+          {supportersOnStageNow && supportersOnStageNow.length > 0 ? (
+            <div>
+              {supportersOnStageNow.map((comment) => (
+                <CommentWrapper className="comment" key={comment.id}>
+                  <CommentVoterPhotoWrapper>
+                    {voterPhotoUrlMedium ? (
+                      <LazyImage
+                        src={voterPhotoUrlMedium}
+                        placeholder={anonymous}
+                        className="profile-photo"
+                        height={24}
+                        width={24}
+                        alt="Your Settings"
+                      />
+                    ) : (
+                      <AccountCircle classes={{ root: classes.accountCircleRoot }} />
+                    )}
+                  </CommentVoterPhotoWrapper>
+                  <CommentTextWrapper>
+                    <Comment>{comment.supporter_endorsement}</Comment>
+                    <CommentNameWrapper>
+                      <CommentName>
+                        {comment.supporter_name}
+                      </CommentName>
+                      {' '}
+                      supported
+                      {' '}
+                      {timeFromDate(comment.date_supported)}
+                    </CommentNameWrapper>
+                  </CommentTextWrapper>
+                </CommentWrapper>
+              ))}
+            </div>
+          ) : null }
+        </CommentsWrapper>
       </Wrapper>
     );
   }
 }
 MostRecentCampaignSupport.propTypes = {
+  campaignXWeVoteId: PropTypes.string,
   classes: PropTypes.object,
 };
 
@@ -162,6 +226,7 @@ const Wrapper = styled.div`
 `;
 
 const CommentsWrapper = styled.div`
+  height: 100px;
   max-height: 140px;
   overflow-y: scroll;
   transition-duration: .3s;
@@ -199,14 +264,11 @@ const CommentWrapper = styled.div`
   justify-content: flex-start;
   margin: 8px 0;
   width: 100%;
-  // background: #2e3c5d30;
-  // padding: 6px;
 `;
 
 const Comment = styled.p`
   color: #999;
   font-size: 14px;
-  // font-weight: 400 !important;
   margin: 0;
 `;
 

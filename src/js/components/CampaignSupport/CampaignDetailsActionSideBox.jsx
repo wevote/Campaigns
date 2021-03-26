@@ -29,7 +29,7 @@ class CampaignDetailsActionSideBox extends Component {
     this.onCampaignSupporterStoreChange();
     this.onVoterStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    this.campaignSupportStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
+    this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
   }
 
@@ -64,7 +64,7 @@ class CampaignDetailsActionSideBox extends Component {
   componentWillUnmount () {
     // console.log('CampaignDetailsActionSideBox componentWillUnmount');
     this.campaignStoreListener.remove();
-    this.campaignSupportStoreListener.remove();
+    this.campaignSupporterStoreListener.remove();
     this.voterStoreListener.remove();
   }
 
@@ -164,6 +164,7 @@ class CampaignDetailsActionSideBox extends Component {
           <KeepHelpingWrapper
             className={hideFooterBehindModal ? 'u-z-index-1000' : 'u-z-index-9000'}
           >
+            <MostRecentCampaignSupport campaignXWeVoteId={campaignXWeVoteId} />
             <ButtonPanel>
               <Button
                 classes={{ root: supportButtonClasses }}
@@ -178,7 +179,7 @@ class CampaignDetailsActionSideBox extends Component {
           </KeepHelpingWrapper>
         ) : (
           <section>
-            <MostRecentCampaignSupport />
+            <MostRecentCampaignSupport campaignXWeVoteId={campaignXWeVoteId} />
             {voterProfileIsComplete ? (
               <ProfileAlreadyComplete>
                 <Suspense fallback={<span>&nbsp;</span>}>

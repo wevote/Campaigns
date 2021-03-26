@@ -41,7 +41,7 @@ class SupportButton extends Component {
 
   submitSupportButtonDesktop = () => {
     const { voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
-    console.log('SupportButton submitSupportButtonDesktop');
+    // console.log('SupportButton submitSupportButtonDesktop');
     if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
       // Open complete your profile modal
       AppActions.setShowCompleteYourProfileModal(true);

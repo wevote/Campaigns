@@ -10,7 +10,7 @@ import { renderLog } from '../../utils/logging';
 import VoterStore from '../../stores/VoterStore';
 
 
-class CampaignDetailsActionSideBox extends Component {
+class CampaignDetailsActionButtonFooter extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -24,16 +24,16 @@ class CampaignDetailsActionSideBox extends Component {
   }
 
   componentDidMount () {
-    // console.log('CampaignDetailsActionSideBox componentDidMount');
+    // console.log('CampaignDetailsActionButtonFooter componentDidMount');
     this.onCampaignSupporterStoreChange();
     this.onVoterStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    this.campaignSupportStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
+    this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
   }
 
   componentDidUpdate (prevProps) {
-    // console.log('CampaignDetailsActionSideBox componentDidUpdate');
+    // console.log('CampaignDetailsActionButtonFooter componentDidUpdate');
     const {
       campaignSEOFriendlyPath: campaignSEOFriendlyPathPrevious,
       campaignXWeVoteId: campaignXWeVoteIdPrevious,
@@ -57,19 +57,19 @@ class CampaignDetailsActionSideBox extends Component {
 
   componentDidCatch (error, info) {
     // We should get this information to Splunk!
-    console.error('CampaignDetailsActionSideBox caught error: ', `${error} with info: `, info);
+    console.error('CampaignDetailsActionButtonFooter caught error: ', `${error} with info: `, info);
   }
 
   componentWillUnmount () {
-    // console.log('CampaignDetailsActionSideBox componentWillUnmount');
+    // console.log('CampaignDetailsActionButtonFooter componentWillUnmount');
     this.campaignStoreListener.remove();
-    this.campaignSupportStoreListener.remove();
+    this.campaignSupporterStoreListener.remove();
     this.voterStoreListener.remove();
   }
 
   // See https://reactjs.org/docs/error-boundaries.html
   static getDerivedStateFromError (error) { // eslint-disable-line no-unused-vars
-    console.error('Error caught in CampaignDetailsActionSideBox: ', error);
+    console.error('Error caught in CampaignDetailsActionButtonFooter: ', error);
     // Update state so the next render will show the fallback UI, We should have a "Oh snap" page
     return { hasError: true };
   }
@@ -83,7 +83,7 @@ class CampaignDetailsActionSideBox extends Component {
       campaignSEOFriendlyPath,
       campaignXWeVoteId,
     } = this.props;
-    // console.log('CampaignDetailsActionSideBox onCampaignSupporterStoreChange campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
+    // console.log('CampaignDetailsActionButtonFooter onCampaignSupporterStoreChange campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
     if (campaignXWeVoteId) {
       this.pullCampaignXSupporterVoterEntry(campaignXWeVoteId);
     } else if (campaignSEOFriendlyPath) {
@@ -104,7 +104,7 @@ class CampaignDetailsActionSideBox extends Component {
       voterIsSignedInWithEmail,
     });
     const voterProfileIsComplete = (voterFirstName && voterLastName && voterIsSignedInWithEmail) || false;
-    // console.log('CampaignDetailsActionSideBox onVoterStoreChange voterProfileIsComplete:', voterProfileIsComplete, ', voterWeVoteId:', voterWeVoteId);
+    // console.log('CampaignDetailsActionButtonFooter onVoterStoreChange voterProfileIsComplete:', voterProfileIsComplete, ', voterWeVoteId:', voterWeVoteId);
     // if (voterProfileIsComplete !== voterProfileIsCompletePrevious || voterWeVoteId !== voterWeVoteIdPrevious) {
     this.setState({
       voterProfileIsComplete,
@@ -161,13 +161,13 @@ class CampaignDetailsActionSideBox extends Component {
   };
 
   render () {
-    renderLog('CampaignDetailsActionSideBox');  // Set LOG_RENDER_EVENTS to log all renders
+    renderLog('CampaignDetailsActionButtonFooter');  // Set LOG_RENDER_EVENTS to log all renders
     const { campaignSEOFriendlyPath, campaignXWeVoteId, classes } = this.props;
     const hideFooterBehindModal = false;
     const supportButtonClasses = classes.buttonDefault; // isWebApp() ? classes.buttonDefault : classes.buttonDefaultCordova;
-    // console.log('CampaignDetailsActionSideBox render campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
+    // console.log('CampaignDetailsActionButtonFooter render campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
     if (!campaignSEOFriendlyPath && !campaignXWeVoteId) {
-      // console.log('CampaignDetailsActionSideBox render voter NOT found');
+      // console.log('CampaignDetailsActionButtonFooter render voter NOT found');
       return <div className="undefined-campaign-state" />;
     }
 
@@ -175,10 +175,10 @@ class CampaignDetailsActionSideBox extends Component {
       campaignSupported, voterWeVoteId,
     } = this.state;
     if (!voterWeVoteId) {
-      // console.log('CampaignDetailsActionSideBox render voter NOT found');
+      // console.log('CampaignDetailsActionButtonFooter render voter NOT found');
       return <div className="undefined-props" />;
     }
-    // console.log('CampaignDetailsActionSideBox render voter found');
+    // console.log('CampaignDetailsActionButtonFooter render voter found');
     return (
       <Wrapper
         className={hideFooterBehindModal ? 'u-z-index-1000' : 'u-z-index-9000'}
@@ -210,7 +210,7 @@ class CampaignDetailsActionSideBox extends Component {
     );
   }
 }
-CampaignDetailsActionSideBox.propTypes = {
+CampaignDetailsActionButtonFooter.propTypes = {
   campaignXWeVoteId: PropTypes.string,
   campaignSEOFriendlyPath: PropTypes.string,
   classes: PropTypes.object,
@@ -250,4 +250,4 @@ const Wrapper = styled.div`
   display: block;
 `;
 
-export default withTheme(withStyles(styles)(CampaignDetailsActionSideBox));
+export default withTheme(withStyles(styles)(CampaignDetailsActionButtonFooter));

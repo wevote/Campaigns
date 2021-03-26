@@ -22,7 +22,7 @@ class CampaignSupportSteps extends Component {
 
   componentDidMount () {
     // console.log('CampaignSupportSteps, componentDidMount');
-    this.campaignSupportStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
+    this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     const { atPayToPromoteStep, atSharingStep, campaignXWeVoteId } = this.props;
     const step1Completed = true;
     const step2Completed = atPayToPromoteStep || atSharingStep || CampaignSupporterStore.supporterEndorsementExists(campaignXWeVoteId);
@@ -39,7 +39,7 @@ class CampaignSupportSteps extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    // console.log('CampaignDetailsActionSideBox componentDidUpdate');
+    // console.log('CampaignSupportSteps componentDidUpdate');
     const {
       campaignXWeVoteId: campaignXWeVoteIdPrevious,
     } = prevProps;
@@ -54,7 +54,7 @@ class CampaignSupportSteps extends Component {
   }
 
   componentWillUnmount () {
-    this.campaignSupportStoreListener.remove();
+    this.campaignSupporterStoreListener.remove();
   }
 
   onCampaignSupporterStoreChange () {

@@ -43,7 +43,7 @@ class CampaignDetailsPage extends Component {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    this.campaignSupportStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
+    this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     // retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
     let pathToUseWhenProfileComplete;
     if (campaignSEOFriendlyPath) {
@@ -68,7 +68,7 @@ class CampaignDetailsPage extends Component {
       this.timer = null;
     }
     this.campaignStoreListener.remove();
-    this.campaignSupportStoreListener.remove();
+    this.campaignSupporterStoreListener.remove();
   }
 
   onCampaignStoreChange () {

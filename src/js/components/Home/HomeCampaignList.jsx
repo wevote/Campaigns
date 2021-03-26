@@ -22,7 +22,7 @@ class HomeCampaignList extends Component {
 
   componentDidMount () {
     // console.log('HomeCampaignList componentDidMount');
-    this.campaignSupportStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
+    this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     if (this.props.startingNumberOfCampaignsToDisplay && this.props.startingNumberOfCampaignsToDisplay > 0) {
       this.setState({
@@ -36,7 +36,7 @@ class HomeCampaignList extends Component {
   }
 
   componentWillUnmount () {
-    this.campaignSupportStoreListener.remove();
+    this.campaignSupporterStoreListener.remove();
     this.campaignStoreListener.remove();
   }
 

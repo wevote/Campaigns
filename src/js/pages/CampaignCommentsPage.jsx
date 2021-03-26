@@ -21,11 +21,6 @@ class CampaignCommentsPage extends Component {
       campaignSEOFriendlyPath: '',
       campaignTitle: '',
       campaignXWeVoteId: '',
-      pathToUseWhenProfileComplete: '',
-      payToPromoteStepCompleted: false,
-      payToPromoteStepTurnedOn: false,
-      sharingStepCompleted: false,
-      step2Completed: false,
     };
   }
 
@@ -36,23 +31,16 @@ class CampaignCommentsPage extends Component {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    this.campaignSupportStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
-    // retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
-    let pathToUseWhenProfileComplete;
+    this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     if (campaignSEOFriendlyPath) {
       this.setState({
         campaignSEOFriendlyPath,
       });
-      pathToUseWhenProfileComplete = `/c/${campaignSEOFriendlyPath}/why-do-you-support`;
     } else {
       this.setState({
         campaignXWeVoteId,
       });
-      pathToUseWhenProfileComplete = `/id/${campaignXWeVoteId}/why-do-you-support`;
     }
-    this.setState({
-      pathToUseWhenProfileComplete,
-    });
   }
 
   componentWillUnmount () {
@@ -61,7 +49,7 @@ class CampaignCommentsPage extends Component {
       this.timer = null;
     }
     this.campaignStoreListener.remove();
-    this.campaignSupportStoreListener.remove();
+    this.campaignSupporterStoreListener.remove();
   }
 
   onCampaignStoreChange () {
@@ -69,21 +57,14 @@ class CampaignCommentsPage extends Component {
     const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
     // console.log('onCampaignStoreChange campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
     const {
-      campaignDescription,
-      campaignPhoto,
       campaignSEOFriendlyPath,
       campaignTitle,
       campaignXWeVoteId,
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
-    let pathToUseWhenProfileComplete;
     if (campaignSEOFriendlyPath) {
-      pathToUseWhenProfileComplete = `/c/${campaignSEOFriendlyPath}/why-do-you-support`;
       this.setState({
         campaignSEOFriendlyPath,
-        pathToUseWhenProfileComplete,
       });
-    } else if (campaignXWeVoteId) {
-      pathToUseWhenProfileComplete = `/id/${campaignXWeVoteId}/why-do-you-support`;
     }
     if (campaignXWeVoteId) {
       this.setState({
@@ -91,27 +72,11 @@ class CampaignCommentsPage extends Component {
       });
     }
     this.setState({
-      campaignDescription,
-      campaignPhoto,
       campaignTitle,
     });
   }
 
   onCampaignSupporterStoreChange () {
-    const { campaignXWeVoteId } = this.state;
-    const step2Completed = CampaignSupporterStore.supporterEndorsementExists(campaignXWeVoteId);
-  }
-
-  getCampaignBasePath = () => {
-    const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
-    let campaignBasePath;
-    if (campaignSEOFriendlyPath) {
-      campaignBasePath = `/c/${campaignSEOFriendlyPath}`;
-    } else {
-      campaignBasePath = `/id/${campaignXWeVoteId}`;
-    }
-
-    return campaignBasePath;
   }
 
   render () {
@@ -146,7 +111,7 @@ class CampaignCommentsPage extends Component {
               </PageSubStatement>
               <CommentsListWrapper>
                 <Suspense fallback={<span>&nbsp;</span>}>
-                  <CampaignCommentsList />
+                  <CampaignCommentsList campaignXWeVoteId={campaignXWeVoteId} />
                 </Suspense>
               </CommentsListWrapper>
             </CommentsSectionInnerWrapper>
