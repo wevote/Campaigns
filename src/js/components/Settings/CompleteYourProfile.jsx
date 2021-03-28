@@ -255,7 +255,7 @@ class CompleteYourProfile extends Component {
             {' '}
             <OpenExternalWebSite
               linkIdAttribute="termsOfService"
-              url="https://wevote.us/more/terms"
+              url="/terms"
               target="_blank"
               body={(
                 <span>Terms of Service</span>
@@ -267,7 +267,7 @@ class CompleteYourProfile extends Component {
             {' '}
             <OpenExternalWebSite
               linkIdAttribute="privacyPolicy"
-              url="https://wevote.us/more/privacy"
+              url="/privacy"
               target="_blank"
               body={(
                 <span>Privacy Policy</span>

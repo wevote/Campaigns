@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import AppActions from '../../actions/AppActions';
 import voterSignOut from '../../utils/voterSignOut';
@@ -45,21 +46,31 @@ class SignInButton extends Component {
     // console.log('SignInButton voterLoaded at start of render: ', voterLoaded);
     // const end = window.performance.now();
     // console.log(`Execution time: ${end - this.start} ms, ${voterPhotoUrlMedium}`);
+    const { hideSignOut, topNavigationStyles } = this.props;
     const { voterIsSignedIn } = this.state;
 
     return (
       <Wrapper>
         {voterIsSignedIn ? (
-          <SignInText onClick={this.signOut}>Sign out</SignInText>
+          <>
+            {!(hideSignOut) && (
+              <SignInText onClick={this.signOut} topNavigationStyles={topNavigationStyles}>Sign&nbsp;out</SignInText>
+            )}
+          </>
         ) : (
-          <SignInText onClick={this.openSignInModal}>Sign in</SignInText>
+          <SignInText onClick={this.openSignInModal} topNavigationStyles={topNavigationStyles}>Sign&nbsp;in</SignInText>
         )}
       </Wrapper>
     );
   }
 }
+SignInButton.propTypes = {
+  hideSignOut: PropTypes.bool,
+  topNavigationStyles: PropTypes.bool,
+};
 
 const SignInText = styled.div`
+  ${({ topNavigationStyles }) => (topNavigationStyles ? 'color: #6f6f6f; font-size: 14px; :hover { color: #4371cc; };' : '')}
 `;
 
 const Wrapper = styled.div`

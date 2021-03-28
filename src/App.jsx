@@ -38,6 +38,7 @@ const PageNotFound = React.lazy(() => import('./js/pages/PageNotFound'));
 const Privacy = React.lazy(() => import('./js/pages/Privacy'));
 const SettingsEditProfile = React.lazy(() => import('./js/pages/Settings/SettingsEditProfile'));
 const SettingsYourCampaigns = React.lazy(() => import('./js/pages/Settings/SettingsYourCampaigns'));
+const SiteConfigurationRetrieveController = React.lazy(() => import('./js/components/Settings/SiteConfigurationRetrieveController'));
 const StyleGuidePage = React.lazy(() => import('./js/pages/StyleGuidePage'));
 const TermsOfService = React.lazy(() => import('./js/pages/TermsOfService'));
 const TwitterSignInProcess = React.lazy(() => import('./js/pages/TwitterSignInProcess'));
@@ -94,6 +95,7 @@ class App extends Component {
           <MuiThemeProvider theme={muiTheme}>
             <ThemeProvider theme={styledTheme}>
               <WeVoteRouter>
+                <SiteConfigurationRetrieveController />
                 <MainHeaderBar displayHeader={doShowHeader} />
                 <Switch>
                   <Route exact path="/about"><About /></Route>

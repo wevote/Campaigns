@@ -13,6 +13,10 @@ export function campaignTheme (topNav, heightOfBar) {
       MuiTab: {
         root: {
           minHeight: 0,
+          [defaultTheme.breakpoints.down('sm')]: {
+            paddingLeft: 10,
+            paddingRight: 10,
+          },
         },
       },
       MuiTabs: {

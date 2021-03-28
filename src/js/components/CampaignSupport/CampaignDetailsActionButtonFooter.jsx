@@ -18,7 +18,6 @@ class CampaignDetailsActionButtonFooter extends Component {
       voterFirstName: '',
       voterIsSignedInWithEmail: false,
       voterLastName: '',
-      voterProfileIsComplete: false,
       voterWeVoteId: '',
     };
   }
@@ -93,7 +92,6 @@ class CampaignDetailsActionButtonFooter extends Component {
   }
 
   onVoterStoreChange () {
-    // const { voterProfileIsComplete: voterProfileIsCompletePrevious, voterWeVoteId: voterWeVoteIdPrevious } = this.state;
     const voterFirstName = VoterStore.getFirstName();
     const voterLastName = VoterStore.getLastName();
     const voterIsSignedInWithEmail = VoterStore.getVoterIsSignedInWithEmail();
@@ -103,14 +101,9 @@ class CampaignDetailsActionButtonFooter extends Component {
       voterLastName,
       voterIsSignedInWithEmail,
     });
-    const voterProfileIsComplete = (voterFirstName && voterLastName && voterIsSignedInWithEmail) || false;
-    // console.log('CampaignDetailsActionButtonFooter onVoterStoreChange voterProfileIsComplete:', voterProfileIsComplete, ', voterWeVoteId:', voterWeVoteId);
-    // if (voterProfileIsComplete !== voterProfileIsCompletePrevious || voterWeVoteId !== voterWeVoteIdPrevious) {
     this.setState({
-      voterProfileIsComplete,
       voterWeVoteId,
     });
-    // }
   }
 
   pullCampaignXSupporterVoterEntry = (campaignXWeVoteId) => {

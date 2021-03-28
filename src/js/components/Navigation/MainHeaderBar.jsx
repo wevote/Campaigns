@@ -2,14 +2,15 @@ import React, { Suspense } from 'react';
 import loadable from '@loadable/component';
 import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
 import styled from 'styled-components';
+import AppStore from '../../stores/AppStore';
 import { historyPush } from '../../utils/cordovaUtils';
+import DelayedLoad from '../Widgets/DelayedLoad';
 import initializeFacebookSDK from '../../utils/initializeFacebookSDK';
 import initializeAppleSDK from '../../utils/initializeAppleSDK';
 import { renderLog } from '../../utils/logging';
-import HeaderBarLogo from './HeaderBarLogo';
 
+const HeaderBarLogo = loadable(() => import('./HeaderBarLogo'));
 const SignInButton = loadable(() => import('./SignInButton'));
 const SignInModalController = loadable(() => import('../Settings/SignInModalController'));
 const TopNavigationDesktop = loadable(() => import('./TopNavigationDesktop'));
@@ -34,9 +35,6 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: '-4px',
     marginRight: 8,
     padding: '0',
-  },
-  menuIconRoot: {
-    color: '#999',
   },
   menuRoot: {
     marginTop: '27px',
@@ -122,11 +120,12 @@ export default function MainHeaderBar (displayHeader) {
     initializeAppleSDK();
   }
 
+  const inPrivateLabelMode = AppStore.getHideWeVoteLogo(); // Using this setting temporarily
+  const showStartACampaign = !(inPrivateLabelMode);
+  const showMembership = !(inPrivateLabelMode);
 
   renderLog('MainHeaderBar');
 
-  const chosenSiteLogoUrl = '';  // {AppStore.getChosenSiteLogoUrl()}
-  const light = false;
   // console.log('MainHeaderBar displayHeader: ', displayHeader);
   return (
     <OuterWrapper displayHeader={displayThis}>
@@ -134,17 +133,30 @@ export default function MainHeaderBar (displayHeader) {
         <AppBar className={classes.appBarRoot} position="static" color="default">
           <Toolbar className={classes.toolbarRoot} disableGutters>
             <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-              <HeaderBarLogo classes={classes} light={light} logUrl={chosenSiteLogoUrl} />
+              <Suspense fallback={<span>&nbsp;</span>}>
+                <HeaderBarLogo />
+              </Suspense>
             </IconButton>
-            <Suspense fallback={<span>&nbsp;</span>}>
-              <TopNavigationDesktop />
-            </Suspense>
+            <DelayedLoad waitBeforeShow={500}>
+              <Suspense fallback={<span>&nbsp;</span>}>
+                <TopNavigationDesktop />
+              </Suspense>
+            </DelayedLoad>
             <Typography variant="h6" className={classes.title}>
               &nbsp;
             </Typography>
             <Suspense fallback={<span>&nbsp;</span>}>
               <SignInModalController />
             </Suspense>
+            <div className="u-show-desktop-tablet">
+              <DelayedLoad waitBeforeShow={500}>
+                <Suspense fallback={<span>&nbsp;</span>}>
+                  <SignInTopBarWrapper>
+                    <SignInButton hideSignOut topNavigationStyles />
+                  </SignInTopBarWrapper>
+                </Suspense>
+              </DelayedLoad>
+            </div>
             <div>
               <IconButton
                 edge="start"
@@ -157,7 +169,6 @@ export default function MainHeaderBar (displayHeader) {
                 <Suspense fallback={<span>&nbsp;</span>}>
                   <VoterNameAndPhoto />
                 </Suspense>
-                <MenuIcon id="mainHeaderBarDropDownMenuIcon" classes={{ root: classes.menuIconRoot }} />
               </IconButton>
               <Menu
                 id="menu-appbar"
@@ -175,25 +186,26 @@ export default function MainHeaderBar (displayHeader) {
                 open={open}
                 onClose={handleClose}
               >
-                <Typography variant="h6" className={classes.title} style={ourPromise}>
-                  Our Promise: We&apos;ll never sell your email.
-                </Typography>
-                {/* The next 6 lines have a test url of '/', not for production! */}
-                <MenuItem className={classes.menuItemMobileOnly} onClick={() => handleClose('/profile/started')}>Your campaigns</MenuItem>
-                <MenuItem className={classes.menuItem} onClick={() => handleClose('/')}>Your ballot</MenuItem>
+                {!inPrivateLabelMode && (
+                  <Typography variant="h6" className={classes.title} style={ourPromise}>
+                    Our Promise: We&apos;ll never sell your email.
+                  </Typography>
+                )}
+                <MenuItem className={classes.menuItem} onClick={() => handleClose('/profile/started')}>Your campaigns</MenuItem>
+                {/* <MenuItem className={classes.menuItem} onClick={() => handleClose('/')}>Your ballot</MenuItem> */}
                 <MenuItem className={classes.menuItem} onClick={() => handleClose('/edit-profile')}>Settings</MenuItem>
-                <MenuItem className={classes.menuItemMobileOnly} onClick={() => handleClose('/start-a-campaign')}>Start a campaign</MenuItem>
-                <MenuItem className={classes.menuItemMobileOnly} onClick={() => handleClose('/membership')}>Membership</MenuItem>
-                <MenuItem className={classes.menuItem} onClick={() => handleClose('/search')}>Search</MenuItem>
+                {showStartACampaign && <MenuItem className={classes.menuItemMobileOnly} onClick={() => handleClose('/start-a-campaign')}>Start a campaign</MenuItem>}
+                {showMembership && <MenuItem className={classes.menuItemMobileOnly} onClick={() => handleClose('/membership')}>Membership</MenuItem>}
+                {/* <MenuItem className={classes.menuItem} onClick={() => handleClose('/search')}>Search</MenuItem> */}
                 <MenuItem className={classes.menuItem} onClick={() => handleCloseNoDestination()}>
                   <Suspense fallback={<span>&nbsp;</span>}>
                     <SignInButton classes={classes} />
                   </Suspense>
                 </MenuItem>
-                <span style={{ lineHeight: '28px' }}>&nbsp;</span>
-                <MenuItem className={classes.menuExtraItem} onClick={() => handleClose('/faq')}>Frequently asked questions</MenuItem>
-                <MenuItem className={classes.menuExtraItem} onClick={() => handleClose('/terms')}>Terms of service</MenuItem>
-                <MenuItem className={classes.menuExtraItem} onClick={() => handleClose('/privacy')}>Privacy Policy</MenuItem>
+                {!inPrivateLabelMode && <span style={{ lineHeight: '28px' }}>&nbsp;</span>}
+                {!inPrivateLabelMode && <MenuItem className={classes.menuExtraItem} onClick={() => handleClose('/faq')}>Frequently asked questions</MenuItem>}
+                {!inPrivateLabelMode && <MenuItem className={classes.menuExtraItem} onClick={() => handleClose('/terms')}>Terms of service</MenuItem>}
+                {!inPrivateLabelMode && <MenuItem className={classes.menuExtraItem} onClick={() => handleClose('/privacy')}>Privacy Policy</MenuItem>}
               </Menu>
             </div>
           </Toolbar>
@@ -202,9 +214,15 @@ export default function MainHeaderBar (displayHeader) {
     </OuterWrapper>
   );
 }
+
 const OuterWrapper = styled.div`
   border-bottom: 1px solid #ddd;
   flex-grow: 1;
   min-height: 36px;
   display: ${({ displayHeader }) => ((displayHeader) ? '' : 'none')};
+`;
+
+const SignInTopBarWrapper = styled.div`
+  cursor: pointer;
+  margin-right: 12px;
 `;

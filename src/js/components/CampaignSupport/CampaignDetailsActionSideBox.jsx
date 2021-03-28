@@ -94,19 +94,16 @@ class CampaignDetailsActionSideBox extends Component {
   }
 
   onVoterStoreChange () {
-    const { voterProfileIsComplete: voterProfileIsCompletePrevious, voterWeVoteId: voterWeVoteIdPrevious } = this.state;
     const voterFirstName = VoterStore.getFirstName();
     const voterLastName = VoterStore.getLastName();
     const voterIsSignedInWithEmail = VoterStore.getVoterIsSignedInWithEmail();
     const voterWeVoteId = VoterStore.getVoterWeVoteId();
     const voterProfileIsComplete = (voterFirstName && voterLastName && voterIsSignedInWithEmail) || false;
     // console.log('CampaignDetailsActionSideBox onVoterStoreChange voterProfileIsComplete:', voterProfileIsComplete, ', voterWeVoteId:', voterWeVoteId);
-    // if (voterProfileIsComplete !== voterProfileIsCompletePrevious || voterWeVoteId !== voterWeVoteIdPrevious) {
     this.setState({
       voterProfileIsComplete,
       voterWeVoteId,
     });
-    // }
   }
 
   pullCampaignXSupporterVoterEntry = (campaignXWeVoteId) => {
