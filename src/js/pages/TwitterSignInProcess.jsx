@@ -99,24 +99,24 @@ export default class TwitterSignInProcess extends Component {
 
   onVoterStoreChange () {
     const { redirectInProcess } = this.state;
-    console.log('TwitterSignInProcess onVoterStoreChange, redirectInProcess:', redirectInProcess);
+    // console.log('TwitterSignInProcess onVoterStoreChange, redirectInProcess:', redirectInProcess);
     if (!redirectInProcess) {
       const twitterSignInStatus = VoterStore.getTwitterSignInStatus();
-      console.log('twitterSignInStatus:', twitterSignInStatus);
+      // console.log('twitterSignInStatus:', twitterSignInStatus);
       const voter = VoterStore.getVoter();
       const { signed_in_twitter: voterIsSignedInTwitter } = voter;
       if (voterIsSignedInTwitter || (twitterSignInStatus && twitterSignInStatus.voter_merge_two_accounts_attempted)) {
         // Once the Twitter merge returns successfully, redirect to starting page
         let redirectFullUrl = '';
         let signInStartFullUrl = cookies.getItem('sign_in_start_full_url');
-        console.log('TwitterSignInProcess signInStartFullUrl:', signInStartFullUrl);
+        // console.log('TwitterSignInProcess signInStartFullUrl:', signInStartFullUrl);
         if (signInStartFullUrl && stringContains('twitter_sign_in', signInStartFullUrl)) {
           // Do not support a redirect to facebook_sign_in
-          console.log('TwitterSignInProcess Ignore facebook_sign_in url');
+          // console.log('TwitterSignInProcess Ignore facebook_sign_in url');
           signInStartFullUrl = null;
         }
         if (signInStartFullUrl) {
-          console.log('TwitterSignInProcess Executing Redirect');
+          // console.log('TwitterSignInProcess Executing Redirect');
           AppActions.unsetStoreSignInStartFullUrl();
           cookies.removeItem('sign_in_start_full_url', '/');
           cookies.removeItem('sign_in_start_full_url', '/', 'wevote.us');
@@ -130,7 +130,7 @@ export default class TwitterSignInProcess extends Component {
               // Switch to path names to reduce load on browser and API server
               useWindowLocationAssign = false;
               const newRedirectPathname = isWebApp() ? redirectFullUrl.replace(window.location.origin, '') : '/ballot';
-              console.log('newRedirectPathname:', newRedirectPathname);
+              // console.log('newRedirectPathname:', newRedirectPathname);
               this.setState({ redirectInProcess: true });
               oAuthLog(`Twitter sign in (1), onVoterStoreChange - push to ${newRedirectPathname}`);
               const { setShowHeaderFooter } = this.props;
@@ -147,7 +147,7 @@ export default class TwitterSignInProcess extends Component {
             }
           }
           if (useWindowLocationAssign) {
-            console.log('useWindowLocationAssign:', useWindowLocationAssign);
+            // console.log('useWindowLocationAssign:', useWindowLocationAssign);
             this.setState({ redirectInProcess: true });
             window.location.assign(redirectFullUrl);
           }
@@ -201,7 +201,7 @@ export default class TwitterSignInProcess extends Component {
   render () {
     renderLog('TwitterSignInProcess');  // Set LOG_RENDER_EVENTS to log all renders
     const { jqueryLoading, hostname, mergingTwoAccounts, redirectInProgress, twitterAuthResponse } = this.state;
-    console.log('TwitterSignInProcess render, redirectInProgress:', redirectInProgress);
+    // console.log('TwitterSignInProcess render, redirectInProgress:', redirectInProgress);
     if (jqueryLoading) {
       return (
         <div className="u-loading-spinner__wrapper">

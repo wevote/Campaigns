@@ -85,20 +85,18 @@ class CampaignCommentsList extends Component {
 
   render () {
     renderLog('CampaignCommentsList');  // Set LOG_RENDER_EVENTS to log all renders
-    const { campaignXWeVoteId } = this.props;
+    const { campaignXWeVoteId, hideEncouragementToComment } = this.props;
     const { supporterEndorsementsList, numberOfCommentsToDisplay } = this.state;
     // console.log('CampaignCommentsList render numberOfCommentsToDisplay:', numberOfCommentsToDisplay);
 
     if (!supporterEndorsementsList || supporterEndorsementsList.length === 0) {
       return (
         <Wrapper>
-          <NoCommentsFound>
-            Be the first to add a comment!
-            {' '}
-            Click &apos;Campaign details&apos; above
-            {' '}
-            to support this campaign so you can add a comment.
-          </NoCommentsFound>
+          {!hideEncouragementToComment && (
+            <NoCommentsFound>
+              Be the first to add a comment! Anyone who supports this campaign may share their reasons.
+            </NoCommentsFound>
+          )}
         </Wrapper>
       );
     }
@@ -138,6 +136,7 @@ class CampaignCommentsList extends Component {
 }
 CampaignCommentsList.propTypes = {
   campaignXWeVoteId: PropTypes.string,
+  hideEncouragementToComment: PropTypes.bool,
   startingNumberOfCommentsToDisplay: PropTypes.number,
 };
 

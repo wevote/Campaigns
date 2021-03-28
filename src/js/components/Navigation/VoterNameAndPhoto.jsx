@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { AccountCircle } from '@material-ui/icons';
+import MenuIcon from '@material-ui/icons/Menu';
 import { withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import anonymous from '../../../img/global/icons/avatar-generic.png';
@@ -52,8 +53,8 @@ class VoterNameAndPhoto extends Component {
 
     return (
       <Wrapper>
-        {voterIsSignedIn && (
-          <>
+        {voterIsSignedIn ? (
+          <NamePhotoMenuWrapper>
             <NameAndPhotoWrapper id="nameAndPhotoWrapper">
               <FirstNameWrapper id="firstNameWrapper">
                 {shortenText(voterFirstName, 9)}
@@ -71,6 +72,13 @@ class VoterNameAndPhoto extends Component {
                 <AccountCircle classes={{ root: classes.accountCircleRoot }} />
               )}
             </NameAndPhotoWrapper>
+            <div className="u-show-mobile-tablet">
+              <MenuIcon id="mainHeaderBarDropDownMenuIcon" classes={{ root: classes.menuIconRoot }} />
+            </div>
+          </NamePhotoMenuWrapper>
+        ) : (
+          <>
+            <MenuIcon id="mainHeaderBarDropDownMenuIcon" classes={{ root: classes.menuIconRoot }} />
           </>
         )}
       </Wrapper>
@@ -85,6 +93,9 @@ const styles = () => ({
   accountCircleRoot: {
     color: '#999',
   },
+  menuIconRoot: {
+    color: '#999',
+  },
 });
 
 const FirstNameWrapper = styled.div`
@@ -94,6 +105,12 @@ const FirstNameWrapper = styled.div`
 `;
 
 const NameAndPhotoWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  margin-right: 6px;
+`;
+
+const NamePhotoMenuWrapper = styled.div`
   align-items: center;
   display: flex;
 `;

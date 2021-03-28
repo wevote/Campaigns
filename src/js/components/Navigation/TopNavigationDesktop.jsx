@@ -2,6 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { AppBar, Tab, Tabs, Toolbar } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
+import AppStore from '../../stores/AppStore';
 import startsWith from '../../utils/startsWith';
 import { campaignTheme } from '../Style/campaignTheme';
 
@@ -14,9 +15,23 @@ export default function TopNavigationDesktop () {
     setValue(newValue);
   };
 
+  const inPrivateLabelMode = AppStore.getHideWeVoteLogo(); // Using this setting temporarily
+  const showStartACampaign = !(inPrivateLabelMode);
+  const showYourCampaigns = !(inPrivateLabelMode);
+  const showMembership = !(inPrivateLabelMode);
+  const showSearch = false; // inPrivateLabelMode;
   const { location: { pathname } } = window;
   // Change the tab value
-  if (startsWith('/start-a-campaign', pathname) && value !== 0) {
+  if (inPrivateLabelMode) {
+    // If using a private-labeled version, show fewer options
+    if (startsWith('/profile', pathname) && value !== 0) {
+      // console.log('Render TopNavigationDesktop private labeled, initial value set to 0');
+      setValue(0);
+    } else if (startsWith('/search', pathname) && value !== 1) {
+      // console.log('Render TopNavigationDesktop private labeled, initial value set to 1');
+      setValue(1);
+    }
+  } else if (startsWith('/start-a-campaign', pathname) && value !== 0) {
     // console.log('Render TopNavigationDesktop, initial value set to 0');
     setValue(0);
   } else if (startsWith('/profile', pathname) && value !== 1) {
@@ -63,10 +78,10 @@ export default function TopNavigationDesktop () {
                 }
               )}
             >
-              <Tab id="topNav-0" label="Start a campaign" style={{ minWidth: 125 }} onClick={() => history.push('/start-a-campaign')} />
-              <Tab id="topNav-1" label="My campaigns" style={{ minWidth: 125 }} onClick={() => history.push('/profile/started')} />
-              <Tab id="topNav-2" label="Membership" style={{ minWidth: 100 }} onClick={() => history.push('/membership')} />
-              {/* <Tab id="topNav-3" label="Search" style={{ minWidth: 60 }} onClick={() => history.push('/search')} /> */}
+              {showStartACampaign && <Tab id="topNav-0" label="Start a campaign" style={{ minWidth: 125 }} onClick={() => history.push('/start-a-campaign')} />}
+              {showYourCampaigns && <Tab id="topNav-1" label="Your campaigns" style={{ minWidth: 125 }} onClick={() => history.push('/profile/started')} />}
+              {showMembership && <Tab id="topNav-2" label="Membership" style={{ minWidth: 100 }} onClick={() => history.push('/membership')} />}
+              {showSearch && <Tab id="topNav-3" label="Search" style={{ minWidth: 60 }} onClick={() => history.push('/search')} />}
             </Tabs>
           </Toolbar>
         </AppBar>

@@ -14,10 +14,11 @@ import { historyPush, isCordova } from '../utils/cordovaUtils';
 import initializejQuery from '../utils/initializejQuery';
 import { renderLog } from '../utils/logging';
 
-const CampaignSupportThermometer = React.lazy(() => import('../components/CampaignSupport/CampaignSupportThermometer'));
+const CampaignCommentsList = React.lazy(() => import('../components/Campaign/CampaignCommentsList'));
 const CampaignDetailsActionButtonFooter = React.lazy(() => import('../components/CampaignSupport/CampaignDetailsActionButtonFooter'));
 const CampaignDetailsActionSideBox = React.lazy(() => import('../components/CampaignSupport/CampaignDetailsActionSideBox'));
 const CampaignRetrieveController = React.lazy(() => import('../components/Campaign/CampaignRetrieveController'));
+const CampaignSupportThermometer = React.lazy(() => import('../components/CampaignSupport/CampaignSupportThermometer'));
 
 
 class CampaignDetailsPage extends Component {
@@ -214,6 +215,16 @@ class CampaignDetailsPage extends Component {
                 {campaignDescription}
               </CampaignDescription>
             </CampaignDescriptionWrapper>
+            <CommentsListWrapper>
+              <DelayedLoad waitBeforeShow={400}>
+                <Suspense fallback={<span>&nbsp;</span>}>
+                  <CampaignSubSectionTitle>
+                    Reasons for supporting
+                  </CampaignSubSectionTitle>
+                  <CampaignCommentsList campaignXWeVoteId={campaignXWeVoteId} startingNumberOfCommentsToDisplay={2} />
+                </Suspense>
+              </DelayedLoad>
+            </CommentsListWrapper>
           </DetailsSectionMobile>
           <DetailsSectionDesktopTablet className="u-show-desktop-tablet">
             <CampaignTitleDesktop>{campaignTitle}</CampaignTitleDesktop>
@@ -237,6 +248,16 @@ class CampaignDetailsPage extends Component {
                     {campaignDescription}
                   </CampaignDescriptionDesktop>
                 </CampaignDescriptionDesktopWrapper>
+                <CommentsListWrapper>
+                  <DelayedLoad waitBeforeShow={500}>
+                    <Suspense fallback={<span>&nbsp;</span>}>
+                      <CampaignSubSectionTitle>
+                        Reasons for supporting
+                      </CampaignSubSectionTitle>
+                      <CampaignCommentsList campaignXWeVoteId={campaignXWeVoteId} startingNumberOfCommentsToDisplay={2} />
+                    </Suspense>
+                  </DelayedLoad>
+                </CommentsListWrapper>
               </ColumnTwoThirds>
               <ColumnOneThird>
                 <Suspense fallback={<span>&nbsp;</span>}>
@@ -357,6 +378,13 @@ const CampaignImageDesktop = styled.img`
   width: 100%;
 `;
 
+const CampaignSubSectionTitle = styled.h2`
+  font-size: 22px;
+  margin: 0;
+  margin-bottom: 10px;
+  margin-top: 50px;
+`;
+
 const CampaignTitleAndScoreBar = styled.div`
   margin: 10px;
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
@@ -367,9 +395,10 @@ const CampaignTitleDesktop = styled.h1`
   font-size: 28px;
   text-align: center;
   margin: 30px 20px 40px 20px;
-  min-height: 29px;
+  min-height: 34px;
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     font-size: 24px;
+    min-height: 29px;
   }
 `;
 
@@ -400,6 +429,13 @@ const ColumnTwoThirds = styled.div`
   flex: 2;
   flex-direction: column;
   flex-basis: 60%;
+`;
+
+const CommentsListWrapper = styled.div`
+  margin-bottom: 25px;
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    margin: 0 10px 25px 10px;
+  }
 `;
 
 const DetailsSectionDesktopTablet = styled.div`
