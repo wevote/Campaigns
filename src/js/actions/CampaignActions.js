@@ -1,10 +1,10 @@
 import Dispatcher from '../components/Dispatcher/Dispatcher';
 
 export default {
-  campaignListRetrieve () {
+  campaignListRetrieve (hostname) {
     Dispatcher.loadEndpoint('campaignListRetrieve',
       {
-        // campaignx_we_vote_id: campaignWeVoteId,
+        hostname,
       });
   },
 

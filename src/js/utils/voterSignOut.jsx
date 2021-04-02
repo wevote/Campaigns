@@ -22,6 +22,8 @@ export default function voterSignOut () { // To discuss - having Store/Actions v
   VoterActions.voterRetrieve();  // to get the new voter_device_id before the next api call
   const delayToAllowVoterRetrieveResponse = 2000;
   setTimeout(() => {
-    CampaignActions.campaignListRetrieve();
+    let { hostname } = window.location;
+    hostname = hostname || '';
+    CampaignActions.campaignListRetrieve(hostname);
   }, delayToAllowVoterRetrieveResponse);
 }

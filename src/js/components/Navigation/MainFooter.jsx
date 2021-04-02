@@ -8,15 +8,44 @@ import MainFooterPrivateLabeled from './MainFooterPrivateLabeled';
 
 
 class MainFooter extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      inPrivateLabelMode: false,
+      siteConfigurationHasBeenRetrieved: false,
+    };
+  }
+
+  componentDidMount () {
+    // console.log('HeaderBarLogo componentDidMount');
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+  }
+
+  componentWillUnmount () {
+    this.appStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const inPrivateLabelMode = AppStore.getHideWeVoteLogo(); // Using this setting temporarily
+    const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
+    this.setState({
+      inPrivateLabelMode,
+      siteConfigurationHasBeenRetrieved,
+    });
+  }
+
   render () {
     const { displayFooter } = this.props;
     const disp = displayFooter !== undefined ? displayFooter : true;
-
     if (!disp) {
       return null;
     }
 
-    const inPrivateLabelMode = AppStore.getHideWeVoteLogo(); // Using this setting temporarily
+    const { inPrivateLabelMode, siteConfigurationHasBeenRetrieved } = this.state;
+    if (!siteConfigurationHasBeenRetrieved) {
+      return null;
+    }
 
     return (
       <OuterWrapper>

@@ -4,14 +4,38 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import AppStore from '../stores/AppStore';
 import { renderLog } from '../utils/logging';
 import { historyPush } from '../utils/cordovaUtils';
 
 const HomeCampaignList = React.lazy(() => import('../components/Home/HomeCampaignList'));
 
 class HomePage extends Component {
-  static getProps () {
-    return {};
+  constructor (props) {
+    super(props);
+    this.state = {
+      inPrivateLabelMode: false,
+      siteConfigurationHasBeenRetrieved: false,
+    };
+  }
+
+  componentDidMount () {
+    // console.log('HeaderBarLogo componentDidMount');
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+  }
+
+  componentWillUnmount () {
+    this.appStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const inPrivateLabelMode = AppStore.getHideWeVoteLogo(); // Using this setting temporarily
+    const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
+    this.setState({
+      inPrivateLabelMode,
+      siteConfigurationHasBeenRetrieved,
+    });
   }
 
   render () {
@@ -20,30 +44,54 @@ class HomePage extends Component {
     //   console.log(`HomePage window.location.href: ${window.location.href}`);
     // }
     const { classes } = this.props;
-    return (
-      <div>
-        <Helmet title="Home - We Vote Campaigns" />
-        <PageWrapper>
-          <IntroductionMessageSection>
-            <PageStatement>Helping the best candidates win votes</PageStatement>
-            <PageSubStatement>Vote for candidates you like. Oppose candidates you don&apos;t.</PageSubStatement>
-            <Button
-              classes={{ root: classes.buttonRoot }}
-              color="primary"
-              variant="contained"
-              onClick={() => historyPush('/start-a-campaign')}
-            >
-              Start a campaign
-            </Button>
-          </IntroductionMessageSection>
-          <WhatIsHappeningSection>
-            <Suspense fallback={<span>&nbsp;</span>}>
-              <HomeCampaignList />
-            </Suspense>
-          </WhatIsHappeningSection>
-        </PageWrapper>
-      </div>
-    );
+    const { inPrivateLabelMode, siteConfigurationHasBeenRetrieved } = this.state;
+    if (!siteConfigurationHasBeenRetrieved) {
+      return null;
+    }
+    if (inPrivateLabelMode) {
+      return (
+        <div>
+          <Helmet title="Home - Who We Support" />
+          <PageWrapper>
+            <IntroductionMessageSection>
+              <PageStatement>Who We Support</PageStatement>
+            </IntroductionMessageSection>
+            <WhatIsHappeningSection>
+              <Suspense fallback={<span>&nbsp;</span>}>
+                <HomeCampaignList hideTitle />
+              </Suspense>
+            </WhatIsHappeningSection>
+          </PageWrapper>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <Helmet title="Home - We Vote Campaigns" />
+          <PageWrapper>
+            <IntroductionMessageSection>
+              <PageStatement>Helping the best candidates win votes</PageStatement>
+              <PageSubStatement>
+                Vote for candidates you like. Oppose candidates you don&apos;t.
+              </PageSubStatement>
+              <Button
+                classes={{ root: classes.buttonRoot }}
+                color="primary"
+                variant="contained"
+                onClick={() => historyPush('/start-a-campaign')}
+              >
+                Start a campaign
+              </Button>
+            </IntroductionMessageSection>
+            <WhatIsHappeningSection>
+              <Suspense fallback={<span>&nbsp;</span>}>
+                <HomeCampaignList />
+              </Suspense>
+            </WhatIsHappeningSection>
+          </PageWrapper>
+        </div>
+      );
+    }
   }
 }
 HomePage.propTypes = {
