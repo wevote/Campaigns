@@ -14,6 +14,7 @@ class HeaderBarLogo extends Component {
     super(props);
     this.state = {
       chosenSiteLogoUrl: '',
+      siteConfigurationHasBeenRetrieved: false,
     };
   }
 
@@ -29,46 +30,52 @@ class HeaderBarLogo extends Component {
 
   onAppStoreChange () {
     const chosenSiteLogoUrl = AppStore.getChosenSiteLogoUrl();
+    const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
     this.setState({
       chosenSiteLogoUrl,
+      siteConfigurationHasBeenRetrieved,
     });
   }
 
   render () {
     const { classes } = this.props;
-    const { chosenSiteLogoUrl } = this.state;
+    const { chosenSiteLogoUrl, siteConfigurationHasBeenRetrieved } = this.state;
 
     const light = false;
     return (
       <HeaderBarWrapper>
-        {chosenSiteLogoUrl ? (
-          <ChosenSiteLogoWrapper>
-            <Link
-              className={classes.logoLinkRoot}
-              to={`${isCordova() ? '/' : '/'}`}
-              id="logoHeaderBar"
-            >
-              <ChosenSiteLogoImage
-                alt="Logo"
-                src={chosenSiteLogoUrl}
-              />
-            </Link>
-          </ChosenSiteLogoWrapper>
-        ) : (
-          <WeVoteLogoWrapper>
-            <Link
-              className={classes.logoLinkRoot}
-              to={`${isCordova() ? '/' : '/'}`}
-              id="logoHeaderBar"
-            >
-              <img
-                width="141"
-                height="44"
-                alt="We Vote logo"
-                src={light ? cordovaDot(logoLight) : cordovaDot(logoDark)}
-              />
-            </Link>
-          </WeVoteLogoWrapper>
+        {siteConfigurationHasBeenRetrieved && (
+          <div>
+            {chosenSiteLogoUrl ? (
+              <ChosenSiteLogoWrapper>
+                <Link
+                  className={classes.logoLinkRoot}
+                  to={`${isCordova() ? '/' : '/'}`}
+                  id="logoHeaderBar"
+                >
+                  <ChosenSiteLogoImage
+                    alt="Logo"
+                    src={chosenSiteLogoUrl}
+                  />
+                </Link>
+              </ChosenSiteLogoWrapper>
+            ) : (
+              <WeVoteLogoWrapper>
+                <Link
+                  className={classes.logoLinkRoot}
+                  to={`${isCordova() ? '/' : '/'}`}
+                  id="logoHeaderBar"
+                >
+                  <img
+                    width="141"
+                    height="44"
+                    alt="We Vote logo"
+                    src={light ? cordovaDot(logoLight) : cordovaDot(logoDark)}
+                  />
+                </Link>
+              </WeVoteLogoWrapper>
+            )}
+          </div>
         )}
       </HeaderBarWrapper>
     );

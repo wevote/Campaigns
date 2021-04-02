@@ -62,6 +62,7 @@ class HomeCampaignList extends Component {
   render () {
     renderLog('HomeCampaignList');  // Set LOG_RENDER_EVENTS to log all renders
     // console.log('HomeCampaignList render');
+    const { hideTitle } = this.props;
     const { promotedCampaignList, numberOfCampaignsToDisplay } = this.state;
 
     if (!promotedCampaignList) {
@@ -70,7 +71,8 @@ class HomeCampaignList extends Component {
     let numberOfCampaignsDisplayed = 0;
     return (
       <Wrapper>
-        {!!(promotedCampaignList &&
+        {!!(!hideTitle &&
+            promotedCampaignList &&
             promotedCampaignList.length > 1) &&
         (
           <WhatIsHappeningTitle>
@@ -107,6 +109,11 @@ class HomeCampaignList extends Component {
             />
           )}
         </LoadMoreItemsManuallyWrapper>
+        {!numberOfCampaignsDisplayed && (
+          <CampaignsNotAvailableToShow>
+            We don&apos;t have any upcoming campaigns to show. Please try again later!
+          </CampaignsNotAvailableToShow>
+        )}
         <Suspense fallback={<span>&nbsp;</span>}>
           <FirstCampaignListController />
         </Suspense>
@@ -115,6 +122,7 @@ class HomeCampaignList extends Component {
   }
 }
 HomeCampaignList.propTypes = {
+  hideTitle: PropTypes.bool,
   startingNumberOfCampaignsToDisplay: PropTypes.number,
 };
 
@@ -123,6 +131,17 @@ const styles = () => ({
     padding: 8,
   },
 });
+
+const CampaignsNotAvailableToShow = styled.div`
+  color: #555;
+  font-size: 18px;
+  text-align: center;
+  margin: 0 2em 6em;
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    font-size: 16px;
+    margin: 0 1em 5em;
+  }
+`;
 
 const LoadMoreItemsManuallyWrapper = styled.div`
   margin-bottom: 0px;

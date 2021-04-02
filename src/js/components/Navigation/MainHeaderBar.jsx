@@ -13,7 +13,7 @@ import { renderLog } from '../../utils/logging';
 const HeaderBarLogo = loadable(() => import('./HeaderBarLogo'));
 const SignInButton = loadable(() => import('./SignInButton'));
 const SignInModalController = loadable(() => import('../Settings/SignInModalController'));
-const TopNavigationDesktop = loadable(() => import('./TopNavigationDesktop'));
+const TopNavigationDesktopController = loadable(() => import('./TopNavigationDesktopController'));
 const VoterNameAndPhoto = loadable(() => import('./VoterNameAndPhoto'));
 
 
@@ -121,7 +121,7 @@ export default function MainHeaderBar (displayHeader) {
   }
 
   const inPrivateLabelMode = AppStore.getHideWeVoteLogo(); // Using this setting temporarily
-  const showStartACampaign = !(inPrivateLabelMode);
+  const showStartACampaign = true; // Allow people to start campaigns in case the site owner approves them
   const showMembership = !(inPrivateLabelMode);
 
   renderLog('MainHeaderBar');
@@ -137,11 +137,9 @@ export default function MainHeaderBar (displayHeader) {
                 <HeaderBarLogo />
               </Suspense>
             </IconButton>
-            <DelayedLoad waitBeforeShow={500}>
-              <Suspense fallback={<span>&nbsp;</span>}>
-                <TopNavigationDesktop />
-              </Suspense>
-            </DelayedLoad>
+            <Suspense fallback={<span>&nbsp;</span>}>
+              <TopNavigationDesktopController />
+            </Suspense>
             <Typography variant="h6" className={classes.title}>
               &nbsp;
             </Typography>
@@ -194,7 +192,7 @@ export default function MainHeaderBar (displayHeader) {
                 <MenuItem className={classes.menuItem} onClick={() => handleClose('/profile/started')}>Your campaigns</MenuItem>
                 {/* <MenuItem className={classes.menuItem} onClick={() => handleClose('/')}>Your ballot</MenuItem> */}
                 <MenuItem className={classes.menuItem} onClick={() => handleClose('/edit-profile')}>Settings</MenuItem>
-                {showStartACampaign && <MenuItem className={classes.menuItemMobileOnly} onClick={() => handleClose('/start-a-campaign')}>Start a campaign</MenuItem>}
+                {showStartACampaign && <MenuItem className={classes.menuItem} onClick={() => handleClose('/start-a-campaign')}>Start a campaign</MenuItem>}
                 {showMembership && <MenuItem className={classes.menuItemMobileOnly} onClick={() => handleClose('/membership')}>Membership</MenuItem>}
                 {/* <MenuItem className={classes.menuItem} onClick={() => handleClose('/search')}>Search</MenuItem> */}
                 <MenuItem className={classes.menuItem} onClick={() => handleCloseNoDestination()}>
