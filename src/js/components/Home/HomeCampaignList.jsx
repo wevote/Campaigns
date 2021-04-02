@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CampaignCardForList from '../Campaign/CampaignCardForList';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
+import DelayedLoad from '../Widgets/DelayedLoad';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
 import { renderLog } from '../../utils/logging';
 
@@ -110,9 +111,11 @@ class HomeCampaignList extends Component {
           )}
         </LoadMoreItemsManuallyWrapper>
         {!numberOfCampaignsDisplayed && (
-          <CampaignsNotAvailableToShow>
-            We don&apos;t have any upcoming campaigns to show. Please try again later!
-          </CampaignsNotAvailableToShow>
+          <DelayedLoad waitBeforeShow={500}>
+            <CampaignsNotAvailableToShow>
+              We don&apos;t have any upcoming campaigns to show. Please try again later!
+            </CampaignsNotAvailableToShow>
+          </DelayedLoad>
         )}
         <Suspense fallback={<span>&nbsp;</span>}>
           <FirstCampaignListController />
