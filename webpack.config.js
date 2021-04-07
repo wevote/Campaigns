@@ -9,6 +9,8 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const CopyPlugin = require('copy-webpack-plugin');
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const WebpackShellPluginNext = require('webpack-shell-plugin-next');
+
 
 const port = process.env.PORT || 3000;
 const isHTTPS = process.env.PROTOCOL && process.env.PROTOCOL === 'HTTPS';
@@ -82,6 +84,13 @@ module.exports = {
       ],
     }),
     new MomentLocalesPlugin(),
+    new WebpackShellPluginNext({
+      onBuildEnd: {
+        scripts: ['node main.name.js'],
+        blocking: false,
+        parallel: true,
+      },
+    }),
   ],
   devServer: (isHTTPS ? {
     contentBase: path.resolve(__dirname, './build'),

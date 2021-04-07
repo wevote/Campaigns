@@ -41,7 +41,7 @@ Run ` npm run start-minified-analysis` to turn on the analyzer.  This gives a re
 show what has been included.  Note that libraries like sock.js and react-dom.development.js are requrired
 to run webpack and the analyzer, so the measured size in the screen shot that follows is 1.55 MB, which is far too big for
 production to give the sub-half-second initial load that is our design goal.  But that 1.55 MB is bloated with webpack and analyzer
-instrumention - you need to `npm run build` to see the real bundle size.
+instrumentation - you need to `npm run build` to see the real bundle size.
 
 ![ScreenShot](./docs/images/WebpackBundleAnalyzer.png)
 
