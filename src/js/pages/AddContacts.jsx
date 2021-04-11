@@ -36,6 +36,7 @@ class AddContacts extends Component {
 
   componentWillUnmount () {
     this.voterStoreListener.remove();
+    this.googleSignInListener.remove();
   }
 
   onGoogleSignIn (signedIn) {
