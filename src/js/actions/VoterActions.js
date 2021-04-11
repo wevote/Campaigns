@@ -357,6 +357,13 @@ export default {
     });
   },
 
+  voterSendGoogleContacts (contacts) {
+    const contactsString = JSON.stringify(Array.from(contacts));
+    Dispatcher.loadEndpoint('voterSendGoogleContacts', {
+      contacts: contactsString,
+    });
+  },
+
   deviceStoreFirebaseCloudMessagingToken (firebaseFCMToken) {
     Dispatcher.loadEndpoint('deviceStoreFirebaseCloudMessagingToken', {
       firebase_fcm_token: firebaseFCMToken,
