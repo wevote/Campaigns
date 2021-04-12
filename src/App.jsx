@@ -15,6 +15,7 @@ const MainFooter  = React.lazy(() => import('./js/components/Navigation/MainFoot
 
 // Root URL pages
 const About = React.lazy(() => import('./js/pages/About'));
+const AddContacts = React.lazy(() => import('./js/pages/AddContacts'));
 const Attributions = React.lazy(() => import('./js/pages/Attributions'));
 const CampaignCommentsPage = React.lazy(() => import('./js/pages/CampaignCommentsPage'));
 const CampaignDetailsPage = React.lazy(() => import('./js/pages/CampaignDetailsPage'));
@@ -99,6 +100,7 @@ class App extends Component {
                 <MainHeaderBar displayHeader={doShowHeader} />
                 <Switch>
                   <Route exact path="/about"><About /></Route>
+                  <Route exact path="/addContacts"><AddContacts showFooter={this.setShowFooter} /></Route>
                   <Route exact path="/attributions"><Attributions /></Route>
                   <Route exact path="/c/:campaignSEOFriendlyPath" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/comments" render={(props) => <CampaignCommentsPage match={props.match} />} />
