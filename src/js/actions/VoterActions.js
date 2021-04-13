@@ -358,7 +358,7 @@ export default {
   },
 
   voterSendGoogleContacts (contacts) {
-    const contactsString = JSON.stringify(Array.from(contacts));
+    const contactsString = JSON.stringify(contacts);
     Dispatcher.loadEndpoint('voterSendGoogleContacts', {
       contacts: contactsString,
     });

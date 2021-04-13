@@ -6,6 +6,7 @@ const AddContactConsts = {
   initializedSignedIn: null,
   requestingSignIn: null,
   requestingContacts: null,
+  receivedContacts: null,
   sendingContacts: null,
   savedContacts: null,
   defaultVal: null,

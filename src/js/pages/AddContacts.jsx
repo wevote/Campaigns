@@ -1,6 +1,7 @@
-import { Button } from '@material-ui/core';
+import { Button, Checkbox } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { loadGapiInsideDOM } from 'gapi-script';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
@@ -16,11 +17,13 @@ class AddContacts extends Component {
 
     this.state = {
       addContactsState: AddContactConsts.uninitialized,
+      setOfContacts: new Set(),
     };
     this.onGoogleSignIn = this.onGoogleSignIn.bind(this);
     this.getOtherConnections = this.getOtherConnections.bind(this);
     this.onButtonClick = this.onButtonClick.bind(this);
     this.onVoterStoreChange = this.onVoterStoreChange.bind(this);
+    this.changedContactSelection = this.changedContactSelection.bind(this);
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
   }
 
@@ -70,16 +73,33 @@ class AddContacts extends Component {
   }
 
   onButtonClick () {
-    const { gapi } = window;
-    const isSignedIn = gapi.auth2.getAuthInstance().isSignedIn.get();
-    if (isSignedIn) {
-      // console.log('Getting contacts from Google on button click, since we were logged into Google');
-      this.getOtherConnections();
-      this.setState({ addContactsState: AddContactConsts.requestingContacts });
+    const { addContactsState, setOfContacts } = this.state;
+    if (addContactsState === AddContactConsts.receivedContacts) {
+      // console.log('Sending contacts from Google to the API Server on button click');
+      const arrayOfSelectedContacts = [];
+      setOfContacts.forEach((contact) => {
+        if (contact.selected) {
+          arrayOfSelectedContacts.push(contact);
+        }
+      });
+
+      VoterActions.voterSendGoogleContacts(arrayOfSelectedContacts);
+      this.setState({
+        addContactsState: AddContactConsts.sendingContacts,
+        arrayOfSelectedContacts,
+      });
     } else {
-      // console.log('Getting Auth from Google on button click, since we were not logged into Google');
-      gapi.auth2.getAuthInstance().signIn();
-      this.setState({ addContactsState: AddContactConsts.requestingSignIn });
+      const { gapi } = window;
+      const isSignedIn = gapi.auth2.getAuthInstance().isSignedIn.get();
+      if (isSignedIn) {
+        // console.log('Getting contacts from Google on button click, since we were logged into Google');
+        this.getOtherConnections();
+        this.setState({ addContactsState: AddContactConsts.requestingContacts });
+      } else {
+        // console.log('Getting Auth from Google on button click, since we were not logged into Google');
+        gapi.auth2.getAuthInstance().signIn();
+        this.setState({ addContactsState: AddContactConsts.requestingSignIn });
+      }
     }
   }
 
@@ -103,11 +123,14 @@ class AddContacts extends Component {
           type: '',
         };
         if (other.emailAddresses && other.emailAddresses.length > 0) {
-          const possible = other.emailAddresses[0].value;
+
+          const possible = other.emailAddresses[0].value.replace('<', '').replace('>', '');
           if (possible && !possible.includes(' ') && !possible.includes(',') && possible.includes('@')) {
             if (!setEmail.has(possible)) {
               setEmail.add(possible);
               person.email = possible;
+              person.id = possible.replace('@', '-').replace('.', '-');
+              person.selected = false;
             }
           }
         }
@@ -125,8 +148,8 @@ class AddContacts extends Component {
           contacts.add(person);
         }
       }
-      VoterActions.voterSendGoogleContacts(contacts);
-      this.setState({ addContactsState: AddContactConsts.sendingContacts });
+      this.setState({ setOfContacts: contacts });
+      this.setState({ addContactsState: AddContactConsts.receivedContacts  });
     });
   }
 
@@ -136,7 +159,6 @@ class AddContacts extends Component {
     const API_KEY = 'AIzaSyDZAd4b8CjDv_uRt9GVZAuOwD_X-vfCMTs';
     const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/people/v1/rest'];
     const SCOPES = 'https://www.googleapis.com/auth/contacts.other.readonly';
-
 
     gapi.client.init({
       apiKey: API_KEY,
@@ -153,23 +175,50 @@ class AddContacts extends Component {
     });
   }
 
+  changedContactSelection (event) {
+    const { checked: isChecked, id: idRaw } = event.target;
+    const id = idRaw.replace('checkbox-', '');
+    const { setOfContacts } = this.state;
+    setOfContacts.forEach((contact) => {
+      if (contact.id === id) {
+        // eslint-disable-next-line no-param-reassign
+        contact.selected = isChecked;
+      }
+    });
+  }
+
   render () {
     renderLog('AddContacts');  // Set LOG_RENDER_EVENTS to log all renders
 
-    const { addContactsState } = this.state;
+    const { addContactsState, setOfContacts, arrayOfSelectedContacts } = this.state;
     // console.log('render in AddContacts, addContactsState: ', addContactsState);
 
+    let displayResults = false;
     let buttonDisabled = false;
-    let buttonLabel = 'Add From Google contacts';
-    if (addContactsState === AddContactConsts.savedContacts) {
+    let buttonLabel = 'Get my Contacts from Google';
+    if (addContactsState === AddContactConsts.receivedContacts) {
+      buttonLabel = 'Save Selected Contacts to My Account';
+      displayResults = true;
+    } else if (addContactsState === AddContactConsts.savedContacts) {
+      displayResults = false;
       buttonDisabled = true;
-      buttonLabel = 'Contacts Have Been Added';
+      buttonLabel = `${arrayOfSelectedContacts.length} Contacts Have Been Added to Your Account`;
     } else if (addContactsState === AddContactConsts.requestingContacts) {
       buttonDisabled = true;
-      buttonLabel = 'Requesting Google contacts';
+      buttonLabel = 'Requesting Google Contacts';
     } else if (addContactsState === AddContactConsts.sendingContacts) {
       buttonDisabled = true;
       buttonLabel = 'Processing Google contacts';
+    }
+
+    let sortedContacts = [];
+    if (setOfContacts.size) {
+      const cons = Array.from(setOfContacts);
+      sortedContacts = cons.sort((a, b) => {
+        if (a.family_name < b.family_name) return -1;
+        if (a.family_name > b.family_name) return 1;
+        return 0;
+      });
     }
 
     return (
@@ -195,10 +244,49 @@ class AddContacts extends Component {
                   unless they opt-in.
                 </ListItem>
                 <ListItem>
+                  You will be able to chose which of your contacts are saved in our cloud.
+                </ListItem>
+                <ListItem>
                   You can delete your contacts at any time.
                 </ListItem>
               </ol>
               <br />
+              <ContactsOuterContainer displayResults={displayResults}>
+                Google provided&nbsp;
+                <b>
+                  {sortedContacts.length}
+                </b>
+                &nbsp;contacts.&nbsp;
+                Select the friends you might want to invite at some point.
+                <ContactsContainer>
+                  <table style={{ width: '100%' }}>
+                    <thead>
+                      <tr>
+                        <th style={{ width: '5%', padding: '0 10px', textAlign: 'left' }}>Send</th>
+                        <th style={{ width: '35%', textAlign: 'left' }}>Name</th>
+                        <th style={{ width: '30%', textAlign: 'left' }}>email</th>
+                        <th style={{ width: '20%', textAlign: 'left' }}>Date saved to Google</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      { sortedContacts.map((contact) => (
+                        <tr key={`checkbox-${contact.id}`}>
+                          <td>
+                            <Checkbox
+                               color="primary"
+                              id={`checkbox-${contact.id}`}
+                              onChange={this.changedContactSelection}
+                            />
+                          </td>
+                          <td>{contact.display_name}</td>
+                          <td>{contact.email}</td>
+                          <td>{moment.utc(contact.update_time).local().format('MMM D, YYYY')}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </ContactsContainer>
+              </ContactsOuterContainer>
               <div style={{ display: 'block' }}>
                 {/* <Button
                   style={{ textTransform: 'none', fontSize: '18px', marginTop: '16px', display: 'block', width: '300px'}}
@@ -209,7 +297,7 @@ class AddContacts extends Component {
                   If this were Cordova we could Add Contacts from phone
                 </Button> */}
                 <Button
-                  style={{ textTransform: 'none', fontSize: '18px', marginTop: '16px', display: 'block', width: '300px' }}
+                  style={{ textTransform: 'none', fontSize: '18px', marginTop: '16px', display: 'block', width: '500px' }}
                   color="primary"
                   id="addFromGoogleContacts"
                   variant="outlined"
@@ -235,7 +323,7 @@ class AddContacts extends Component {
   }
 }
 AddContacts.propTypes = {
-  classes: PropTypes.object,
+  // classes: PropTypes.object,
   showFooter: PropTypes.func,
 };
 
@@ -268,7 +356,6 @@ const BigQuestion = styled.div`
   padding-top: 16px;
 `;
 
-
 const PageWrapper = styled.div`
   margin: 0 auto;
   max-width: 960px;
@@ -276,6 +363,23 @@ const PageWrapper = styled.div`
     // Switch to 15px left/right margin when auto is too small
     margin: 0 15px;
   }
+`;
+
+const ContactsOuterContainer = styled.div`
+  display: ${({ displayResults }) => (displayResults ? 'block' : 'none')};
+  font-size: 18px;
+  font-weight: 400;
+  padding-top: 10px;
+`;
+
+const ContactsContainer = styled.div`
+  overflow-y: auto;
+  background-color: rgb(254, 254, 228, 0.01);
+  border: 1px solid darkgrey;
+  margin: 16px auto 11px;
+  height: 300px;
+  width: 100%;
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
 `;
 
 const styles = () => ({
