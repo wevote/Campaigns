@@ -954,6 +954,19 @@ class VoterStore extends ReduceStore {
           return state;
         }
 
+      case 'voterSendGoogleContacts':
+        console.log('VoterStore voterSendGoogleContacts action', action);
+        if (action.res.success) {
+          const { we_vote_id_for_google_contacts: weVoteIdForGoogleContacts, contacts_stored: googleContactsStored  } = action.res;
+          return {
+            ...state,
+            weVoteIdForGoogleContacts,
+            googleContactsStored,
+          };
+        } else {
+          console.log('response voterSendGoogleContacts was not successful');
+          return state;
+        }
 
       case 'error-voterRetrieve' || 'error-voterAddressRetrieve' || 'error-voterAddressSave':
         // console.log('VoterStore action', action);
