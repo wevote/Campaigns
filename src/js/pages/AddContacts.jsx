@@ -123,6 +123,7 @@ class AddContacts extends Component {
           type: '',
         };
         if (other.emailAddresses && other.emailAddresses.length > 0) {
+
           const possible = other.emailAddresses[0].value.replace('<', '').replace('>', '');
           if (possible && !possible.includes(' ') && !possible.includes(',') && possible.includes('@')) {
             if (!setEmail.has(possible)) {
