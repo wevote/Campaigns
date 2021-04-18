@@ -71,6 +71,7 @@ class CampaignCardForList extends Component {
       campaign_description: campaignDescription,
       campaign_title: campaignTitle,
       in_draft_mode: inDraftMode,
+      visible_on_this_site: visibleOnThisSite,
       we_vote_hosted_campaign_photo_medium_url: CampaignPhotoMediumUrl,
     } = campaignX;
     return (
@@ -82,6 +83,13 @@ class CampaignCardForList extends Component {
                 <DraftModeWrapper>
                   <DraftModeIndicator>
                     Draft
+                  </DraftModeIndicator>
+                </DraftModeWrapper>
+              )}
+              {!visibleOnThisSite && (
+                <DraftModeWrapper>
+                  <DraftModeIndicator>
+                    Not Visible On This Site
                   </DraftModeIndicator>
                 </DraftModeWrapper>
               )}

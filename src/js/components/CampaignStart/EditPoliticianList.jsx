@@ -1,0 +1,156 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { withStyles } from '@material-ui/core/styles';
+import anonymous from '../../../img/global/icons/avatar-generic.png';
+import CampaignStartStore from '../../stores/CampaignStartStore';
+import { renderLog } from '../../utils/logging';
+import { convertStateCodeToStateText } from '../../utils/addressFunctions';
+import DeletePoliticianCheckbox from './DeletePoliticianCheckbox';
+
+class EditPoliticianList extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      campaignPoliticianList: [],
+    };
+  }
+
+  componentDidMount () {
+    // console.log('EditPoliticianList, componentDidMount');
+    this.campaignStartStoreListener = CampaignStartStore.addListener(this.onCampaignStartStoreChange.bind(this));
+    const campaignPoliticianList = CampaignStartStore.getCampaignPoliticianList();
+    this.setState({
+      campaignPoliticianList,
+    });
+  }
+
+  componentWillUnmount () {
+    this.campaignStartStoreListener.remove();
+  }
+
+  onCampaignStartStoreChange () {
+    const campaignPoliticianList = CampaignStartStore.getCampaignPoliticianList();
+    // const { campaignPoliticianListUpdatedSet } = this.state;
+    // console.log('onCampaignStartStoreChange campaignPoliticianList: ', campaignPoliticianList);
+    this.setState({
+      campaignPoliticianList,
+    });
+  }
+
+  render () {
+    renderLog('EditPoliticianList');  // Set LOG_RENDER_EVENTS to log all renders
+
+    const { externalUniqueId } = this.props;
+    const {
+      campaignPoliticianList,
+    } = this.state;
+    // console.log('render EditPoliticianList campaignPoliticianList ', campaignPoliticianList);
+    if (!campaignPoliticianList || campaignPoliticianList.length === 0) {
+      return null;
+    }
+    let politicianImageUrl = '';
+    return (
+      <Wrapper>
+        <ColumnFullWidth>
+          <CampaignPoliticianListWrapper>
+            { campaignPoliticianList.map((campaignPolitician) => {
+              // console.log('one');
+              if (campaignPolitician.we_vote_hosted_profile_image_url_tiny) {
+                politicianImageUrl = campaignPolitician.we_vote_hosted_profile_image_url_tiny;
+              } else {
+                politicianImageUrl = anonymous;
+              }
+              return (
+                <CampaignPoliticianRow key={`campaignPoliticianList-${campaignPolitician.politician_name}-${externalUniqueId}`}>
+                  <CampaignPoliticianWrapper>
+                    <CampaignPoliticianNameAndImageWrapper>
+                      <CampaignPoliticianImage src={politicianImageUrl} />
+                      <CampaignPoliticianName>
+                        {campaignPolitician.politician_name}
+                      </CampaignPoliticianName>
+                    </CampaignPoliticianNameAndImageWrapper>
+                    {campaignPolitician.state_code && (
+                      <CampaignPoliticianState>
+                        {convertStateCodeToStateText(campaignPolitician.state_code)}
+                      </CampaignPoliticianState>
+                    )}
+                  </CampaignPoliticianWrapper>
+                  <CampaignPoliticianDelete>
+                    <DeletePoliticianCheckbox campaignXPoliticianId={campaignPolitician.campaignx_politician_id} />
+                  </CampaignPoliticianDelete>
+                </CampaignPoliticianRow>
+              );
+            })}
+          </CampaignPoliticianListWrapper>
+        </ColumnFullWidth>
+      </Wrapper>
+    );
+  }
+}
+EditPoliticianList.propTypes = {
+  externalUniqueId: PropTypes.string,
+};
+
+const styles = () => ({
+});
+
+const CampaignPoliticianDelete = styled.div`
+  margin-bottom: 8px;
+`;
+
+const CampaignPoliticianListWrapper = styled.div`
+  margin-top: 15px;
+`;
+
+const CampaignPoliticianImage = styled.img`
+  border-radius: 3px;
+  margin-bottom: 8px;
+  margin-right: 4px;
+  width: 32px;
+`;
+
+const CampaignPoliticianName = styled.div`
+  margin-bottom: 8px;
+`;
+
+const CampaignPoliticianRow = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const CampaignPoliticianState = styled.div`
+  color: #999;
+  margin-bottom: 8px;
+  margin-left: 10px;
+`;
+
+const CampaignPoliticianNameAndImageWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+`;
+
+const CampaignPoliticianWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  @media (max-width: 1005px) {
+    flex-wrap: wrap;
+  }
+`;
+
+const ColumnFullWidth = styled.div`
+  padding: 8px 12px;
+  width: 100%;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-left: -12px;
+  width: calc(100% + 24px);
+`;
+
+export default withStyles(styles)(EditPoliticianList);

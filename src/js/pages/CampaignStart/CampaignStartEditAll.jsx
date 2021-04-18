@@ -10,7 +10,9 @@ import CampaignPhotoUpload from '../../components/CampaignStart/CampaignPhotoUpl
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import CampaignTitleInputField from '../../components/CampaignStart/CampaignTitleInputField';
+import EditPoliticianList from '../../components/CampaignStart/EditPoliticianList';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
 
 
@@ -23,11 +25,10 @@ class CampaignStartEditAll extends Component {
 
   componentDidMount () {
     // console.log('CampaignStartEditAll, componentDidMount');
-    import('jquery').then(({ default: jquery }) => {
-      window.jQuery = jquery;
-      window.$ = jquery;
+    initializejQuery(() => {
       CampaignStartActions.campaignRetrieveAsOwner('');
-    }).catch((error) => console.error('An error occurred while loading jQuery', error));
+      CampaignStartActions.campaignEditAllReset();
+    });
   }
 
   cancelEditAll = () => {
@@ -39,19 +40,22 @@ class CampaignStartEditAll extends Component {
     const campaignDescriptionQueuedToSaveSet = CampaignStartStore.getCampaignDescriptionQueuedToSaveSet();
     const campaignPhotoQueuedToSave = CampaignStartStore.getCampaignPhotoQueuedToSave();
     const campaignPhotoQueuedToSaveSet = CampaignStartStore.getCampaignPhotoQueuedToSaveSet();
-    const campaignPoliticianListQueuedToSave = CampaignStartStore.getCampaignPoliticianListQueuedToSave();
-    const campaignPoliticianListQueuedToSaveSet = CampaignStartStore.getCampaignPoliticianListQueuedToSaveSet();
+    const campaignPoliticianDeleteList = CampaignStartStore.getCampaignPoliticianDeleteList();
+    const campaignPoliticianStarterListQueuedToSave = CampaignStartStore.getCampaignPoliticianStarterListQueuedToSave();
+    const campaignPoliticianStarterListQueuedToSaveSet = CampaignStartStore.getCampaignPoliticianStarterListQueuedToSaveSet();
     const campaignTitleQueuedToSave = CampaignStartStore.getCampaignTitleQueuedToSave();
     const campaignTitleQueuedToSaveSet = CampaignStartStore.getCampaignTitleQueuedToSaveSet();
-    // console.log('CampaignStartEditAll campaignPoliticianListQueuedToSaveSet:', campaignPoliticianListQueuedToSaveSet);
+    // console.log('CampaignStartEditAll campaignPoliticianStarterListQueuedToSaveSet:', campaignPoliticianStarterListQueuedToSaveSet);
     const campaignWeVoteId = '';
-    if (campaignDescriptionQueuedToSaveSet || campaignPhotoQueuedToSaveSet || campaignPoliticianListQueuedToSaveSet || campaignTitleQueuedToSaveSet) {
-      const campaignPoliticianListQueuedToSaveJson = JSON.stringify(campaignPoliticianListQueuedToSave);
+    if (campaignDescriptionQueuedToSaveSet || campaignPhotoQueuedToSaveSet || campaignPoliticianDeleteList || campaignPoliticianStarterListQueuedToSaveSet || campaignTitleQueuedToSaveSet) {
+      const campaignPoliticianDeleteListJson = JSON.stringify(campaignPoliticianDeleteList);
+      const campaignPoliticianStarterListQueuedToSaveJson = JSON.stringify(campaignPoliticianStarterListQueuedToSave);
+      // console.log('CampaignStartEditAll campaignPoliticianStarterListQueuedToSaveJson:', campaignPoliticianStarterListQueuedToSaveJson);
       CampaignStartActions.campaignEditAllSave(
         campaignWeVoteId,
         campaignDescriptionQueuedToSave, campaignDescriptionQueuedToSaveSet,
-        campaignPhotoQueuedToSave, campaignPhotoQueuedToSaveSet,
-        campaignPoliticianListQueuedToSaveJson, campaignPoliticianListQueuedToSaveSet,
+        campaignPhotoQueuedToSave, campaignPhotoQueuedToSaveSet, campaignPoliticianDeleteListJson,
+        campaignPoliticianStarterListQueuedToSaveJson, campaignPoliticianStarterListQueuedToSaveSet,
         campaignTitleQueuedToSave, campaignTitleQueuedToSaveSet,
       );
       CampaignStartActions.campaignEditAllReset();
@@ -97,8 +101,9 @@ class CampaignStartEditAll extends Component {
             <InnerWrapper>
               <CampaignStartSectionWrapper>
                 <CampaignStartSection>
-                  <AddCandidateInputField />
                   <CampaignTitleInputField campaignTitlePlaceholder="Title of your campaign" />
+                  <EditPoliticianList />
+                  <AddCandidateInputField />
                   <CampaignPhotoUpload />
                   <CampaignDescriptionInputField />
                 </CampaignStartSection>
