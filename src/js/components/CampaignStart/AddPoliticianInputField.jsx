@@ -27,9 +27,9 @@ class AddPoliticianInputField extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      // campaignPoliticianList: [],
-      // searchResults: [],
-      campaignPoliticianListUpdatedSet: false,
+      campaignPoliticianStarterList: [],
+      campaignPoliticianStarterListUpdatedSet: false,
+      candidateOptions: [],
     };
   }
 
@@ -38,10 +38,10 @@ class AddPoliticianInputField extends Component {
     this.campaignStartStoreListener = CampaignStartStore.addListener(this.onCampaignStartStoreChange.bind(this));
     this.searchAllStoreListener = SearchAllStore.addListener(this.onSearchAllStoreChange.bind(this));
     SearchAllActions.clearSearchResults();
-    const campaignPoliticianList = CampaignStartStore.getCampaignPoliticianList();
+    const campaignPoliticianStarterList = CampaignStartStore.getCampaignPoliticianStarterList();
     this.setState({
       candidateOptions: candidateOptionsDefault,
-      campaignPoliticianList,
+      campaignPoliticianStarterList,
     });
   }
 
@@ -51,11 +51,9 @@ class AddPoliticianInputField extends Component {
   }
 
   onCampaignStartStoreChange () {
-    const campaignPoliticianList = CampaignStartStore.getCampaignPoliticianList();
-    // const { campaignPoliticianListUpdatedSet } = this.state;
-    // console.log('onCampaignStartStoreChange campaignPoliticianListUpdatedSet: ', campaignPoliticianListUpdatedSet, ', campaignPoliticianList: ', campaignPoliticianList);
+    const campaignPoliticianStarterList = CampaignStartStore.getCampaignPoliticianStarterList();
     this.setState({
-      campaignPoliticianList,
+      campaignPoliticianStarterList,
     });
   }
 
@@ -91,14 +89,10 @@ class AddPoliticianInputField extends Component {
   }
 
   handleChange = (newValue) => { // , actionMeta
-    // console.group('Value Changed');
-    // console.log(newValue);
-    // // console.log(`action: ${actionMeta.action}`);
-    // console.groupEnd();
-    CampaignStartActions.campaignPoliticianListQueuedToSave(newValue);
+    CampaignStartActions.campaignPoliticianStarterListQueuedToSave(newValue);
     this.setState({
-      campaignPoliticianListUpdated: newValue,
-      campaignPoliticianListUpdatedSet: true,
+      campaignPoliticianStarterListUpdated: newValue,
+      campaignPoliticianStarterListUpdatedSet: true,
     });
   };
 
@@ -107,10 +101,10 @@ class AddPoliticianInputField extends Component {
 
     const { externalUniqueId } = this.props;
     const {
-      campaignPoliticianList, campaignPoliticianListUpdated,
-      campaignPoliticianListUpdatedSet, candidateOptions,
+      campaignPoliticianStarterList, campaignPoliticianStarterListUpdated,
+      campaignPoliticianStarterListUpdatedSet, candidateOptions,
     } = this.state;
-    // console.log('render campaignPoliticianListUpdatedSet: ', campaignPoliticianListUpdatedSet, ', campaignPoliticianList:', campaignPoliticianList, ', campaignPoliticianListUpdated: ', campaignPoliticianListUpdated);
+    // console.log('render campaignPoliticianStarterListUpdatedSet: ', campaignPoliticianStarterListUpdatedSet, ', campaignPoliticianStarterList:', campaignPoliticianStarterList, ', campaignPoliticianStarterListUpdated: ', campaignPoliticianStarterListUpdated);
     // console.log('candidateOptions:', candidateOptions);
     return (
       <div className="">
@@ -118,7 +112,7 @@ class AddPoliticianInputField extends Component {
           <Wrapper>
             <ColumnFullWidth>
               <CreatableSelect
-                defaultValue={campaignPoliticianList}
+                defaultValue={campaignPoliticianStarterList}
                 // isClearable
                 id={`addCandidateInputField-${externalUniqueId}`}
                 isMulti
@@ -127,8 +121,8 @@ class AddPoliticianInputField extends Component {
                 // onCreateOption={this.handleCreate}
                 onKeyDown={this.searchTermHasChanged}
                 options={candidateOptions}
-                placeholder="Name of candidate(s)?"
-                value={campaignPoliticianListUpdatedSet ? campaignPoliticianListUpdated : campaignPoliticianList}
+                placeholder="Add name of candidate(s) here..."
+                value={campaignPoliticianStarterListUpdatedSet ? campaignPoliticianStarterListUpdated : campaignPoliticianStarterList}
               />
             </ColumnFullWidth>
           </Wrapper>

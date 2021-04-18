@@ -22,8 +22,8 @@ export default {
   campaignEditAllSave (
     campaignWeVoteId,
     campaignDescriptionQueuedToSave, campaignDescriptionQueuedToSaveSet,
-    campaignPhotoQueuedToSave, campaignPhotoQueuedToSaveSet,
-    campaignPoliticianListQueuedToSave, campaignPoliticianListQueuedToSaveSet,
+    campaignPhotoQueuedToSave, campaignPhotoQueuedToSaveSet, campaignPoliticianDeleteListJson,
+    campaignPoliticianStarterListQueuedToSave, campaignPoliticianStarterListQueuedToSaveSet,
     campaignTitleQueuedToSave, campaignTitleQueuedToSaveSet,
   ) {
     Dispatcher.loadEndpoint('campaignStartSave',
@@ -34,8 +34,9 @@ export default {
         campaign_photo_changed: campaignPhotoQueuedToSaveSet,
         campaign_title: campaignTitleQueuedToSave,
         campaign_title_changed: campaignTitleQueuedToSaveSet,
-        politician_list: campaignPoliticianListQueuedToSave,
-        politician_list_changed: campaignPoliticianListQueuedToSaveSet,
+        politician_delete_list: campaignPoliticianDeleteListJson,
+        politician_starter_list: campaignPoliticianStarterListQueuedToSave,
+        politician_starter_list_changed: campaignPoliticianStarterListQueuedToSaveSet,
         campaignx_we_vote_id: campaignWeVoteId,
       });
   },
@@ -53,16 +54,25 @@ export default {
       });
   },
 
-  campaignPoliticianListQueuedToSave (campaignPoliticianList) {
-    Dispatcher.dispatch({ type: 'campaignPoliticianListQueuedToSave', payload: campaignPoliticianList });
+  campaignPoliticianDeleteAddQueuedToSave (campaignXPoliticianId) {
+    Dispatcher.dispatch({ type: 'campaignPoliticianDeleteAddQueuedToSave', payload: campaignXPoliticianId });
   },
 
-  campaignPoliticianListSave (campaignWeVoteId, campaignPoliticianList) {
-    // console.log('campaignPoliticianListSave: ', campaignPoliticianList);
+  campaignPoliticianDeleteRemoveQueuedToSave (campaignXPoliticianId) {
+    Dispatcher.dispatch({ type: 'campaignPoliticianDeleteRemoveQueuedToSave', payload: campaignXPoliticianId });
+  },
+
+  campaignPoliticianStarterListQueuedToSave (campaignPoliticianStarterList) {
+    Dispatcher.dispatch({ type: 'campaignPoliticianStarterListQueuedToSave', payload: campaignPoliticianStarterList });
+  },
+
+  campaignPoliticianStarterListSave (campaignWeVoteId, campaignPoliticianStarterListQueuedToSaveJson, campaignPoliticianDeleteListJson) {
+    // console.log('campaignPoliticianStarterListQueuedToSaveJson: ', campaignPoliticianStarterListQueuedToSaveJson);
     Dispatcher.loadEndpoint('campaignStartSave',
       {
-        politician_list: campaignPoliticianList,
-        politician_list_changed: true,
+        politician_delete_list: campaignPoliticianDeleteListJson,
+        politician_starter_list: campaignPoliticianStarterListQueuedToSaveJson,
+        politician_starter_list_changed: true,
         campaignx_we_vote_id: campaignWeVoteId,
       });
   },

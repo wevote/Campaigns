@@ -17,6 +17,7 @@ import CampaignStartActions from '../../actions/CampaignStartActions';
 import AddCandidateInputField from '../../components/CampaignStart/AddPoliticianInputField';
 import CampaignStartSteps from '../../components/Navigation/CampaignStartSteps';
 import CampaignStartStore from '../../stores/CampaignStartStore';
+import EditPoliticianList from '../../components/CampaignStart/EditPoliticianList';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
@@ -35,18 +36,20 @@ class CampaignStartAddPolitician extends Component {
     });
   }
 
-  submitPoliticianList = () => {
-    const campaignPoliticianListQueuedToSave = CampaignStartStore.getCampaignPoliticianListQueuedToSave();
-    const campaignPoliticianListQueuedToSaveSet = CampaignStartStore.getCampaignPoliticianListQueuedToSaveSet();
+  submitPoliticianStarterList = () => {
+    const campaignPoliticianDeleteList = CampaignStartStore.getCampaignPoliticianDeleteList();
+    const campaignPoliticianStarterListQueuedToSave = CampaignStartStore.getCampaignPoliticianStarterListQueuedToSave();
+    const campaignPoliticianStarterListQueuedToSaveSet = CampaignStartStore.getCampaignPoliticianStarterListQueuedToSaveSet();
     // Has a change been made that needs to be saved?
-    // console.log('CampaignStartAddPolitician, campaignPoliticianListQueuedToSaveSet:', campaignPoliticianListQueuedToSaveSet);
-    if (campaignPoliticianListQueuedToSaveSet) {
-      // console.log('CampaignStartAddPolitician, campaignPoliticianListQueuedToSave:', campaignPoliticianListQueuedToSave);
+    // console.log('CampaignStartAddPolitician, campaignPoliticianStarterListQueuedToSaveSet:', campaignPoliticianStarterListQueuedToSaveSet);
+    if (campaignPoliticianStarterListQueuedToSaveSet || campaignPoliticianDeleteList.length > 0) {
+      // console.log('CampaignStartAddPolitician, campaignPoliticianStarterListQueuedToSave:', campaignPoliticianStarterListQueuedToSave);
       const campaignWeVoteId = '';
-      const campaignPoliticianListQueuedToSaveJson = JSON.stringify(campaignPoliticianListQueuedToSave);
-      // console.log('CampaignStartAddPolitician, campaignPoliticianListQueuedToSaveJson:', campaignPoliticianListQueuedToSaveJson);
-      CampaignStartActions.campaignPoliticianListSave(campaignWeVoteId, campaignPoliticianListQueuedToSaveJson);
-      CampaignStartActions.campaignPoliticianListQueuedToSave('');
+      const campaignPoliticianDeleteListJson = JSON.stringify(campaignPoliticianDeleteList);
+      const campaignPoliticianStarterListQueuedToSaveJson = JSON.stringify(campaignPoliticianStarterListQueuedToSave);
+      // console.log('CampaignStartAddPolitician, campaignPoliticianStarterListQueuedToSaveJson:', campaignPoliticianStarterListQueuedToSaveJson);
+      CampaignStartActions.campaignPoliticianStarterListSave(campaignWeVoteId, campaignPoliticianStarterListQueuedToSaveJson, campaignPoliticianDeleteListJson);
+      CampaignStartActions.campaignPoliticianStarterListQueuedToSave('');
     }
     historyPush('/start-a-campaign-why-winning-matters');
   }
@@ -73,6 +76,7 @@ class CampaignStartAddPolitician extends Component {
               </CampaignProcessStepIntroductionText>
               <CampaignStartSectionWrapper>
                 <CampaignStartSection>
+                  <EditPoliticianList />
                   <AddCandidateInputField />
                   <CampaignStartDesktopButtonWrapper className="u-show-desktop-tablet">
                     <CampaignStartDesktopButtonPanel>
@@ -80,7 +84,7 @@ class CampaignStartAddPolitician extends Component {
                         classes={{ root: classes.buttonDesktop }}
                         color="primary"
                         id="saveCampaignPoliticianList"
-                        onClick={this.submitPoliticianList}
+                        onClick={this.submitPoliticianStarterList}
                         variant="contained"
                       >
                         Continue
@@ -126,7 +130,7 @@ class CampaignStartAddPolitician extends Component {
               classes={{ root: mobileButtonClasses }}
               color="primary"
               id="saveCampaignPoliticianListFooter"
-              onClick={this.submitPoliticianList}
+              onClick={this.submitPoliticianStarterList}
               variant="contained"
             >
               Continue

@@ -9,6 +9,7 @@ import CampaignStartActions from '../../actions/CampaignStartActions';
 import CompleteYourProfileModalController from '../../components/Settings/CompleteYourProfileModalController';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
 import VoterStore from '../../stores/VoterStore';
 
@@ -19,6 +20,7 @@ class CampaignStartPreview extends Component {
     this.state = {
       campaignDescription: '',
       campaignPhotoLargeUrl: '',
+      campaignPoliticianList: [],
       campaignTitle: '',
       readyToPublish: false,
       voterFirstName: '',
@@ -33,11 +35,10 @@ class CampaignStartPreview extends Component {
     this.onVoterStoreChange();
     this.campaignStartStoreListener = CampaignStartStore.addListener(this.onCampaignStartStoreChange.bind(this));
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
-    import('jquery').then(({ default: jquery }) => {
-      window.jQuery = jquery;
-      window.$ = jquery;
+    initializejQuery(() => {
       CampaignStartActions.campaignRetrieveAsOwner('');
-    }).catch((error) => console.error('An error occurred while loading jQuery', error));
+      CampaignStartActions.campaignEditAllReset();
+    });
   }
 
   componentWillUnmount () {
@@ -48,6 +49,7 @@ class CampaignStartPreview extends Component {
   onCampaignStartStoreChange () {
     const campaignDescription = CampaignStartStore.getCampaignDescription();
     const campaignPhotoLargeUrl = CampaignStartStore.getCampaignPhotoLargeUrl();
+    const campaignPoliticianList = CampaignStartStore.getCampaignPoliticianList();
     const campaignTitle = CampaignStartStore.getCampaignTitle();
     const step1Completed = CampaignStartStore.campaignTitleExists();
     const step2Completed = CampaignStartStore.campaignPoliticianListExists();
@@ -57,6 +59,7 @@ class CampaignStartPreview extends Component {
     this.setState({
       campaignDescription,
       campaignPhotoLargeUrl,
+      campaignPoliticianList,
       campaignTitle,
       readyToPublish,
       voterSignedInWithEmail,
@@ -116,8 +119,10 @@ class CampaignStartPreview extends Component {
     }
     const { classes } = this.props;
     const {
-      campaignDescription, campaignPhotoLargeUrl, campaignTitle, readyToPublish,
+      campaignDescription, campaignPhotoLargeUrl, campaignPoliticianList, campaignTitle, readyToPublish,
     } = this.state;
+    let campaignPoliticianNumber = 0;
+    let commaOrNot = '';
     return (
       <div>
         <Helmet title="Preview Your Campaign - We Vote Campaigns" />
@@ -171,7 +176,47 @@ class CampaignStartPreview extends Component {
                   <MobileDisplayWrapper className="u-show-mobile">
                     <CampaignTitleMobile>{campaignTitle || <CampaignTitleMissing>Title Required</CampaignTitleMissing>}</CampaignTitleMobile>
                   </MobileDisplayWrapper>
-                  Candidate Name
+                  {(campaignPoliticianList && campaignPoliticianList.length > 0) ? (
+                    <CampaignPoliticianList>
+                      {campaignPoliticianList.length === 1 ? (
+                        <>
+                          Supporting
+                          {' '}
+                          {campaignPoliticianList[0].politician_name}
+                          .
+                        </>
+                      ) : (
+                        <>
+                          Supporting
+                          { campaignPoliticianList.map((campaignPolitician) => {
+                            campaignPoliticianNumber += 1;
+                            if (campaignPoliticianNumber >= campaignPoliticianList.length) {
+                              return (
+                                <span key={campaignPoliticianNumber}>
+                                  {' '}
+                                  and
+                                  {' '}
+                                  {campaignPolitician.politician_name}
+                                  .
+                                </span>
+                              );
+                            } else {
+                              commaOrNot = (campaignPoliticianNumber === campaignPoliticianList.length - 1) ? '' : ',';
+                              return (
+                                <span key={campaignPoliticianNumber}>
+                                  {' '}
+                                  {campaignPolitician.politician_name}
+                                  {commaOrNot}
+                                </span>
+                              );
+                            }
+                          })}
+                        </>
+                      )}
+                    </CampaignPoliticianList>
+                  ) : (
+                    <CampaignPoliticianListMissing>Politician Missing</CampaignPoliticianListMissing>
+                  )}
                   <br />
                   {campaignPhotoLargeUrl ? (
                     <CampaignImage src={campaignPhotoLargeUrl} alt="Campaign" />
@@ -244,6 +289,17 @@ const CampaignImageMissing = styled.div`
   color: red;
   font-size: 18px;
   font-weight: 600;
+`;
+
+const CampaignPoliticianList = styled.div`
+  font-size: 17px;
+  margin: 10px 0;
+`;
+
+const CampaignPoliticianListMissing = styled.div`
+  color: red;
+  font-size: 18px;
+  margin: 10px 0;
 `;
 
 const CampaignStartSection = styled.div`
