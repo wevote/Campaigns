@@ -15,6 +15,7 @@ const WebpackShellPluginNext = require('webpack-shell-plugin-next');
 const port = process.env.PORT || 3000;
 const isHTTPS = process.env.PROTOCOL && process.env.PROTOCOL === 'HTTPS';
 const bundleAnalysis = process.env.ANALYSIS || false;  // enable the interactive bundle analyser and the Unused component analyzer
+const isFixedPublicPath = process.env.FIXEDPATH || false;
 
 module.exports = {
   entry: path.resolve(__dirname, './src/index.jsx'),
@@ -45,7 +46,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './build'),
     filename: '[name].[contenthash].js',
-    publicPath: '/',
+    publicPath: isFixedPublicPath ? 'https://campaign.wevote.us/' :  '/',
   },
   plugins: [
     new CleanWebpackPlugin(),
