@@ -11,11 +11,11 @@
     "url": "https://github.com/WeVote/Campaigns.git"
   },
   "scripts": {
-    "build": "node buildDateFile.js webpack --mode production",
+    "build": "node buildDateFile.js && webpack --mode production",
     "prod-fixed": "node buildDateFile.js && FIXEDPATH=1 webpack --mode production",
     "prod": "node buildDateFile.js && webpack --mode production",
     "lint": "eslint --format stylish --ext .jsx --ext .js src/js",
-    "start": "node buildDateFile.js  && PROTOCOL=HTTP webpack serve --mode development",
+    "start": "node buildDateFile.js && PROTOCOL=HTTP webpack serve --mode development",
     "start-https": "node buildDateFile.js && PROTOCOL=HTTPS webpack serve --mode development",
     "start-https-analysis": "node buildDateFile.js && PROTOCOL=HTTPS && ANALYSIS=1 webpack serve --mode development",
     "start-minified": "webpack serve --mode production",
