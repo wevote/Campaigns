@@ -171,10 +171,12 @@ class CampaignStore extends ReduceStore {
         // console.log('action.res.voter_issues_only:', action.res.voter_issues_only);
         campaignXList.forEach((oneCampaignX) => {
           allCachedCampaignXDicts[oneCampaignX.campaignx_we_vote_id] = oneCampaignX;
-          if ('campaignx_owner_list' in campaignX) {
+          // TODO: 4/20/21, campaignX is not initialized, so always undefined -- looks like copied code
+          if (campaignX && 'campaignx_owner_list' in campaignX) {
             ({ allCachedCampaignXOwners, allCachedCampaignXProfilePhotos } = this.extractCampaignXOwnerList(campaignX, allCachedCampaignXOwners, allCachedCampaignXProfilePhotos));
           }
-          if ('campaignx_politician_list' in campaignX) {
+          // TODO: 4/20/21, campaignX is not initialized, so always undefined -- looks like copied code
+          if (campaignX && 'campaignx_politician_list' in campaignX) {
             ({ allCachedCampaignXPoliticianLists } = this.extractCampaignXPoliticianList(campaignX, allCachedCampaignXPoliticianLists));
           }
           if (!(oneCampaignX.seo_friendly_path in allCachedCampaignXWeVoteIdsBySEOFriendlyPath)) {
