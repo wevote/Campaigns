@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Done } from '@material-ui/icons';
+import AppStore from '../../stores/AppStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
@@ -17,23 +18,24 @@ class CampaignSupportSteps extends Component {
       payToPromoteStepCompleted: false,
       payToPromoteStepTurnedOn: false,
       sharingStepCompleted: false,
+      siteConfigurationHasBeenRetrieved: false,
     };
   }
 
   componentDidMount () {
     // console.log('CampaignSupportSteps, componentDidMount');
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     const { atPayToPromoteStep, atSharingStep, campaignXWeVoteId } = this.props;
     const step1Completed = true;
     const step2Completed = atPayToPromoteStep || atSharingStep || CampaignSupporterStore.supporterEndorsementExists(campaignXWeVoteId);
     const payToPromoteStepCompleted = atSharingStep;
-    const payToPromoteStepTurnedOn = true;
     const sharingStepCompleted = false;
     this.setState({
       step1Completed,
       step2Completed,
       payToPromoteStepCompleted,
-      payToPromoteStepTurnedOn,
       sharingStepCompleted,
     });
   }
@@ -54,20 +56,30 @@ class CampaignSupportSteps extends Component {
   }
 
   componentWillUnmount () {
+    this.appStoreListener.remove();
     this.campaignSupporterStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenSiteLogoUrl = AppStore.getChosenSiteLogoUrl();
+    const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
+    // For now, we assume that paid sites with chosenSiteLogoUrl will turn off "Chip in"
+    const payToPromoteStepTurnedOn = !chosenSiteLogoUrl;
+    this.setState({
+      payToPromoteStepTurnedOn,
+      siteConfigurationHasBeenRetrieved,
+    });
   }
 
   onCampaignSupporterStoreChange () {
     const { atPayToPromoteStep, atSharingStep, campaignXWeVoteId } = this.props;
     const step2Completed = atPayToPromoteStep || atSharingStep || CampaignSupporterStore.supporterEndorsementExists(campaignXWeVoteId);
     const payToPromoteStepCompleted = atSharingStep;
-    const payToPromoteStepTurnedOn = true;
     const sharingStepCompleted = false;
     // console.log('onCampaignSupporterStoreChange step1Completed: ', step1Completed, ', step2Completed: ', step2Completed, ', payToPromoteStepCompleted:', payToPromoteStepCompleted);
     this.setState({
       step2Completed,
       payToPromoteStepCompleted,
-      payToPromoteStepTurnedOn,
       sharingStepCompleted,
     });
   }
@@ -82,7 +94,8 @@ class CampaignSupportSteps extends Component {
       campaignBasePath, classes,
     } = this.props;
     const {
-      step1Completed, step2Completed, payToPromoteStepCompleted, payToPromoteStepTurnedOn, sharingStepCompleted,
+      step1Completed, step2Completed, payToPromoteStepCompleted,
+      payToPromoteStepTurnedOn, sharingStepCompleted, siteConfigurationHasBeenRetrieved,
     } = this.state;
     return (
       <div>
@@ -94,95 +107,97 @@ class CampaignSupportSteps extends Component {
           </InnerWrapper>
         </OuterWrapperPageTitle>
         <OuterWrapperSteps>
-          <InnerWrapper>
-            <StepWrapper>
-              {step1Completed ? (
-                <StepCircle
-                  className="u-cursor--pointer"
-                  onClick={() => historyPush(`${campaignBasePath}`)}
-                >
-                  <StepNumber>
-                    <Done classes={{ root: classes.doneIcon }} />
-                  </StepNumber>
-                </StepCircle>
-              ) : (
-                <StepCircle
-                  className="u-cursor--pointer"
-                  inverseColor={atStepNumber1}
-                  onClick={() => historyPush(`${campaignBasePath}`)}
-                >
-                  <StepNumber inverseColor={atStepNumber1}>1</StepNumber>
-                </StepCircle>
-              )}
-            </StepWrapper>
-            <StepWrapper>
-              {step2Completed ? (
-                <StepCircle
-                  className="u-cursor--pointer"
-                  inverseColor={atStepNumber2}
-                  onClick={() => historyPush(`${campaignBasePath}/why-do-you-support`)}
-                >
-                  <StepNumber inverseColor={atStepNumber2}>
-                    <Done classes={{ root: classes.doneIcon }} />
-                  </StepNumber>
-                </StepCircle>
-              ) : (
-                <StepCircle
-                  className="u-cursor--pointer"
-                  inverseColor={atStepNumber2}
-                  onClick={() => historyPush(`${campaignBasePath}/why-do-you-support`)}
-                >
-                  <StepNumber inverseColor={atStepNumber2}>2</StepNumber>
-                </StepCircle>
-              )}
-            </StepWrapper>
-            {payToPromoteStepTurnedOn && (
+          {siteConfigurationHasBeenRetrieved && (
+            <InnerWrapper>
               <StepWrapper>
-                {payToPromoteStepCompleted ? (
+                {step1Completed ? (
                   <StepCircle
                     className="u-cursor--pointer"
-                    inverseColor={atPayToPromoteStep}
-                    onClick={() => historyPush(`${campaignBasePath}/pay-to-promote`)}
+                    onClick={() => historyPush(`${campaignBasePath}`)}
                   >
-                    <StepNumber inverseColor={atPayToPromoteStep}>
+                    <StepNumber>
                       <Done classes={{ root: classes.doneIcon }} />
                     </StepNumber>
                   </StepCircle>
                 ) : (
                   <StepCircle
                     className="u-cursor--pointer"
-                    inverseColor={atPayToPromoteStep}
-                    onClick={() => historyPush(`${campaignBasePath}/pay-to-promote`)}
+                    inverseColor={atStepNumber1}
+                    onClick={() => historyPush(`${campaignBasePath}`)}
                   >
-                    <StepNumber inverseColor={atPayToPromoteStep}>3</StepNumber>
+                    <StepNumber inverseColor={atStepNumber1}>1</StepNumber>
                   </StepCircle>
                 )}
               </StepWrapper>
-            )}
-            <StepWrapper>
-              {sharingStepCompleted ? (
-                <StepCircle
-                  className="u-cursor--pointer"
-                  inverseColor={atSharingStep}
-                  onClick={() => historyPush(`${campaignBasePath}/share-campaign`)}
-                >
-                  <StepNumber inverseColor={atSharingStep}>
-                    <Done classes={{ root: classes.doneIcon }} />
-                  </StepNumber>
-                </StepCircle>
-              ) : (
-                <StepCircle
-                  className="u-cursor--pointer"
-                  inverseColor={atSharingStep}
-                  onClick={() => historyPush(`${campaignBasePath}/share-campaign`)}
-                >
-                  <StepNumber inverseColor={atSharingStep}>
-                    {payToPromoteStepTurnedOn ? '4' : '3'}
-                  </StepNumber>
-                </StepCircle>
+              <StepWrapper>
+                {step2Completed ? (
+                  <StepCircle
+                    className="u-cursor--pointer"
+                    inverseColor={atStepNumber2}
+                    onClick={() => historyPush(`${campaignBasePath}/why-do-you-support`)}
+                  >
+                    <StepNumber inverseColor={atStepNumber2}>
+                      <Done classes={{ root: classes.doneIcon }} />
+                    </StepNumber>
+                  </StepCircle>
+                ) : (
+                  <StepCircle
+                    className="u-cursor--pointer"
+                    inverseColor={atStepNumber2}
+                    onClick={() => historyPush(`${campaignBasePath}/why-do-you-support`)}
+                  >
+                    <StepNumber inverseColor={atStepNumber2}>2</StepNumber>
+                  </StepCircle>
+                )}
+              </StepWrapper>
+              {payToPromoteStepTurnedOn && (
+                <StepWrapper>
+                  {payToPromoteStepCompleted ? (
+                    <StepCircle
+                      className="u-cursor--pointer"
+                      inverseColor={atPayToPromoteStep}
+                      onClick={() => historyPush(`${campaignBasePath}/pay-to-promote`)}
+                    >
+                      <StepNumber inverseColor={atPayToPromoteStep}>
+                        <Done classes={{ root: classes.doneIcon }} />
+                      </StepNumber>
+                    </StepCircle>
+                  ) : (
+                    <StepCircle
+                      className="u-cursor--pointer"
+                      inverseColor={atPayToPromoteStep}
+                      onClick={() => historyPush(`${campaignBasePath}/pay-to-promote`)}
+                    >
+                      <StepNumber inverseColor={atPayToPromoteStep}>3</StepNumber>
+                    </StepCircle>
+                  )}
+                </StepWrapper>
               )}
-            </StepWrapper>
-          </InnerWrapper>
+              <StepWrapper>
+                {sharingStepCompleted ? (
+                  <StepCircle
+                    className="u-cursor--pointer"
+                    inverseColor={atSharingStep}
+                    onClick={() => historyPush(`${campaignBasePath}/share-campaign`)}
+                  >
+                    <StepNumber inverseColor={atSharingStep}>
+                      <Done classes={{ root: classes.doneIcon }} />
+                    </StepNumber>
+                  </StepCircle>
+                ) : (
+                  <StepCircle
+                    className="u-cursor--pointer"
+                    inverseColor={atSharingStep}
+                    onClick={() => historyPush(`${campaignBasePath}/share-campaign`)}
+                  >
+                    <StepNumber inverseColor={atSharingStep}>
+                      {payToPromoteStepTurnedOn ? '4' : '3'}
+                    </StepNumber>
+                  </StepCircle>
+                )}
+              </StepWrapper>
+            </InnerWrapper>
+          )}
         </OuterWrapperSteps>
       </div>
     );
@@ -225,6 +240,7 @@ const OuterWrapperSteps = styled.div`
   display: flex;
   justify-content: center;
   margin: 20px 0 35px;
+  min-height: 34px;
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
     margin-bottom: 25px;
   }

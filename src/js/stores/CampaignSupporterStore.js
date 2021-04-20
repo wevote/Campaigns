@@ -89,6 +89,10 @@ class CampaignSupporterStore extends ReduceStore {
     let revisedState;
     switch (action.type) {
       case 'campaignListRetrieve':
+        // See CampaignStore for the following campaignX values:
+        // - campaignx_owner_list
+        // - seo_friendly_path_list
+
         // console.log('CampaignSupporterStore campaignListRetrieve');
         if (!action.res || !action.res.success) return state;
         revisedState = state;
@@ -133,6 +137,10 @@ class CampaignSupporterStore extends ReduceStore {
         return revisedState;
 
       case 'campaignRetrieve':
+        // See CampaignStore for the following campaignX values:
+        // - campaignx_owner_list
+        // - seo_friendly_path_list
+
         // console.log('CampaignSupporterStore campaignRetrieve action.res:', action.res);
         if (!action.res || !action.res.success) return state;
         revisedState = state;
@@ -217,7 +225,7 @@ class CampaignSupporterStore extends ReduceStore {
 
       case 'voterSignOut':
         // console.log("resetting Campaign");
-        console.log('CampaignSupporterStore voterSignOut, state:', state);
+        // console.log('CampaignSupporterStore voterSignOut, state:', state);
         return this.resetState();
 
       default:

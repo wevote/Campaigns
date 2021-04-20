@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
+import AppStore from '../stores/AppStore';
+import CampaignOwnersList from '../components/CampaignSupport/CampaignOwnersList';
 import CampaignTopNavigation from '../components/Navigation/CampaignTopNavigation';
 import CampaignStore from '../stores/CampaignStore';
 import CampaignSupporterActions from '../actions/CampaignSupporterActions';
@@ -43,6 +45,8 @@ class CampaignDetailsPage extends Component {
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     // retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
@@ -68,8 +72,18 @@ class CampaignDetailsPage extends Component {
       clearTimeout(this.timer);
       this.timer = null;
     }
+    this.appStoreListener.remove();
     this.campaignStoreListener.remove();
     this.campaignSupporterStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenSiteLogoUrl = AppStore.getChosenSiteLogoUrl();
+    // For now, we assume that paid sites with chosenSiteLogoUrl will turn off "Chip in"
+    const payToPromoteStepTurnedOn = !chosenSiteLogoUrl;
+    this.setState({
+      payToPromoteStepTurnedOn,
+    });
   }
 
   onCampaignStoreChange () {
@@ -109,14 +123,12 @@ class CampaignDetailsPage extends Component {
     const { campaignXWeVoteId } = this.state;
     const step2Completed = CampaignSupporterStore.supporterEndorsementExists(campaignXWeVoteId);
     const payToPromoteStepCompleted = false;
-    const payToPromoteStepTurnedOn = true;
     const sharingStepCompleted = false;
     // console.log('onCampaignSupporterStoreChange sharingStepCompleted: ', sharingStepCompleted, ', step2Completed: ', step2Completed, ', payToPromoteStepCompleted:', payToPromoteStepCompleted);
     this.setState({
       sharingStepCompleted,
       step2Completed,
       payToPromoteStepCompleted,
-      payToPromoteStepTurnedOn,
     });
   }
 
@@ -209,6 +221,9 @@ class CampaignDetailsPage extends Component {
               <Suspense fallback={<span>&nbsp;</span>}>
                 <CampaignSupportThermometer campaignXWeVoteId={campaignXWeVoteId} />
               </Suspense>
+              <CampaignOwnersWrapper>
+                <CampaignOwnersList campaignXWeVoteId={campaignXWeVoteId} />
+              </CampaignOwnersWrapper>
             </CampaignTitleAndScoreBar>
             <CampaignDescriptionWrapper>
               <CampaignDescription>
@@ -243,6 +258,9 @@ class CampaignDetailsPage extends Component {
                     </DelayedLoad>
                   )}
                 </CampaignImageDesktopWrapper>
+                <CampaignOwnersDesktopWrapper>
+                  <CampaignOwnersList campaignXWeVoteId={campaignXWeVoteId} />
+                </CampaignOwnersDesktopWrapper>
                 <CampaignDescriptionDesktopWrapper>
                   <CampaignDescriptionDesktop>
                     {campaignDescription}
@@ -304,13 +322,13 @@ const styles = () => ({
 });
 
 const CampaignDescription = styled.div`
-  font-size: 15px;
+  font-size: 18px;
   text-align: left;
   white-space: pre-wrap;
 `;
 
 const CampaignDescriptionDesktop = styled.div`
-  font-size: 15px;
+  font-size: 18px;
   text-align: left;
   white-space: pre-wrap;
 `;
@@ -376,6 +394,13 @@ const CampaignImage = styled.img`
 const CampaignImageDesktop = styled.img`
   border-radius: 5px;
   width: 100%;
+`;
+
+const CampaignOwnersDesktopWrapper = styled.div`
+  margin-bottom: 8px;
+`;
+
+const CampaignOwnersWrapper = styled.div`
 `;
 
 const CampaignSubSectionTitle = styled.h2`
