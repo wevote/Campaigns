@@ -46,7 +46,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './build'),
     filename: '[name].[contenthash].js',
-    publicPath: isFixedPublicPath ? 'https://campaign.wevote.us/' :  '/',
+    publicPath: isFixedPublicPath ? 'https://campaigns.wevote.us/' :  '/',
   },
   plugins: [
     new CleanWebpackPlugin(),
