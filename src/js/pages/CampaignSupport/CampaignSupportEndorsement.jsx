@@ -26,6 +26,7 @@ import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import initializejQuery from '../../utils/initializejQuery';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
+import AppStore from '../../stores/AppStore';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
 const VisibleToPublicCheckbox = React.lazy(() => import('../../components/CampaignSupport/VisibleToPublicCheckbox'));
@@ -40,12 +41,15 @@ class CampaignSupportEndorsement extends Component {
       campaignSEOFriendlyPath: '',
       campaignTitle: '',
       campaignXWeVoteId: '',
+      payToPromoteStepTurnedOn: true,
     };
   }
 
   componentDidMount () {
     // console.log('CampaignSupportEndorsement componentDidMount');
     this.props.setShowHeaderFooter(false);
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     const { match: { params } } = this.props;
@@ -83,7 +87,17 @@ class CampaignSupportEndorsement extends Component {
 
   componentWillUnmount () {
     this.props.setShowHeaderFooter(true);
+    this.appStoreListener.remove();
     this.campaignStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenSiteLogoUrl = AppStore.getChosenSiteLogoUrl();
+    // For now, we assume that paid sites with chosenSiteLogoUrl will turn off "Chip in"
+    const payToPromoteStepTurnedOn = !chosenSiteLogoUrl;
+    this.setState({
+      payToPromoteStepTurnedOn,
+    });
   }
 
   onCampaignStoreChange () {
@@ -133,7 +147,7 @@ class CampaignSupportEndorsement extends Component {
   }
 
   goToNextStep = () => {
-    const payToPromoteStepTurnedOn = true;
+    const { payToPromoteStepTurnedOn } = this.state;
     if (payToPromoteStepTurnedOn) {
       historyPush(`${this.getCampaignBasePath()}/pay-to-promote`);
     } else {
