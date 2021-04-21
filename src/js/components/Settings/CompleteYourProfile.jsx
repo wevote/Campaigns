@@ -66,9 +66,9 @@ class CompleteYourProfile extends Component {
 
     const voter = VoterStore.getVoter();
     const { signed_in_with_email: voterIsSignedInWithEmail, we_vote_id: voterWeVoteId } = voter;
-    // console.log(`VoterEmailAddressEntry onVoterStoreChange isSignedIn: ${isSignedIn}, voterIsSignedInWithEmail: ${voterIsSignedInWithEmail}`);
+    // console.log(`CompleteYourProfile onVoterStoreChange isSignedIn: ${isSignedIn}, voterIsSignedInWithEmail: ${voterIsSignedInWithEmail}`);
     if (voterIsSignedInWithEmail) {
-      // console.log('VoterEmailAddressEntry onVoterStoreChange voterIsSignedInWithEmail');
+      // console.log('CompleteYourProfile onVoterStoreChange voterIsSignedInWithEmail');
       if (voterWeVoteId !== voterWeVoteIdPrevious) {
         this.setState({
           voterWeVoteId,
@@ -104,7 +104,7 @@ class CompleteYourProfile extends Component {
     VoterActions.clearSecretCodeVerificationStatus();
     VoterActions.voterRetrieve();
     if (verified && this.props.functionToUseWhenProfileComplete) {
-      // console.log('VoterEmailAddressEntry closeVerifyModal, functionToUseWhenProfileComplete exists');
+      // console.log('CompleteYourProfile closeVerifyModal, functionToUseWhenProfileComplete exists');
       this.props.functionToUseWhenProfileComplete();
     }
     const delayBeforeClosingVerifyModal = 400;
@@ -185,7 +185,7 @@ class CompleteYourProfile extends Component {
   voterFirstRetrieve = () => {
     initializejQuery(() => {
       const voterFirstRetrieveInitiated = AppStore.voterFirstRetrieveInitiated();
-      // console.log('SignInModalController voterFirstRetrieveInitiated: ', voterFirstRetrieveInitiated);
+      // console.log('CompleteYourProfile voterFirstRetrieveInitiated: ', voterFirstRetrieveInitiated);
       if (!voterFirstRetrieveInitiated) {
         AppActions.setVoterFirstRetrieveInitiated(true);
         VoterActions.voterRetrieve();
