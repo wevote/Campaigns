@@ -250,7 +250,6 @@ class AppStore extends ReduceStore {
     hostname = hostname || '';
     if (hostname === 'campaigns.wevote.us') {
       // Bypass for default site
-      console.log('Bypass siteConfigurationHasBeenRetrieved');
       return true;
     } else {
       return this.getState().siteConfigurationHasBeenRetrieved;

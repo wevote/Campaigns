@@ -66,9 +66,9 @@ class CompleteYourProfile extends Component {
 
     const voter = VoterStore.getVoter();
     const { signed_in_with_email: voterIsSignedInWithEmail, we_vote_id: voterWeVoteId } = voter;
-    // console.log(`VoterEmailAddressEntry onVoterStoreChange isSignedIn: ${isSignedIn}, voterIsSignedInWithEmail: ${voterIsSignedInWithEmail}`);
+    // console.log(`CompleteYourProfile onVoterStoreChange isSignedIn: ${isSignedIn}, voterIsSignedInWithEmail: ${voterIsSignedInWithEmail}`);
     if (voterIsSignedInWithEmail) {
-      // console.log('VoterEmailAddressEntry onVoterStoreChange voterIsSignedInWithEmail');
+      // console.log('CompleteYourProfile onVoterStoreChange voterIsSignedInWithEmail');
       if (voterWeVoteId !== voterWeVoteIdPrevious) {
         this.setState({
           voterWeVoteId,
@@ -98,11 +98,15 @@ class CompleteYourProfile extends Component {
     }
   }
 
-  closeVerifyModal = () => {
-    // console.log('VoterEmailAddressEntry closeVerifyModal');
+  closeVerifyModal = (verified = false) => {
+    // console.log('CompleteYourProfile closeVerifyModal, verified:', verified);
     VoterActions.clearEmailAddressStatus();
     VoterActions.clearSecretCodeVerificationStatus();
     VoterActions.voterRetrieve();
+    if (verified && this.props.functionToUseWhenProfileComplete) {
+      // console.log('CompleteYourProfile closeVerifyModal, functionToUseWhenProfileComplete exists');
+      this.props.functionToUseWhenProfileComplete();
+    }
     const delayBeforeClosingVerifyModal = 400;
     this.closeVerifyModalTimer = setTimeout(() => {
       this.setState({
@@ -181,7 +185,7 @@ class CompleteYourProfile extends Component {
   voterFirstRetrieve = () => {
     initializejQuery(() => {
       const voterFirstRetrieveInitiated = AppStore.voterFirstRetrieveInitiated();
-      // console.log('SignInModalController voterFirstRetrieveInitiated: ', voterFirstRetrieveInitiated);
+      // console.log('CompleteYourProfile voterFirstRetrieveInitiated: ', voterFirstRetrieveInitiated);
       if (!voterFirstRetrieveInitiated) {
         AppActions.setVoterFirstRetrieveInitiated(true);
         VoterActions.voterRetrieve();

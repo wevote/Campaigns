@@ -6,7 +6,7 @@ import { renderLog } from '../../utils/logging';
 
 class SiteConfigurationRetrieveController extends Component {
   componentDidMount () {
-    console.log('SiteConfigurationRetrieveController componentDidMount');
+    // console.log('SiteConfigurationRetrieveController componentDidMount');
     this.siteConfigurationFirstRetrieve();
   }
 

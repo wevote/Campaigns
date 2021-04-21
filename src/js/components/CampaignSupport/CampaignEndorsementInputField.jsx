@@ -3,14 +3,17 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { TextField, FormControl } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { renderLog } from '../../utils/logging';
+import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
 
 class CampaignEndorsementInputField extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      campaignXPoliticianList: [],
       supporterEndorsement: '',
     };
 
@@ -20,7 +23,9 @@ class CampaignEndorsementInputField extends Component {
 
   componentDidMount () {
     // console.log('CampaignEndorsementInputField, componentDidMount');
+    this.onCampaignStoreChange();
     this.onCampaignSupporterStoreChange();
+    this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
   }
 
@@ -34,17 +39,27 @@ class CampaignEndorsementInputField extends Component {
     } = this.props;
     if (campaignXWeVoteId) {
       if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
+        this.onCampaignStoreChange();
         this.onCampaignSupporterStoreChange();
       }
     }
   }
 
   componentWillUnmount () {
+    this.campaignStoreListener.remove();
     this.campaignSupporterStoreListener.remove();
   }
 
   handleKeyPress () {
     //
+  }
+
+  onCampaignStoreChange () {
+    const { campaignXWeVoteId } = this.props;
+    const campaignXPoliticianList = CampaignStore.getCampaignXPoliticianList(campaignXWeVoteId);
+    this.setState({
+      campaignXPoliticianList,
+    });
   }
 
   onCampaignSupporterStoreChange () {
@@ -80,14 +95,18 @@ class CampaignEndorsementInputField extends Component {
     renderLog('CampaignEndorsementInputField');  // Set LOG_RENDER_EVENTS to log all renders
 
     const { classes, externalUniqueId } = this.props;
-    const { supporterEndorsement } = this.state;
-    const candidateNameString = 'Candidate One';
-    const moreThanOneCandidate = false;
-    let placeholderText = `I am supporting ${candidateNameString}.`;
-    if (moreThanOneCandidate) {
+    const { campaignXPoliticianList, supporterEndorsement } = this.state;
+    let numberOfPoliticians = 0;
+    if (campaignXPoliticianList && campaignXPoliticianList.length > 0) {
+      numberOfPoliticians = campaignXPoliticianList.length;
+    }
+    let placeholderText = '';
+    if (numberOfPoliticians > 0) {
+      const politicianListSentenceString = politicianListToSentenceString(campaignXPoliticianList);
+      placeholderText += `I am supporting${politicianListSentenceString}.`;
       placeholderText += ' It is important they win because...';
     } else {
-      placeholderText += ' It is important for them to win because...';
+      placeholderText += 'It is important for them to win because...';
     }
     return (
       <div className="">

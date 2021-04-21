@@ -177,7 +177,7 @@ class SettingsVerifySecretCode extends Component {
     if (secretCodeVerified) {
       // console.log('onVoterStoreChange secretCodeVerified: yes,   voter:', VoterStore.getVoter());
       this.closeVerifyModalLocalTimer = setTimeout(() => {
-        this.closeVerifyModalLocal();
+        this.closeVerifyModalLocal(true);
       }, 500);
     } else {
       let errorMessageToDisplay = '';
@@ -442,11 +442,11 @@ class SettingsVerifySecretCode extends Component {
     this.setState({ voterVerifySecretCodeSubmitted: true });
   };
 
-  closeVerifyModalLocal = () => {
+  closeVerifyModalLocal = (verified = false) => {
     // console.log('voterVerifySecretCode this.props.closeVerifyModal:', this.props.closeVerifyModal);
     // console.log('voterVerifySecretCode voter:', VoterStore.getVoter());
     if (this.props.closeVerifyModal) {
-      this.props.closeVerifyModal();
+      this.props.closeVerifyModal(verified);
     }
   };
 
