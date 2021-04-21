@@ -172,11 +172,12 @@ class CampaignSupportShare extends Component {
     }
     const { classes, iWillShare, showShareCampaignWithOneFriend } = this.props;
     const { campaignPhoto, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId } = this.state;
-    let campaignProcessStepIntroductionText = 'Supporters joined this campaign thanks to the people who shared it. Join them and help this campaign grow!';
-    let campaignProcessStepTitle = 'Sharing leads to way more support.';
+    let campaignProcessStepIntroductionText = 'Voters joined this campaign thanks to the people who shared it. Join them and help this campaign grow!';
+    let campaignProcessStepTitle = 'Sharing leads to way more votes.';
+    const htmlTitle = `${campaignTitle} - We Vote Campaigns`;
     let skipForNowText = 'Skip for now';
     if (iWillShare) {
-      campaignProcessStepTitle = 'Thank you for sharing! Sharing leads to way more support.';
+      campaignProcessStepTitle = 'Thank you for sharing! Sharing leads to way more votes.';
     } else if (showShareCampaignWithOneFriend) {
       campaignProcessStepIntroductionText = 'Direct messages are more likely to convince people to support this campaign.';
       campaignProcessStepTitle = 'Before you go, can you help by recruiting a friend?';
@@ -184,9 +185,16 @@ class CampaignSupportShare extends Component {
       // NOTE: When we add the "recommended-campaigns" feature, change this
       skipForNowText = 'See news for this campaign';
     }
+    const campaignDescriptionLimited = 'This is test from CampaignSupportShare.';
     return (
       <div>
-        <Helmet title="Why Do You Support? - We Vote Campaigns" />
+        <Helmet>
+          <title>{htmlTitle}</title>
+          <meta
+            name="description"
+            content={campaignDescriptionLimited}
+          />
+        </Helmet>
         <PageWrapperDefault cordova={isCordova()}>
           <ContentOuterWrapperDefault>
             <ContentInnerWrapperDefault>
@@ -272,12 +280,12 @@ class CampaignSupportShare extends Component {
                   <CampaignSupportSection>
                     <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                       <CampaignSupportDesktopButtonPanel>
-                        <ShareOnFacebookButton />
+                        <ShareOnFacebookButton campaignXWeVoteId={campaignXWeVoteId} />
                       </CampaignSupportDesktopButtonPanel>
                     </CampaignSupportDesktopButtonWrapper>
                     <CampaignSupportMobileButtonWrapper className="u-show-mobile">
                       <CampaignSupportMobileButtonPanel>
-                        <ShareOnFacebookButton mobileMode />
+                        <ShareOnFacebookButton campaignXWeVoteId={campaignXWeVoteId} mobileMode />
                       </CampaignSupportMobileButtonPanel>
                     </CampaignSupportMobileButtonWrapper>
                     <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
