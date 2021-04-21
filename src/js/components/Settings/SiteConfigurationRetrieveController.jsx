@@ -4,22 +4,25 @@ import AppStore from '../../stores/AppStore';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
 
-
 class SiteConfigurationRetrieveController extends Component {
   componentDidMount () {
+    console.log('SiteConfigurationRetrieveController componentDidMount');
     this.siteConfigurationFirstRetrieve();
   }
 
   siteConfigurationFirstRetrieve = () => {
-    initializejQuery(() => {
-      const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
-      // console.log('SiteConfigurationRetrieveController voterFirstRetrieveInitiated: ', voterFirstRetrieveInitiated);
-      if (!siteConfigurationHasBeenRetrieved) {
-        let { hostname } = window.location;
-        hostname = hostname || '';
-        AppActions.siteConfigurationRetrieve(hostname);
-      }
-    });
+    let { hostname } = window.location;
+    hostname = hostname || '';
+    // campaigns.wevote.us also referenced in src/App.jsx
+    if (hostname !== 'campaigns.wevote.us') {
+      initializejQuery(() => {
+        const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
+        // console.log('SiteConfigurationRetrieveController voterFirstRetrieveInitiated: ', voterFirstRetrieveInitiated);
+        if (!siteConfigurationHasBeenRetrieved) {
+          AppActions.siteConfigurationRetrieve(hostname);
+        }
+      });
+    }
   }
 
   render () {
