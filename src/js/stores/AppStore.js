@@ -246,7 +246,15 @@ class AppStore extends ReduceStore {
   }
 
   siteConfigurationHasBeenRetrieved () {
-    return this.getState().siteConfigurationHasBeenRetrieved;
+    let { hostname } = window.location;
+    hostname = hostname || '';
+    if (hostname === 'campaigns.wevote.us') {
+      // Bypass for default site
+      console.log('Bypass siteConfigurationHasBeenRetrieved');
+      return true;
+    } else {
+      return this.getState().siteConfigurationHasBeenRetrieved;
+    }
   }
 
   storeSignInStartFullUrl () {

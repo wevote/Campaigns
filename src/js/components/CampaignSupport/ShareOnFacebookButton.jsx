@@ -55,12 +55,7 @@ class ShareOnFacebookButton extends Component {
 
   generateFullCampaignLink = () => {
     const { hostname } = window.location;
-    let domainAddress;
-    if (hostname === 'localhost') {
-      domainAddress = `https://${hostname}:3000`;
-    } else {
-      domainAddress = `https://${hostname}`;
-    }
+    const domainAddress = `https://${hostname}`;
     const { campaignX } = this.state;
     // console.log('domainAddress:', domainAddress);
     if (!campaignX) {
@@ -89,18 +84,19 @@ class ShareOnFacebookButton extends Component {
     const { mobileMode } = this.props;
     const { campaignX } = this.state;
     const {
-      campaign_description: campaignDescription,
+      // campaign_description: campaignDescription,
       campaign_title: campaignTitle,
-      campaignx_we_vote_id: campaignXWeVoteId,
-      in_draft_mode: inDraftMode,
-      supporters_count: supportersCount,
-      visible_on_this_site: visibleOnThisSite,
-      we_vote_hosted_campaign_photo_medium_url: CampaignPhotoMediumUrl,
+      // campaignx_we_vote_id: campaignXWeVoteId,
+      // in_draft_mode: inDraftMode,
+      // supporters_count: supportersCount,
+      // visible_on_this_site: visibleOnThisSite,
+      // we_vote_hosted_campaign_photo_medium_url: CampaignPhotoMediumUrl,
     } = campaignX;
     let linkToBeShared = this.generateFullCampaignLink();
     let linkToBeSharedUrlEncoded = '';
     linkToBeShared = linkToBeShared.replace('https://file:/', 'https://wevote.us/');  // Cordova
     linkToBeSharedUrlEncoded = encodeURI(linkToBeShared);
+    const quoteForFacebookShare = `Please join me in voting for the candidates in this campaign '${campaignTitle}'. `;
     return (
       <Wrapper>
         <div id="androidFacebook"
@@ -109,9 +105,9 @@ class ShareOnFacebookButton extends Component {
         >
           <FacebookShareButton
             className={mobileMode ? 'material_ui_button_mobile' : ''}
-            id="shareModalFacebookButton"
+            id="shareOnFacebookButton"
             onClick={this.saveActionShareButtonFacebook}
-            quote={campaignTitle}
+            quote={quoteForFacebookShare}
             url={`${linkToBeSharedUrlEncoded}`}
             windowWidth={mobileMode ? 350 : 750}
             windowHeight={mobileMode ? 600 : 600}

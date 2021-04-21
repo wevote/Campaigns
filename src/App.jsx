@@ -89,14 +89,21 @@ class App extends Component {
     renderLog('App');
     const { doShowHeader, doShowFooter } = this.state;
     // console.log(`App doShowHeader: ${doShowHeader}, doShowFooter:${doShowFooter}`);
-
+    let { hostname } = window.location;
+    hostname = hostname || '';
+    let useSiteConfigurationRetrieveController = true;
+    if (hostname === 'campaigns.wevote.us') {
+      useSiteConfigurationRetrieveController = false;
+    }
     return (
       <ErrorBoundary>
         <Suspense fallback={<span>&nbsp;</span>}>
           <MuiThemeProvider theme={muiTheme}>
             <ThemeProvider theme={styledTheme}>
               <WeVoteRouter>
-                <SiteConfigurationRetrieveController />
+                {useSiteConfigurationRetrieveController && (
+                  <SiteConfigurationRetrieveController />
+                )}
                 <MainHeaderBar displayHeader={doShowHeader} />
                 <Switch>
                   <Route exact path="/about"><About /></Route>
