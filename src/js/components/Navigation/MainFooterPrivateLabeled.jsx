@@ -3,12 +3,38 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
+import AppStore from '../../stores/AppStore';
 import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
 
 
 class MainFooterPrivateLabeled extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      chosenAboutOrganizationExternalUrl: false,
+    };
+  }
+
+  componentDidMount () {
+    // console.log('MainFooterPrivateLabeled componentDidMount');
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+  }
+
+  componentWillUnmount () {
+    this.appStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenAboutOrganizationExternalUrl = AppStore.getChosenAboutOrganizationExternalUrl();
+    this.setState({
+      chosenAboutOrganizationExternalUrl,
+    });
+  }
+
   render () {
     const { classes } = this.props;
+    const { chosenAboutOrganizationExternalUrl } = this.state;
 
     return (
       <Wrapper>
@@ -17,7 +43,7 @@ class MainFooterPrivateLabeled extends Component {
             <Column>
               <OpenExternalWebSite
                 linkIdAttribute="footerLinkAbout"
-                url="https://wevote.us/more/about"
+                url={chosenAboutOrganizationExternalUrl || 'https://wevote.us/more/about'}
                 target="_blank"
                 body={(
                   <span>About Us</span>

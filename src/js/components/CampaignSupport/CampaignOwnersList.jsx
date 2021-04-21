@@ -14,10 +14,10 @@ class CampaignOwnersList extends Component {
   }
 
   componentDidMount () {
-    const { campaignXWeVoteId } = this.props;
+    const { campaignXWeVoteId, compressedMode } = this.props;
     // console.log('CampaignOwnersList, componentDidMount campaignXWeVoteId:', campaignXWeVoteId);
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    const campaignXLeadOwnerProfilePhoto = CampaignStore.getCampaignXLeadOwnerProfilePhoto(campaignXWeVoteId);
+    const campaignXLeadOwnerProfilePhoto = CampaignStore.getCampaignXLeadOwnerProfilePhoto(campaignXWeVoteId, compressedMode);
     const campaignXOwnerList = CampaignStore.getCampaignXOwnerList(campaignXWeVoteId);
     const campaignXPoliticianList = CampaignStore.getCampaignXPoliticianList(campaignXWeVoteId);
     this.setState({
@@ -46,9 +46,9 @@ class CampaignOwnersList extends Component {
   }
 
   onCampaignStoreChange () {
-    const { campaignXWeVoteId } = this.props;
+    const { campaignXWeVoteId, compressedMode } = this.props;
     // console.log('CampaignOwnersList, componentDidMount campaignXWeVoteId:', campaignXWeVoteId);
-    const campaignXLeadOwnerProfilePhoto = CampaignStore.getCampaignXLeadOwnerProfilePhoto(campaignXWeVoteId);
+    const campaignXLeadOwnerProfilePhoto = CampaignStore.getCampaignXLeadOwnerProfilePhoto(campaignXWeVoteId, compressedMode);
     const campaignXOwnerList = CampaignStore.getCampaignXOwnerList(campaignXWeVoteId);
     const campaignXPoliticianList = CampaignStore.getCampaignXPoliticianList(campaignXWeVoteId);
     // console.log('onCampaignStoreChange campaignXOwnerList: ', campaignXOwnerList);
@@ -62,6 +62,7 @@ class CampaignOwnersList extends Component {
   render () {
     renderLog('CampaignOwnersList');  // Set LOG_RENDER_EVENTS to log all renders
 
+    const { compressedMode } = this.props;
     const { campaignXOwnerList, campaignXLeadOwnerProfilePhoto, campaignXPoliticianList } = this.state;
     // console.log('render CampaignOwnersList campaignXOwnerList ', campaignXOwnerList);
     if (!campaignXOwnerList || campaignXOwnerList.length === 0) {
@@ -74,8 +75,10 @@ class CampaignOwnersList extends Component {
       <Wrapper>
         <ColumnFullWidth>
           <CampaignXOwnerListWrapper>
-            <CampaignXOwnerLeadPhoto src={campaignXLeadOwnerProfilePhoto} />
-            <CampaignXOwnerWrapper>
+            {campaignXLeadOwnerProfilePhoto && (
+              <CampaignXOwnerLeadPhoto src={campaignXLeadOwnerProfilePhoto} />
+            )}
+            <CampaignXOwnerWrapper compressedMode={compressedMode}>
               {campaignXOwnerList.length === 1 ? (
                 <>
                   {campaignXOwnerList[0].organization_name}
@@ -148,6 +151,7 @@ class CampaignOwnersList extends Component {
 }
 CampaignOwnersList.propTypes = {
   campaignXWeVoteId: PropTypes.string,
+  compressedMode: PropTypes.bool,
 };
 
 const styles = () => ({
@@ -166,10 +170,11 @@ const CampaignXOwnerLeadPhoto = styled.img`
 `;
 
 const CampaignXOwnerWrapper = styled.span`
+  ${(props) => (props.compressedMode ? 'font-size: 12px;' : '')};
 `;
 
 const ColumnFullWidth = styled.div`
-  padding: 8px 12px;
+  padding: 8px 12px 0 8px;
   width: 100%;
 `;
 

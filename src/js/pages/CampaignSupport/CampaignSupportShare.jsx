@@ -20,6 +20,7 @@ import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSte
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
+import ShareOnFacebookButton from '../../components/CampaignSupport/ShareOnFacebookButton';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
 const VoterFirstRetrieveController = loadable(() => import('../../components/Settings/VoterFirstRetrieveController'));
@@ -171,13 +172,13 @@ class CampaignSupportShare extends Component {
     }
     const { classes, iWillShare, showShareCampaignWithOneFriend } = this.props;
     const { campaignPhoto, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId } = this.state;
-    let campaignProcessStepIntroductionText = '200 new supporters joined this campaign thanks to the people who shared it. Join them and help this campaign grow!';
+    let campaignProcessStepIntroductionText = 'Supporters joined this campaign thanks to the people who shared it. Join them and help this campaign grow!';
     let campaignProcessStepTitle = 'Sharing leads to way more support.';
     let skipForNowText = 'Skip for now';
     if (iWillShare) {
       campaignProcessStepTitle = 'Thank you for sharing! Sharing leads to way more support.';
     } else if (showShareCampaignWithOneFriend) {
-      campaignProcessStepIntroductionText = 'Direct messages are 9 times more likely to convince people to support this campaign.';
+      campaignProcessStepIntroductionText = 'Direct messages are more likely to convince people to support this campaign.';
       campaignProcessStepTitle = 'Before you go, can you help by recruiting a friend?';
       // Since showing direct message choices is the final step, link should take voter back to the campaign updates page
       // NOTE: When we add the "recommended-campaigns" feature, change this
@@ -271,28 +272,12 @@ class CampaignSupportShare extends Component {
                   <CampaignSupportSection>
                     <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                       <CampaignSupportDesktopButtonPanel>
-                        <Button
-                          classes={{ root: classes.buttonDesktop }}
-                          color="primary"
-                          id="shareOnFacebookDesktop"
-                          onClick={this.shareOnFacebook}
-                          variant="contained"
-                        >
-                          Share on Facebook
-                        </Button>
+                        <ShareOnFacebookButton />
                       </CampaignSupportDesktopButtonPanel>
                     </CampaignSupportDesktopButtonWrapper>
                     <CampaignSupportMobileButtonWrapper className="u-show-mobile">
                       <CampaignSupportMobileButtonPanel>
-                        <Button
-                          classes={{ root: classes.buttonDefault }}
-                          color="primary"
-                          id="shareOnFacebookMobile"
-                          onClick={this.shareOnFacebook}
-                          variant="contained"
-                        >
-                          Share on Facebook
-                        </Button>
+                        <ShareOnFacebookButton mobileMode />
                       </CampaignSupportMobileButtonPanel>
                     </CampaignSupportMobileButtonWrapper>
                     <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">

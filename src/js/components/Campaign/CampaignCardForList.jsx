@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import TruncateMarkup from 'react-truncate-markup';
 import { withStyles } from '@material-ui/core/styles';
+import CampaignOwnersList from '../CampaignSupport/CampaignOwnersList';
 import CampaignStore from '../../stores/CampaignStore';
 import { renderLog } from '../../utils/logging';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import { numberWithCommas } from '../../utils/textFormat';
 
 class CampaignCardForList extends Component {
   constructor (props) {
@@ -70,7 +72,9 @@ class CampaignCardForList extends Component {
     const {
       campaign_description: campaignDescription,
       campaign_title: campaignTitle,
+      campaignx_we_vote_id: campaignXWeVoteId,
       in_draft_mode: inDraftMode,
+      supporters_count: supportersCount,
       visible_on_this_site: visibleOnThisSite,
       we_vote_hosted_campaign_photo_medium_url: CampaignPhotoMediumUrl,
     } = campaignX;
@@ -96,6 +100,16 @@ class CampaignCardForList extends Component {
               <OneCampaignTitle>
                 {campaignTitle}
               </OneCampaignTitle>
+              <OneCampaignPhotoWrapperMobile className="u-show-mobile">
+                {CampaignPhotoMediumUrl && (
+                  <CampaignImage src={CampaignPhotoMediumUrl} alt="Campaign" />
+                )}
+              </OneCampaignPhotoWrapperMobile>
+              <SupportersCount>
+                {numberWithCommas(supportersCount)}
+                {' '}
+                have supported
+              </SupportersCount>
               <OneCampaignDescription>
                 <TruncateMarkup lines={4}>
                   <div>
@@ -103,12 +117,15 @@ class CampaignCardForList extends Component {
                   </div>
                 </TruncateMarkup>
               </OneCampaignDescription>
+              <CampaignOwnersWrapper>
+                <CampaignOwnersList campaignXWeVoteId={campaignXWeVoteId} compressedMode />
+              </CampaignOwnersWrapper>
             </OneCampaignTextColumn>
-            <OneCampaignPhotoColumn>
+            <OneCampaignPhotoDesktopColumn className="u-show-desktop-tablet">
               {CampaignPhotoMediumUrl && (
                 <CampaignImage src={CampaignPhotoMediumUrl} alt="Campaign" />
               )}
-            </OneCampaignPhotoColumn>
+            </OneCampaignPhotoDesktopColumn>
           </OneCampaignInnerWrapper>
         </OneCampaignOuterWrapper>
       </Wrapper>
@@ -128,6 +145,29 @@ const styles = (theme) => ({
     },
   },
 });
+
+const CampaignImage = styled.img`
+  border-radius: 5px;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  min-height: 175px;
+  width: 100%;
+  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+    margin-bottom: 0;
+    margin-left: 15px;
+    margin-top: 0;
+    min-height: 130px;
+    width: 225px;
+  }
+  @media (max-width: ${({ theme }) => theme.breakpoints.xs}) {
+    margin-top: 0;
+    min-height: auto;
+    width: 100%;
+  }
+`;
+
+const CampaignOwnersWrapper = styled.div`
+`;
 
 const DraftModeIndicator = styled.span`
   background-color: #ccc;
@@ -164,7 +204,10 @@ const OneCampaignOuterWrapper = styled.div`
   }
 `;
 
-const OneCampaignPhotoColumn = styled.div`
+const OneCampaignPhotoDesktopColumn = styled.div`
+`;
+
+const OneCampaignPhotoWrapperMobile = styled.div`
 `;
 
 const OneCampaignTextColumn = styled.div`
@@ -175,17 +218,11 @@ const OneCampaignTitle = styled.h1`
   margin: 0;
 `;
 
-const CampaignImage = styled.img`
-  border-radius: 5px;
-  margin-top: 8px;
-  min-height: 175px;
-  width: 100%;
-  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
-    margin-left: 15px;
-    margin-top: 0;
-    min-height: 130px;
-    width: 225px;
-  }
+const SupportersCount = styled.div`
+  color: #808080;
+  font-weight: 500 !important;
+  font-size: 14px;
+  margin-bottom: 6px;
 `;
 
 const Wrapper = styled.div`

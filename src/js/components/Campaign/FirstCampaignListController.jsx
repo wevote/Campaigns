@@ -41,9 +41,7 @@ class FirstCampaignListController extends Component {
       // console.log('FirstCampaignListController campaignListFirstRetrieveInitiated: ', campaignListFirstRetrieveInitiated, ', voterFirstRetrieveCompleted: ', voterFirstRetrieveCompleted);
       if (voterFirstRetrieveCompleted && !campaignListFirstRetrieveInitiated) {
         AppActions.setCampaignListFirstRetrieveInitiated(true);
-        let { hostname } = window.location;
-        hostname = hostname || '';
-        CampaignActions.campaignListRetrieve(hostname);
+        CampaignActions.campaignListRetrieve();
       }
     });
   }

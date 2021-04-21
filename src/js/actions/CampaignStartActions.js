@@ -78,9 +78,12 @@ export default {
   },
 
   campaignRetrieveAsOwner (campaignWeVoteId) {
+    let { hostname } = window.location;
+    hostname = hostname || '';
     Dispatcher.loadEndpoint('campaignRetrieveAsOwner',
       {
         campaignx_we_vote_id: campaignWeVoteId,
+        hostname,
       });
   },
 
