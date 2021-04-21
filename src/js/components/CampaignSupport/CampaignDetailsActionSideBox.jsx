@@ -7,6 +7,7 @@ import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { renderLog } from '../../utils/logging';
 import SupportButton from './SupportButton';
+import VoterActions from '../../actions/VoterActions';
 import VoterStore from '../../stores/VoterStore';
 
 const CompleteYourProfile = React.lazy(() => import('../Settings/CompleteYourProfile'));
@@ -66,6 +67,10 @@ class CampaignDetailsActionSideBox extends Component {
     this.campaignStoreListener.remove();
     this.campaignSupporterStoreListener.remove();
     this.voterStoreListener.remove();
+    if (this.clearVerificationTimer) {
+      clearTimeout(this.clearVerificationTimer);
+      this.clearVerificationTimer = null;
+    }
   }
 
   // See https://reactjs.org/docs/error-boundaries.html
@@ -99,6 +104,20 @@ class CampaignDetailsActionSideBox extends Component {
     const voterIsSignedInWithEmail = VoterStore.getVoterIsSignedInWithEmail();
     const voterWeVoteId = VoterStore.getVoterWeVoteId();
     const voterProfileIsComplete = (voterFirstName && voterLastName && voterIsSignedInWithEmail) || false;
+    const secretCodeVerificationStatus = VoterStore.getSecretCodeVerificationStatus();
+    const { secretCodeVerified } = secretCodeVerificationStatus;
+    // console.log('onVoterStoreChange secretCodeVerificationStatus:', secretCodeVerificationStatus);
+    // console.log(`onVoterStoreChange secretCodeVerified: ${secretCodeVerified}`);
+    const { campaignSupported } = this.state;
+    if (secretCodeVerified && !campaignSupported) {
+      // console.log('onVoterStoreChange secretCodeVerified: yes');
+      this.props.functionToUseWhenProfileComplete();
+      const delayBeforeClearingVerification = 400;
+      this.clearVerificationTimer = setTimeout(() => {
+        VoterActions.clearSecretCodeVerificationStatus();
+        VoterActions.voterRetrieve();
+      }, delayBeforeClearingVerification);
+    }
     // console.log('CampaignDetailsActionSideBox onVoterStoreChange voterProfileIsComplete:', voterProfileIsComplete, ', voterWeVoteId:', voterWeVoteId);
     this.setState({
       voterProfileIsComplete,

@@ -98,11 +98,15 @@ class CompleteYourProfile extends Component {
     }
   }
 
-  closeVerifyModal = () => {
-    // console.log('VoterEmailAddressEntry closeVerifyModal');
+  closeVerifyModal = (verified = false) => {
+    // console.log('CompleteYourProfile closeVerifyModal, verified:', verified);
     VoterActions.clearEmailAddressStatus();
     VoterActions.clearSecretCodeVerificationStatus();
     VoterActions.voterRetrieve();
+    if (verified && this.props.functionToUseWhenProfileComplete) {
+      // console.log('VoterEmailAddressEntry closeVerifyModal, functionToUseWhenProfileComplete exists');
+      this.props.functionToUseWhenProfileComplete();
+    }
     const delayBeforeClosingVerifyModal = 400;
     this.closeVerifyModalTimer = setTimeout(() => {
       this.setState({

@@ -5,6 +5,7 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
+import AppStore from '../../stores/AppStore';
 import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../components/Style/AdviceBoxStyles';
 import {
   CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
@@ -24,9 +25,9 @@ import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import CampaignEndorsementInputField from '../../components/CampaignSupport/CampaignEndorsementInputField';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import initializejQuery from '../../utils/initializejQuery';
+import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
-import AppStore from '../../stores/AppStore';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
 const VisibleToPublicCheckbox = React.lazy(() => import('../../components/CampaignSupport/VisibleToPublicCheckbox'));
@@ -58,10 +59,12 @@ class CampaignSupportEndorsement extends Component {
     const {
       campaignPhoto,
       campaignSEOFriendlyPath,
+      campaignXPoliticianList,
       campaignXWeVoteId,
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     this.setState({
       campaignPhoto,
+      campaignXPoliticianList,
     });
     if (campaignSEOFriendlyPath) {
       this.setState({
@@ -108,11 +111,13 @@ class CampaignSupportEndorsement extends Component {
       campaignPhoto,
       campaignSEOFriendlyPath,
       campaignTitle,
+      campaignXPoliticianList,
       campaignXWeVoteId,
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     this.setState({
       campaignPhoto,
       campaignTitle,
+      campaignXPoliticianList,
     });
     if (campaignSEOFriendlyPath) {
       this.setState({
@@ -191,7 +196,15 @@ class CampaignSupportEndorsement extends Component {
       console.log(`CampaignSupportEndorsement window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
-    const { campaignPhoto, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId } = this.state;
+    const {
+      campaignPhoto, campaignSEOFriendlyPath, campaignTitle,
+      campaignXPoliticianList, campaignXWeVoteId,
+    } = this.state;
+    let numberOfPoliticians = 0;
+    if (campaignXPoliticianList && campaignXPoliticianList.length) {
+      numberOfPoliticians = campaignXPoliticianList.length;
+    }
+    const politicianListSentenceString = politicianListToSentenceString(campaignXPoliticianList);
     return (
       <div>
         <Helmet title="Why Do You Support? - We Vote Campaigns" />
@@ -213,10 +226,20 @@ class CampaignSupportEndorsement extends Component {
                 )}
               </CampaignSupportImageWrapper>
               <CampaignProcessStepTitle>
-                Why do you support these candidates?
+                Why do you support
+                {' '}
+                {numberOfPoliticians > 1 ? (
+                  <>these candidates?</>
+                ) : (
+                  <>this candidate?</>
+                )}
               </CampaignProcessStepTitle>
               <CampaignProcessStepIntroductionText>
-                People are more likely to support your campaign if it’s clear why you care. Explain how this candidate winning will impact you, your family, or your community.
+                People are more likely to support your campaign if it’s clear why you care. Explain how
+                {' '}
+                {politicianListSentenceString}
+                {' '}
+                winning will impact you, your family, or your community.
               </CampaignProcessStepIntroductionText>
               <CampaignSupportSectionWrapper>
                 <CampaignSupportSection>
