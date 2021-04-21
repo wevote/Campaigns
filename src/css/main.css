@@ -28,6 +28,12 @@ html {
   vertical-align: middle;
 }
 
+@media (max-width: 576px) {
+  .material_ui_button_mobile {
+    width: 100% !important;
+  }
+}
+
 .material_ui_dark_button:hover {
   background-color: #232e47;
 }

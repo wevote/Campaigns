@@ -134,7 +134,6 @@ class CampaignCardForList extends Component {
 }
 CampaignCardForList.propTypes = {
   campaignXWeVoteId: PropTypes.string,
-  // classes: PropTypes.object,
 };
 
 const styles = (theme) => ({

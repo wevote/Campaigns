@@ -15,6 +15,7 @@ import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
 import initializejQuery from '../utils/initializejQuery';
 import { renderLog } from '../utils/logging';
+import returnFirstXWords from '../utils/returnFirstXWords';
 
 const CampaignCommentsList = React.lazy(() => import('../components/Campaign/CampaignCommentsList'));
 const CampaignDetailsActionButtonFooter = React.lazy(() => import('../components/CampaignSupport/CampaignDetailsActionButtonFooter'));
@@ -99,11 +100,10 @@ class CampaignDetailsPage extends Component {
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     let pathToUseWhenProfileComplete;
     if (campaignSEOFriendlyPath) {
-      pathToUseWhenProfileComplete = `/c/${campaignSEOFriendlyPath}/why-do-you-support`;
       this.setState({
         campaignSEOFriendlyPath,
-        pathToUseWhenProfileComplete,
       });
+      pathToUseWhenProfileComplete = `/c/${campaignSEOFriendlyPath}/why-do-you-support`;
     } else if (campaignXWeVoteId) {
       pathToUseWhenProfileComplete = `/id/${campaignXWeVoteId}/why-do-you-support`;
     }
@@ -112,10 +112,13 @@ class CampaignDetailsPage extends Component {
         campaignXWeVoteId,
       });
     }
+    const campaignDescriptionLimited = returnFirstXWords(campaignDescription, 200);
     this.setState({
       campaignDescription,
+      campaignDescriptionLimited,
       campaignPhoto,
       campaignTitle,
+      pathToUseWhenProfileComplete,
     });
   }
 
@@ -190,7 +193,8 @@ class CampaignDetailsPage extends Component {
     }
     // const { classes } = this.props;
     const {
-      campaignDescription, campaignPhoto, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId,
+      campaignDescription, campaignDescriptionLimited, campaignPhoto,
+      campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId,
     } = this.state;
     // console.log('render campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
     const htmlTitle = `${campaignTitle} - We Vote Campaigns`;
@@ -199,7 +203,13 @@ class CampaignDetailsPage extends Component {
         <Suspense fallback={<span>&nbsp;</span>}>
           <CampaignRetrieveController campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
         </Suspense>
-        <Helmet title={htmlTitle} />
+        <Helmet>
+          <title>{htmlTitle}</title>
+          <meta
+            name="description"
+            content={campaignDescriptionLimited}
+          />
+        </Helmet>
         <PageWrapper cordova={isCordova()}>
           <CampaignTopNavigation campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
           <DetailsSectionMobile className="u-show-mobile">
