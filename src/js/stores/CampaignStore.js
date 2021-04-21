@@ -100,8 +100,9 @@ class CampaignStore extends ReduceStore {
     return this.getState().allCachedCampaignXOwners[campaignXWeVoteId] || [];
   }
 
-  getCampaignXLeadOwnerProfilePhoto (campaignXWeVoteId) {
-    return this.getState().allCachedCampaignXProfilePhotos[campaignXWeVoteId] || anonymous;
+  getCampaignXLeadOwnerProfilePhoto (campaignXWeVoteId, hideAnonymousImage = false) {
+    const alternateImage = hideAnonymousImage ? '' : anonymous;
+    return this.getState().allCachedCampaignXProfilePhotos[campaignXWeVoteId] || alternateImage;
   }
 
   getCampaignXPoliticianList (campaignXWeVoteId) {
@@ -150,7 +151,7 @@ class CampaignStore extends ReduceStore {
     let revisedState;
     switch (action.type) {
       case 'campaignListRetrieve':
-        // See CampaignSupporterStore for the following campaignX values:
+        // See CampaignSupporterStore for code to take in the following campaignX values:
         // - latest_campaignx_supporter_endorsement_list
         // - latest_campaignx_supporter_list
         // - voter_campaignx_supporter
@@ -171,13 +172,11 @@ class CampaignStore extends ReduceStore {
         // console.log('action.res.voter_issues_only:', action.res.voter_issues_only);
         campaignXList.forEach((oneCampaignX) => {
           allCachedCampaignXDicts[oneCampaignX.campaignx_we_vote_id] = oneCampaignX;
-          // TODO: 4/20/21, campaignX is not initialized, so always undefined -- looks like copied code
-          if (campaignX && 'campaignx_owner_list' in campaignX) {
-            ({ allCachedCampaignXOwners, allCachedCampaignXProfilePhotos } = this.extractCampaignXOwnerList(campaignX, allCachedCampaignXOwners, allCachedCampaignXProfilePhotos));
+          if ('campaignx_owner_list' in oneCampaignX) {
+            ({ allCachedCampaignXOwners, allCachedCampaignXProfilePhotos } = this.extractCampaignXOwnerList(oneCampaignX, allCachedCampaignXOwners, allCachedCampaignXProfilePhotos));
           }
-          // TODO: 4/20/21, campaignX is not initialized, so always undefined -- looks like copied code
-          if (campaignX && 'campaignx_politician_list' in campaignX) {
-            ({ allCachedCampaignXPoliticianLists } = this.extractCampaignXPoliticianList(campaignX, allCachedCampaignXPoliticianLists));
+          if ('campaignx_politician_list' in oneCampaignX) {
+            ({ allCachedCampaignXPoliticianLists } = this.extractCampaignXPoliticianList(oneCampaignX, allCachedCampaignXPoliticianLists));
           }
           if (!(oneCampaignX.seo_friendly_path in allCachedCampaignXWeVoteIdsBySEOFriendlyPath)) {
             allCachedCampaignXWeVoteIdsBySEOFriendlyPath[oneCampaignX.seo_friendly_path] = oneCampaignX.campaignx_we_vote_id;
@@ -204,7 +203,7 @@ class CampaignStore extends ReduceStore {
         return revisedState;
 
       case 'campaignRetrieve':
-        // See CampaignSupporterStore for the following campaignX values:
+        // See CampaignSupporterStore for code to take in the following campaignX values:
         // - latest_campaignx_supporter_endorsement_list
         // - latest_campaignx_supporter_list
         // - voter_campaignx_supporter

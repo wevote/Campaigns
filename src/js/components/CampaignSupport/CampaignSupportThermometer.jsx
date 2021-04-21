@@ -10,7 +10,7 @@ class CampaignSupportThermometer extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      numberOfSupportersGoal: 10000,
+      numberOfSupportersGoal: 1000,
       supportersCount: 0,
     };
   }

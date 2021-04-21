@@ -74,20 +74,17 @@ const InnerWrapper = styled.div`
   justify-content: space-between;
   margin: 0 auto;
   max-width: 960px;
-  padding: 30px 0;
+  padding: 30px 0 100px 0;
   @media (max-width: 1005px) {
     // Switch to 15px left/right margin when auto is too small
     margin: 0 15px;
-  }
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    padding-bottom: 100px;
   }
 `;
 
 const OuterWrapper = styled.div`
   background-color: #f6f4f6;
   border-top: 1px solid #ddd;
-  margin-top: 30px;
+  margin-top: 90px;
   width: 100%;
 `;
 

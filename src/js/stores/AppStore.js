@@ -65,6 +65,10 @@ class AppStore extends ReduceStore {
     return this.getState().campaignListFirstRetrieveInitiated;
   }
 
+  getChosenAboutOrganizationExternalUrl () {
+    return this.getState().chosenAboutOrganizationExternalUrl;
+  }
+
   getChosenPreventSharingOpinions () {
     return this.getState().chosenPreventSharingOpinions;
   }
@@ -264,6 +268,7 @@ class AppStore extends ReduceStore {
   reduce (state, action) {
     let apiStatus;
     let apiSuccess;
+    let chosenAboutOrganizationExternalUrl;
     let chosenPreventSharingOpinions;
     let chosenReadyIntroductionText;
     let chosenReadyIntroductionTitle;
@@ -345,6 +350,7 @@ class AppStore extends ReduceStore {
           success: apiSuccess,
           hostname,
           organization_we_vote_id: siteOwnerOrganizationWeVoteId,
+          chosen_about_organization_external_url: chosenAboutOrganizationExternalUrl,
           chosen_hide_we_vote_logo: hideWeVoteLogo,
           chosen_logo_url_https: chosenSiteLogoUrl,
           chosen_prevent_sharing_opinions: chosenPreventSharingOpinions,
@@ -393,6 +399,7 @@ class AppStore extends ReduceStore {
             ...state,
             apiStatus,
             apiSuccess,
+            chosenAboutOrganizationExternalUrl,
             chosenPreventSharingOpinions,
             chosenReadyIntroductionText,
             chosenReadyIntroductionTitle,

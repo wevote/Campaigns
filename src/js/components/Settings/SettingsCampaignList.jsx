@@ -28,9 +28,7 @@ class SettingsCampaignList extends Component {
     // console.log('SettingsCampaignList componentDidMount');
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     initializejQuery(() => {
-      let { hostname } = window.location;
-      hostname = hostname || '';
-      CampaignActions.campaignListRetrieve(hostname);
+      CampaignActions.campaignListRetrieve();
     });
     if (this.props.startingNumberOfCampaignsToDisplay && this.props.startingNumberOfCampaignsToDisplay > 0) {
       this.setState({
