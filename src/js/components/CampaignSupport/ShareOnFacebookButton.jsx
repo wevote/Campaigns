@@ -7,23 +7,22 @@ import CampaignStore from '../../stores/CampaignStore';
 import { isAndroid, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 import { androidFacebookClickHandler } from '../Share/shareButtonCommon';
+import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
 
 class ShareOnFacebookButton extends Component {
   constructor (props) {
     super(props);
     this.state = {
       campaignX: {},
+      numberOfPoliticians: 0,
+      politicianListSentenceString: '',
     };
   }
 
   componentDidMount () {
     // console.log('CampaignCardForList componentDidMount');
+    this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    const { campaignXWeVoteId } = this.props;
-    const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
-    this.setState({
-      campaignX,
-    });
   }
 
   componentDidUpdate (prevProps) {
@@ -48,8 +47,19 @@ class ShareOnFacebookButton extends Component {
   onCampaignStoreChange () {
     const { campaignXWeVoteId } = this.props;
     const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
+    const campaignXPoliticianList = CampaignStore.getCampaignXPoliticianList(campaignXWeVoteId);
+    let numberOfPoliticians = 0;
+    if (campaignXPoliticianList && campaignXPoliticianList.length > 0) {
+      numberOfPoliticians = campaignXPoliticianList.length;
+    }
+    let politicianListSentenceString = '';
+    if (numberOfPoliticians > 0) {
+      politicianListSentenceString = politicianListToSentenceString(campaignXPoliticianList);
+    }
     this.setState({
       campaignX,
+      numberOfPoliticians,
+      politicianListSentenceString,
     });
   }
 
@@ -82,7 +92,7 @@ class ShareOnFacebookButton extends Component {
       console.log(`ShareOnFacebookButton window.location.href: ${window.location.href}`);
     }
     const { mobileMode } = this.props;
-    const { campaignX } = this.state;
+    const { campaignX, numberOfPoliticians, politicianListSentenceString } = this.state;
     const {
       // campaign_description: campaignDescription,
       campaign_title: campaignTitle,
@@ -96,7 +106,17 @@ class ShareOnFacebookButton extends Component {
     let linkToBeSharedUrlEncoded = '';
     linkToBeShared = linkToBeShared.replace('https://file:/', 'https://wevote.us/');  // Cordova
     linkToBeSharedUrlEncoded = encodeURI(linkToBeShared);
-    const quoteForFacebookShare = `Please join me in voting for the candidates in this campaign '${campaignTitle}'. `;
+    let quoteForFacebookShare = 'Please join me in voting';
+    if (numberOfPoliticians === 1) {
+      quoteForFacebookShare += ' for the candidate ';
+      quoteForFacebookShare += politicianListSentenceString;
+    } else if (numberOfPoliticians) {
+      quoteForFacebookShare += ' for the candidates ';
+      quoteForFacebookShare += politicianListSentenceString;
+    } else {
+      quoteForFacebookShare += ' for the candidate(s)';
+    }
+    quoteForFacebookShare += ` in this campaign '${campaignTitle}'. `;
     return (
       <Wrapper>
         <div id="androidFacebook"
