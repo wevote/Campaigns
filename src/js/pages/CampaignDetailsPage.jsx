@@ -32,6 +32,7 @@ class CampaignDetailsPage extends Component {
       campaignSEOFriendlyPath: '',
       campaignTitle: '',
       campaignXWeVoteId: '',
+      chosenWebsiteName: '',
       pathToUseWhenProfileComplete: '',
       payToPromoteStepCompleted: false,
       payToPromoteStepTurnedOn: false,
@@ -79,10 +80,12 @@ class CampaignDetailsPage extends Component {
   }
 
   onAppStoreChange () {
-    const chosenSiteLogoUrl = AppStore.getChosenSiteLogoUrl();
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+    const inPrivateLabelMode = AppStore.inPrivateLabelMode();
     // For now, we assume that paid sites with chosenSiteLogoUrl will turn off "Chip in"
-    const payToPromoteStepTurnedOn = !chosenSiteLogoUrl;
+    const payToPromoteStepTurnedOn = !inPrivateLabelMode;
     this.setState({
+      chosenWebsiteName,
       payToPromoteStepTurnedOn,
     });
   }
@@ -195,9 +198,10 @@ class CampaignDetailsPage extends Component {
     const {
       campaignDescription, campaignDescriptionLimited, campaignPhoto,
       campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId,
+      chosenWebsiteName,
     } = this.state;
     // console.log('render campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
-    const htmlTitle = `${campaignTitle} - We Vote Campaigns`;
+    const htmlTitle = `${campaignTitle} - ${chosenWebsiteName}`;
     return (
       <div>
         <Suspense fallback={<span>&nbsp;</span>}>

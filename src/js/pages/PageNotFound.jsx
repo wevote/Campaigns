@@ -5,12 +5,33 @@ import styled from 'styled-components';
 import { Ballot } from '@material-ui/icons';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import AppStore from '../stores/AppStore';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
 import { renderLog } from '../utils/logging';
 
 class PageNotFound extends Component {
-  static getProps () {
-    return {};
+  constructor (props) {
+    super(props);
+    this.state = {
+      chosenWebsiteName: '',
+    };
+  }
+
+  componentDidMount () {
+    // console.log('PageNotFound componentDidMount');
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+  }
+
+  componentWillUnmount () {
+    this.appStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+    this.setState({
+      chosenWebsiteName,
+    });
   }
 
   render () {
@@ -19,9 +40,10 @@ class PageNotFound extends Component {
       console.log(`PageNotFound window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
+    const { chosenWebsiteName } = this.state;
     return (
       <div>
-        <Helmet title="Page Not Found - We Vote Campaigns" />
+        <Helmet title={`Page Not Found - ${chosenWebsiteName}`} />
         <PageWrapper cordova={isCordova()}>
           <EmptyBallotMessageContainer>
             <EmptyBallotText>Page not found.</EmptyBallotText>

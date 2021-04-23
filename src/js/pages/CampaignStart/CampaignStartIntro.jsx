@@ -4,77 +4,140 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
+import AppStore from '../../stores/AppStore';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 
 
 class CampaignStartIntro extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      chosenWebsiteName: '',
+      inPrivateLabelMode: false,
+      siteConfigurationHasBeenRetrieved: false,
+    };
+  }
+
+  componentDidMount () {
+    // console.log('CampaignSupportSteps, componentDidMount');
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+  }
+
+  componentWillUnmount () {
+    this.appStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+    const inPrivateLabelMode = AppStore.inPrivateLabelMode();
+    const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
+    this.setState({
+      chosenWebsiteName,
+      inPrivateLabelMode,
+      siteConfigurationHasBeenRetrieved,
+    });
+  }
+
   render () {
     renderLog('CampaignStartIntro');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
       console.log(`CampaignStartIntro window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
+    const { chosenWebsiteName, inPrivateLabelMode, siteConfigurationHasBeenRetrieved } = this.state;
     const mobileButtonClasses = classes.buttonDefault; // isWebApp() ? classes.buttonDefault : classes.buttonDefaultCordova;
     return (
       <div>
-        <Helmet title="Start a Campaign - We Vote Campaigns" />
+        <Helmet title={`Start a Campaign - ${chosenWebsiteName}`} />
         <PageWrapper cordova={isCordova()}>
           <OuterWrapper>
-            <InnerWrapper>
-              <ContentTitle>
-                Here&apos;s how WeVote.US campaigns work:
-              </ContentTitle>
-              <CampaignStartSectionWrapper>
-                <CampaignStartSection>
-                  <TitleRow>
-                    <Dot><StepNumber>1</StepNumber></Dot>
-                    <StepTitle>Create your campaign</StepTitle>
-                  </TitleRow>
-                  <ContentRow>
-                    <Dot><StepNumberPlaceholder>&nbsp;</StepNumberPlaceholder></Dot>
-                    <StepText>
-                      Your voice is important, and will convince others to vote for the candidate(s) you like. If your first edits aren&apos;t perfect, don&apos;t worry; you can edit your campaign later.
-                    </StepText>
-                  </ContentRow>
+            {siteConfigurationHasBeenRetrieved && (
+              <InnerWrapper>
+                <ContentTitle>
+                  Get the most out of
+                  {' '}
+                  {chosenWebsiteName}
+                  :
+                </ContentTitle>
+                <CampaignStartSectionWrapper>
+                  <CampaignStartSection>
+                    <TitleRow>
+                      <Dot><StepNumber>1</StepNumber></Dot>
+                      <StepTitle>Create your campaign</StepTitle>
+                    </TitleRow>
+                    <ContentRow>
+                      <Dot><StepNumberPlaceholder>&nbsp;</StepNumberPlaceholder></Dot>
+                      <StepText>
+                        Your voice is important, and will convince others to vote for the candidate(s) you like. If your first edits aren&apos;t perfect, don&apos;t worry; you can edit your campaign later.
+                      </StepText>
+                    </ContentRow>
 
-                  <TitleRow>
-                    <Dot><StepNumber>2</StepNumber></Dot>
-                    <StepTitle>Community support can lead to victory</StepTitle>
-                  </TitleRow>
-                  <ContentRow>
-                    <Dot><StepNumberPlaceholder>&nbsp;</StepNumberPlaceholder></Dot>
-                    <StepText>
-                      WeVote.US has tools to help you share your campaign directly with friends via text and email, more broadly via social media, or with other WeVote.US voters.
-                    </StepText>
-                  </ContentRow>
+                    <TitleRow>
+                      <Dot><StepNumber>2</StepNumber></Dot>
+                      <StepTitle>Community support can lead to victory</StepTitle>
+                    </TitleRow>
+                    <ContentRow>
+                      <Dot><StepNumberPlaceholder>&nbsp;</StepNumberPlaceholder></Dot>
+                      <StepText>
+                        {chosenWebsiteName}
+                        {' '}
+                        has tools to help you share your campaign directly with friends via text and email, more broadly via social media, or with other
+                        {' '}
+                        {chosenWebsiteName}
+                        {' '}
+                        voters.
+                      </StepText>
+                    </ContentRow>
 
-                  <TitleRow>
-                    <Dot><StepNumber>3</StepNumber></Dot>
-                    <StepTitle>Person-to-person persuasion is effective</StepTitle>
-                  </TitleRow>
-                  <ContentRow>
-                    <Dot><StepNumberPlaceholder>&nbsp;</StepNumberPlaceholder></Dot>
-                    <StepText>
-                      You can make a difference by telling your friends why you want a candidate to win. The more of your friends who vote, the more impact you will have on the outcome of the election.
-                    </StepText>
-                  </ContentRow>
-                  <DesktopButtonWrapper className="u-show-desktop-tablet">
-                    <DesktopButtonPanel>
-                      <Button
-                        classes={{ root: classes.buttonDesktop }}
-                        color="primary"
-                        id="campaignStartButton"
-                        onClick={() => historyPush('/start-a-campaign-add-title')}
-                        variant="contained"
-                      >
-                        Got it! I&apos;m ready to create my campaign
-                      </Button>
-                    </DesktopButtonPanel>
-                  </DesktopButtonWrapper>
-                </CampaignStartSection>
-              </CampaignStartSectionWrapper>
-            </InnerWrapper>
+                    <TitleRow>
+                      <Dot><StepNumber>3</StepNumber></Dot>
+                      <StepTitle>Person-to-person persuasion is effective</StepTitle>
+                    </TitleRow>
+                    <ContentRow>
+                      <Dot><StepNumberPlaceholder>&nbsp;</StepNumberPlaceholder></Dot>
+                      <StepText>
+                        You can make a difference by telling your friends why you want a candidate to win. The more of your friends who vote, the more impact you will have on the outcome of the election.
+                      </StepText>
+                    </ContentRow>
+
+                    {inPrivateLabelMode && (
+                      <>
+                        <TitleRow>
+                          <Dot><StepNumber>4</StepNumber></Dot>
+                          <StepTitle>Our Approval Process</StepTitle>
+                        </TitleRow>
+                        <ContentRow>
+                          <Dot><StepNumberPlaceholder>&nbsp;</StepNumberPlaceholder></Dot>
+                          <StepText>
+                            Your campaign will appear on
+                            {' '}
+                            {chosenWebsiteName}
+                            {' '}
+                            as soon as it has been reviewed and approved. In the meantime, you will be able to see your campaign on Campaigns.WeVote.US.
+                          </StepText>
+                        </ContentRow>
+                      </>
+                    )}
+
+                    <DesktopButtonWrapper className="u-show-desktop-tablet">
+                      <DesktopButtonPanel>
+                        <Button
+                          classes={{ root: classes.buttonDesktop }}
+                          color="primary"
+                          id="campaignStartButton"
+                          onClick={() => historyPush('/start-a-campaign-add-title')}
+                          variant="contained"
+                        >
+                          Got it! I&apos;m ready to create my campaign
+                        </Button>
+                      </DesktopButtonPanel>
+                    </DesktopButtonWrapper>
+                  </CampaignStartSection>
+                </CampaignStartSectionWrapper>
+              </InnerWrapper>
+            )}
           </OuterWrapper>
         </PageWrapper>
         <MobileButtonWrapper className="u-show-mobile">

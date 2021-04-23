@@ -28,7 +28,7 @@ class FAQ extends Component {
     renderLog('FAQ');  // Set LOG_RENDER_EVENTS to log all renders
     return (
       <div>
-        <Helmet title="FAQ - We Vote Campaigns" />
+        <Helmet title="FAQ - WeVote.US Campaigns" />
         <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>

@@ -19,6 +19,7 @@ class AppStore extends ReduceStore {
       chosenReadyIntroductionText: '',
       chosenReadyIntroductionTitle: '',
       chosenSiteLogoUrl: '',
+      chosenWebsiteName: '',
       getVoterGuideSettingsDashboardEditMode: '',
       getStartedMode: '',
       hideWeVoteLogo: false,
@@ -85,6 +86,10 @@ class AppStore extends ReduceStore {
     return this.getState().chosenSiteLogoUrl;
   }
 
+  getChosenWebsiteName () {
+    return this.getState().chosenWebsiteName || 'WeVote.US Campaigns';
+  }
+
   getHideWeVoteLogo () {
     return this.getState().hideWeVoteLogo;
   }
@@ -116,6 +121,10 @@ class AppStore extends ReduceStore {
 
   getVoterGuideSettingsDashboardEditMode () {
     return this.getState().getVoterGuideSettingsDashboardEditMode;
+  }
+
+  inPrivateLabelMode () {
+    return Boolean(this.getState().chosenSiteLogoUrl || false);
   }
 
   isOnWeVoteRootUrl () {
@@ -280,6 +289,7 @@ class AppStore extends ReduceStore {
     let chosenReadyIntroductionText;
     let chosenReadyIntroductionTitle;
     let chosenSiteLogoUrl;
+    let chosenWebsiteName;
     let externalVoterId;
     let hideWeVoteLogo;
     let hostname;
@@ -363,6 +373,7 @@ class AppStore extends ReduceStore {
           chosen_prevent_sharing_opinions: chosenPreventSharingOpinions,
           chosen_ready_introduction_text: chosenReadyIntroductionText,
           chosen_ready_introduction_title: chosenReadyIntroductionTitle,
+          chosen_website_name: chosenWebsiteName,
         } = action.res);
         if (apiSuccess) {
           let onWeVoteRootUrl = false;
@@ -411,6 +422,7 @@ class AppStore extends ReduceStore {
             chosenReadyIntroductionText,
             chosenReadyIntroductionTitle,
             chosenSiteLogoUrl,
+            chosenWebsiteName,
             hideWeVoteLogo,
             hostname,
             onChosenFullDomainUrl,

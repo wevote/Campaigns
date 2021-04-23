@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
+import AppStore from '../stores/AppStore';
 import CampaignTopNavigation from '../components/Navigation/CampaignTopNavigation';
 import CampaignStore from '../stores/CampaignStore';
 import CampaignSupporterStore from '../stores/CampaignSupporterStore';
@@ -21,6 +22,7 @@ class CampaignCommentsPage extends Component {
       campaignSEOFriendlyPath: '',
       campaignTitle: '',
       campaignXWeVoteId: '',
+      chosenWebsiteName: '',
     };
   }
 
@@ -30,6 +32,8 @@ class CampaignCommentsPage extends Component {
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     if (campaignSEOFriendlyPath) {
@@ -48,8 +52,16 @@ class CampaignCommentsPage extends Component {
       clearTimeout(this.timer);
       this.timer = null;
     }
+    this.appStoreListener.remove();
     this.campaignStoreListener.remove();
     this.campaignSupporterStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+    this.setState({
+      chosenWebsiteName,
+    });
   }
 
   onCampaignStoreChange () {
@@ -86,10 +98,10 @@ class CampaignCommentsPage extends Component {
     }
     // const { classes } = this.props;
     const {
-      campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId,
+      campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId, chosenWebsiteName,
     } = this.state;
     // console.log('render campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
-    const htmlTitle = `Supporter Comments, ${campaignTitle} - We Vote Campaigns`;
+    const htmlTitle = `Supporter Comments, ${campaignTitle} - ${chosenWebsiteName}`;
     return (
       <div>
         <Suspense fallback={<span>&nbsp;</span>}>

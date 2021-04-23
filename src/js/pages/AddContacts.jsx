@@ -222,7 +222,7 @@ class AddContacts extends Component {
 
     return (
       <div>
-        <Helmet title="AddContacts - We Vote Campaigns" />
+        <Helmet title="AddContacts - WeVote.US Campaigns" />
         <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>

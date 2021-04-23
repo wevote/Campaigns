@@ -14,6 +14,7 @@ class HomePage extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      chosenWebsiteName: '',
       inPrivateLabelMode: false,
       siteConfigurationHasBeenRetrieved: false,
     };
@@ -30,9 +31,11 @@ class HomePage extends Component {
   }
 
   onAppStoreChange () {
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
     const inPrivateLabelMode = AppStore.getHideWeVoteLogo(); // Using this setting temporarily
     const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
     this.setState({
+      chosenWebsiteName,
       inPrivateLabelMode,
       siteConfigurationHasBeenRetrieved,
     });
@@ -44,14 +47,14 @@ class HomePage extends Component {
     //   console.log(`HomePage window.location.href: ${window.location.href}`);
     // }
     const { classes } = this.props;
-    const { inPrivateLabelMode, siteConfigurationHasBeenRetrieved } = this.state;
+    const { chosenWebsiteName, inPrivateLabelMode, siteConfigurationHasBeenRetrieved } = this.state;
     if (!siteConfigurationHasBeenRetrieved) {
       return null;
     }
     if (inPrivateLabelMode) {
       return (
         <div>
-          <Helmet title="Home - Who We Support" />
+          <Helmet title={`Who We Support - ${chosenWebsiteName}`} />
           <PageWrapper>
             <IntroductionMessageSection>
               <PageStatement>Who We Support</PageStatement>
@@ -67,7 +70,7 @@ class HomePage extends Component {
     } else {
       return (
         <div>
-          <Helmet title="Home - We Vote Campaigns" />
+          <Helmet title="Home - WeVote.US Campaigns" />
           <PageWrapper>
             <IntroductionMessageSection>
               <PageStatement>Helping the best candidates win votes</PageStatement>

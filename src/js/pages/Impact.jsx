@@ -26,7 +26,7 @@ class Impact extends Component {
     renderLog('Impact');  // Set LOG_RENDER_EVENTS to log all renders
     return (
       <div>
-        <Helmet title="Impact - We Vote Campaigns" />
+        <Helmet title="Impact - WeVote.US Campaigns" />
         <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>

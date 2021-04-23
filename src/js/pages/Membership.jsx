@@ -144,7 +144,7 @@ class Membership extends Component {
 
     return (
       <div>
-        <Helmet title="Membership - We Vote Campaigns" />
+        <Helmet title="Membership - WeVote.US Campaigns" />
         <PageWrapper cordova={isCordova()}>
           <OuterWrapper>
             <InnerWrapper>

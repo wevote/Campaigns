@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
+import AppStore from '../../stores/AppStore';
 import {
   CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
 } from '../../components/Style/CampaignProcessStyles';
@@ -36,12 +37,15 @@ class CampaignSupportPayToPromote extends Component {
       campaignSEOFriendlyPath: '',
       campaignTitle: '',
       campaignXWeVoteId: '',
+      chosenWebsiteName: '',
     };
   }
 
   componentDidMount () {
     // console.log('CampaignSupportPayToPromote componentDidMount');
     this.props.setShowHeaderFooter(false);
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
@@ -78,7 +82,15 @@ class CampaignSupportPayToPromote extends Component {
 
   componentWillUnmount () {
     this.props.setShowHeaderFooter(true);
+    this.appStoreListener.remove();
     this.campaignStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+    this.setState({
+      chosenWebsiteName,
+    });
   }
 
   onCampaignStoreChange () {
@@ -162,10 +174,10 @@ class CampaignSupportPayToPromote extends Component {
       console.log(`CampaignSupportPayToPromote window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
-    const { campaignPhoto, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId } = this.state;
+    const { campaignPhoto, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId, chosenWebsiteName } = this.state;
     return (
       <div>
-        <Helmet title="Why Do You Support? - We Vote Campaigns" />
+        <Helmet title={`Chip In - ${chosenWebsiteName}`} />
         <PageWrapperDefault cordova={isCordova()}>
           <ContentOuterWrapperDefault>
             <ContentInnerWrapperDefault>

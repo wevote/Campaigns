@@ -42,6 +42,7 @@ class CampaignSupportEndorsement extends Component {
       campaignSEOFriendlyPath: '',
       campaignTitle: '',
       campaignXWeVoteId: '',
+      chosenWebsiteName: '',
       payToPromoteStepTurnedOn: true,
     };
   }
@@ -95,10 +96,12 @@ class CampaignSupportEndorsement extends Component {
   }
 
   onAppStoreChange () {
-    const chosenSiteLogoUrl = AppStore.getChosenSiteLogoUrl();
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+    const inPrivateLabelMode = AppStore.inPrivateLabelMode();
     // For now, we assume that paid sites with chosenSiteLogoUrl will turn off "Chip in"
-    const payToPromoteStepTurnedOn = !chosenSiteLogoUrl;
+    const payToPromoteStepTurnedOn = !inPrivateLabelMode;
     this.setState({
+      chosenWebsiteName,
       payToPromoteStepTurnedOn,
     });
   }
@@ -198,7 +201,7 @@ class CampaignSupportEndorsement extends Component {
     const { classes } = this.props;
     const {
       campaignPhoto, campaignSEOFriendlyPath, campaignTitle,
-      campaignXPoliticianList, campaignXWeVoteId,
+      campaignXPoliticianList, campaignXWeVoteId, chosenWebsiteName,
     } = this.state;
     let numberOfPoliticians = 0;
     if (campaignXPoliticianList && campaignXPoliticianList.length) {
@@ -207,7 +210,7 @@ class CampaignSupportEndorsement extends Component {
     const politicianListSentenceString = politicianListToSentenceString(campaignXPoliticianList);
     return (
       <div>
-        <Helmet title="Why Do You Support? - We Vote Campaigns" />
+        <Helmet title={`Why Do You Support? - ${chosenWebsiteName}`} />
         <PageWrapperDefault cordova={isCordova()}>
           <ContentOuterWrapperDefault>
             <ContentInnerWrapperDefault>
