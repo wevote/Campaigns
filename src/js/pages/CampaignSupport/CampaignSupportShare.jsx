@@ -2,6 +2,7 @@ import React, { Component, Suspense } from 'react';
 import loadable from '@loadable/component';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
+import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import AppStore from '../../stores/AppStore';
@@ -21,7 +22,9 @@ import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSte
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
-import ShareOnFacebookButton from '../../components/CampaignSupport/ShareOnFacebookButton';
+import SendFacebookDirectMessageButton from '../../components/Share/SendFacebookDirectMessageButton';
+import ShareOnFacebookButton from '../../components/Share/ShareOnFacebookButton';
+import ShareOnTwitterButton from '../../components/Share/ShareOnTwitterButton';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
 const VoterFirstRetrieveController = loadable(() => import('../../components/Settings/VoterFirstRetrieveController'));
@@ -169,14 +172,6 @@ class CampaignSupportShare extends Component {
     this.goToNextStep();
   }
 
-  shareOnFacebook = () => {
-    // const { campaignXWeVoteId } = this.state;
-  }
-
-  shareOnTwitter = () => {
-    // const { campaignXWeVoteId } = this.state;
-  }
-
   render () {
     renderLog('CampaignSupportShare');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
@@ -230,9 +225,20 @@ class CampaignSupportShare extends Component {
               <CampaignProcessStepIntroductionText>
                 {campaignProcessStepIntroductionText}
               </CampaignProcessStepIntroductionText>
+              {/* Before you go... */}
               {showShareCampaignWithOneFriend ? (
                 <CampaignSupportSectionWrapper>
                   <CampaignSupportSection>
+                    <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
+                      <CampaignSupportDesktopButtonPanel>
+                        <SendFacebookDirectMessageButton campaignXWeVoteId={campaignXWeVoteId} />
+                      </CampaignSupportDesktopButtonPanel>
+                    </CampaignSupportDesktopButtonWrapper>
+                    <CampaignSupportMobileButtonWrapper className="u-show-mobile">
+                      <CampaignSupportMobileButtonPanel>
+                        <SendFacebookDirectMessageButton campaignXWeVoteId={campaignXWeVoteId} mobileMode />
+                      </CampaignSupportMobileButtonPanel>
+                    </CampaignSupportMobileButtonWrapper>
                     <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                       <CampaignSupportDesktopButtonPanel>
                         <Button
@@ -240,7 +246,7 @@ class CampaignSupportShare extends Component {
                           color="primary"
                           id="copyLinkDesktop"
                           onClick={this.copyLink}
-                          variant="contained"
+                          variant="outlined"
                         >
                           Copy link
                         </Button>
@@ -253,35 +259,9 @@ class CampaignSupportShare extends Component {
                           color="primary"
                           id="copyLinkMobile"
                           onClick={this.copyLink}
-                          variant="contained"
+                          variant="outlined"
                         >
                           Copy link
-                        </Button>
-                      </CampaignSupportMobileButtonPanel>
-                    </CampaignSupportMobileButtonWrapper>
-                    <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
-                      <CampaignSupportDesktopButtonPanel>
-                        <Button
-                          classes={{ root: classes.buttonDesktop }}
-                          color="primary"
-                          id="shareOnTwitterDesktop"
-                          onClick={this.shareOnTwitter}
-                          variant="outlined"
-                        >
-                          Tweet to your followers
-                        </Button>
-                      </CampaignSupportDesktopButtonPanel>
-                    </CampaignSupportDesktopButtonWrapper>
-                    <CampaignSupportMobileButtonWrapper className="u-show-mobile">
-                      <CampaignSupportMobileButtonPanel>
-                        <Button
-                          classes={{ root: classes.buttonDefault }}
-                          color="primary"
-                          id="shareOnTwitterMobile"
-                          onClick={this.shareOnTwitter}
-                          variant="outlined"
-                        >
-                          Tweet to your followers
                         </Button>
                       </CampaignSupportMobileButtonPanel>
                     </CampaignSupportMobileButtonWrapper>
@@ -290,6 +270,14 @@ class CampaignSupportShare extends Component {
               ) : (
                 <CampaignSupportSectionWrapper>
                   <CampaignSupportSection>
+                    <CampaignSupportDesktopButtonWrapper>
+                      <CampaignSupportDesktopButtonPanel>
+                        <PublicOrPrivateSectionHeader>Share publicly. </PublicOrPrivateSectionHeader>
+                        <PublicOrPrivateSectionText>
+                          Share with everyone and make your voice heard.
+                        </PublicOrPrivateSectionText>
+                      </CampaignSupportDesktopButtonPanel>
+                    </CampaignSupportDesktopButtonWrapper>
                     <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                       <CampaignSupportDesktopButtonPanel>
                         <ShareOnFacebookButton campaignXWeVoteId={campaignXWeVoteId} />
@@ -302,28 +290,12 @@ class CampaignSupportShare extends Component {
                     </CampaignSupportMobileButtonWrapper>
                     <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                       <CampaignSupportDesktopButtonPanel>
-                        <Button
-                          classes={{ root: classes.buttonDesktop }}
-                          color="primary"
-                          id="shareOnTwitterDesktop"
-                          onClick={this.shareOnTwitter}
-                          variant="outlined"
-                        >
-                          Tweet to your followers
-                        </Button>
+                        <ShareOnTwitterButton campaignXWeVoteId={campaignXWeVoteId} />
                       </CampaignSupportDesktopButtonPanel>
                     </CampaignSupportDesktopButtonWrapper>
                     <CampaignSupportMobileButtonWrapper className="u-show-mobile">
                       <CampaignSupportMobileButtonPanel>
-                        <Button
-                          classes={{ root: classes.buttonDefault }}
-                          color="primary"
-                          id="shareOnTwitterMobile"
-                          onClick={this.shareOnTwitter}
-                          variant="outlined"
-                        >
-                          Tweet to your followers
-                        </Button>
+                        <ShareOnTwitterButton campaignXWeVoteId={campaignXWeVoteId} mobileMode />
                       </CampaignSupportMobileButtonPanel>
                     </CampaignSupportMobileButtonWrapper>
                   </CampaignSupportSection>
@@ -408,5 +380,13 @@ const styles = () => ({
     },
   },
 });
+
+const PublicOrPrivateSectionHeader = styled.span`
+  font-weight: 600;
+`;
+
+const PublicOrPrivateSectionText = styled.span`
+  color: #999;
+`;
 
 export default withStyles(styles)(CampaignSupportShare);

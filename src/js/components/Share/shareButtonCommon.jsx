@@ -1,20 +1,35 @@
 import { cordovaOpenSafariView } from '../../utils/cordovaUtils';
 import { openSnackbar } from '../Widgets/SnackNotifier';
 
-export function androidFacebookClickHandler (linkToBeShared) {
+export function androidFacebookClickHandler (linkToBeShared, quoteForSharingEncoded) {
   // react-share in Cordova for Android, navigates to the URL instead of opening a "tab" with a return 'X' button
   // https://m.facebook.com/sharer/sharer.php?u=https%253A%252F%252Fwevote.us%252F-0i8mao%26t%3DWeVote&quote=This+is+a+website+I+am+using+to+get+ready+to+vote.
-  const fbURL = `https://m.facebook.com/sharer/sharer.php?u=${linkToBeShared}&quote=This+is+a+website+I+am+using+to+get+ready+to+vote.`;
+  const fbURL = `https://m.facebook.com/sharer/sharer.php?u=${linkToBeShared}&quote=${quoteForSharingEncoded}`;
   console.log(`androidFacebookClickHandler clicked ~~~~~~~~~~~~~~~~ url : ${fbURL}`);
   cordovaOpenSafariView(fbURL, null, 50);
 }
 
-export function androidTwitterClickHandler (linkToBeShared) {
+export function androidTwitterClickHandler (linkToBeShared, quoteForSharingEncoded) {
   // react-share in Cordova for Android, navigates to the URL instead of opening a "tab" with a return 'X' button
   // https://twitter.com/share?url=https%3A%2F%2Fwevote.us%2F-0i8mao&text=This%20is%20a%20website%20I%20am%20using%20to%20get%20ready%20to%20vote.
-  const twitURL = `https://twitter.com/share?url=${linkToBeShared}&text=This%20is%20a%20website%20I%20am%20using%20to%20get%20ready%20to%20vote.`;
+  const twitURL = `https://twitter.com/share?url=${linkToBeShared}&text=${quoteForSharingEncoded}`;
   console.log(`androidTwitterClickHandler clicked ~~~~~~~~~~~~~~~~ url : ${twitURL}`);
   cordovaOpenSafariView(twitURL, null, 50);
+}
+
+export function generateQuoteForSharing (campaignTitle, numberOfPoliticians, politicianListSentenceString) {
+  let quoteForSharing = 'Please join me in voting';
+  if (numberOfPoliticians === 1) {
+    quoteForSharing += ' for the candidate';
+    quoteForSharing += politicianListSentenceString;
+  } else if (numberOfPoliticians) {
+    quoteForSharing += ' for the candidates';
+    quoteForSharing += politicianListSentenceString;
+  } else {
+    quoteForSharing += ` for ${campaignTitle}`;
+  }
+  quoteForSharing += '. Sign the campaign! ';
+  return quoteForSharing;
 }
 
 let close;

@@ -219,10 +219,10 @@ class CompleteYourProfile extends Component {
       buttonText = 'Continue';
       introductionText = <span>Let people you know see you, so they can feel safe supporting your campaign.</span>;
     } else if (supportCampaign) {
-      buttonText = 'I support this campaign';
+      buttonText = 'Support with my vote';
       introductionText = <span>Leading up to election day, WeVote.US will remind you to vote for all of the candidates you support. We keep your email secure and confidential.</span>;
     } else if (supportCampaignOnCampaignHome) {
-      buttonText = 'I support this campaign';
+      buttonText = 'Support with my vote';
       outerMarginsOff = true;
     }
     return (

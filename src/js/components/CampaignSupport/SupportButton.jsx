@@ -72,7 +72,7 @@ class SupportButton extends Component {
               onClick={this.submitSupportButtonDesktop} // () =>
               variant="contained"
             >
-              I support this campaign
+              Support with my vote
             </Button>
           </ButtonPanel>
         </Wrapper>

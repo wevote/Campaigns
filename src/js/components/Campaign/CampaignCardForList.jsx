@@ -108,7 +108,7 @@ class CampaignCardForList extends Component {
               <SupportersCount>
                 {numberWithCommas(supportersCount)}
                 {' '}
-                have supported
+                {supportersCount === 1 ? 'supporter.' : 'supporters.'}
               </SupportersCount>
               <OneCampaignDescription>
                 <TruncateMarkup lines={4}>

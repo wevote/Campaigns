@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import AppActions from '../../actions/AppActions';
+import AppStore from '../../stores/AppStore';
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import CompleteYourProfileModalController from '../../components/Settings/CompleteYourProfileModalController';
 import CampaignStartStore from '../../stores/CampaignStartStore';
@@ -31,6 +32,8 @@ class CampaignStartPreview extends Component {
 
   componentDidMount () {
     // console.log('CampaignStartPreview, componentDidMount');
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.onCampaignStartStoreChange();
     this.onVoterStoreChange();
     this.campaignStartStoreListener = CampaignStartStore.addListener(this.onCampaignStartStoreChange.bind(this));
@@ -42,8 +45,16 @@ class CampaignStartPreview extends Component {
   }
 
   componentWillUnmount () {
+    this.appStoreListener.remove();
     this.campaignStartStoreListener.remove();
     this.voterStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+    this.setState({
+      chosenWebsiteName,
+    });
   }
 
   onCampaignStartStoreChange () {
@@ -119,13 +130,14 @@ class CampaignStartPreview extends Component {
     }
     const { classes } = this.props;
     const {
-      campaignDescription, campaignPhotoLargeUrl, campaignPoliticianList, campaignTitle, readyToPublish,
+      campaignDescription, campaignPhotoLargeUrl, campaignPoliticianList,
+      campaignTitle, chosenWebsiteName, readyToPublish,
     } = this.state;
     let campaignPoliticianNumber = 0;
     let commaOrNot = '';
     return (
       <div>
-        <Helmet title="Preview Your Campaign - We Vote Campaigns" />
+        <Helmet title={`Preview Your Campaign - ${chosenWebsiteName}`} />
         <SaveCancelOuterWrapper>
           <SaveCancelInnerWrapper>
             <SaveCancelButtonsWrapper>

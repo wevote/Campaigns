@@ -4,11 +4,13 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import AppStore from '../../stores/AppStore';
 import CampaignListTabs from '../../components/Navigation/CampaignListTabs';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 import SettingsCampaignList from '../../components/Settings/SettingsCampaignList';
 import VoterStore from '../../stores/VoterStore';
+
 
 class SettingsYourCampaigns extends Component {
   static getProps () {
@@ -23,6 +25,8 @@ class SettingsYourCampaigns extends Component {
 
   componentDidMount () {
     // console.log('VoterFirstNameInputField, componentDidMount');
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
     const voterFirstPlusLastName = VoterStore.getFirstPlusLastName();
     this.setState({
@@ -31,7 +35,15 @@ class SettingsYourCampaigns extends Component {
   }
 
   componentWillUnmount () {
+    this.appStoreListener.remove();
     this.voterStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+    this.setState({
+      chosenWebsiteName,
+    });
   }
 
   onVoterStoreChange () {
@@ -47,10 +59,10 @@ class SettingsYourCampaigns extends Component {
       console.log(`SettingsYourCampaigns window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
-    const { voterFirstPlusLastName } = this.state;
+    const { chosenWebsiteName, voterFirstPlusLastName } = this.state;
     return (
       <div>
-        <Helmet title="Your Campaigns - We Vote Campaigns" />
+        <Helmet title={`Your Campaigns - ${chosenWebsiteName}`} />
         <PageWrapper cordova={isCordova()}>
           <IntroductionMessageSection>
             <YourNameWrapper>{voterFirstPlusLastName || 'Your profile'}</YourNameWrapper>

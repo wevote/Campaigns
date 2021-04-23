@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { FacebookShareButton } from 'react-share';
+import AppStore from '../../stores/AppStore';
 import CampaignStore from '../../stores/CampaignStore';
 import { isAndroid, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
-import { androidFacebookClickHandler } from '../Share/shareButtonCommon';
+import { androidFacebookClickHandler, generateQuoteForSharing } from './shareButtonCommon';
 import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
 
 class ShareOnFacebookButton extends Component {
@@ -14,6 +15,7 @@ class ShareOnFacebookButton extends Component {
     super(props);
     this.state = {
       campaignX: {},
+      inPrivateLabelMode: false,
       numberOfPoliticians: 0,
       politicianListSentenceString: '',
     };
@@ -21,6 +23,8 @@ class ShareOnFacebookButton extends Component {
 
   componentDidMount () {
     // console.log('CampaignCardForList componentDidMount');
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
   }
@@ -41,7 +45,15 @@ class ShareOnFacebookButton extends Component {
   }
 
   componentWillUnmount () {
+    this.appStoreListener.remove();
     this.campaignStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const inPrivateLabelMode = AppStore.inPrivateLabelMode();
+    this.setState({
+      inPrivateLabelMode,
+    });
   }
 
   onCampaignStoreChange () {
@@ -82,7 +94,7 @@ class ShareOnFacebookButton extends Component {
     }
   }
 
-  saveActionShareButtonFacebook = () => {
+  saveActionShareButton = () => {
     //
   }
 
@@ -92,42 +104,28 @@ class ShareOnFacebookButton extends Component {
       console.log(`ShareOnFacebookButton window.location.href: ${window.location.href}`);
     }
     const { mobileMode } = this.props;
-    const { campaignX, numberOfPoliticians, politicianListSentenceString } = this.state;
+    const { campaignX, inPrivateLabelMode, numberOfPoliticians, politicianListSentenceString } = this.state;
     const {
-      // campaign_description: campaignDescription,
       campaign_title: campaignTitle,
-      // campaignx_we_vote_id: campaignXWeVoteId,
-      // in_draft_mode: inDraftMode,
-      // supporters_count: supportersCount,
-      // visible_on_this_site: visibleOnThisSite,
-      // we_vote_hosted_campaign_photo_medium_url: CampaignPhotoMediumUrl,
     } = campaignX;
     let linkToBeShared = this.generateFullCampaignLink();
     let linkToBeSharedUrlEncoded = '';
     linkToBeShared = linkToBeShared.replace('https://file:/', 'https://wevote.us/');  // Cordova
     linkToBeSharedUrlEncoded = encodeURI(linkToBeShared);
-    let quoteForFacebookShare = 'Please join me in voting';
-    if (numberOfPoliticians === 1) {
-      quoteForFacebookShare += ' for the candidate ';
-      quoteForFacebookShare += politicianListSentenceString;
-    } else if (numberOfPoliticians) {
-      quoteForFacebookShare += ' for the candidates ';
-      quoteForFacebookShare += politicianListSentenceString;
-    } else {
-      quoteForFacebookShare += ' for the candidate(s)';
-    }
-    quoteForFacebookShare += ` in this campaign '${campaignTitle}'. `;
+    const quoteForSharing = generateQuoteForSharing(campaignTitle, numberOfPoliticians, politicianListSentenceString);
+    const quoteForSharingEncoded = encodeURI(quoteForSharing);
     return (
       <Wrapper>
         <div id="androidFacebook"
              onClick={() => isAndroid() &&
-               androidFacebookClickHandler(`${linkToBeSharedUrlEncoded}&t=WeVote`)}
+               androidFacebookClickHandler(`${linkToBeSharedUrlEncoded}&t=WeVote`, quoteForSharingEncoded)}
         >
           <FacebookShareButton
             className={mobileMode ? 'material_ui_button_mobile' : ''}
+            hashtag={inPrivateLabelMode ? null : '#WeVote'}
             id="shareOnFacebookButton"
-            onClick={this.saveActionShareButtonFacebook}
-            quote={quoteForFacebookShare}
+            onClick={this.saveActionShareButton}
+            quote={quoteForSharing}
             url={`${linkToBeSharedUrlEncoded}`}
             windowWidth={mobileMode ? 350 : 750}
             windowHeight={mobileMode ? 600 : 600}

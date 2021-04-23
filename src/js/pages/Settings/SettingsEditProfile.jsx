@@ -5,12 +5,14 @@ import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AppActions from '../../actions/AppActions';
+import AppStore from '../../stores/AppStore';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 import VoterActions from '../../actions/VoterActions';
 import VoterFirstNameInputField from '../../components/Settings/VoterFirstNameInputField';
 import VoterLastNameInputField from '../../components/Settings/VoterLastNameInputField';
 import VoterStore from '../../stores/VoterStore';
+
 
 class SettingsEditProfile extends Component {
   static getProps () {
@@ -24,10 +26,23 @@ class SettingsEditProfile extends Component {
   }
 
   componentDidMount () {
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     const voterIsSignedIn = VoterStore.getVoterIsSignedIn();
     if (!voterIsSignedIn) {
       AppActions.setShowSignInModal(true);
     }
+  }
+
+  componentWillUnmount () {
+    this.appStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+    this.setState({
+      chosenWebsiteName,
+    });
   }
 
   cancelEditProfile = () => {
@@ -59,9 +74,10 @@ class SettingsEditProfile extends Component {
       console.log(`SettingsEditProfile window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
+    const { chosenWebsiteName } = this.state;
     return (
       <div>
-        <Helmet title="Edit Your Profile - We Vote Campaigns" />
+        <Helmet title={`Edit Your Profile - ${chosenWebsiteName}`} />
         <SaveCancelOuterWrapper>
           <SaveCancelInnerWrapper>
             <SaveCancelButtonsWrapper>

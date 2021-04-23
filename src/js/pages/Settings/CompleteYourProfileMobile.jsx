@@ -5,9 +5,11 @@ import styled from 'styled-components';
 import { Close } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import AppStore from '../../stores/AppStore';
 import CompleteYourProfile from '../../components/Settings/CompleteYourProfile';
 import { historyPush } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
+
 
 class CompleteYourProfileMobile extends Component {
   constructor (props) {
@@ -21,6 +23,8 @@ class CompleteYourProfileMobile extends Component {
 
   componentDidMount () {
     // console.log('CampaignDetailsPage componentDidMount');
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     const { match: { params }, setShowHeaderFooter } = this.props;
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     const { becomeMember, startCampaign, supportCampaign } = this.props;
@@ -46,6 +50,14 @@ class CompleteYourProfileMobile extends Component {
   componentWillUnmount () {
     const { setShowHeaderFooter } = this.props;
     setShowHeaderFooter(true);
+    this.appStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+    this.setState({
+      chosenWebsiteName,
+    });
   }
 
   cancelFunction = () => {
@@ -71,18 +83,16 @@ class CompleteYourProfileMobile extends Component {
   render () {
     renderLog('CompleteYourProfileMobile');  // Set LOG_RENDER_EVENTS to log all renders
     const { becomeMember, classes, startCampaign, supportCampaign } = this.props;
-    const { campaignXWeVoteId } = this.state;
+    const { campaignXWeVoteId, chosenWebsiteName } = this.state;
     let completeProfileTitle = <span>&nbsp;</span>;
-    let htmlPageTitle = 'Complete Your Profile - We Vote Campaigns';
+    let htmlPageTitle = `Complete Your Profile - ${chosenWebsiteName}`;
     if (becomeMember) {
       completeProfileTitle = <span>becomeMember</span>;
-      htmlPageTitle = 'Complete Your Profile - We Vote Campaigns';
     } else if (startCampaign) {
       completeProfileTitle = <span>Complete your profile</span>;
-      htmlPageTitle = 'Complete Your Profile - We Vote Campaigns';
     } else if (supportCampaign) {
       completeProfileTitle = <span>Complete your support</span>;
-      htmlPageTitle = 'Complete Your Support - We Vote Campaigns';
+      htmlPageTitle = `Complete Your Support - ${chosenWebsiteName}`;
     }
     return (
       <div>

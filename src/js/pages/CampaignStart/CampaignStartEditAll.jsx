@@ -4,6 +4,7 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
+import AppStore from '../../stores/AppStore';
 import AddCandidateInputField from '../../components/CampaignStart/AddPoliticianInputField';
 import CampaignDescriptionInputField from '../../components/CampaignStart/CampaignDescriptionInputField';
 import CampaignPhotoUpload from '../../components/CampaignStart/CampaignPhotoUpload';
@@ -25,9 +26,22 @@ class CampaignStartEditAll extends Component {
 
   componentDidMount () {
     // console.log('CampaignStartEditAll, componentDidMount');
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     initializejQuery(() => {
       CampaignStartActions.campaignRetrieveAsOwner('');
       CampaignStartActions.campaignEditAllReset();
+    });
+  }
+
+  componentWillUnmount () {
+    this.appStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+    this.setState({
+      chosenWebsiteName,
     });
   }
 
@@ -69,9 +83,10 @@ class CampaignStartEditAll extends Component {
       console.log(`CampaignStartEditAll window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
+    const { chosenWebsiteName } = this.state;
     return (
       <div>
-        <Helmet title="Edit Your Campaign - We Vote Campaigns" />
+        <Helmet title={`Edit Your Campaign - ${chosenWebsiteName}`} />
         <SaveCancelOuterWrapper>
           <SaveCancelInnerWrapper>
             <SaveCancelButtonsWrapper>
