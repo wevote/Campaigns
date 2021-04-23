@@ -6,7 +6,7 @@ export default function politicianListToSentenceString (politicianList) {
   let sentenceString = '';
   if (!politicianList || politicianList.length === 0) return sentenceString;
   if (politicianList.length === 1) {
-    sentenceString = politicianList[0].politician_name;
+    sentenceString += ` ${politicianList[0].politician_name}`;
     return sentenceString;
   }
   let commaOrNot;

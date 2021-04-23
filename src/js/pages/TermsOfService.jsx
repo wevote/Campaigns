@@ -14,7 +14,7 @@ class TermsOfService extends Component {
     renderLog('TermsOfService');  // Set LOG_RENDER_EVENTS to log all renders
     return (
       <div>
-        <Helmet title="Terms of Service - We Vote Campaigns" />
+        <Helmet title="Terms of Service - WeVote.US Campaigns" />
         <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>

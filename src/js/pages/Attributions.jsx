@@ -39,7 +39,7 @@ class Attributions extends Component {
 
     return (
       <div>
-        <Helmet title="Attributions - We Vote Campaigns" />
+        <Helmet title="Attributions - WeVote.US Campaigns" />
         <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>

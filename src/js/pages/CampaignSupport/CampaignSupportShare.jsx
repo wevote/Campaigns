@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
+import AppStore from '../../stores/AppStore';
 import {
   CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
 } from '../../components/Style/CampaignProcessStyles';
@@ -34,12 +35,15 @@ class CampaignSupportShare extends Component {
       campaignSEOFriendlyPath: '',
       campaignTitle: '',
       campaignXWeVoteId: '',
+      chosenWebsiteName: '',
     };
   }
 
   componentDidMount () {
     // console.log('CampaignSupportShare componentDidMount');
     this.props.setShowHeaderFooter(false);
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
@@ -89,7 +93,15 @@ class CampaignSupportShare extends Component {
 
   componentWillUnmount () {
     this.props.setShowHeaderFooter(true);
+    this.appStoreListener.remove();
     this.campaignStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+    this.setState({
+      chosenWebsiteName,
+    });
   }
 
   onCampaignStoreChange () {
@@ -171,10 +183,10 @@ class CampaignSupportShare extends Component {
       console.log(`CampaignSupportShare window.location.href: ${window.location.href}`);
     }
     const { classes, iWillShare, showShareCampaignWithOneFriend } = this.props;
-    const { campaignPhoto, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId } = this.state;
+    const { campaignPhoto, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId, chosenWebsiteName } = this.state;
     let campaignProcessStepIntroductionText = 'Voters joined this campaign thanks to the people who shared it. Join them and help this campaign grow!';
     let campaignProcessStepTitle = 'Sharing leads to way more votes.';
-    const htmlTitle = `${campaignTitle} - We Vote Campaigns`;
+    const htmlTitle = `${campaignTitle} - ${chosenWebsiteName}`;
     let skipForNowText = 'Skip for now';
     if (iWillShare) {
       campaignProcessStepTitle = 'Thank you for sharing! Sharing leads to way more votes.';

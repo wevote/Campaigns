@@ -20,7 +20,7 @@ class StyleGuidePage extends Component {
     // const { classes } = this.props;
     return (
       <div>
-        <Helmet title="Style Guide - We Vote Campaigns" />
+        <Helmet title="Style Guide - WeVote.US Campaigns" />
         <Wrapper cordova={isCordova()}>
           <IntroductionMessageSection>
             <PageStatement>Style Guide</PageStatement>

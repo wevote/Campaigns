@@ -10,6 +10,7 @@ import { isCordova } from '../../utils/cordovaUtils';
 import LazyImage from '../../utils/LazyImage';
 import { renderLog } from '../../utils/logging';
 import { timeFromDate } from '../../utils/dateFormat';
+import { stringContains } from '../../utils/textFormat';
 
 class CampaignCommentForList extends Component {
   constructor (props) {
@@ -88,10 +89,12 @@ class CampaignCommentForList extends Component {
                   </TruncateMarkup>
                 </Comment>
                 <CommentNameWrapper>
-                  <CommentName>
-                    {supporterName}
-                  </CommentName>
-                  {' '}
+                  {!stringContains('Voter-', supporterName) && (
+                    <CommentName>
+                      {supporterName}
+                      {' '}
+                    </CommentName>
+                  )}
                   supported
                   {' '}
                   {timeFromDate(dateSupported)}
@@ -144,6 +147,7 @@ const CommentTextWrapper = styled.div`
 `;
 
 const CommentVoterPhotoWrapper = styled.div`
+  margin-right: 6px;
 `;
 
 const CommentWrapper = styled.div`

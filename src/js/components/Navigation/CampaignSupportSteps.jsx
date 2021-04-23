@@ -61,10 +61,10 @@ class CampaignSupportSteps extends Component {
   }
 
   onAppStoreChange () {
-    const chosenSiteLogoUrl = AppStore.getChosenSiteLogoUrl();
+    const inPrivateLabelMode = AppStore.inPrivateLabelMode();
     const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
     // For now, we assume that paid sites with chosenSiteLogoUrl will turn off "Chip in"
-    const payToPromoteStepTurnedOn = !chosenSiteLogoUrl;
+    const payToPromoteStepTurnedOn = !inPrivateLabelMode;
     this.setState({
       payToPromoteStepTurnedOn,
       siteConfigurationHasBeenRetrieved,

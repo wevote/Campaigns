@@ -9,6 +9,7 @@ import CampaignStore from '../../stores/CampaignStore';
 import LazyImage from '../../utils/LazyImage';
 import { renderLog } from '../../utils/logging';
 import { timeFromDate } from '../../utils/dateFormat';
+import { stringContains } from '../../utils/textFormat';
 
 class MostRecentCampaignSupport extends React.Component {
   constructor (props) {
@@ -192,10 +193,12 @@ class MostRecentCampaignSupport extends React.Component {
                   <CommentTextWrapper>
                     <Comment>{comment.supporter_endorsement}</Comment>
                     <CommentNameWrapper>
-                      <CommentName>
-                        {comment.supporter_name}
-                      </CommentName>
-                      {' '}
+                      {!stringContains('Voter-', comment.supporter_name) && (
+                        <CommentName>
+                          {comment.supporter_name}
+                          {' '}
+                        </CommentName>
+                      )}
                       supported
                       {' '}
                       {timeFromDate(comment.date_supported)}
@@ -255,6 +258,7 @@ const CommentTextWrapper = styled.div`
 `;
 
 const CommentVoterPhotoWrapper = styled.div`
+  margin-right: 6px;
 `;
 
 const CommentWrapper = styled.div`

@@ -17,7 +17,7 @@ class Credits extends Component {
     renderLog('Credits');  // Set LOG_RENDER_EVENTS to log all renders
     return (
       <div>
-        <Helmet title="Credits and Thanks - We Vote Campaigns" />
+        <Helmet title="Credits and Thanks - WeVote.US Campaigns" />
         <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>

@@ -14,7 +14,7 @@ class Privacy extends Component {
     renderLog('Privacy');  // Set LOG_RENDER_EVENTS to log all renders
     return (
       <div>
-        <Helmet title="Privacy Policy - We Vote Campaigns" />
+        <Helmet title="Privacy Policy - WeVote.US Campaigns" />
         <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>

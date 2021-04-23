@@ -26,7 +26,7 @@ class About extends Component {
     renderLog('About');  // Set LOG_RENDER_EVENTS to log all renders
     return (
       <div>
-        <Helmet title="About - We Vote Campaigns" />
+        <Helmet title="About - WeVote.US Campaigns" />
         <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>
