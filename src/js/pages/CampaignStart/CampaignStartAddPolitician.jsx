@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
+import AppStore from '../../stores/AppStore';
 import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../components/Style/AdviceBoxStyles';
 import {
   CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
@@ -31,8 +32,21 @@ class CampaignStartAddPolitician extends Component {
 
   componentDidMount () {
     // console.log('CampaignStartAddPolitician, componentDidMount');
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     initializejQuery(() => {
       CampaignStartActions.campaignRetrieveAsOwner('');
+    });
+  }
+
+  componentWillUnmount () {
+    this.appStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+    this.setState({
+      chosenWebsiteName,
     });
   }
 
@@ -60,10 +74,11 @@ class CampaignStartAddPolitician extends Component {
       console.log(`CampaignStartAddPolitician window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
+    const { chosenWebsiteName } = this.state;
     const mobileButtonClasses = classes.buttonDefault; // isWebApp() ? classes.buttonDefault : classes.buttonDefaultCordova;
     return (
       <div>
-        <Helmet title="Add Candidate - We Vote Campaigns" />
+        <Helmet title={`Add Candidate - ${chosenWebsiteName}`} />
         <PageWrapper cordova={isCordova()}>
           <OuterWrapper>
             <InnerWrapper>

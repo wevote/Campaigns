@@ -4,6 +4,7 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
+import AppStore from '../../stores/AppStore';
 import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../components/Style/AdviceBoxStyles';
 import {
   CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
@@ -31,8 +32,21 @@ class CampaignStartAddPhoto extends Component {
 
   componentDidMount () {
     // console.log('CampaignStartAddPhoto, componentDidMount');
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     initializejQuery(() => {
       CampaignStartActions.campaignRetrieveAsOwner('');
+    });
+  }
+
+  componentWillUnmount () {
+    this.appStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+    this.setState({
+      chosenWebsiteName,
     });
   }
 
@@ -54,10 +68,11 @@ class CampaignStartAddPhoto extends Component {
       console.log(`CampaignStartAddPhoto window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
+    const { chosenWebsiteName } = this.state;
     const mobileButtonClasses = classes.buttonDefault; // isWebApp() ? classes.buttonDefault : classes.buttonDefaultCordova;
     return (
       <div>
-        <Helmet title="Start a Campaign - We Vote Campaigns" />
+        <Helmet title={`Add a Photo - ${chosenWebsiteName}`} />
         <PageWrapper cordova={isCordova()}>
           <OuterWrapper>
             <InnerWrapper>

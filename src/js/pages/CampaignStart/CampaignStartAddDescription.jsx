@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../components/Style/AdviceBoxStyles';
+import AppStore from '../../stores/AppStore';
 import {
   CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
 } from '../../components/Style/CampaignProcessStyles';
@@ -31,8 +32,21 @@ class CampaignStartAddDescription extends Component {
 
   componentDidMount () {
     // console.log('CampaignStartAddDescription, componentDidMount');
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     initializejQuery(() => {
       CampaignStartActions.campaignRetrieveAsOwner('');
+    });
+  }
+
+  componentWillUnmount () {
+    this.appStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+    this.setState({
+      chosenWebsiteName,
     });
   }
 
@@ -54,10 +68,11 @@ class CampaignStartAddDescription extends Component {
       console.log(`CampaignStartAddDescription window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
+    const { chosenWebsiteName } = this.state;
     const mobileButtonClasses = classes.buttonDefault; // isWebApp() ? classes.buttonDefault : classes.buttonDefaultCordova;
     return (
       <div>
-        <Helmet title="Start a Campaign - We Vote Campaigns" />
+        <Helmet title={`Add Description - ${chosenWebsiteName}`} />
         <PageWrapper cordova={isCordova()}>
           <OuterWrapper>
             <InnerWrapper>

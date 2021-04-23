@@ -195,7 +195,7 @@ class CampaignDetailsActionButtonFooter extends Component {
               onClick={this.submitSupportButtonMobile}
               variant="contained"
             >
-              Support this campaign
+              Support with my vote
             </Button>
           )}
         </ButtonPanel>
