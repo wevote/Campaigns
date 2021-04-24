@@ -76,6 +76,7 @@ class CampaignCardForList extends Component {
       in_draft_mode: inDraftMode,
       supporters_count: supportersCount,
       visible_on_this_site: visibleOnThisSite,
+      we_vote_hosted_campaign_photo_large_url: CampaignPhotoLargeUrl,
       we_vote_hosted_campaign_photo_medium_url: CampaignPhotoMediumUrl,
     } = campaignX;
     return (
@@ -101,8 +102,8 @@ class CampaignCardForList extends Component {
                 {campaignTitle}
               </OneCampaignTitle>
               <OneCampaignPhotoWrapperMobile className="u-show-mobile">
-                {CampaignPhotoMediumUrl && (
-                  <CampaignImage src={CampaignPhotoMediumUrl} alt="Campaign" />
+                {CampaignPhotoLargeUrl && (
+                  <CampaignImage src={CampaignPhotoLargeUrl} alt="Campaign" />
                 )}
               </OneCampaignPhotoWrapperMobile>
               <SupportersCount>

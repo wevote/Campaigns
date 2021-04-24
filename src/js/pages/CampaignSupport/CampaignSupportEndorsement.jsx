@@ -38,7 +38,7 @@ class CampaignSupportEndorsement extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      campaignPhoto: '',
+      campaignPhotoLargeUrl: '',
       campaignSEOFriendlyPath: '',
       campaignTitle: '',
       campaignXWeVoteId: '',
@@ -58,13 +58,13 @@ class CampaignSupportEndorsement extends Component {
     const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
     // console.log('componentDidMount campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
     const {
-      campaignPhoto,
+      campaignPhotoLargeUrl,
       campaignSEOFriendlyPath,
       campaignXPoliticianList,
       campaignXWeVoteId,
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     this.setState({
-      campaignPhoto,
+      campaignPhotoLargeUrl,
       campaignXPoliticianList,
     });
     if (campaignSEOFriendlyPath) {
@@ -111,14 +111,14 @@ class CampaignSupportEndorsement extends Component {
     const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
     // console.log('onCampaignStoreChange campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
     const {
-      campaignPhoto,
+      campaignPhotoLargeUrl,
       campaignSEOFriendlyPath,
       campaignTitle,
       campaignXPoliticianList,
       campaignXWeVoteId,
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     this.setState({
-      campaignPhoto,
+      campaignPhotoLargeUrl,
       campaignTitle,
       campaignXPoliticianList,
     });
@@ -200,7 +200,7 @@ class CampaignSupportEndorsement extends Component {
     }
     const { classes } = this.props;
     const {
-      campaignPhoto, campaignSEOFriendlyPath, campaignTitle,
+      campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
       campaignXPoliticianList, campaignXWeVoteId, chosenWebsiteName,
     } = this.state;
     let numberOfPoliticians = 0;
@@ -220,8 +220,8 @@ class CampaignSupportEndorsement extends Component {
                 campaignXWeVoteId={campaignXWeVoteId}
               />
               <CampaignSupportImageWrapper>
-                {campaignPhoto ? (
-                  <CampaignImage src={campaignPhoto} alt="Campaign" />
+                {campaignPhotoLargeUrl ? (
+                  <CampaignImage src={campaignPhotoLargeUrl} alt="Campaign" />
                 ) : (
                   <CampaignSupportImageWrapperText>
                     {campaignTitle}

@@ -28,7 +28,7 @@ class CampaignDetailsPage extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      campaignPhoto: '',
+      campaignPhotoLargeUrl: '',
       campaignSEOFriendlyPath: '',
       campaignTitle: '',
       campaignXWeVoteId: '',
@@ -96,7 +96,7 @@ class CampaignDetailsPage extends Component {
     // console.log('onCampaignStoreChange campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
     const {
       campaignDescription,
-      campaignPhoto,
+      campaignPhotoLargeUrl,
       campaignSEOFriendlyPath,
       campaignTitle,
       campaignXWeVoteId,
@@ -119,7 +119,7 @@ class CampaignDetailsPage extends Component {
     this.setState({
       campaignDescription,
       campaignDescriptionLimited,
-      campaignPhoto,
+      campaignPhotoLargeUrl,
       campaignTitle,
       pathToUseWhenProfileComplete,
     });
@@ -196,7 +196,7 @@ class CampaignDetailsPage extends Component {
     }
     // const { classes } = this.props;
     const {
-      campaignDescription, campaignDescriptionLimited, campaignPhoto,
+      campaignDescription, campaignDescriptionLimited, campaignPhotoLargeUrl,
       campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId,
       chosenWebsiteName,
     } = this.state;
@@ -218,8 +218,8 @@ class CampaignDetailsPage extends Component {
           <CampaignTopNavigation campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
           <DetailsSectionMobile className="u-show-mobile">
             <CampaignImageMobileWrapper>
-              {campaignPhoto ? (
-                <CampaignImage src={campaignPhoto} alt="Campaign" />
+              {campaignPhotoLargeUrl ? (
+                <CampaignImage src={campaignPhotoLargeUrl} alt="Campaign" />
               ) : (
                 <DelayedLoad waitBeforeShow={1000}>
                   <CampaignImagePlaceholder>
@@ -260,8 +260,8 @@ class CampaignDetailsPage extends Component {
             <ColumnsWrapper>
               <ColumnTwoThirds>
                 <CampaignImageDesktopWrapper>
-                  {campaignPhoto ? (
-                    <CampaignImageDesktop src={campaignPhoto} alt="Campaign" />
+                  {campaignPhotoLargeUrl ? (
+                    <CampaignImageDesktop src={campaignPhotoLargeUrl} alt="Campaign" />
                   ) : (
                     <DelayedLoad waitBeforeShow={1000}>
                       <CampaignImagePlaceholder>

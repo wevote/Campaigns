@@ -33,7 +33,7 @@ class CampaignSupportPayToPromote extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      campaignPhoto: '',
+      campaignPhotoLargeUrl: '',
       campaignSEOFriendlyPath: '',
       campaignTitle: '',
       campaignXWeVoteId: '',
@@ -51,12 +51,12 @@ class CampaignSupportPayToPromote extends Component {
     const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
     // console.log('componentDidMount campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
     const {
-      campaignPhoto,
+      campaignPhotoLargeUrl,
       campaignSEOFriendlyPath,
       campaignXWeVoteId,
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     this.setState({
-      campaignPhoto,
+      campaignPhotoLargeUrl,
     });
     if (campaignSEOFriendlyPath) {
       this.setState({
@@ -98,13 +98,13 @@ class CampaignSupportPayToPromote extends Component {
     const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
     // console.log('onCampaignStoreChange campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
     const {
-      campaignPhoto,
+      campaignPhotoLargeUrl,
       campaignSEOFriendlyPath,
       campaignTitle,
       campaignXWeVoteId,
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     this.setState({
-      campaignPhoto,
+      campaignPhotoLargeUrl,
       campaignTitle,
     });
     if (campaignSEOFriendlyPath) {
@@ -174,7 +174,7 @@ class CampaignSupportPayToPromote extends Component {
       console.log(`CampaignSupportPayToPromote window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
-    const { campaignPhoto, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId, chosenWebsiteName } = this.state;
+    const { campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId, chosenWebsiteName } = this.state;
     return (
       <div>
         <Helmet title={`Chip In - ${chosenWebsiteName}`} />
@@ -187,8 +187,8 @@ class CampaignSupportPayToPromote extends Component {
                 campaignXWeVoteId={campaignXWeVoteId}
               />
               <CampaignSupportImageWrapper>
-                {campaignPhoto ? (
-                  <CampaignImage src={campaignPhoto} alt="Campaign" />
+                {campaignPhotoLargeUrl ? (
+                  <CampaignImage src={campaignPhotoLargeUrl} alt="Campaign" />
                 ) : (
                   <CampaignSupportImageWrapperText>
                     {campaignTitle}

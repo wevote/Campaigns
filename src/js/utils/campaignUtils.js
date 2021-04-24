@@ -6,7 +6,9 @@ export function getCampaignXValuesFromIdentifiers (campaignSEOFriendlyPath, camp
   // console.log('getCampaignXValuesFromIdentifiers campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
   let campaignX = {};
   let campaignDescription = '';
-  let campaignPhoto = '';
+  let campaignPhotoLargeUrl = '';
+  let campaignPhotoMediumUrl = '';
+  let campaignPhotoSmallUrl = '';
   let campaignTitle = '';
   let campaignSEOFriendlyPathFromObject = '';
   let campaignXWeVoteIdFromObject = '';
@@ -22,13 +24,17 @@ export function getCampaignXValuesFromIdentifiers (campaignSEOFriendlyPath, camp
       campaign_description: campaignDescription,
       campaign_title: campaignTitle,
       campaignx_we_vote_id: campaignXWeVoteIdFromObject,
-      we_vote_hosted_campaign_photo_large_url: campaignPhoto,
+      we_vote_hosted_campaign_photo_large_url: campaignPhotoLargeUrl,
+      we_vote_hosted_campaign_photo_medium_url: campaignPhotoMediumUrl,
+      we_vote_hosted_campaign_photo_small_url: campaignPhotoSmallUrl,
     } = campaignX);
     campaignXPoliticianList = CampaignStore.getCampaignXPoliticianList(campaignXWeVoteIdFromObject);
   }
   return {
     campaignDescription,
-    campaignPhoto,
+    campaignPhotoLargeUrl,
+    campaignPhotoMediumUrl,
+    campaignPhotoSmallUrl,
     campaignSEOFriendlyPath: campaignSEOFriendlyPathFromObject,
     campaignTitle,
     campaignXPoliticianList,

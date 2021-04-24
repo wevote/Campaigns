@@ -34,7 +34,7 @@ class CampaignSupportShare extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      campaignPhoto: '',
+      campaignPhotoLargeUrl: '',
       campaignSEOFriendlyPath: '',
       campaignTitle: '',
       campaignXWeVoteId: '',
@@ -52,12 +52,12 @@ class CampaignSupportShare extends Component {
     const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
     // console.log('componentDidMount campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
     const {
-      campaignPhoto,
+      campaignPhotoLargeUrl,
       campaignSEOFriendlyPath,
       campaignXWeVoteId,
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     this.setState({
-      campaignPhoto,
+      campaignPhotoLargeUrl,
     });
     if (campaignSEOFriendlyPath) {
       this.setState({
@@ -112,13 +112,13 @@ class CampaignSupportShare extends Component {
     const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
     // console.log('onCampaignStoreChange campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
     const {
-      campaignPhoto,
+      campaignPhotoLargeUrl,
       campaignSEOFriendlyPath,
       campaignTitle,
       campaignXWeVoteId,
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     this.setState({
-      campaignPhoto,
+      campaignPhotoLargeUrl,
       campaignTitle,
     });
     if (campaignSEOFriendlyPath) {
@@ -178,7 +178,7 @@ class CampaignSupportShare extends Component {
       console.log(`CampaignSupportShare window.location.href: ${window.location.href}`);
     }
     const { classes, iWillShare, showShareCampaignWithOneFriend } = this.props;
-    const { campaignPhoto, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId, chosenWebsiteName } = this.state;
+    const { campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId, chosenWebsiteName } = this.state;
     let campaignProcessStepIntroductionText = 'Voters joined this campaign thanks to the people who shared it. Join them and help this campaign grow!';
     let campaignProcessStepTitle = 'Sharing leads to way more votes.';
     const htmlTitle = `${campaignTitle} - ${chosenWebsiteName}`;
@@ -211,8 +211,8 @@ class CampaignSupportShare extends Component {
                 campaignXWeVoteId={campaignXWeVoteId}
               />
               <CampaignSupportImageWrapper>
-                {campaignPhoto ? (
-                  <CampaignImage src={campaignPhoto} alt="Campaign" />
+                {campaignPhotoLargeUrl ? (
+                  <CampaignImage src={campaignPhotoLargeUrl} alt="Campaign" />
                 ) : (
                   <CampaignSupportImageWrapperText>
                     {campaignTitle}
