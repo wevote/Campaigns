@@ -111,7 +111,7 @@ class CampaignStartAddPhoto extends Component {
                         &nbsp;
                       </AdviceBoxText>
                       <AdviceBoxTitle>
-                        Try to upload a photo that is 1600 x 900 pixels or larger
+                        Try to upload a photo that is 1200 x 628 pixels or larger
                       </AdviceBoxTitle>
                       <AdviceBoxText>
                         A large photo will look good on all screen sizes. We can accept one photo up to 5 megabytes in size.

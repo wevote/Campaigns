@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import CampaignStore from '../../stores/CampaignStore';
 import { renderLog } from '../../utils/logging';
+import { stringContains } from '../../utils/textFormat';
+
 
 class CampaignOwnersList extends Component {
   constructor (props) {
@@ -81,7 +83,7 @@ class CampaignOwnersList extends Component {
             <CampaignXOwnerWrapper compressedMode={compressedMode}>
               {campaignXOwnerList.length === 1 ? (
                 <>
-                  {campaignXOwnerList[0].organization_name}
+                  {!stringContains('Voter-', campaignXOwnerList[0].organization_name) && campaignXOwnerList[0].organization_name}
                 </>
               ) : (
                 <>
@@ -90,19 +92,27 @@ class CampaignOwnersList extends Component {
                     if (campaignXOwnerNumber >= campaignXOwnerList.length) {
                       return (
                         <span key={campaignXOwnerNumber}>
-                          {' '}
-                          and
-                          {' '}
-                          {campaignXOwner.organization_name}
+                          {!stringContains('Voter-', campaignXOwner.organization_name) && (
+                            <>
+                              {' '}
+                              and
+                              {' '}
+                              {campaignXOwner.organization_name}
+                            </>
+                          )}
                         </span>
                       );
                     } else {
                       commaOrNot = (campaignXOwnerNumber === campaignXOwnerList.length - 1) ? '' : ',';
                       return (
                         <span key={campaignXOwnerNumber}>
-                          {' '}
-                          {campaignXOwner.organization_name}
-                          {commaOrNot}
+                          {!stringContains('Voter-', campaignXOwner.organization_name) && (
+                            <>
+                              {' '}
+                              {campaignXOwner.organization_name}
+                              {commaOrNot}
+                            </>
+                          )}
                         </span>
                       );
                     }
