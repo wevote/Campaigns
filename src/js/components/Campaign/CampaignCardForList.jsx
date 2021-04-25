@@ -260,7 +260,6 @@ const OneCampaignDescription = styled.div`
 
 const OneCampaignInnerWrapper = styled.div`
   margin: 15px 0;
-  width: 100%;
   @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
     display: flex;
     justify-content: space-between;

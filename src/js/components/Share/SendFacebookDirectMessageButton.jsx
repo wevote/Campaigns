@@ -127,19 +127,17 @@ class SendFacebookDirectMessageButton extends Component {
           <FacebookMessengerShareButton
             appId={webAppConfig.FACEBOOK_APP_ID}
             className={mobileMode ? 'material_ui_button_mobile' : ''}
-            hashtag={inPrivateLabelMode ? null : '#WeVote'}
             id="shareOnFacebookButton"
             onClick={this.saveActionShareButton}
-            quote={quoteForSharing}
             url={`${linkToBeSharedUrlEncoded}`}
-            windowWidth={mobileMode ? 350 : 750}
+            windowWidth={mobileMode ? 350 : 1000}
             windowHeight={mobileMode ? 600 : 600}
             disabled={isAndroid()}
             disabledStyle={isAndroid() ? { opacity: 1 } : {}}
           >
             <div className="material_ui_dark_button">
               <div>
-                Send Facebook Message
+                Send Facebook Direct Message
               </div>
             </div>
           </FacebookMessengerShareButton>
