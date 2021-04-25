@@ -1,17 +1,20 @@
 import { ReduceStore } from 'flux/utils';
 import Dispatcher from '../components/Dispatcher/Dispatcher';
 import anonymous from '../../img/global/icons/avatar-generic.png';
+import arrayContains from '../utils/arrayContains';
+import VoterStore from './VoterStore'; // eslint-disable-line import/no-cycle
 
 class CampaignStore extends ReduceStore {
   getInitialState () {
     return {
       allCachedCampaignXDicts: {},  // key == campaignXWeVoteId, value = campaignX data dict
       allCachedCampaignXOwners: {},  // key == campaignXWeVoteId, value = list of owners of this campaign
-      allCachedCampaignXProfilePhotos: {},  // key == campaignXWeVoteId, value = Tiny Profile Photo to show
+      allCachedCampaignXOwnerPhotos: {},  // key == campaignXWeVoteId, value = Tiny Profile Photo to show
       allCachedCampaignXPoliticianLists: {},  // key == campaignXWeVoteId, value = list of politicians supported in this Campaign
       allCachedCampaignXWeVoteIdsBySEOFriendlyPath: {},  // key == SEOFriendlyPath, value = campaignXWeVoteId
       allCachedPoliticians: {},  // key == politicianWeVoteId, value = the Politician
       promotedCampaignXWeVoteIds: [], // These are the campaignx_we_vote_id's of the campaigns this voter started
+      voterOwnedCampaignXWeVoteIds: [], // These are the campaignx_we_vote_id's of the campaigns this voter can edit
       voterStartedCampaignXWeVoteIds: [], // These are the campaignx_we_vote_id's of the campaigns this voter started
       voterSupportedCampaignXWeVoteIds: [], // These are the campaignx_we_vote_id's of the campaigns this voter supports
       voterWeVoteId: '',
@@ -22,15 +25,24 @@ class CampaignStore extends ReduceStore {
     return this.getInitialState();
   }
 
-  extractCampaignXOwnerList (campaignX, allCachedCampaignXOwnersIncoming, allCachedCampaignXProfilePhotosIncoming) {
+  extractCampaignXOwnerList (campaignX, allCachedCampaignXOwnersIncoming, allCachedCampaignXOwnerPhotosIncoming, voterOwnedCampaignXWeVoteIdsIncoming) {
     const allCachedCampaignXOwners = allCachedCampaignXOwnersIncoming;
-    const allCachedCampaignXProfilePhotos = allCachedCampaignXProfilePhotosIncoming;
+    const allCachedCampaignXOwnerPhotos = allCachedCampaignXOwnerPhotosIncoming;
     const campaignXOwnersFiltered = [];
     let featuredProfileImageFound = false;
     let firstProfileImageFound = false;
     let useThisProfileImage = false;
+    const voterOwnedCampaignXWeVoteIds = voterOwnedCampaignXWeVoteIdsIncoming;
+    const linkedOrganizationWeVoteId = VoterStore.getLinkedOrganizationWeVoteId();
+    // console.log('linkedOrganizationWeVoteId:', linkedOrganizationWeVoteId);
     for (let i = 0; i < campaignX.campaignx_owner_list.length; ++i) {
       // console.log('CampaignStore owner_list i: ', i, ', one_owner: ', campaignX.campaignx_owner_list[i]);
+      if (campaignX.campaignx_owner_list[i].organization_we_vote_id &&
+          campaignX.campaignx_owner_list[i].organization_we_vote_id === linkedOrganizationWeVoteId) {
+        if (!(arrayContains(campaignX.campaignx_we_vote_id, voterOwnedCampaignXWeVoteIds))) {
+          voterOwnedCampaignXWeVoteIds.push(campaignX.campaignx_we_vote_id);
+        }
+      }
       if (campaignX.campaignx_owner_list[i].visible_to_public) {
         if (campaignX.campaignx_owner_list[i].organization_name) {
           campaignXOwnersFiltered.push(campaignX.campaignx_owner_list[i]);
@@ -49,7 +61,7 @@ class CampaignStore extends ReduceStore {
             useThisProfileImage = true;
           }
           if (useThisProfileImage) {
-            allCachedCampaignXProfilePhotos[campaignX.campaignx_we_vote_id] = campaignX.campaignx_owner_list[i].we_vote_hosted_profile_image_url_tiny;
+            allCachedCampaignXOwnerPhotos[campaignX.campaignx_we_vote_id] = campaignX.campaignx_owner_list[i].we_vote_hosted_profile_image_url_tiny;
           }
         }
       }
@@ -58,7 +70,8 @@ class CampaignStore extends ReduceStore {
 
     return {
       allCachedCampaignXOwners,
-      allCachedCampaignXProfilePhotos,
+      allCachedCampaignXOwnerPhotos,
+      voterOwnedCampaignXWeVoteIds,
     };
   }
 
@@ -102,7 +115,7 @@ class CampaignStore extends ReduceStore {
 
   getCampaignXLeadOwnerProfilePhoto (campaignXWeVoteId, hideAnonymousImage = false) {
     const alternateImage = hideAnonymousImage ? '' : anonymous;
-    return this.getState().allCachedCampaignXProfilePhotos[campaignXWeVoteId] || alternateImage;
+    return this.getState().allCachedCampaignXOwnerPhotos[campaignXWeVoteId] || alternateImage;
   }
 
   getCampaignXPoliticianList (campaignXWeVoteId) {
@@ -136,15 +149,28 @@ class CampaignStore extends ReduceStore {
     return this.getCampaignXFromListOfWeVoteIds(this.getState().promotedCampaignXWeVoteIds);
   }
 
+  getVoterCanEditThisCampaign (campaignXWeVoteId) {
+    // console.log('this.getState().voterOwnedCampaignXWeVoteIds:', this.getState().voterOwnedCampaignXWeVoteIds);
+    return arrayContains(campaignXWeVoteId, this.getState().voterOwnedCampaignXWeVoteIds);
+  }
+
+  getVoterOwnedCampaignXWeVoteIds () {
+    return this.getState().voterOwnedCampaignXWeVoteIds;
+  }
+
   getVoterStartedCampaignXDicts () {
     return this.getCampaignXFromListOfWeVoteIds(this.getState().voterStartedCampaignXWeVoteIds);
   }
 
+  getVoterSupportedCampaignXDicts () {
+    return this.getCampaignXFromListOfWeVoteIds(this.getState().voterSupportedCampaignXWeVoteIds);
+  }
+
   reduce (state, action) {
-    const { allCachedCampaignXDicts, allCachedCampaignXWeVoteIdsBySEOFriendlyPath } = state;
+    const { allCachedCampaignXDicts, allCachedCampaignXWeVoteIdsBySEOFriendlyPath, voterSupportedCampaignXWeVoteIds } = state;
     let {
-      allCachedCampaignXOwners, allCachedCampaignXPoliticianLists, allCachedCampaignXProfilePhotos,
-      promotedCampaignXWeVoteIds, voterStartedCampaignXWeVoteIds,
+      allCachedCampaignXOwners, allCachedCampaignXPoliticianLists, allCachedCampaignXOwnerPhotos,
+      promotedCampaignXWeVoteIds, voterOwnedCampaignXWeVoteIds, voterStartedCampaignXWeVoteIds,
     } = state;
     let campaignX;
     let campaignXList;
@@ -164,16 +190,33 @@ class CampaignStore extends ReduceStore {
           promotedCampaignXWeVoteIds = action.res.promoted_campaignx_we_vote_ids;
           revisedState = { ...revisedState, promotedCampaignXWeVoteIds };
         }
+        if (action.res.voter_owned_campaignx_we_vote_ids) {
+          voterOwnedCampaignXWeVoteIds = action.res.voter_owned_campaignx_we_vote_ids;
+          // revisedState updated with voterOwnedCampaignXWeVoteIds below
+        }
         if (action.res.voter_started_campaignx_we_vote_ids) {
           voterStartedCampaignXWeVoteIds = action.res.voter_started_campaignx_we_vote_ids;
           revisedState = { ...revisedState, voterStartedCampaignXWeVoteIds };
+        }
+        if (action.res.voter_supported_campaignx_we_vote_ids) {
+          // console.log('action.res.voter_supported_campaignx_we_vote_ids:', action.res.voter_supported_campaignx_we_vote_ids);
+          action.res.voter_supported_campaignx_we_vote_ids.forEach((oneCampaignXWeVoteId) => {
+            if (!(oneCampaignXWeVoteId in voterSupportedCampaignXWeVoteIds)) {
+              voterSupportedCampaignXWeVoteIds.push(oneCampaignXWeVoteId);
+            }
+          });
+          revisedState = { ...revisedState, voterSupportedCampaignXWeVoteIds };
         }
 
         // console.log('action.res.voter_issues_only:', action.res.voter_issues_only);
         campaignXList.forEach((oneCampaignX) => {
           allCachedCampaignXDicts[oneCampaignX.campaignx_we_vote_id] = oneCampaignX;
           if ('campaignx_owner_list' in oneCampaignX) {
-            ({ allCachedCampaignXOwners, allCachedCampaignXProfilePhotos } = this.extractCampaignXOwnerList(oneCampaignX, allCachedCampaignXOwners, allCachedCampaignXProfilePhotos));
+            ({
+              allCachedCampaignXOwners,
+              allCachedCampaignXOwnerPhotos,
+              voterOwnedCampaignXWeVoteIds,
+            } = this.extractCampaignXOwnerList(oneCampaignX, allCachedCampaignXOwners, allCachedCampaignXOwnerPhotos, voterOwnedCampaignXWeVoteIds));
           }
           if ('campaignx_politician_list' in oneCampaignX) {
             ({ allCachedCampaignXPoliticianLists } = this.extractCampaignXPoliticianList(oneCampaignX, allCachedCampaignXPoliticianLists));
@@ -198,11 +241,13 @@ class CampaignStore extends ReduceStore {
         revisedState = { ...revisedState, allCachedCampaignXDicts };
         revisedState = { ...revisedState, allCachedCampaignXOwners };
         revisedState = { ...revisedState, allCachedCampaignXPoliticianLists };
-        revisedState = { ...revisedState, allCachedCampaignXProfilePhotos };
+        revisedState = { ...revisedState, allCachedCampaignXOwnerPhotos };
         revisedState = { ...revisedState, allCachedCampaignXWeVoteIdsBySEOFriendlyPath };
+        revisedState = { ...revisedState, voterOwnedCampaignXWeVoteIds };
         return revisedState;
 
       case 'campaignRetrieve':
+      case 'campaignStartSave':
         // See CampaignSupporterStore for code to take in the following campaignX values:
         // - latest_campaignx_supporter_endorsement_list
         // - latest_campaignx_supporter_list
@@ -214,7 +259,11 @@ class CampaignStore extends ReduceStore {
         // console.log('CampaignStore campaignRetrieve, campaignX:', campaignX);
         allCachedCampaignXDicts[campaignX.campaignx_we_vote_id] = campaignX;
         if ('campaignx_owner_list' in campaignX) {
-          ({ allCachedCampaignXOwners, allCachedCampaignXProfilePhotos } = this.extractCampaignXOwnerList(campaignX, allCachedCampaignXOwners, allCachedCampaignXProfilePhotos));
+          ({
+            allCachedCampaignXOwners,
+            allCachedCampaignXOwnerPhotos,
+            voterOwnedCampaignXWeVoteIds,
+          } = this.extractCampaignXOwnerList(campaignX, allCachedCampaignXOwners, allCachedCampaignXOwnerPhotos, voterOwnedCampaignXWeVoteIds));
         }
         if ('campaignx_politician_list' in campaignX) {
           ({ allCachedCampaignXPoliticianLists } = this.extractCampaignXPoliticianList(campaignX, allCachedCampaignXPoliticianLists));
@@ -235,11 +284,24 @@ class CampaignStore extends ReduceStore {
             }
           }
         }
+        if ('voter_campaignx_supporter' in action.res) {
+          if ('campaign_supported' in action.res.voter_campaignx_supporter) {
+            //
+            // console.log('action.res.voter_campaignx_supporter.campaign_supported:', action.res.voter_campaignx_supporter.campaign_supported);
+            if (action.res.voter_campaignx_supporter.campaign_supported) {
+              if (!(action.res.voter_campaignx_supporter.campaignx_we_vote_id in voterSupportedCampaignXWeVoteIds)) {
+                voterSupportedCampaignXWeVoteIds.push(action.res.voter_campaignx_supporter.campaignx_we_vote_id);
+                revisedState = { ...revisedState, voterSupportedCampaignXWeVoteIds };
+              }
+            }
+          }
+        }
         revisedState = { ...revisedState, allCachedCampaignXDicts };
         revisedState = { ...revisedState, allCachedCampaignXOwners };
         revisedState = { ...revisedState, allCachedCampaignXPoliticianLists };
-        revisedState = { ...revisedState, allCachedCampaignXProfilePhotos };
+        revisedState = { ...revisedState, allCachedCampaignXOwnerPhotos };
         revisedState = { ...revisedState, allCachedCampaignXWeVoteIdsBySEOFriendlyPath };
+        revisedState = { ...revisedState, voterOwnedCampaignXWeVoteIds };
         return revisedState;
 
       case 'voterSignOut':

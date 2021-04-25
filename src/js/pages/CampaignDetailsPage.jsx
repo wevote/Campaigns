@@ -38,6 +38,7 @@ class CampaignDetailsPage extends Component {
       payToPromoteStepTurnedOn: false,
       sharingStepCompleted: false,
       step2Completed: false,
+      voterCanEditThisCampaign: false,
     };
   }
 
@@ -111,8 +112,10 @@ class CampaignDetailsPage extends Component {
       pathToUseWhenProfileComplete = `/id/${campaignXWeVoteId}/why-do-you-support`;
     }
     if (campaignXWeVoteId) {
+      const voterCanEditThisCampaign = CampaignStore.getVoterCanEditThisCampaign(campaignXWeVoteId);
       this.setState({
         campaignXWeVoteId,
+        voterCanEditThisCampaign,
       });
     }
     const campaignDescriptionLimited = returnFirstXWords(campaignDescription, 200);
@@ -189,6 +192,17 @@ class CampaignDetailsPage extends Component {
     }, this.goToNextPage());
   }
 
+  onCampaignEditClick = () => {
+    const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
+    // console.log('campaignX:', campaignX);
+    if (campaignSEOFriendlyPath) {
+      historyPush(`/c/${campaignSEOFriendlyPath}/edit`);
+    } else {
+      historyPush(`/id/${campaignXWeVoteId}/edit`);
+    }
+    return null;
+  }
+
   render () {
     renderLog('CampaignDetailsPage');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
@@ -198,7 +212,7 @@ class CampaignDetailsPage extends Component {
     const {
       campaignDescription, campaignDescriptionLimited, campaignPhotoLargeUrl,
       campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId,
-      chosenWebsiteName,
+      chosenWebsiteName, voterCanEditThisCampaign,
     } = this.state;
     // console.log('render campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
     const htmlTitle = `${campaignTitle} - ${chosenWebsiteName}`;
@@ -243,6 +257,13 @@ class CampaignDetailsPage extends Component {
               <CampaignDescription>
                 {campaignDescription}
               </CampaignDescription>
+              {voterCanEditThisCampaign && (
+                <IndicatorButtonWrapper>
+                  <EditCampaignIndicator onClick={this.onCampaignEditClick}>
+                    Edit This Campaign
+                  </EditCampaignIndicator>
+                </IndicatorButtonWrapper>
+              )}
             </CampaignDescriptionWrapper>
             <CommentsListWrapper>
               <DelayedLoad waitBeforeShow={400}>
@@ -279,6 +300,13 @@ class CampaignDetailsPage extends Component {
                   <CampaignDescriptionDesktop>
                     {campaignDescription}
                   </CampaignDescriptionDesktop>
+                  {voterCanEditThisCampaign && (
+                    <IndicatorButtonWrapper>
+                      <EditCampaignIndicator onClick={this.onCampaignEditClick}>
+                        Edit This Campaign
+                      </EditCampaignIndicator>
+                    </IndicatorButtonWrapper>
+                  )}
                 </CampaignDescriptionDesktopWrapper>
                 <CommentsListWrapper>
                   <DelayedLoad waitBeforeShow={500}>
@@ -343,6 +371,7 @@ const CampaignDescription = styled.div`
 
 const CampaignDescriptionDesktop = styled.div`
   font-size: 18px;
+  margin-top: 32px;
   text-align: left;
   white-space: pre-wrap;
 `;
@@ -485,6 +514,23 @@ const DetailsSectionDesktopTablet = styled.div`
 const DetailsSectionMobile = styled.div`
   display: flex;
   flex-flow: column;
+`;
+
+const EditCampaignIndicator = styled.span`
+  background-color: #fff;
+  border: 1px solid #2e3c5d;
+  border-radius: 5px;
+  color: #2e3c5d;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 3px 30px;
+  &:hover {
+    background-color: #f0f0f0;
+  }
+`;
+
+const IndicatorButtonWrapper = styled.div`
+  margin-top: 32px;
 `;
 
 const PageWrapper = styled.div`

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import anonymous from '../../../img/global/icons/avatar-generic.png';
 import CampaignStartStore from '../../stores/CampaignStartStore';
+import CampaignStore from '../../stores/CampaignStore';
 import { renderLog } from '../../utils/logging';
 import { convertStateCodeToStateText } from '../../utils/addressFunctions';
 import DeletePoliticianCheckbox from './DeletePoliticianCheckbox';
@@ -19,20 +20,38 @@ class EditPoliticianList extends Component {
   componentDidMount () {
     // console.log('EditPoliticianList, componentDidMount');
     this.campaignStartStoreListener = CampaignStartStore.addListener(this.onCampaignStartStoreChange.bind(this));
-    const campaignPoliticianList = CampaignStartStore.getCampaignPoliticianList();
-    this.setState({
-      campaignPoliticianList,
-    });
+    this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStartStoreChange.bind(this));
+    this.onCampaignStartStoreChange();
+  }
+
+  componentDidUpdate (prevProps) {
+    // console.log('CampaignEndorsementInputField componentDidUpdate');
+    const {
+      campaignXWeVoteId: campaignXWeVoteIdPrevious,
+    } = prevProps;
+    const {
+      campaignXWeVoteId,
+    } = this.props;
+    if (campaignXWeVoteId) {
+      if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
+        this.onCampaignStartStoreChange();
+      }
+    }
   }
 
   componentWillUnmount () {
     this.campaignStartStoreListener.remove();
+    this.campaignStoreListener.remove();
   }
 
   onCampaignStartStoreChange () {
-    const campaignPoliticianList = CampaignStartStore.getCampaignPoliticianList();
-    // const { campaignPoliticianListUpdatedSet } = this.state;
-    // console.log('onCampaignStartStoreChange campaignPoliticianList: ', campaignPoliticianList);
+    const { campaignXWeVoteId, editExistingCampaign } = this.props;
+    let campaignPoliticianList = [];
+    if (editExistingCampaign) {
+      campaignPoliticianList = CampaignStore.getCampaignXPoliticianList(campaignXWeVoteId);
+    } else {
+      campaignPoliticianList = CampaignStartStore.getCampaignPoliticianList();
+    }
     this.setState({
       campaignPoliticianList,
     });
@@ -89,6 +108,8 @@ class EditPoliticianList extends Component {
   }
 }
 EditPoliticianList.propTypes = {
+  campaignXWeVoteId: PropTypes.string,
+  editExistingCampaign: PropTypes.bool,
   externalUniqueId: PropTypes.string,
 };
 

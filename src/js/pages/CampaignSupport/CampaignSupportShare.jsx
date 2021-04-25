@@ -239,32 +239,32 @@ class CampaignSupportShare extends Component {
                         <SendFacebookDirectMessageButton campaignXWeVoteId={campaignXWeVoteId} mobileMode />
                       </CampaignSupportMobileButtonPanel>
                     </CampaignSupportMobileButtonWrapper>
-                    <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
-                      <CampaignSupportDesktopButtonPanel>
-                        <Button
-                          classes={{ root: classes.buttonDesktop }}
-                          color="primary"
-                          id="copyLinkDesktop"
-                          onClick={this.copyLink}
-                          variant="outlined"
-                        >
-                          Copy link
-                        </Button>
-                      </CampaignSupportDesktopButtonPanel>
-                    </CampaignSupportDesktopButtonWrapper>
-                    <CampaignSupportMobileButtonWrapper className="u-show-mobile">
-                      <CampaignSupportMobileButtonPanel>
-                        <Button
-                          classes={{ root: classes.buttonDefault }}
-                          color="primary"
-                          id="copyLinkMobile"
-                          onClick={this.copyLink}
-                          variant="outlined"
-                        >
-                          Copy link
-                        </Button>
-                      </CampaignSupportMobileButtonPanel>
-                    </CampaignSupportMobileButtonWrapper>
+                    {/* <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet"> */}
+                    {/*  <CampaignSupportDesktopButtonPanel> */}
+                    {/*    <Button */}
+                    {/*      classes={{ root: classes.buttonDesktop }} */}
+                    {/*      color="primary" */}
+                    {/*      id="copyLinkDesktop" */}
+                    {/*      onClick={this.copyLink} */}
+                    {/*      variant="outlined" */}
+                    {/*    > */}
+                    {/*      Copy link */}
+                    {/*    </Button> */}
+                    {/*  </CampaignSupportDesktopButtonPanel> */}
+                    {/* </CampaignSupportDesktopButtonWrapper> */}
+                    {/* <CampaignSupportMobileButtonWrapper className="u-show-mobile"> */}
+                    {/*  <CampaignSupportMobileButtonPanel> */}
+                    {/*    <Button */}
+                    {/*      classes={{ root: classes.buttonDefault }} */}
+                    {/*      color="primary" */}
+                    {/*      id="copyLinkMobile" */}
+                    {/*      onClick={this.copyLink} */}
+                    {/*      variant="outlined" */}
+                    {/*    > */}
+                    {/*      Copy link */}
+                    {/*    </Button> */}
+                    {/*  </CampaignSupportMobileButtonPanel> */}
+                    {/* </CampaignSupportMobileButtonWrapper> */}
                   </CampaignSupportSection>
                 </CampaignSupportSectionWrapper>
               ) : (

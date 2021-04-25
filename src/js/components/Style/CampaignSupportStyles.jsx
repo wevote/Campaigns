@@ -17,12 +17,12 @@ const CampaignSupportImageWrapper = styled.div`
   border-radius: 5px;
   display: flex;
   justify-content: center;
-  min-height: 350px;
+  min-height: 325px;
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    min-height: 300px;
+    min-height: 279px;
   }
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    min-height: 175px;
+    min-height: 159px;
   }
 `;
 

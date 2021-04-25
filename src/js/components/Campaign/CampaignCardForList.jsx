@@ -22,8 +22,10 @@ class CampaignCardForList extends Component {
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     const { campaignXWeVoteId } = this.props;
     const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
+    const voterCanEditThisCampaign = CampaignStore.getVoterCanEditThisCampaign(campaignXWeVoteId);
     this.setState({
       campaignX,
+      voterCanEditThisCampaign,
     });
   }
 
@@ -34,8 +36,10 @@ class CampaignCardForList extends Component {
   onCampaignStoreChange () {
     const { campaignXWeVoteId } = this.props;
     const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
+    const voterCanEditThisCampaign = CampaignStore.getVoterCanEditThisCampaign(campaignXWeVoteId);
     this.setState({
       campaignX,
+      voterCanEditThisCampaign,
     });
   }
 
@@ -60,12 +64,33 @@ class CampaignCardForList extends Component {
     return null;
   }
 
+  onCampaignEditClick = () => {
+    const { campaignX } = this.state;
+    // console.log('campaignX:', campaignX);
+    if (!campaignX) {
+      return null;
+    }
+    const {
+      in_draft_mode: inDraftMode,
+      seo_friendly_path: SEOFriendlyPath,
+      campaignx_we_vote_id: campaignXWeVoteId,
+    } = campaignX;
+    if (inDraftMode) {
+      historyPush('/start-a-campaign-preview');
+    } else if (SEOFriendlyPath) {
+      historyPush(`/c/${SEOFriendlyPath}/edit`);
+    } else {
+      historyPush(`/id/${campaignXWeVoteId}/edit`);
+    }
+    return null;
+  }
+
   render () {
     renderLog('CampaignCardForList');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
       console.log(`CampaignCardForList window.location.href: ${window.location.href}`);
     }
-    const { campaignX } = this.state;
+    const { campaignX, voterCanEditThisCampaign } = this.state;
     if (!campaignX) {
       return null;
     }
@@ -81,48 +106,71 @@ class CampaignCardForList extends Component {
     } = campaignX;
     return (
       <Wrapper cordova={isCordova()}>
-        <OneCampaignOuterWrapper onClick={this.onCampaignClick}>
+        <OneCampaignOuterWrapper>
           <OneCampaignInnerWrapper>
             <OneCampaignTextColumn>
-              {inDraftMode && (
-                <DraftModeWrapper>
-                  <DraftModeIndicator>
-                    Draft
-                  </DraftModeIndicator>
-                </DraftModeWrapper>
+              <ClickableDiv onClick={this.onCampaignClick}>
+                <OneCampaignTitle>
+                  {campaignTitle}
+                </OneCampaignTitle>
+                <OneCampaignPhotoWrapperMobile className="u-show-mobile">
+                  {CampaignPhotoLargeUrl && (
+                    <CampaignImage src={CampaignPhotoLargeUrl} alt="Campaign" />
+                  )}
+                </OneCampaignPhotoWrapperMobile>
+                <SupportersCount>
+                  {numberWithCommas(supportersCount)}
+                  {' '}
+                  {supportersCount === 1 ? 'supporter.' : 'supporters.'}
+                </SupportersCount>
+                <OneCampaignDescription>
+                  <TruncateMarkup lines={4}>
+                    <div>
+                      {campaignDescription}
+                    </div>
+                  </TruncateMarkup>
+                </OneCampaignDescription>
+                <CampaignOwnersWrapper>
+                  <CampaignOwnersList campaignXWeVoteId={campaignXWeVoteId} compressedMode />
+                </CampaignOwnersWrapper>
+              </ClickableDiv>
+              {(inDraftMode || !visibleOnThisSite) && (
+                <IndicatorRow>
+                  {inDraftMode && (
+                    <IndicatorButtonWrapper>
+                      <DraftModeIndicator>
+                        Draft
+                      </DraftModeIndicator>
+                    </IndicatorButtonWrapper>
+                  )}
+                  {!visibleOnThisSite && (
+                    <IndicatorButtonWrapper>
+                      <DraftModeIndicator>
+                        <span className="u-show-mobile">
+                          Not Visible
+                        </span>
+                        <span className="u-show-desktop-tablet">
+                          Not Visible On This Site
+                        </span>
+                      </DraftModeIndicator>
+                    </IndicatorButtonWrapper>
+                  )}
+                  {voterCanEditThisCampaign && (
+                    <IndicatorButtonWrapper>
+                      <EditCampaignIndicator onClick={this.onCampaignEditClick}>
+                        <span className="u-show-mobile">
+                          Edit
+                        </span>
+                        <span className="u-show-desktop-tablet">
+                          Edit Campaign
+                        </span>
+                      </EditCampaignIndicator>
+                    </IndicatorButtonWrapper>
+                  )}
+                </IndicatorRow>
               )}
-              {!visibleOnThisSite && (
-                <DraftModeWrapper>
-                  <DraftModeIndicator>
-                    Not Visible On This Site
-                  </DraftModeIndicator>
-                </DraftModeWrapper>
-              )}
-              <OneCampaignTitle>
-                {campaignTitle}
-              </OneCampaignTitle>
-              <OneCampaignPhotoWrapperMobile className="u-show-mobile">
-                {CampaignPhotoLargeUrl && (
-                  <CampaignImage src={CampaignPhotoLargeUrl} alt="Campaign" />
-                )}
-              </OneCampaignPhotoWrapperMobile>
-              <SupportersCount>
-                {numberWithCommas(supportersCount)}
-                {' '}
-                {supportersCount === 1 ? 'supporter.' : 'supporters.'}
-              </SupportersCount>
-              <OneCampaignDescription>
-                <TruncateMarkup lines={4}>
-                  <div>
-                    {campaignDescription}
-                  </div>
-                </TruncateMarkup>
-              </OneCampaignDescription>
-              <CampaignOwnersWrapper>
-                <CampaignOwnersList campaignXWeVoteId={campaignXWeVoteId} compressedMode />
-              </CampaignOwnersWrapper>
             </OneCampaignTextColumn>
-            <OneCampaignPhotoDesktopColumn className="u-show-desktop-tablet">
+            <OneCampaignPhotoDesktopColumn className="u-show-desktop-tablet" onClick={this.onCampaignClick}>
               {CampaignPhotoMediumUrl && (
                 <CampaignImage src={CampaignPhotoMediumUrl} alt="Campaign" />
               )}
@@ -148,6 +196,7 @@ const styles = (theme) => ({
 
 const CampaignImage = styled.img`
   border-radius: 5px;
+  cursor: pointer;
   margin-bottom: 8px;
   margin-top: 8px;
   min-height: 175px;
@@ -169,6 +218,11 @@ const CampaignImage = styled.img`
 const CampaignOwnersWrapper = styled.div`
 `;
 
+const ClickableDiv = styled.div`
+  cursor: pointer;
+  width: 100%;
+`;
+
 const DraftModeIndicator = styled.span`
   background-color: #ccc;
   border-radius: 5px;
@@ -176,8 +230,27 @@ const DraftModeIndicator = styled.span`
   padding: 3px 30px;
 `;
 
-const DraftModeWrapper = styled.div`
-  margin-bottom: 12px;
+const IndicatorButtonWrapper = styled.div`
+  margin-right: 8px;
+`;
+
+const EditCampaignIndicator = styled.span`
+  background-color: #fff;
+  border: 1px solid #2e3c5d;
+  border-radius: 5px;
+  color: #2e3c5d;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 3px 30px;
+  &:hover {
+    background-color: #f0f0f0;
+  }
+`;
+
+const IndicatorRow = styled.div`
+  display: flex;
+  justify-content: start;
+  margin-top: 12px;
 `;
 
 const OneCampaignDescription = styled.div`
@@ -187,6 +260,7 @@ const OneCampaignDescription = styled.div`
 
 const OneCampaignInnerWrapper = styled.div`
   margin: 15px 0;
+  width: 100%;
   @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
     display: flex;
     justify-content: space-between;
@@ -196,7 +270,6 @@ const OneCampaignInnerWrapper = styled.div`
 
 const OneCampaignOuterWrapper = styled.div`
   border-top: 1px solid #ddd;
-  cursor: pointer;
   margin-top: 15px;
   @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
     border: 1px solid #ddd;
@@ -211,11 +284,15 @@ const OneCampaignPhotoWrapperMobile = styled.div`
 `;
 
 const OneCampaignTextColumn = styled.div`
+  width: 100%;
 `;
 
 const OneCampaignTitle = styled.h1`
   font-size: 18px;
   margin: 0;
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    margin-bottom: 4px;;
+  }
 `;
 
 const SupportersCount = styled.div`

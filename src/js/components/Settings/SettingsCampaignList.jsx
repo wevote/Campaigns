@@ -17,7 +17,6 @@ class SettingsCampaignList extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      loadingMoreItems: false,
       numberOfCampaignsToDisplay: STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY,
       voterStartedCampaignList: [],
       voterSupportedCampaignList: [],
@@ -36,8 +35,10 @@ class SettingsCampaignList extends Component {
       });
     }
     const voterStartedCampaignList = CampaignStore.getVoterStartedCampaignXDicts();
+    const voterSupportedCampaignList = CampaignStore.getVoterSupportedCampaignXDicts();
     this.setState({
       voterStartedCampaignList,
+      voterSupportedCampaignList,
     });
   }
 
@@ -47,23 +48,25 @@ class SettingsCampaignList extends Component {
 
   onCampaignStoreChange () {
     const voterStartedCampaignList = CampaignStore.getVoterStartedCampaignXDicts();
+    const voterSupportedCampaignList = CampaignStore.getVoterSupportedCampaignXDicts();
     this.setState({
       voterStartedCampaignList,
+      voterSupportedCampaignList,
     });
   }
 
-  // increaseNumberOfPositionItemsToDisplay = () => {
-  //   let { numberOfCampaignsToDisplay } = this.state;
-  //   numberOfCampaignsToDisplay += 2;
-  //   this.setState({
-  //     numberOfCampaignsToDisplay,
-  //   });
-  // }
+  increaseNumberOfCampaignsToDisplay = () => {
+    let { numberOfCampaignsToDisplay } = this.state;
+    numberOfCampaignsToDisplay += 2;
+    this.setState({
+      numberOfCampaignsToDisplay,
+    });
+  }
 
   render () {
     renderLog('SettingsCampaignList');  // Set LOG_RENDER_EVENTS to log all renders
     // console.log('SettingsCampaignList render');
-    const { loadingMoreItems, numberOfCampaignsToDisplay, voterStartedCampaignList, voterSupportedCampaignList } = this.state;
+    const { numberOfCampaignsToDisplay, voterStartedCampaignList, voterSupportedCampaignList } = this.state;
     const { location: { pathname } } = window;
     let showSupportedCampaigns = false;
     if (startsWith('/profile/supported', pathname)) {
@@ -94,11 +97,12 @@ class SettingsCampaignList extends Component {
             </div>
             <LoadMoreItemsManuallyWrapper>
               {/*  onClick={this.increaseNumberOfPositionItemsToDisplay} */}
-              {!!(voterSupportedCampaignList && voterSupportedCampaignList.length > 1) && (
+              {!!(voterSupportedCampaignList &&
+                voterSupportedCampaignList.length > 1 &&
+                numberOfCampaignsToDisplay < voterSupportedCampaignList.length) && (
                 <LoadMoreItemsManually
-                  loadingMoreItemsNow={loadingMoreItems}
-                  numberOfItemsDisplayed={numberOfCampaignsDisplayed}
-                  numberOfItemsTotal={voterSupportedCampaignList.length}
+                  loadMoreFunction={this.increaseNumberOfCampaignsToDisplay}
+                  uniqueExternalId="SettingsCampaignList"
                 />
               )}
             </LoadMoreItemsManuallyWrapper>
