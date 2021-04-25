@@ -20,7 +20,7 @@ export default {
   },
 
   campaignEditAllSave (
-    campaignWeVoteId,
+    campaignXWeVoteId,
     campaignDescriptionQueuedToSave, campaignDescriptionQueuedToSaveSet,
     campaignPhotoQueuedToSave, campaignPhotoQueuedToSaveSet, campaignPoliticianDeleteListJson,
     campaignPoliticianStarterListQueuedToSave, campaignPoliticianStarterListQueuedToSaveSet,
@@ -34,10 +34,10 @@ export default {
         campaign_photo_changed: campaignPhotoQueuedToSaveSet,
         campaign_title: campaignTitleQueuedToSave,
         campaign_title_changed: campaignTitleQueuedToSaveSet,
+        campaignx_we_vote_id: campaignXWeVoteId,
         politician_delete_list: campaignPoliticianDeleteListJson,
         politician_starter_list: campaignPoliticianStarterListQueuedToSave,
         politician_starter_list_changed: campaignPoliticianStarterListQueuedToSaveSet,
-        campaignx_we_vote_id: campaignWeVoteId,
       });
   },
 

@@ -184,14 +184,14 @@ const CampaignXOwnerWrapper = styled.span`
 `;
 
 const ColumnFullWidth = styled.div`
-  padding: 8px 12px 0 8px;
+  padding: 8px 12px 0 0;
   width: 100%;
 `;
 
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-left: -12px;
+  margin-left: 0;
   width: calc(100% + 24px);
 `;
 

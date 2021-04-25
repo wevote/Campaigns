@@ -5,6 +5,7 @@ import { TextField, FormControl } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import CampaignStartStore from '../../stores/CampaignStartStore';
+import CampaignStore from '../../stores/CampaignStore';
 import { renderLog } from '../../utils/logging';
 
 class CampaignDescriptionInputField extends Component {
@@ -21,14 +22,28 @@ class CampaignDescriptionInputField extends Component {
   componentDidMount () {
     // console.log('CampaignDescriptionInputField, componentDidMount');
     this.campaignStartStoreListener = CampaignStartStore.addListener(this.onCampaignStartStoreChange.bind(this));
-    const campaignDescription = CampaignStartStore.getCampaignDescription();
-    this.setState({
-      campaignDescription,
-    });
+    this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStartStoreChange.bind(this));
+    this.onCampaignStartStoreChange();
+  }
+
+  componentDidUpdate (prevProps) {
+    // console.log('CampaignEndorsementInputField componentDidUpdate');
+    const {
+      campaignXWeVoteId: campaignXWeVoteIdPrevious,
+    } = prevProps;
+    const {
+      campaignXWeVoteId,
+    } = this.props;
+    if (campaignXWeVoteId) {
+      if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
+        this.onCampaignStartStoreChange();
+      }
+    }
   }
 
   componentWillUnmount () {
     this.campaignStartStoreListener.remove();
+    this.campaignStoreListener.remove();
   }
 
   handleKeyPress () {
@@ -36,7 +51,16 @@ class CampaignDescriptionInputField extends Component {
   }
 
   onCampaignStartStoreChange () {
-    const campaignDescription = CampaignStartStore.getCampaignDescription();
+    const { campaignXWeVoteId, editExistingCampaign } = this.props;
+    let campaignDescription = '';
+    if (editExistingCampaign) {
+      const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
+      if (campaignX && campaignX.campaignx_we_vote_id) {
+        campaignDescription = campaignX.campaign_description;
+      }
+    } else {
+      campaignDescription = CampaignStartStore.getCampaignDescription();
+    }
     const campaignDescriptionQueuedToSave = CampaignStartStore.getCampaignDescriptionQueuedToSave();
     const campaignDescriptionQueuedToSaveSet = CampaignStartStore.getCampaignDescriptionQueuedToSaveSet();
     let campaignDescriptionAdjusted = campaignDescription;
@@ -92,7 +116,9 @@ class CampaignDescriptionInputField extends Component {
   }
 }
 CampaignDescriptionInputField.propTypes = {
+  campaignXWeVoteId: PropTypes.string,
   classes: PropTypes.object,
+  editExistingCampaign: PropTypes.bool,
   externalUniqueId: PropTypes.string,
 };
 

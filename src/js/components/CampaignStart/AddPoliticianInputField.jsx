@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import CampaignStartStore from '../../stores/CampaignStartStore';
+import CampaignStore from '../../stores/CampaignStore';
 import { renderLog } from '../../utils/logging';
 import SearchAllActions from '../../actions/SearchAllActions';
 import SearchAllStore from '../../stores/SearchAllStore';
@@ -37,21 +38,46 @@ class AddPoliticianInputField extends Component {
     // console.log('AddPoliticianInputField, componentDidMount');
     this.campaignStartStoreListener = CampaignStartStore.addListener(this.onCampaignStartStoreChange.bind(this));
     this.searchAllStoreListener = SearchAllStore.addListener(this.onSearchAllStoreChange.bind(this));
+    this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStartStoreChange.bind(this));
+    this.onCampaignStartStoreChange();
     SearchAllActions.clearSearchResults();
-    const campaignPoliticianStarterList = CampaignStartStore.getCampaignPoliticianStarterList();
     this.setState({
       candidateOptions: candidateOptionsDefault,
-      campaignPoliticianStarterList,
     });
+  }
+
+  componentDidUpdate (prevProps) {
+    // console.log('CampaignEndorsementInputField componentDidUpdate');
+    const {
+      campaignXWeVoteId: campaignXWeVoteIdPrevious,
+    } = prevProps;
+    const {
+      campaignXWeVoteId,
+    } = this.props;
+    if (campaignXWeVoteId) {
+      if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
+        this.onCampaignStartStoreChange();
+      }
+    }
   }
 
   componentWillUnmount () {
     this.campaignStartStoreListener.remove();
+    this.campaignStoreListener.remove();
     this.searchAllStoreListener.remove();
   }
 
   onCampaignStartStoreChange () {
-    const campaignPoliticianStarterList = CampaignStartStore.getCampaignPoliticianStarterList();
+    const { campaignXWeVoteId, editExistingCampaign } = this.props;
+    let campaignPoliticianStarterList = [];
+    if (editExistingCampaign) {
+      const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
+      if (campaignX && campaignX.campaignx_we_vote_id) {
+        campaignPoliticianStarterList = campaignX.campaignx_politician_starter_list;
+      }
+    } else {
+      campaignPoliticianStarterList = CampaignStartStore.getCampaignPoliticianStarterList();
+    }
     this.setState({
       campaignPoliticianStarterList,
     });
@@ -132,6 +158,8 @@ class AddPoliticianInputField extends Component {
   }
 }
 AddPoliticianInputField.propTypes = {
+  campaignXWeVoteId: PropTypes.string,
+  editExistingCampaign: PropTypes.bool,
   externalUniqueId: PropTypes.string,
 };
 

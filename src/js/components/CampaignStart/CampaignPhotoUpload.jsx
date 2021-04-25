@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import CampaignStartStore from '../../stores/CampaignStartStore';
+import CampaignStore from '../../stores/CampaignStore';
 import isMobileScreenSize from '../../utils/isMobileScreenSize';
 import { renderLog } from '../../utils/logging';
 
@@ -20,14 +21,28 @@ class CampaignPhotoUpload extends Component {
   componentDidMount () {
     // console.log('CampaignPhotoUpload, componentDidMount');
     this.campaignStartStoreListener = CampaignStartStore.addListener(this.onCampaignStartStoreChange.bind(this));
-    const campaignPhotoLargeUrl = CampaignStartStore.getCampaignPhotoLargeUrl();
-    this.setState({
-      campaignPhotoLargeUrl,
-    });
+    this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStartStoreChange.bind(this));
+    this.onCampaignStartStoreChange();
+  }
+
+  componentDidUpdate (prevProps) {
+    // console.log('CampaignEndorsementInputField componentDidUpdate');
+    const {
+      campaignXWeVoteId: campaignXWeVoteIdPrevious,
+    } = prevProps;
+    const {
+      campaignXWeVoteId,
+    } = this.props;
+    if (campaignXWeVoteId) {
+      if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
+        this.onCampaignStartStoreChange();
+      }
+    }
   }
 
   componentWillUnmount () {
     this.campaignStartStoreListener.remove();
+    this.campaignStoreListener.remove();
   }
 
   handleDrop (files) {
@@ -45,7 +60,16 @@ class CampaignPhotoUpload extends Component {
   }
 
   onCampaignStartStoreChange () {
-    const campaignPhotoLargeUrl = CampaignStartStore.getCampaignPhotoLargeUrl();
+    const { campaignXWeVoteId, editExistingCampaign } = this.props;
+    let campaignPhotoLargeUrl = '';
+    if (editExistingCampaign) {
+      const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
+      if (campaignX && campaignX.campaignx_we_vote_id) {
+        campaignPhotoLargeUrl = campaignX.we_vote_hosted_campaign_photo_large_url;
+      }
+    } else {
+      campaignPhotoLargeUrl = CampaignStartStore.getCampaignPhotoLargeUrl();
+    }
     this.setState({
       campaignPhotoLargeUrl,
     });
@@ -85,7 +109,9 @@ class CampaignPhotoUpload extends Component {
   }
 }
 CampaignPhotoUpload.propTypes = {
+  campaignXWeVoteId: PropTypes.string,
   classes: PropTypes.object,
+  editExistingCampaign: PropTypes.bool,
 };
 
 const styles = (theme) => ({

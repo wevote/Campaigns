@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
@@ -10,32 +10,81 @@ import CampaignDescriptionInputField from '../../components/CampaignStart/Campai
 import CampaignPhotoUpload from '../../components/CampaignStart/CampaignPhotoUpload';
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import CampaignStartStore from '../../stores/CampaignStartStore';
+import CampaignStore from '../../stores/CampaignStore';
 import CampaignTitleInputField from '../../components/CampaignStart/CampaignTitleInputField';
 import EditPoliticianList from '../../components/CampaignStart/EditPoliticianList';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
+
+const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
 
 
 class CampaignStartEditAll extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      campaignSEOFriendlyPath: '',
+      campaignXWeVoteId: '',
+      chosenWebsiteName: '',
     };
   }
 
   componentDidMount () {
     // console.log('CampaignStartEditAll, componentDidMount');
+    const { editExistingCampaign } = this.props;
+    if (this.props.setShowHeaderFooter) {
+      this.props.setShowHeaderFooter(!editExistingCampaign);
+    }
     this.onAppStoreChange();
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
-    initializejQuery(() => {
-      CampaignStartActions.campaignRetrieveAsOwner('');
-      CampaignStartActions.campaignEditAllReset();
-    });
+    this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
+    if (editExistingCampaign) {
+      const { match: { params } } = this.props;
+      const {
+        campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams,
+        campaignXWeVoteId: campaignXWeVoteIdFromParams,
+      } = params;
+      // console.log('componentDidMount campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
+      const {
+        campaignSEOFriendlyPath,
+        campaignXWeVoteId,
+      } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
+      if (campaignSEOFriendlyPath) {
+        this.setState({
+          campaignSEOFriendlyPath,
+        });
+      } else if (campaignSEOFriendlyPathFromParams) {
+        this.setState({
+          campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams,
+        });
+      }
+      if (campaignXWeVoteId) {
+        this.setState({
+          campaignXWeVoteId,
+        });
+      } else if (campaignXWeVoteIdFromParams) {
+        this.setState({
+          campaignXWeVoteId: campaignXWeVoteIdFromParams,
+        });
+      }
+      // Take the "calculated" identifiers and retrieve if missing
+      retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
+    } else {
+      initializejQuery(() => {
+        CampaignStartActions.campaignRetrieveAsOwner('');
+        CampaignStartActions.campaignEditAllReset();
+      });
+    }
   }
 
   componentWillUnmount () {
+    if (this.props.setShowHeaderFooter) {
+      this.props.setShowHeaderFooter(true);
+    }
     this.appStoreListener.remove();
+    this.campaignStoreListener.remove();
   }
 
   onAppStoreChange () {
@@ -45,11 +94,58 @@ class CampaignStartEditAll extends Component {
     });
   }
 
+  onCampaignStoreChange () {
+    const { editExistingCampaign } = this.props;
+    // console.log('onCampaignStoreChange campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
+    if (editExistingCampaign) {
+      const { match: { params } } = this.props;
+      const {
+        campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams,
+        campaignXWeVoteId: campaignXWeVoteIdFromParams,
+      } = params;
+      // console.log('componentDidMount campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
+      const {
+        campaignSEOFriendlyPath,
+        campaignXWeVoteId,
+      } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
+      if (campaignSEOFriendlyPath) {
+        this.setState({
+          campaignSEOFriendlyPath,
+        });
+      } else if (campaignSEOFriendlyPathFromParams) {
+        this.setState({
+          campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams,
+        });
+      }
+      if (campaignXWeVoteId) {
+        this.setState({
+          campaignXWeVoteId,
+        });
+      } else if (campaignXWeVoteIdFromParams) {
+        this.setState({
+          campaignXWeVoteId: campaignXWeVoteIdFromParams,
+        });
+      }
+    }
+  }
+
   cancelEditAll = () => {
-    historyPush('/start-a-campaign-preview');
+    const { editExistingCampaign } = this.props;
+    if (editExistingCampaign) {
+      const { campaignXWeVoteId, campaignSEOFriendlyPath } = this.state;
+      if (campaignSEOFriendlyPath) {
+        historyPush(`/c/${campaignSEOFriendlyPath}`);
+      } else {
+        historyPush(`/id/${campaignXWeVoteId}`);
+      }
+    } else {
+      historyPush('/start-a-campaign-preview');
+    }
   }
 
   submitCampaignEditAll = () => {
+    const { editExistingCampaign } = this.props;
+    const { campaignXWeVoteId } = this.state;
     const campaignDescriptionQueuedToSave = CampaignStartStore.getCampaignDescriptionQueuedToSave();
     const campaignDescriptionQueuedToSaveSet = CampaignStartStore.getCampaignDescriptionQueuedToSaveSet();
     const campaignPhotoQueuedToSave = CampaignStartStore.getCampaignPhotoQueuedToSave();
@@ -60,13 +156,12 @@ class CampaignStartEditAll extends Component {
     const campaignTitleQueuedToSave = CampaignStartStore.getCampaignTitleQueuedToSave();
     const campaignTitleQueuedToSaveSet = CampaignStartStore.getCampaignTitleQueuedToSaveSet();
     // console.log('CampaignStartEditAll campaignPoliticianStarterListQueuedToSaveSet:', campaignPoliticianStarterListQueuedToSaveSet);
-    const campaignWeVoteId = '';
     if (campaignDescriptionQueuedToSaveSet || campaignPhotoQueuedToSaveSet || campaignPoliticianDeleteList || campaignPoliticianStarterListQueuedToSaveSet || campaignTitleQueuedToSaveSet) {
       const campaignPoliticianDeleteListJson = JSON.stringify(campaignPoliticianDeleteList);
       const campaignPoliticianStarterListQueuedToSaveJson = JSON.stringify(campaignPoliticianStarterListQueuedToSave);
       // console.log('CampaignStartEditAll campaignPoliticianStarterListQueuedToSaveJson:', campaignPoliticianStarterListQueuedToSaveJson);
       CampaignStartActions.campaignEditAllSave(
-        campaignWeVoteId,
+        campaignXWeVoteId,
         campaignDescriptionQueuedToSave, campaignDescriptionQueuedToSaveSet,
         campaignPhotoQueuedToSave, campaignPhotoQueuedToSaveSet, campaignPoliticianDeleteListJson,
         campaignPoliticianStarterListQueuedToSaveJson, campaignPoliticianStarterListQueuedToSaveSet,
@@ -74,7 +169,16 @@ class CampaignStartEditAll extends Component {
       );
       CampaignStartActions.campaignEditAllReset();
     }
-    historyPush('/start-a-campaign-preview');
+    if (editExistingCampaign) {
+      const { campaignSEOFriendlyPath } = this.state;
+      if (campaignSEOFriendlyPath) {
+        historyPush(`/c/${campaignSEOFriendlyPath}`);
+      } else {
+        historyPush(`/id/${campaignXWeVoteId}`);
+      }
+    } else {
+      historyPush('/start-a-campaign-preview');
+    }
   }
 
   render () {
@@ -82,10 +186,13 @@ class CampaignStartEditAll extends Component {
     if (isCordova()) {
       console.log(`CampaignStartEditAll window.location.href: ${window.location.href}`);
     }
-    const { classes } = this.props;
-    const { chosenWebsiteName } = this.state;
+    const { classes, editExistingCampaign } = this.props;
+    const { campaignSEOFriendlyPath, campaignXWeVoteId, chosenWebsiteName } = this.state;
     return (
       <div>
+        <Suspense fallback={<span>&nbsp;</span>}>
+          <CampaignRetrieveController campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
+        </Suspense>
         <Helmet title={`Edit Your Campaign - ${chosenWebsiteName}`} />
         <SaveCancelOuterWrapper>
           <SaveCancelInnerWrapper>
@@ -116,11 +223,27 @@ class CampaignStartEditAll extends Component {
             <InnerWrapper>
               <CampaignStartSectionWrapper>
                 <CampaignStartSection>
-                  <CampaignTitleInputField campaignTitlePlaceholder="Title of your campaign" />
-                  <EditPoliticianList />
-                  <AddCandidateInputField />
-                  <CampaignPhotoUpload />
-                  <CampaignDescriptionInputField />
+                  <CampaignTitleInputField
+                    campaignTitlePlaceholder="Title of your campaign"
+                    campaignXWeVoteId={campaignXWeVoteId}
+                    editExistingCampaign={editExistingCampaign}
+                  />
+                  <EditPoliticianList
+                    campaignXWeVoteId={campaignXWeVoteId}
+                    editExistingCampaign={editExistingCampaign}
+                  />
+                  <AddCandidateInputField
+                    campaignXWeVoteId={campaignXWeVoteId}
+                    editExistingCampaign={editExistingCampaign}
+                  />
+                  <CampaignPhotoUpload
+                    campaignXWeVoteId={campaignXWeVoteId}
+                    editExistingCampaign={editExistingCampaign}
+                  />
+                  <CampaignDescriptionInputField
+                    campaignXWeVoteId={campaignXWeVoteId}
+                    editExistingCampaign={editExistingCampaign}
+                  />
                 </CampaignStartSection>
               </CampaignStartSectionWrapper>
             </InnerWrapper>
@@ -132,6 +255,9 @@ class CampaignStartEditAll extends Component {
 }
 CampaignStartEditAll.propTypes = {
   classes: PropTypes.object,
+  editExistingCampaign: PropTypes.bool,
+  match: PropTypes.object,
+  setShowHeaderFooter: PropTypes.func,
 };
 
 const styles = () => ({

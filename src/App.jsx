@@ -111,6 +111,7 @@ class App extends Component {
                   <Route exact path="/attributions"><Attributions /></Route>
                   <Route exact path="/c/:campaignSEOFriendlyPath" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/comments" render={(props) => <CampaignCommentsPage match={props.match} />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/edit" render={(props) => <CampaignStartEditAll match={props.match} editExistingCampaign setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/updates" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/complete-your-support-for-this-campaign" render={(props) => <CompleteYourProfileMobile match={props.match} supportCampaign setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/pay-to-promote" render={(props) => <CampaignSupportPayToPromote match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
@@ -123,6 +124,7 @@ class App extends Component {
                   <Route exact path="/faq"><FAQ /></Route>
                   <Route exact path="/id/:campaignXWeVoteId" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/id/:campaignXWeVoteId/comments" render={(props) => <CampaignCommentsPage match={props.match} />} />
+                  <Route exact path="/id/:campaignXWeVoteId/edit" render={(props) => <CampaignStartEditAll match={props.match} editExistingCampaign setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/id/:campaignXWeVoteId/updates" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/id/:campaignXWeVoteId/complete-your-support-for-this-campaign" render={(props) => <CompleteYourProfileMobile match={props.match} supportCampaign setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/id/:campaignXWeVoteId/pay-to-promote" render={(props) => <CampaignSupportPayToPromote match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />

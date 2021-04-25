@@ -240,7 +240,7 @@ class CampaignStartStore extends ReduceStore {
         };
 
       case 'campaignStartSave':
-        // console.log('CampaignStartStore campaignStartSave');
+        // console.log('CampaignStartStore campaignStartSave, action.res:', action.res);
         return {
           ...state,
           campaignDescription: action.res.campaign_description,
