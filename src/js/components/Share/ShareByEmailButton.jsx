@@ -2,15 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import { FacebookShareButton } from 'react-share';
+import { EmailShareButton } from 'react-share';
 import AppStore from '../../stores/AppStore';
 import CampaignStore from '../../stores/CampaignStore';
 import { isAndroid, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
-import { androidFacebookClickHandler, generateQuoteForSharing } from './shareButtonCommon';
+import {
+  cordovaSocialSharingByEmail,
+  generateQuoteForSharing,
+} from './shareButtonCommon';
 import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
 
-class ShareOnFacebookButton extends Component {
+class ShareByEmailButton extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -22,7 +25,7 @@ class ShareOnFacebookButton extends Component {
   }
 
   componentDidMount () {
-    // console.log('ShareOnFacebookButton componentDidMount');
+    // console.log('ShareByEmailButton componentDidMount');
     this.onAppStoreChange();
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.onCampaignStoreChange();
@@ -30,7 +33,7 @@ class ShareOnFacebookButton extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    // console.log('ShareOnFacebookButton componentDidUpdate');
+    // console.log('ShareByEmailButton componentDidUpdate');
     const {
       campaignXWeVoteId: campaignXWeVoteIdPrevious,
     } = prevProps;
@@ -68,6 +71,7 @@ class ShareOnFacebookButton extends Component {
     if (numberOfPoliticians > 0) {
       politicianListSentenceString = politicianListToSentenceString(campaignXPoliticianList);
     }
+    // console.log('onCampaignStoreChange politicianListSentenceString:', politicianListSentenceString);
     this.setState({
       campaignX,
       numberOfPoliticians,
@@ -99,52 +103,59 @@ class ShareOnFacebookButton extends Component {
   }
 
   render () {
-    renderLog('ShareOnFacebookButton');  // Set LOG_RENDER_EVENTS to log all renders
+    renderLog('ShareByEmailButton');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
-      console.log(`ShareOnFacebookButton window.location.href: ${window.location.href}`);
+      console.log(`ShareByEmailButton window.location.href: ${window.location.href}`);
     }
-    const { mobileMode } = this.props;
+    const { darkButton, mobileMode } = this.props;
     const { campaignX, inPrivateLabelMode, numberOfPoliticians, politicianListSentenceString } = this.state;
     const {
       campaign_title: campaignTitle,
     } = campaignX;
     let linkToBeShared = this.generateFullCampaignLink();
-    let linkToBeSharedUrlEncoded = '';
-    linkToBeShared = linkToBeShared.replace('https://file:/', 'https://wevote.us/');  // Cordova
-    linkToBeSharedUrlEncoded = encodeURI(linkToBeShared);
+    linkToBeShared = linkToBeShared.replace('https://file:/', 'https://campaigns.wevote.us/');  // Cordova
     const quoteForSharing = generateQuoteForSharing(campaignTitle, numberOfPoliticians, politicianListSentenceString);
+    // console.log('quoteForSharing:', quoteForSharing);
     const quoteForSharingEncoded = encodeURI(quoteForSharing);
+    let subjectForSharing = `Vote for${politicianListSentenceString}`;
+    if (subjectForSharing) {
+      subjectForSharing = subjectForSharing.trim();
+    }
+    const subjectForSharingEncoded = encodeURI(subjectForSharing);
+    // console.log('subjectForSharing:', subjectForSharing);
     return (
       <Wrapper>
-        <div id="androidFacebook"
+        <div id="androidEmail"
              onClick={() => isAndroid() &&
-               androidFacebookClickHandler(`${linkToBeSharedUrlEncoded}&t=WeVote`, quoteForSharingEncoded)}
+               cordovaSocialSharingByEmail(subjectForSharingEncoded, quoteForSharingEncoded)}
         >
-          <FacebookShareButton
+          <EmailShareButton
             className={mobileMode ? 'material_ui_button_mobile' : ''}
-            hashtag={inPrivateLabelMode ? null : '#WeVote'}
-            id="shareOnFacebookButton"
+            id="shareByEmailButton"
             onClick={this.saveActionShareButton}
-            quote={quoteForSharing}
-            url={`${linkToBeSharedUrlEncoded}`}
+            body={quoteForSharing}
+            openShareDialogOnClick
+            subject={subjectForSharing}
+            url={linkToBeShared}
             windowWidth={mobileMode ? 350 : 750}
             windowHeight={mobileMode ? 600 : 600}
             disabled={isAndroid()}
             disabledStyle={isAndroid() ? { opacity: 1 } : {}}
           >
-            <div className="material_ui_dark_button">
+            <div className={darkButton ? 'material_ui_dark_button' : 'material_ui_light_button'}>
               <div>
-                Share on Facebook
+                Share by Email
               </div>
             </div>
-          </FacebookShareButton>
+          </EmailShareButton>
         </div>
       </Wrapper>
     );
   }
 }
-ShareOnFacebookButton.propTypes = {
+ShareByEmailButton.propTypes = {
   campaignXWeVoteId: PropTypes.string,
+  darkButton: PropTypes.bool,
   mobileMode: PropTypes.bool,
 };
 
@@ -156,4 +167,4 @@ const Wrapper = styled.div`
   display: block;
 `;
 
-export default withStyles(styles)(ShareOnFacebookButton);
+export default withStyles(styles)(ShareByEmailButton);

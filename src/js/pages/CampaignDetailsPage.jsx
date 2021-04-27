@@ -426,7 +426,7 @@ const CampaignImageDesktopWrapper = styled.div`
 const CampaignImageMobileWrapper = styled.div`
   min-height: 174px;
   @media (min-width: ${({ theme }) => theme.breakpoints.xs}) {
-    min-height: 175px;
+    min-height: 117px;
   }
 `;
 

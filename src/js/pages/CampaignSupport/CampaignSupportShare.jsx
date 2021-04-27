@@ -22,7 +22,9 @@ import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSte
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
-import SendFacebookDirectMessageButton from '../../components/Share/SendFacebookDirectMessageButton';
+import SendFacebookDirectMessageButton from '../../components/Share/ShareByFacebookDirectMessageButton';
+import ShareByCopyLink from '../../components/Share/ShareByCopyLink';
+import ShareByEmailButton from '../../components/Share/ShareByEmailButton';
 import ShareOnFacebookButton from '../../components/Share/ShareOnFacebookButton';
 import ShareOnTwitterButton from '../../components/Share/ShareOnTwitterButton';
 
@@ -234,72 +236,95 @@ class CampaignSupportShare extends Component {
                         <SendFacebookDirectMessageButton campaignXWeVoteId={campaignXWeVoteId} />
                       </CampaignSupportDesktopButtonPanel>
                     </CampaignSupportDesktopButtonWrapper>
-                    <CampaignSupportMobileButtonWrapper className="u-show-mobile">
-                      <CampaignSupportMobileButtonPanel>
-                        <SendFacebookDirectMessageButton campaignXWeVoteId={campaignXWeVoteId} mobileMode />
-                      </CampaignSupportMobileButtonPanel>
-                    </CampaignSupportMobileButtonWrapper>
-                    {/* <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet"> */}
-                    {/*  <CampaignSupportDesktopButtonPanel> */}
-                    {/*    <Button */}
-                    {/*      classes={{ root: classes.buttonDesktop }} */}
-                    {/*      color="primary" */}
-                    {/*      id="copyLinkDesktop" */}
-                    {/*      onClick={this.copyLink} */}
-                    {/*      variant="outlined" */}
-                    {/*    > */}
-                    {/*      Copy link */}
-                    {/*    </Button> */}
-                    {/*  </CampaignSupportDesktopButtonPanel> */}
-                    {/* </CampaignSupportDesktopButtonWrapper> */}
-                    {/* <CampaignSupportMobileButtonWrapper className="u-show-mobile"> */}
-                    {/*  <CampaignSupportMobileButtonPanel> */}
-                    {/*    <Button */}
-                    {/*      classes={{ root: classes.buttonDefault }} */}
-                    {/*      color="primary" */}
-                    {/*      id="copyLinkMobile" */}
-                    {/*      onClick={this.copyLink} */}
-                    {/*      variant="outlined" */}
-                    {/*    > */}
-                    {/*      Copy link */}
-                    {/*    </Button> */}
-                    {/*  </CampaignSupportMobileButtonPanel> */}
-                    {/* </CampaignSupportMobileButtonWrapper> */}
-                  </CampaignSupportSection>
-                </CampaignSupportSectionWrapper>
-              ) : (
-                <CampaignSupportSectionWrapper>
-                  <CampaignSupportSection>
-                    <CampaignSupportDesktopButtonWrapper>
-                      <CampaignSupportDesktopButtonPanel>
-                        <PublicOrPrivateSectionHeader>Share publicly. </PublicOrPrivateSectionHeader>
-                        <PublicOrPrivateSectionText>
-                          Share with everyone and make your voice heard.
-                        </PublicOrPrivateSectionText>
-                      </CampaignSupportDesktopButtonPanel>
-                    </CampaignSupportDesktopButtonWrapper>
                     <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                       <CampaignSupportDesktopButtonPanel>
-                        <ShareOnFacebookButton campaignXWeVoteId={campaignXWeVoteId} />
+                        <ShareByEmailButton campaignXWeVoteId={campaignXWeVoteId} />
                       </CampaignSupportDesktopButtonPanel>
                     </CampaignSupportDesktopButtonWrapper>
                     <CampaignSupportMobileButtonWrapper className="u-show-mobile">
                       <CampaignSupportMobileButtonPanel>
-                        <ShareOnFacebookButton campaignXWeVoteId={campaignXWeVoteId} mobileMode />
+                        <ShareByEmailButton campaignXWeVoteId={campaignXWeVoteId} darkButton mobileMode />
                       </CampaignSupportMobileButtonPanel>
                     </CampaignSupportMobileButtonWrapper>
                     <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                       <CampaignSupportDesktopButtonPanel>
-                        <ShareOnTwitterButton campaignXWeVoteId={campaignXWeVoteId} />
+                        <ShareByCopyLink campaignXWeVoteId={campaignXWeVoteId} />
                       </CampaignSupportDesktopButtonPanel>
                     </CampaignSupportDesktopButtonWrapper>
                     <CampaignSupportMobileButtonWrapper className="u-show-mobile">
                       <CampaignSupportMobileButtonPanel>
-                        <ShareOnTwitterButton campaignXWeVoteId={campaignXWeVoteId} mobileMode />
+                        <ShareByCopyLink campaignXWeVoteId={campaignXWeVoteId} mobileMode />
                       </CampaignSupportMobileButtonPanel>
                     </CampaignSupportMobileButtonWrapper>
                   </CampaignSupportSection>
                 </CampaignSupportSectionWrapper>
+              ) : (
+                <>
+                  <CampaignSupportSectionWrapper>
+                    <CampaignSupportSection>
+                      <CampaignSupportDesktopButtonWrapper>
+                        <CampaignSupportDesktopButtonPanel>
+                          <PublicOrPrivateSectionHeader>Share privately. </PublicOrPrivateSectionHeader>
+                          <PublicOrPrivateSectionText>
+                            Share 1-on-1 with friends who share your values.
+                          </PublicOrPrivateSectionText>
+                        </CampaignSupportDesktopButtonPanel>
+                      </CampaignSupportDesktopButtonWrapper>
+                      <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
+                        <CampaignSupportDesktopButtonPanel>
+                          <ShareByEmailButton campaignXWeVoteId={campaignXWeVoteId} darkButton />
+                        </CampaignSupportDesktopButtonPanel>
+                      </CampaignSupportDesktopButtonWrapper>
+                      <CampaignSupportMobileButtonWrapper className="u-show-mobile">
+                        <CampaignSupportMobileButtonPanel>
+                          <ShareByEmailButton campaignXWeVoteId={campaignXWeVoteId} darkButton mobileMode />
+                        </CampaignSupportMobileButtonPanel>
+                      </CampaignSupportMobileButtonWrapper>
+                      <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
+                        <CampaignSupportDesktopButtonPanel>
+                          <ShareByCopyLink campaignXWeVoteId={campaignXWeVoteId} />
+                        </CampaignSupportDesktopButtonPanel>
+                      </CampaignSupportDesktopButtonWrapper>
+                      <CampaignSupportMobileButtonWrapper className="u-show-mobile">
+                        <CampaignSupportMobileButtonPanel>
+                          <ShareByCopyLink campaignXWeVoteId={campaignXWeVoteId} mobileMode />
+                        </CampaignSupportMobileButtonPanel>
+                      </CampaignSupportMobileButtonWrapper>
+                    </CampaignSupportSection>
+                  </CampaignSupportSectionWrapper>
+                  <CampaignSupportSectionWrapper>
+                    <CampaignSupportSection>
+                      <CampaignSupportDesktopButtonWrapper>
+                        <CampaignSupportDesktopButtonPanel>
+                          <PublicOrPrivateSectionHeader>Share publicly. </PublicOrPrivateSectionHeader>
+                          <PublicOrPrivateSectionText>
+                            Share with everyone and make your voice heard.
+                          </PublicOrPrivateSectionText>
+                        </CampaignSupportDesktopButtonPanel>
+                      </CampaignSupportDesktopButtonWrapper>
+                      <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
+                        <CampaignSupportDesktopButtonPanel>
+                          <ShareOnFacebookButton campaignXWeVoteId={campaignXWeVoteId} />
+                        </CampaignSupportDesktopButtonPanel>
+                      </CampaignSupportDesktopButtonWrapper>
+                      <CampaignSupportMobileButtonWrapper className="u-show-mobile">
+                        <CampaignSupportMobileButtonPanel>
+                          <ShareOnFacebookButton campaignXWeVoteId={campaignXWeVoteId} mobileMode />
+                        </CampaignSupportMobileButtonPanel>
+                      </CampaignSupportMobileButtonWrapper>
+                      <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
+                        <CampaignSupportDesktopButtonPanel>
+                          <ShareOnTwitterButton campaignXWeVoteId={campaignXWeVoteId} />
+                        </CampaignSupportDesktopButtonPanel>
+                      </CampaignSupportDesktopButtonWrapper>
+                      <CampaignSupportMobileButtonWrapper className="u-show-mobile">
+                        <CampaignSupportMobileButtonPanel>
+                          <ShareOnTwitterButton campaignXWeVoteId={campaignXWeVoteId} mobileMode />
+                        </CampaignSupportMobileButtonPanel>
+                      </CampaignSupportMobileButtonWrapper>
+                    </CampaignSupportSection>
+                  </CampaignSupportSectionWrapper>
+                </>
               )}
               <CampaignSupportSectionWrapper>
                 <CampaignSupportSection>

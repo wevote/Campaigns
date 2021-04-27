@@ -56,6 +56,7 @@ html {
 }
 
 .material_ui_button_mobile {
+  min-width: 100% !important;
   width: 100% !important;
 }
 
@@ -71,12 +72,30 @@ html {
   color: #4371cc;
 }
 
+.u-link-color--gray {
+  color: #aaa;
+}
+
 .u-link-underline {
   text-decoration: underline;
 }
 
 .u-no-break { /* Replacement for nobr and &nbsp */
   white-space: nowrap;
+}
+
+.u-text-fade-at-end {
+  position: relative;
+}
+
+.u-text-fade-at-end::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100px;
+  height: 1em;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 90%);
 }
 
 /* Hide when 576px or greater

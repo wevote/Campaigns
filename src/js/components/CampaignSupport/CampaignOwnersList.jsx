@@ -184,7 +184,7 @@ const CampaignXOwnerWrapper = styled.span`
 `;
 
 const ColumnFullWidth = styled.div`
-  padding: 8px 12px 0 0;
+  padding: 8px 8px 0 0;
   width: 100%;
 `;
 
@@ -192,7 +192,6 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   margin-left: 0;
-  width: calc(100% + 24px);
 `;
 
 export default withStyles(styles)(CampaignOwnersList);

@@ -22,7 +22,7 @@ class ShareOnTwitterButton extends Component {
   }
 
   componentDidMount () {
-    // console.log('CampaignCardForList componentDidMount');
+    // console.log('ShareOnTwitterButton componentDidMount');
     this.onAppStoreChange();
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.onCampaignStoreChange();
@@ -30,7 +30,7 @@ class ShareOnTwitterButton extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    // console.log('CampaignEndorsementInputField componentDidUpdate');
+    // console.log('ShareOnTwitterButton componentDidUpdate');
     const {
       campaignXWeVoteId: campaignXWeVoteIdPrevious,
     } = prevProps;

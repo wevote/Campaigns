@@ -17,7 +17,7 @@ export function androidTwitterClickHandler (linkToBeShared, quoteForSharingEncod
   cordovaOpenSafariView(twitURL, null, 50);
 }
 
-export function generateQuoteForSharing (campaignTitle, numberOfPoliticians, politicianListSentenceString) {
+export function generateQuoteForSharing (campaignTitle, numberOfPoliticians, politicianListSentenceString, linkToBeShared= '') {
   let quoteForSharing = 'Please join me in voting';
   if (numberOfPoliticians === 1) {
     quoteForSharing += ' for the candidate';
@@ -29,6 +29,9 @@ export function generateQuoteForSharing (campaignTitle, numberOfPoliticians, pol
     quoteForSharing += ` for ${campaignTitle}`;
   }
   quoteForSharing += '. Sign the campaign! ';
+  if (linkToBeShared) {
+    quoteForSharing += ` ${linkToBeShared}`;
+  }
   return quoteForSharing;
 }
 
@@ -49,15 +52,14 @@ function onEmailSendError (error) {
   }
 }
 
-export function cordovaSocialSharingByEmail (subject, linkToBeShared, handleClose) {
+export function cordovaSocialSharingByEmail (subject, messageBody, handleClose = null) {
   close = handleClose;
-  const body = `This is a website I am using to get ready to vote. ${linkToBeShared}`;
-  console.log('cordovaSocialSharingByEmail ', subject, linkToBeShared);
+  console.log('cordovaSocialSharingByEmail ', subject, messageBody);
   // window.plugins.socialsharing.canShareViaEmail((e) => {console.log("canShareViaEmail 1: " + e)}, (e) => {console.log("canShareViaEmail 2: " + e)});
   // const { plugins: { socialsharing: { shareViaEmail } } } = window;
   const soc = window.plugins.socialsharing;
   soc.shareViaEmail(
-    body,               // can contain HTML tags, but support on Android is rather limited:  http://stackoverflow.com/questions/15136480/how-to-send-html-content-with-image-through-android-default-email-client
+    messageBody,               // can contain HTML tags, but support on Android is rather limited:  http://stackoverflow.com/questions/15136480/how-to-send-html-content-with-image-through-android-default-email-client
     subject,
     null,               // TO: must be null or an array
     null,               // CC: must be null or an array
