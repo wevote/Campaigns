@@ -21,7 +21,7 @@ class ShareByCopyLink extends Component {
   }
 
   componentDidMount () {
-    // console.log('Candidate componentDidMount');
+    // console.log('ShareByCopyLink componentDidMount');
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.onAppStoreChange();
     this.onCampaignStoreChange();
@@ -29,7 +29,7 @@ class ShareByCopyLink extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    // console.log('ShareByEmailButton componentDidUpdate');
+    // console.log('ShareByCopyLink componentDidUpdate');
     const {
       campaignXWeVoteId: campaignXWeVoteIdPrevious,
     } = prevProps;
@@ -66,8 +66,6 @@ class ShareByCopyLink extends Component {
   onCampaignStoreChange () {
     const { campaignXWeVoteId } = this.props;
     const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
-
-    // console.log('onCampaignStoreChange politicianListSentenceString:', politicianListSentenceString);
     this.setState({
       campaignX,
     });
@@ -113,7 +111,7 @@ class ShareByCopyLink extends Component {
   render () {
     renderLog('ShareByCopyLink');  // Set LOG_RENDER_EVENTS to log all renders
     const { darkButton, mobileMode, uniqueExternalId } = this.props;
-    const { copyLinkCopied, inPrivateLabelMode } = this.state;
+    const { copyLinkCopied } = this.state;
     const linkToBeShared = this.generateFullCampaignLink();
     return (
       <Wrapper>
