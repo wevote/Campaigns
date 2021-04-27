@@ -5,6 +5,7 @@ import TruncateMarkup from 'react-truncate-markup';
 import { withStyles } from '@material-ui/core/styles';
 import CampaignOwnersList from '../CampaignSupport/CampaignOwnersList';
 import CampaignStore from '../../stores/CampaignStore';
+import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { renderLog } from '../../utils/logging';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import { numberWithCommas } from '../../utils/textFormat';
@@ -14,23 +15,37 @@ class CampaignCardForList extends Component {
     super(props);
     this.state = {
       campaignX: {},
+      numberOfSupportersGoal: 1000,
     };
   }
 
   componentDidMount () {
     // console.log('CampaignCardForList componentDidMount');
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    const { campaignXWeVoteId } = this.props;
-    const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
-    const voterCanEditThisCampaign = CampaignStore.getVoterCanEditThisCampaign(campaignXWeVoteId);
-    this.setState({
-      campaignX,
-      voterCanEditThisCampaign,
-    });
+    this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
+    this.onCampaignStoreChange();
+    this.onCampaignSupporterStoreChange();
+  }
+
+  componentDidUpdate (prevProps) {
+    // console.log('CampaignEndorsementInputField componentDidUpdate');
+    const {
+      campaignXWeVoteId: campaignXWeVoteIdPrevious,
+    } = prevProps;
+    const {
+      campaignXWeVoteId,
+    } = this.props;
+    if (campaignXWeVoteId) {
+      if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
+        this.onCampaignStoreChange();
+        this.onCampaignSupporterStoreChange();
+      }
+    }
   }
 
   componentWillUnmount () {
     this.campaignStoreListener.remove();
+    this.campaignSupporterStoreListener.remove();
   }
 
   onCampaignStoreChange () {
@@ -41,6 +56,16 @@ class CampaignCardForList extends Component {
       campaignX,
       voterCanEditThisCampaign,
     });
+  }
+
+  onCampaignSupporterStoreChange () {
+    const {
+      campaignXWeVoteId,
+    } = this.props;
+    // console.log('CampaignDetailsActionSideBox onCampaignSupporterStoreChange campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
+    if (campaignXWeVoteId) {
+      this.pullCampaignXSupporterVoterEntry(campaignXWeVoteId);
+    }
   }
 
   onCampaignClick = () => {
@@ -85,12 +110,38 @@ class CampaignCardForList extends Component {
     return null;
   }
 
+  pullCampaignXSupporterVoterEntry = (campaignXWeVoteId) => {
+    // console.log('pullCampaignXSupporterVoterEntry campaignXWeVoteId:', campaignXWeVoteId);
+    if (campaignXWeVoteId) {
+      const campaignXSupporterVoterEntry = CampaignSupporterStore.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
+      // console.log('onCampaignSupporterStoreChange campaignXSupporterVoterEntry:', campaignXSupporterVoterEntry);
+      const {
+        campaign_supported: campaignSupported,
+        campaignx_we_vote_id: campaignXWeVoteIdFromCampaignXSupporter,
+      } = campaignXSupporterVoterEntry;
+      // console.log('onCampaignSupporterStoreChange campaignSupported: ', campaignSupported);
+      if (campaignXWeVoteIdFromCampaignXSupporter) {
+        this.setState({
+          campaignSupported,
+        });
+      } else {
+        this.setState({
+          campaignSupported: false,
+        });
+      }
+    } else {
+      this.setState({
+        campaignSupported: false,
+      });
+    }
+  }
+
   render () {
     renderLog('CampaignCardForList');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
       console.log(`CampaignCardForList window.location.href: ${window.location.href}`);
     }
-    const { campaignX, voterCanEditThisCampaign } = this.state;
+    const { campaignSupported, campaignX, numberOfSupportersGoal, voterCanEditThisCampaign } = this.state;
     if (!campaignX) {
       return null;
     }
@@ -118,13 +169,36 @@ class CampaignCardForList extends Component {
                     <CampaignImage src={CampaignPhotoLargeUrl} alt="Campaign" />
                   )}
                 </OneCampaignPhotoWrapperMobile>
-                <SupportersCount>
-                  {numberWithCommas(supportersCount)}
+                <SupportersWrapper>
+                  <SupportersCount>
+                    {numberWithCommas(supportersCount)}
+                    {' '}
+                    {supportersCount === 1 ? 'supporter.' : 'supporters.'}
+                  </SupportersCount>
                   {' '}
-                  {supportersCount === 1 ? 'supporter.' : 'supporters.'}
-                </SupportersCount>
+                  {campaignSupported ? (
+                    <SupportersActionLink>
+                      Thank you for supporting!
+                    </SupportersActionLink>
+                  ) : (
+                    <SupportersActionLink className="u-link-color u-link-underline">
+                      Let&apos;s get to
+                      {' '}
+                      {numberWithCommas(numberOfSupportersGoal)}
+                      !
+                    </SupportersActionLink>
+                  )}
+                </SupportersWrapper>
                 <OneCampaignDescription>
-                  <TruncateMarkup lines={4}>
+                  <TruncateMarkup
+                    lines={4}
+                    ellipsis={(
+                      <span>
+                        {'  '}
+                        <span className="u-link-color u-link-underline">Read more</span>
+                      </span>
+                    )}
+                  >
                     <div>
                       {campaignDescription}
                     </div>
@@ -134,7 +208,7 @@ class CampaignCardForList extends Component {
                   <CampaignOwnersList campaignXWeVoteId={campaignXWeVoteId} compressedMode />
                 </CampaignOwnersWrapper>
               </ClickableDiv>
-              {(inDraftMode || !visibleOnThisSite) && (
+              {(inDraftMode || !visibleOnThisSite || voterCanEditThisCampaign) && (
                 <IndicatorRow>
                   {inDraftMode && (
                     <IndicatorButtonWrapper>
@@ -205,8 +279,9 @@ const CampaignImage = styled.img`
     margin-bottom: 0;
     margin-left: 15px;
     margin-top: 0;
-    min-height: 130px;
-    width: 225px;
+    min-height: 117px;
+    height: 117px;
+    width: 224px;
   }
   @media (max-width: ${({ theme }) => theme.breakpoints.xs}) {
     margin-top: 0;
@@ -294,10 +369,17 @@ const OneCampaignTitle = styled.h1`
   }
 `;
 
-const SupportersCount = styled.div`
-  color: #808080;
-  font-weight: 500 !important;
+const SupportersActionLink = styled.span`
   font-size: 14px;
+`;
+
+const SupportersCount = styled.span`
+  color: #808080;
+  font-weight: 600 !important;
+  font-size: 14px;
+`;
+
+const SupportersWrapper = styled.div`
   margin-bottom: 6px;
 `;
 

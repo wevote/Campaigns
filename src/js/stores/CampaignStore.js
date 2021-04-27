@@ -154,6 +154,10 @@ class CampaignStore extends ReduceStore {
     return arrayContains(campaignXWeVoteId, this.getState().voterOwnedCampaignXWeVoteIds);
   }
 
+  getVoterOwnedCampaignXDicts () {
+    return this.getCampaignXFromListOfWeVoteIds(this.getState().voterOwnedCampaignXWeVoteIds);
+  }
+
   getVoterOwnedCampaignXWeVoteIds () {
     return this.getState().voterOwnedCampaignXWeVoteIds;
   }
@@ -191,6 +195,7 @@ class CampaignStore extends ReduceStore {
           revisedState = { ...revisedState, promotedCampaignXWeVoteIds };
         }
         if (action.res.voter_owned_campaignx_we_vote_ids) {
+          // We want to reset this variable with this incoming value
           voterOwnedCampaignXWeVoteIds = action.res.voter_owned_campaignx_we_vote_ids;
           // revisedState updated with voterOwnedCampaignXWeVoteIds below
         }

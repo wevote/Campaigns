@@ -18,7 +18,7 @@ class SettingsCampaignList extends Component {
     super(props);
     this.state = {
       numberOfCampaignsToDisplay: STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY,
-      voterStartedCampaignList: [],
+      voterOwnedCampaignList: [],
       voterSupportedCampaignList: [],
     };
   }
@@ -34,10 +34,10 @@ class SettingsCampaignList extends Component {
         numberOfCampaignsToDisplay: this.props.startingNumberOfCampaignsToDisplay,
       });
     }
-    const voterStartedCampaignList = CampaignStore.getVoterStartedCampaignXDicts();
+    const voterOwnedCampaignList = CampaignStore.getVoterOwnedCampaignXDicts();
     const voterSupportedCampaignList = CampaignStore.getVoterSupportedCampaignXDicts();
     this.setState({
-      voterStartedCampaignList,
+      voterOwnedCampaignList,
       voterSupportedCampaignList,
     });
   }
@@ -47,10 +47,10 @@ class SettingsCampaignList extends Component {
   }
 
   onCampaignStoreChange () {
-    const voterStartedCampaignList = CampaignStore.getVoterStartedCampaignXDicts();
+    const voterOwnedCampaignList = CampaignStore.getVoterOwnedCampaignXDicts();
     const voterSupportedCampaignList = CampaignStore.getVoterSupportedCampaignXDicts();
     this.setState({
-      voterStartedCampaignList,
+      voterOwnedCampaignList,
       voterSupportedCampaignList,
     });
   }
@@ -66,7 +66,7 @@ class SettingsCampaignList extends Component {
   render () {
     renderLog('SettingsCampaignList');  // Set LOG_RENDER_EVENTS to log all renders
     // console.log('SettingsCampaignList render');
-    const { numberOfCampaignsToDisplay, voterStartedCampaignList, voterSupportedCampaignList } = this.state;
+    const { numberOfCampaignsToDisplay, voterOwnedCampaignList, voterSupportedCampaignList } = this.state;
     const { location: { pathname } } = window;
     let showSupportedCampaigns = false;
     if (startsWith('/profile/supported', pathname)) {
@@ -109,7 +109,7 @@ class SettingsCampaignList extends Component {
           </div>
         ) : (
           <div>
-            {voterStartedCampaignList.map((oneCampaign) => (
+            {voterOwnedCampaignList.map((oneCampaign) => (
               <div key={`oneCampaignItemStarted-${oneCampaign.campaignx_we_vote_id}`}>
                 <CampaignCardForList
                   campaignXWeVoteId={oneCampaign.campaignx_we_vote_id}

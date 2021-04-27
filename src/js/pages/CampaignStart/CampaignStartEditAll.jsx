@@ -236,10 +236,13 @@ class CampaignStartEditAll extends Component {
                     campaignXWeVoteId={campaignXWeVoteId}
                     editExistingCampaign={editExistingCampaign}
                   />
-                  <CampaignPhotoUpload
-                    campaignXWeVoteId={campaignXWeVoteId}
-                    editExistingCampaign={editExistingCampaign}
-                  />
+                  <PhotoUploadWrapper>
+                    Try to upload a photo that is 1200 x 628 pixels or larger. We can accept one photo up to 5 megabytes in size.
+                    <CampaignPhotoUpload
+                      campaignXWeVoteId={campaignXWeVoteId}
+                      editExistingCampaign={editExistingCampaign}
+                    />
+                  </PhotoUploadWrapper>
                   <CampaignDescriptionInputField
                     campaignXWeVoteId={campaignXWeVoteId}
                     editExistingCampaign={editExistingCampaign}
@@ -335,6 +338,10 @@ const PageWrapper = styled.div`
     // Switch to 15px left/right margin when auto is too small
     margin: 0 15px;
   }
+`;
+
+const PhotoUploadWrapper = styled.div`
+  margin-top: 32px;
 `;
 
 export default withStyles(styles)(CampaignStartEditAll);
