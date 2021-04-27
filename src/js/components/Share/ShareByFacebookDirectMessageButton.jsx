@@ -11,7 +11,7 @@ import { androidFacebookClickHandler, generateQuoteForSharing } from './shareBut
 import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
 import webAppConfig from '../../config';
 
-class SendFacebookDirectMessageButton extends Component {
+class ShareByFacebookDirectMessageButton extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -23,7 +23,7 @@ class SendFacebookDirectMessageButton extends Component {
   }
 
   componentDidMount () {
-    // console.log('CampaignCardForList componentDidMount');
+    // console.log('ShareByFacebookDirectMessageButton componentDidMount');
     this.onAppStoreChange();
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.onCampaignStoreChange();
@@ -31,7 +31,7 @@ class SendFacebookDirectMessageButton extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    // console.log('CampaignEndorsementInputField componentDidUpdate');
+    // console.log('ShareByFacebookDirectMessageButton componentDidUpdate');
     const {
       campaignXWeVoteId: campaignXWeVoteIdPrevious,
     } = prevProps;
@@ -100,7 +100,7 @@ class SendFacebookDirectMessageButton extends Component {
   }
 
   render () {
-    renderLog('SendFacebookDirectMessageButton');  // Set LOG_RENDER_EVENTS to log all renders
+    renderLog('ShareByFacebookDirectMessageButton');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
       console.log(`SendFacebookDirectMessageButton window.location.href: ${window.location.href}`);
     }
@@ -146,7 +146,7 @@ class SendFacebookDirectMessageButton extends Component {
     );
   }
 }
-SendFacebookDirectMessageButton.propTypes = {
+ShareByFacebookDirectMessageButton.propTypes = {
   campaignXWeVoteId: PropTypes.string,
   mobileMode: PropTypes.bool,
 };
@@ -159,4 +159,4 @@ const Wrapper = styled.div`
   display: block;
 `;
 
-export default withStyles(styles)(SendFacebookDirectMessageButton);
+export default withStyles(styles)(ShareByFacebookDirectMessageButton);

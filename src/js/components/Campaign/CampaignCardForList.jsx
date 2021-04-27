@@ -194,7 +194,7 @@ class CampaignCardForList extends Component {
                     lines={4}
                     ellipsis={(
                       <span>
-                        {'  '}
+                        <span className="u-text-fade-at-end">&nbsp;</span>
                         <span className="u-link-color u-link-underline">Read more</span>
                       </span>
                     )}
@@ -273,13 +273,10 @@ const CampaignImage = styled.img`
   cursor: pointer;
   margin-bottom: 8px;
   margin-top: 8px;
-  min-height: 175px;
-  width: 100%;
   @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
     margin-bottom: 0;
     margin-left: 15px;
     margin-top: 0;
-    min-height: 117px;
     height: 117px;
     width: 224px;
   }

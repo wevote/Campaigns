@@ -41,7 +41,7 @@ const CampaignSupportMobileButtonWrapper = styled.div`
 `;
 
 const CampaignSupportSection = styled.div`
-  margin-bottom: 60px !important;
+  margin-bottom: 20px !important;
   width: 100%;
 `;
 

@@ -30,10 +30,7 @@ class HomeCampaignList extends Component {
         numberOfCampaignsToDisplay: this.props.startingNumberOfCampaignsToDisplay,
       });
     }
-    const promotedCampaignList = CampaignStore.getPromotedCampaignXDicts();
-    this.setState({
-      promotedCampaignList,
-    });
+    this.onCampaignStoreChange();
   }
 
   componentWillUnmount () {
@@ -46,11 +43,14 @@ class HomeCampaignList extends Component {
   }
 
   onCampaignStoreChange () {
-    const promotedCampaignList = CampaignStore.getPromotedCampaignXDicts();
+    const promotedCampaignListUnsorted = CampaignStore.getPromotedCampaignXDicts();
+    const promotedCampaignList = promotedCampaignListUnsorted.sort(this.orderBySupportersCount);
     this.setState({
       promotedCampaignList,
     });
   }
+
+  orderBySupportersCount = (firstCampaign, secondCampaign) => secondCampaign.supporters_count - firstCampaign.supporters_count;
 
   increaseNumberOfCampaignsToDisplay = () => {
     let { numberOfCampaignsToDisplay } = this.state;

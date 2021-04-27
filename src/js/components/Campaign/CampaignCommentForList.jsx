@@ -17,6 +17,7 @@ class CampaignCommentForList extends Component {
     super(props);
     this.state = {
       campaignXSupporter: {},
+      showFullSupporterEndorsement: false,
     };
   }
 
@@ -44,13 +45,19 @@ class CampaignCommentForList extends Component {
     });
   }
 
+  onShowFullSupporterEndorsement = () => {
+    this.setState({
+      showFullSupporterEndorsement: true,
+    });
+  }
+
   render () {
     renderLog('CampaignCommentForList');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
       console.log(`CampaignCommentForList window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
-    const { campaignXSupporter } = this.state;
+    const { campaignXSupporter, showFullSupporterEndorsement } = this.state;
     if (!campaignXSupporter || !('id' in campaignXSupporter)) {
       return null;
     }
@@ -82,11 +89,30 @@ class CampaignCommentForList extends Component {
               </CommentVoterPhotoWrapper>
               <CommentTextWrapper>
                 <Comment>
-                  <TruncateMarkup lines={4}>
+                  {showFullSupporterEndorsement ? (
                     <div>
                       {supporterEndorsement}
                     </div>
-                  </TruncateMarkup>
+                  ) : (
+                    <TruncateMarkup
+                      lines={4}
+                      ellipsis={(
+                        <span>
+                          <span className="u-text-fade-at-end">&nbsp;</span>
+                          <span
+                            className="u-cursor--pointer u-link-underline u-link-color--gray"
+                            onClick={this.onShowFullSupporterEndorsement}
+                          >
+                            Read more
+                          </span>
+                        </span>
+                      )}
+                    >
+                      <div>
+                        {supporterEndorsement}
+                      </div>
+                    </TruncateMarkup>
+                  )}
                 </Comment>
                 <CommentNameWrapper>
                   {!stringContains('Voter-', supporterName) && (
