@@ -17,7 +17,7 @@ import {
   SkipForNowButtonPanel, SkipForNowButtonWrapper,
 } from '../../components/Style/CampaignSupportStyles';
 import CampaignStore from '../../stores/CampaignStore';
-import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiers } from '../../utils/campaignUtils';
 import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSteps';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
@@ -77,8 +77,8 @@ class CampaignSupportShare extends Component {
         campaignXWeVoteId: campaignXWeVoteIdFromParams,
       });
     }
-    // Take the "calculated" identifiers and retrieve if missing
-    retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
+    // Take the "calculated" identifiers and retrieve so we have the voter's comment
+    retrieveCampaignXFromIdentifiers(campaignSEOFriendlyPath, campaignXWeVoteId);
   }
 
   componentDidUpdate (prevProps) {

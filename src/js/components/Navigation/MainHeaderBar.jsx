@@ -121,7 +121,7 @@ export default function MainHeaderBar (displayHeader) {
   }
 
   const inPrivateLabelMode = AppStore.getHideWeVoteLogo(); // Using this setting temporarily
-  const showStartACampaign = true; // Allow people to start campaigns in case the site owner approves them
+  const showStartACampaign = !(inPrivateLabelMode);
   const showMembership = !(inPrivateLabelMode);
 
   renderLog('MainHeaderBar');

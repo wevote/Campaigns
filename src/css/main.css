@@ -71,6 +71,10 @@ html {
   color: #4371cc;
 }
 
+.u-link-underline {
+  text-decoration: underline;
+}
+
 .u-no-break { /* Replacement for nobr and &nbsp */
   white-space: nowrap;
 }

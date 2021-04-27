@@ -2,12 +2,22 @@ import React, { Component } from 'react';
 import { DropzoneArea } from 'material-ui-dropzone';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
+import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles';
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import CampaignStore from '../../stores/CampaignStore';
 import isMobileScreenSize from '../../utils/isMobileScreenSize';
 import { renderLog } from '../../utils/logging';
+
+const muiTheme = createMuiTheme({
+  overrides: {
+    MuiDropzonePreviewList: {
+      image: {
+        maxWidth: 'auto',
+      },
+    },
+  },
+});
 
 class CampaignPhotoUpload extends Component {
   constructor (props) {
@@ -92,15 +102,20 @@ class CampaignPhotoUpload extends Component {
               {campaignPhotoLargeUrl && (
                 <CampaignImage src={campaignPhotoLargeUrl} alt="Campaign" />
               )}
-              <DropzoneArea
-                acceptedFiles={['image/*']}
-                classes={{ icon: classes.dropzoneIcon, root: classes.dropzoneRoot }}
-                dropzoneText={dropzoneText}
-                filesLimit={1}
-                initialFiles={campaignPhotoLargeUrl ? [campaignPhotoLargeUrl] : undefined}
-                maxFileSize={6000000}
-                onChange={this.handleDrop}
-              />
+              <MuiThemeProvider theme={muiTheme}>
+                <DropzoneArea
+                  acceptedFiles={['image/*']}
+                  classes={{
+                    icon: classes.dropzoneIcon,
+                    root: classes.dropzoneRoot,
+                  }}
+                  dropzoneText={dropzoneText}
+                  filesLimit={1}
+                  initialFiles={campaignPhotoLargeUrl ? [campaignPhotoLargeUrl] : undefined}
+                  maxFileSize={6000000}
+                  onChange={this.handleDrop}
+                />
+              </MuiThemeProvider>
             </ColumnFullWidth>
           </Wrapper>
         </form>
