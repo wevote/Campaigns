@@ -152,7 +152,7 @@ class App extends Component {
                   <Route exact path="/"><HomePage /></Route>
                   <Route path="*" component={PageNotFound} />
                 </Switch>
-                <DelayedLoad waitBeforeShow={1000}>
+                <DelayedLoad waitBeforeShow={4000}>
                   <Suspense fallback={<span>&nbsp;</span>}>
                     <MainFooter displayFooter={doShowFooter} />
                   </Suspense>
