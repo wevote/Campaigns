@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import TruncateMarkup from 'react-truncate-markup';
 import { withStyles } from '@material-ui/core/styles';
 import CampaignOwnersList from '../CampaignSupport/CampaignOwnersList';
@@ -165,8 +165,14 @@ class CampaignCardForList extends Component {
                   {campaignTitle}
                 </OneCampaignTitle>
                 <OneCampaignPhotoWrapperMobile className="u-show-mobile">
-                  {CampaignPhotoLargeUrl && (
-                    <CampaignImage src={CampaignPhotoLargeUrl} alt="Campaign" />
+                  {CampaignPhotoLargeUrl ? (
+                    <CampaignImageMobile src={CampaignPhotoLargeUrl} alt="Campaign" />
+                  ) : (
+                    <CampaignImageMobilePlaceholder>
+                      <CampaignImagePlaceholderText>
+                        No image provided
+                      </CampaignImagePlaceholderText>
+                    </CampaignImageMobilePlaceholder>
                   )}
                 </OneCampaignPhotoWrapperMobile>
                 <SupportersWrapper>
@@ -245,8 +251,14 @@ class CampaignCardForList extends Component {
               )}
             </OneCampaignTextColumn>
             <OneCampaignPhotoDesktopColumn className="u-show-desktop-tablet" onClick={this.onCampaignClick}>
-              {CampaignPhotoMediumUrl && (
-                <CampaignImage src={CampaignPhotoMediumUrl} alt="Campaign" />
+              {CampaignPhotoMediumUrl ? (
+                <CampaignImageDesktop src={CampaignPhotoMediumUrl} alt="Campaign" />
+              ) : (
+                <CampaignImageDesktopPlaceholder>
+                  <CampaignImagePlaceholderText>
+                    No image provided
+                  </CampaignImagePlaceholderText>
+                </CampaignImageDesktopPlaceholder>
               )}
             </OneCampaignPhotoDesktopColumn>
           </OneCampaignInnerWrapper>
@@ -268,23 +280,48 @@ const styles = (theme) => ({
   },
 });
 
-const CampaignImage = styled.img`
-  border-radius: 5px;
+const CampaignImageDesktopSharedStyles = css`
   cursor: pointer;
-  margin-bottom: 8px;
-  margin-top: 8px;
-  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
-    margin-bottom: 0;
-    margin-left: 15px;
-    margin-top: 0;
-    height: 117px;
-    width: 224px;
-  }
-  @media (max-width: ${({ theme }) => theme.breakpoints.xs}) {
-    margin-top: 0;
-    min-height: auto;
-    width: 100%;
-  }
+  margin: 0;
+  height: 117px;
+  width: 224px;
+`;
+
+const CampaignImageDesktopPlaceholder = styled.div`
+  background-color: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  ${CampaignImageDesktopSharedStyles}
+`;
+
+const CampaignImageDesktop = styled.img`
+  border-radius: 5px;
+  ${CampaignImageDesktopSharedStyles}
+`;
+
+const CampaignImageMobileSharedStyles = css`
+  cursor: pointer;
+  margin: 0;
+  width: 100%;
+`;
+
+const CampaignImageMobilePlaceholder = styled.div`
+  background-color: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  ${CampaignImageMobileSharedStyles}
+`;
+
+const CampaignImagePlaceholderText = styled.div`
+  color: #ccc;
+`;
+
+const CampaignImageMobile = styled.img`
+  border-radius: 5px;
+  ${CampaignImageMobileSharedStyles}
 `;
 
 const CampaignOwnersWrapper = styled.div`
@@ -349,9 +386,23 @@ const OneCampaignOuterWrapper = styled.div`
 `;
 
 const OneCampaignPhotoDesktopColumn = styled.div`
+  margin-bottom: 0;
+  margin-left: 15px;
+  margin-top: 0;
+  height: 117px;
+  width: 224px;
 `;
 
 const OneCampaignPhotoWrapperMobile = styled.div`
+  cursor: pointer;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  min-height: 150px;
+  @media (max-width: ${({ theme }) => theme.breakpoints.xs}) {
+    margin-top: 0;
+    min-height: auto;
+    width: 100%;
+  }
 `;
 
 const OneCampaignTextColumn = styled.div`
@@ -362,7 +413,7 @@ const OneCampaignTitle = styled.h1`
   font-size: 18px;
   margin: 0;
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    margin-bottom: 4px;;
+    margin-bottom: 4px;
   }
 `;
 
