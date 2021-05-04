@@ -201,7 +201,10 @@ class CampaignDetailsActionSideBox extends Component {
                 <Suspense fallback={<span>&nbsp;</span>}>
                   <VisibleToPublicCheckbox campaignXWeVoteId={campaignXWeVoteId} />
                 </Suspense>
-                <SupportButton functionToUseWhenProfileComplete={this.props.functionToUseWhenProfileComplete} />
+                <SupportButton
+                  campaignXWeVoteId={campaignXWeVoteId}
+                  functionToUseWhenProfileComplete={this.props.functionToUseWhenProfileComplete}
+                />
               </ProfileAlreadyComplete>
             ) : (
               <CompleteYourProfileWrapper>

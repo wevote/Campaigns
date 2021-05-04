@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { FacebookMessengerShareButton } from 'react-share';
-import AppStore from '../../stores/AppStore';
 import CampaignStore from '../../stores/CampaignStore';
 import { isAndroid, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
@@ -16,7 +15,6 @@ class ShareByFacebookDirectMessageButton extends Component {
     super(props);
     this.state = {
       campaignX: {},
-      inPrivateLabelMode: false,
       numberOfPoliticians: 0,
       politicianListSentenceString: '',
     };
@@ -24,8 +22,6 @@ class ShareByFacebookDirectMessageButton extends Component {
 
   componentDidMount () {
     // console.log('ShareByFacebookDirectMessageButton componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
   }
@@ -46,15 +42,7 @@ class ShareByFacebookDirectMessageButton extends Component {
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
     this.campaignStoreListener.remove();
-  }
-
-  onAppStoreChange () {
-    const inPrivateLabelMode = AppStore.inPrivateLabelMode();
-    this.setState({
-      inPrivateLabelMode,
-    });
   }
 
   onCampaignStoreChange () {
@@ -108,7 +96,7 @@ class ShareByFacebookDirectMessageButton extends Component {
       return null;
     }
     const { mobileMode } = this.props;
-    const { campaignX, inPrivateLabelMode, numberOfPoliticians, politicianListSentenceString } = this.state;
+    const { campaignX, numberOfPoliticians, politicianListSentenceString } = this.state;
     const {
       campaign_title: campaignTitle,
     } = campaignX;

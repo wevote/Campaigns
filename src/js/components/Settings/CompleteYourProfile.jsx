@@ -5,6 +5,7 @@ import { withStyles, withTheme } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import AppActions from '../../actions/AppActions';
 import AppStore from '../../stores/AppStore';
+import CampaignStore from '../../stores/CampaignStore';
 import initializejQuery from '../../utils/initializejQuery';
 import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
 import { renderLog } from '../../utils/logging';
@@ -27,8 +28,25 @@ class CompleteYourProfile extends Component {
 
   componentDidMount () {
     this.voterFirstRetrieve();
+    this.onCampaignStoreChange();
+    this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.onVoterStoreChange();
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
+  }
+
+  componentDidUpdate (prevProps) {
+    // console.log('CampaignDetailsActionSideBox componentDidUpdate');
+    const {
+      campaignXWeVoteId: campaignXWeVoteIdPrevious,
+    } = prevProps;
+    const {
+      campaignXWeVoteId,
+    } = this.props;
+    if (campaignXWeVoteId) {
+      if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
+        this.onCampaignStoreChange();
+      }
+    }
   }
 
   componentDidCatch (error, info) {
@@ -38,6 +56,7 @@ class CompleteYourProfile extends Component {
 
   componentWillUnmount () {
     // console.log('CompleteYourProfile componentWillUnmount');
+    this.campaignStoreListener.remove();
     this.voterStoreListener.remove();
     if (this.closeVerifyModalTimer) {
       clearTimeout(this.closeVerifyModalTimer);
@@ -54,6 +73,16 @@ class CompleteYourProfile extends Component {
     console.error('Error caught in CompleteYourProfile: ', error);
     // Update state so the next render will show the fallback UI, We should have a "Oh snap" page
     return { hasError: true };
+  }
+
+  onCampaignStoreChange () {
+    const { campaignXWeVoteId } = this.props;
+    if (campaignXWeVoteId) {
+      const voterCanVoteForPoliticianInCampaign = CampaignStore.getVoterCanVoteForPoliticianInCampaign(campaignXWeVoteId);
+      this.setState({
+        voterCanVoteForPoliticianInCampaign,
+      });
+    }
   }
 
   onVoterStoreChange () {
@@ -201,7 +230,7 @@ class CompleteYourProfile extends Component {
     } = this.props;
 
     const {
-      showVerifyModal, voterWeVoteId, voterEmailMissing,
+      showVerifyModal, voterWeVoteId, voterCanVoteForPoliticianInCampaign, voterEmailMissing,
       voterFirstNameMissing, voterLastNameMissing, voterEmailQueuedToSaveLocal,
     } = this.state;
     if (!voterWeVoteId) {
@@ -219,10 +248,18 @@ class CompleteYourProfile extends Component {
       buttonText = 'Continue';
       introductionText = <span>Let people you know see you, so they can feel safe supporting your campaign.</span>;
     } else if (supportCampaign) {
-      buttonText = 'Support with my vote';
+      if (voterCanVoteForPoliticianInCampaign) {
+        buttonText = 'Support with my vote';
+      } else {
+        buttonText = 'I support this campaign';
+      }
       introductionText = <span>Leading up to election day, WeVote.US will remind you to vote for all of the candidates you support. We keep your email secure and confidential.</span>;
     } else if (supportCampaignOnCampaignHome) {
-      buttonText = 'Support with my vote';
+      if (voterCanVoteForPoliticianInCampaign) {
+        buttonText = 'Support with my vote';
+      } else {
+        buttonText = 'I support this campaign';
+      }
       outerMarginsOff = true;
     }
     return (

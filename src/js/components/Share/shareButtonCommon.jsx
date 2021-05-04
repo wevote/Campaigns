@@ -17,7 +17,7 @@ export function androidTwitterClickHandler (linkToBeShared, quoteForSharingEncod
   cordovaOpenSafariView(twitURL, null, 50);
 }
 
-export function generateQuoteForSharing (campaignTitle, numberOfPoliticians, politicianListSentenceString, linkToBeShared= '') {
+export function generateQuoteForSharing (campaignTitle, numberOfPoliticians, politicianListSentenceString, linkToBeShared = '') {
   let quoteForSharing = 'Please join me in voting';
   if (numberOfPoliticians === 1) {
     quoteForSharing += ' for the candidate';
