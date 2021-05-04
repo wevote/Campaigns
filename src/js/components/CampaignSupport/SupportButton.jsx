@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AppActions from '../../actions/AppActions';
+import CampaignStore from '../../stores/CampaignStore';
 import { isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 import VoterStore from '../../stores/VoterStore';
@@ -19,13 +20,41 @@ class SupportButton extends Component {
   }
 
   componentDidMount () {
+    this.onCampaignStoreChange();
+    this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.onVoterStoreChange();
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
   }
 
+  componentDidUpdate (prevProps) {
+    // console.log('CampaignDetailsActionSideBox componentDidUpdate');
+    const {
+      campaignXWeVoteId: campaignXWeVoteIdPrevious,
+    } = prevProps;
+    const {
+      campaignXWeVoteId,
+    } = this.props;
+    if (campaignXWeVoteId) {
+      if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
+        this.onCampaignStoreChange();
+      }
+    }
+  }
+
   componentWillUnmount () {
     // console.log('CompleteYourProfile componentWillUnmount');
+    this.campaignStoreListener.remove();
     this.voterStoreListener.remove();
+  }
+
+  onCampaignStoreChange () {
+    const { campaignXWeVoteId } = this.props;
+    if (campaignXWeVoteId) {
+      const voterCanVoteForPoliticianInCampaign = CampaignStore.getVoterCanVoteForPoliticianInCampaign(campaignXWeVoteId);
+      this.setState({
+        voterCanVoteForPoliticianInCampaign,
+      });
+    }
   }
 
   onVoterStoreChange () {
@@ -57,6 +86,7 @@ class SupportButton extends Component {
       console.log(`SupportButton window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
+    const { voterCanVoteForPoliticianInCampaign } = this.state;
     const hideFooterBehindModal = false;
     const supportButtonClasses = classes.buttonDefault; // isWebApp() ? classes.buttonDefault : classes.buttonDefaultCordova;
     return (
@@ -72,7 +102,15 @@ class SupportButton extends Component {
               onClick={this.submitSupportButtonDesktop} // () =>
               variant="contained"
             >
-              Support with my vote
+              {voterCanVoteForPoliticianInCampaign ? (
+                <span>
+                  Support with my vote
+                </span>
+              ) : (
+                <span>
+                  I support this campaign
+                </span>
+              )}
             </Button>
           </ButtonPanel>
         </Wrapper>
@@ -81,6 +119,7 @@ class SupportButton extends Component {
   }
 }
 SupportButton.propTypes = {
+  campaignXWeVoteId: PropTypes.string,
   classes: PropTypes.object,
   functionToUseWhenProfileComplete: PropTypes.func.isRequired,
 };

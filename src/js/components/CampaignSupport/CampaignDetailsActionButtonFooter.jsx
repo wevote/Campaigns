@@ -43,13 +43,13 @@ class CampaignDetailsActionButtonFooter extends Component {
     } = this.props;
     if (campaignXWeVoteId) {
       if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
-        this.pullCampaignXSupporterVoterEntry(campaignXWeVoteId);
+        this.onCampaignOrCampaignSupporterChange(campaignXWeVoteId);
       }
     } else if (campaignSEOFriendlyPath) {
       if (campaignSEOFriendlyPath !== campaignSEOFriendlyPathPrevious) {
         const campaignXWeVoteIdCalculated = CampaignStore.getCampaignXWeVoteIdFromCampaignSEOFriendlyPath(campaignSEOFriendlyPath);
         // console.log('campaignXWeVoteIdCalculated:', campaignXWeVoteIdCalculated);
-        this.pullCampaignXSupporterVoterEntry(campaignXWeVoteIdCalculated);
+        this.onCampaignOrCampaignSupporterChange(campaignXWeVoteIdCalculated);
       }
     }
   }
@@ -84,10 +84,10 @@ class CampaignDetailsActionButtonFooter extends Component {
     } = this.props;
     // console.log('CampaignDetailsActionButtonFooter onCampaignSupporterStoreChange campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
     if (campaignXWeVoteId) {
-      this.pullCampaignXSupporterVoterEntry(campaignXWeVoteId);
+      this.onCampaignOrCampaignSupporterChange(campaignXWeVoteId);
     } else if (campaignSEOFriendlyPath) {
       const campaignXWeVoteIdCalculated = CampaignStore.getCampaignXWeVoteIdFromCampaignSEOFriendlyPath(campaignSEOFriendlyPath);
-      this.pullCampaignXSupporterVoterEntry(campaignXWeVoteIdCalculated);
+      this.onCampaignOrCampaignSupporterChange(campaignXWeVoteIdCalculated);
     }
   }
 
@@ -106,8 +106,8 @@ class CampaignDetailsActionButtonFooter extends Component {
     });
   }
 
-  pullCampaignXSupporterVoterEntry = (campaignXWeVoteId) => {
-    // console.log('pullCampaignXSupporterVoterEntry campaignXWeVoteId:', campaignXWeVoteId);
+  onCampaignOrCampaignSupporterChange = (campaignXWeVoteId) => {
+    // console.log('onCampaignOrCampaignSupporterChange campaignXWeVoteId:', campaignXWeVoteId);
     if (campaignXWeVoteId) {
       const campaignXSupporterVoterEntry = CampaignSupporterStore.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
       // console.log('onCampaignSupporterStoreChange campaignXSupporterVoterEntry:', campaignXSupporterVoterEntry);
@@ -125,9 +125,14 @@ class CampaignDetailsActionButtonFooter extends Component {
           campaignSupported: false,
         });
       }
+      const voterCanVoteForPoliticianInCampaign = CampaignStore.getVoterCanVoteForPoliticianInCampaign(campaignXWeVoteId);
+      this.setState({
+        voterCanVoteForPoliticianInCampaign,
+      });
     } else {
       this.setState({
         campaignSupported: false,
+        voterCanVoteForPoliticianInCampaign: false,
       });
     }
   }
@@ -165,8 +170,9 @@ class CampaignDetailsActionButtonFooter extends Component {
     }
 
     const {
-      campaignSupported, voterWeVoteId,
+      campaignSupported, voterCanVoteForPoliticianInCampaign, voterWeVoteId,
     } = this.state;
+    // console.log('voterCanVoteForPoliticianInCampaign: ', voterCanVoteForPoliticianInCampaign);
     if (!voterWeVoteId) {
       // console.log('CampaignDetailsActionButtonFooter render voter NOT found');
       return <div className="undefined-props" />;
@@ -195,7 +201,15 @@ class CampaignDetailsActionButtonFooter extends Component {
               onClick={this.submitSupportButtonMobile}
               variant="contained"
             >
-              Support with my vote
+              {voterCanVoteForPoliticianInCampaign ? (
+                <span>
+                  Support with my vote
+                </span>
+              ) : (
+                <span>
+                  I support this campaign
+                </span>
+              )}
             </Button>
           )}
         </ButtonPanel>

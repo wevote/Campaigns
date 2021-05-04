@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { EmailShareButton } from 'react-share';
-import AppStore from '../../stores/AppStore';
 import CampaignStore from '../../stores/CampaignStore';
 import { isAndroid, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
@@ -18,7 +17,6 @@ class ShareByEmailButton extends Component {
     super(props);
     this.state = {
       campaignX: {},
-      inPrivateLabelMode: false,
       numberOfPoliticians: 0,
       politicianListSentenceString: '',
     };
@@ -26,8 +24,6 @@ class ShareByEmailButton extends Component {
 
   componentDidMount () {
     // console.log('ShareByEmailButton componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
   }
@@ -48,15 +44,7 @@ class ShareByEmailButton extends Component {
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
     this.campaignStoreListener.remove();
-  }
-
-  onAppStoreChange () {
-    const inPrivateLabelMode = AppStore.inPrivateLabelMode();
-    this.setState({
-      inPrivateLabelMode,
-    });
   }
 
   onCampaignStoreChange () {
@@ -108,7 +96,7 @@ class ShareByEmailButton extends Component {
       console.log(`ShareByEmailButton window.location.href: ${window.location.href}`);
     }
     const { darkButton, mobileMode } = this.props;
-    const { campaignX, inPrivateLabelMode, numberOfPoliticians, politicianListSentenceString } = this.state;
+    const { campaignX, numberOfPoliticians, politicianListSentenceString } = this.state;
     const {
       campaign_title: campaignTitle,
     } = campaignX;

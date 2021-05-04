@@ -78,17 +78,6 @@ class ShareByCopyLink extends Component {
     }
   }
 
-  copyLink () {
-    // console.log('ShareByCopyLink copyLink');
-    openSnackbar({ message: 'Copied!' });
-    this.setState({
-      copyLinkCopied: true,
-    });
-    if (this.props.onClickFunction) {
-      this.props.onClickFunction();
-    }
-  }
-
   generateFullCampaignLink = () => {
     const { hostname } = window.location;
     const domainAddress = `https://${hostname}`;
@@ -105,6 +94,17 @@ class ShareByCopyLink extends Component {
       return `${domainAddress}/c/${SEOFriendlyPath}`;
     } else {
       return `${domainAddress}/id/${campaignXWeVoteId}`;
+    }
+  }
+
+  copyLink () {
+    // console.log('ShareByCopyLink copyLink');
+    openSnackbar({ message: 'Copied!' });
+    this.setState({
+      copyLinkCopied: true,
+    });
+    if (this.props.onClickFunction) {
+      this.props.onClickFunction();
     }
   }
 
