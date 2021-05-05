@@ -18,10 +18,10 @@ import { renderLog } from '../utils/logging';
 import returnFirstXWords from '../utils/returnFirstXWords';
 
 const CampaignCommentsList = React.lazy(() => import('../components/Campaign/CampaignCommentsList'));
-const CampaignDetailsActionButtonFooter = React.lazy(() => import('../components/CampaignSupport/CampaignDetailsActionButtonFooter'));
 const CampaignDetailsActionSideBox = React.lazy(() => import('../components/CampaignSupport/CampaignDetailsActionSideBox'));
 const CampaignRetrieveController = React.lazy(() => import('../components/Campaign/CampaignRetrieveController'));
 const CampaignSupportThermometer = React.lazy(() => import('../components/CampaignSupport/CampaignSupportThermometer'));
+const SupportButtonBeforeCompletionScreen = React.lazy(() => import('../components/CampaignSupport/SupportButtonBeforeCompletionScreen'));
 
 
 class CampaignDetailsPage extends Component {
@@ -336,12 +336,16 @@ class CampaignDetailsPage extends Component {
           </DetailsSectionDesktopTablet>
         </PageWrapper>
         <SupportButtonFooterWrapper className="u-show-mobile">
-          <CampaignDetailsActionButtonFooter
-            campaignSEOFriendlyPath={campaignSEOFriendlyPath}
-            campaignXWeVoteId={campaignXWeVoteId}
-            functionToUseToKeepHelping={this.functionToUseToKeepHelping}
-            functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
-          />
+          <SupportButtonPanel>
+            <Suspense fallback={<span>&nbsp;</span>}>
+              <SupportButtonBeforeCompletionScreen
+                campaignSEOFriendlyPath={campaignSEOFriendlyPath}
+                campaignXWeVoteId={campaignXWeVoteId}
+                functionToUseToKeepHelping={this.functionToUseToKeepHelping}
+                functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
+              />
+            </Suspense>
+          </SupportButtonPanel>
         </SupportButtonFooterWrapper>
         <CompleteYourProfileModalController
           campaignXWeVoteId={campaignXWeVoteId}
@@ -539,6 +543,16 @@ const PageWrapper = styled.div`
 `;
 
 const SupportButtonFooterWrapper = styled.div`
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  display: block;
+`;
+
+const SupportButtonPanel = styled.div`
+  background-color: #fff;
+  border-top: 1px solid #ddd;
+  padding: 10px;
 `;
 
 export default withStyles(styles)(CampaignDetailsPage);

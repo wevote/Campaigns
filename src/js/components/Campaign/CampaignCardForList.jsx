@@ -1,14 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import TruncateMarkup from 'react-truncate-markup';
 import { withStyles } from '@material-ui/core/styles';
 import CampaignOwnersList from '../CampaignSupport/CampaignOwnersList';
 import CampaignStore from '../../stores/CampaignStore';
+import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { renderLog } from '../../utils/logging';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import initializejQuery from '../../utils/initializejQuery';
 import { numberWithCommas } from '../../utils/textFormat';
+
+const SupportButtonBeforeCompletionScreen = React.lazy(() => import('../CampaignSupport/SupportButtonBeforeCompletionScreen'));
 
 class CampaignCardForList extends Component {
   constructor (props) {
@@ -16,7 +20,18 @@ class CampaignCardForList extends Component {
     this.state = {
       campaignX: {},
       numberOfSupportersGoal: 1000,
+      payToPromoteStepCompleted: false,
+      payToPromoteStepTurnedOn: false,
+      sharingStepCompleted: false,
+      step2Completed: false,
     };
+    this.functionToUseToKeepHelping = this.functionToUseToKeepHelping.bind(this);
+    this.functionToUseWhenProfileComplete = this.functionToUseWhenProfileComplete.bind(this);
+    this.getCampaignBasePath = this.getCampaignBasePath.bind(this);
+    this.goToNextPage = this.goToNextPage.bind(this);
+    this.onCampaignClick = this.onCampaignClick.bind(this);
+    this.onCampaignEditClick = this.onCampaignEditClick.bind(this);
+    this.pullCampaignXSupporterVoterEntry = this.pullCampaignXSupporterVoterEntry.bind(this);
   }
 
   componentDidMount () {
@@ -52,8 +67,18 @@ class CampaignCardForList extends Component {
     const { campaignXWeVoteId } = this.props;
     const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
     const voterCanEditThisCampaign = CampaignStore.getVoterCanEditThisCampaign(campaignXWeVoteId);
+    const {
+      seo_friendly_path: campaignSEOFriendlyPath,
+    } = campaignX;
+    let pathToUseWhenProfileComplete;
+    if (campaignSEOFriendlyPath) {
+      pathToUseWhenProfileComplete = `/c/${campaignSEOFriendlyPath}/why-do-you-support`;
+    } else if (campaignXWeVoteId) {
+      pathToUseWhenProfileComplete = `/id/${campaignXWeVoteId}/why-do-you-support`;
+    }
     this.setState({
       campaignX,
+      pathToUseWhenProfileComplete,
       voterCanEditThisCampaign,
     });
   }
@@ -68,7 +93,7 @@ class CampaignCardForList extends Component {
     }
   }
 
-  onCampaignClick = () => {
+  onCampaignClick () {
     const { campaignX } = this.state;
     // console.log('campaignX:', campaignX);
     if (!campaignX) {
@@ -89,7 +114,7 @@ class CampaignCardForList extends Component {
     return null;
   }
 
-  onCampaignEditClick = () => {
+  onCampaignEditClick () {
     const { campaignX } = this.state;
     // console.log('campaignX:', campaignX);
     if (!campaignX) {
@@ -110,7 +135,7 @@ class CampaignCardForList extends Component {
     return null;
   }
 
-  pullCampaignXSupporterVoterEntry = (campaignXWeVoteId) => {
+  pullCampaignXSupporterVoterEntry (campaignXWeVoteId) {
     // console.log('pullCampaignXSupporterVoterEntry campaignXWeVoteId:', campaignXWeVoteId);
     if (campaignXWeVoteId) {
       const campaignXSupporterVoterEntry = CampaignSupporterStore.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
@@ -121,8 +146,14 @@ class CampaignCardForList extends Component {
       } = campaignXSupporterVoterEntry;
       // console.log('onCampaignSupporterStoreChange campaignSupported: ', campaignSupported);
       if (campaignXWeVoteIdFromCampaignXSupporter) {
+        const step2Completed = CampaignSupporterStore.supporterEndorsementExists(campaignXWeVoteId);
+        const payToPromoteStepCompleted = false;
+        const sharingStepCompleted = false;
         this.setState({
           campaignSupported,
+          sharingStepCompleted,
+          step2Completed,
+          payToPromoteStepCompleted,
         });
       } else {
         this.setState({
@@ -134,6 +165,65 @@ class CampaignCardForList extends Component {
         campaignSupported: false,
       });
     }
+  }
+
+  getCampaignBasePath () {
+    const { campaignX } = this.state;
+    // console.log('campaignX:', campaignX);
+    if (!campaignX) {
+      return null;
+    }
+    const {
+      seo_friendly_path: campaignSEOFriendlyPath,
+      campaignx_we_vote_id: campaignXWeVoteId,
+    } = campaignX;
+    let campaignBasePath;
+    if (campaignSEOFriendlyPath) {
+      campaignBasePath = `/c/${campaignSEOFriendlyPath}`;
+    } else {
+      campaignBasePath = `/id/${campaignXWeVoteId}`;
+    }
+
+    return campaignBasePath;
+  }
+
+  goToNextPage () {
+    const { pathToUseWhenProfileComplete } = this.state;
+    this.timer = setTimeout(() => {
+      historyPush(pathToUseWhenProfileComplete);
+    }, 500);
+  }
+
+  functionToUseToKeepHelping () {
+    // console.log('functionToUseToKeepHelping');
+    const { payToPromoteStepCompleted, payToPromoteStepTurnedOn, sharingStepCompleted, step2Completed } = this.state;
+    if (!sharingStepCompleted) {
+      historyPush(`${this.getCampaignBasePath()}/share-campaign`);
+    } else if (payToPromoteStepTurnedOn && !payToPromoteStepCompleted) {
+      historyPush(`${this.getCampaignBasePath()}/pay-to-promote`);
+    } else if (!step2Completed) {
+      historyPush(`${this.getCampaignBasePath()}/why-do-you-support`);
+    } else {
+      historyPush(`${this.getCampaignBasePath()}/share-campaign`);
+    }
+  }
+
+  functionToUseWhenProfileComplete () {
+    const { campaignXWeVoteId } = this.props;
+    const campaignSupported = true;
+    const campaignSupportedChanged = true;
+    // From this page we always send value for 'visibleToPublic'
+    let visibleToPublic = CampaignSupporterStore.getVisibleToPublic();
+    const visibleToPublicChanged = CampaignSupporterStore.getVisibleToPublicQueuedToSaveSet();
+    if (visibleToPublicChanged) {
+      // If it has changed, use new value
+      visibleToPublic = CampaignSupporterStore.getVisibleToPublicQueuedToSave();
+    }
+    // console.log('functionToUseWhenProfileComplete, visibleToPublic:', visibleToPublic, ', visibleToPublicChanged:', visibleToPublicChanged);
+    const saveVisibleToPublic = true;
+    initializejQuery(() => {
+      CampaignSupporterActions.supportCampaignSave(campaignXWeVoteId, campaignSupported, campaignSupportedChanged, visibleToPublic, saveVisibleToPublic);
+    }, this.goToNextPage());
   }
 
   render () {
@@ -150,6 +240,7 @@ class CampaignCardForList extends Component {
       campaign_title: campaignTitle,
       campaignx_we_vote_id: campaignXWeVoteId,
       in_draft_mode: inDraftMode,
+      seo_friendly_path: campaignSEOFriendlyPath,
       supporters_count: supportersCount,
       visible_on_this_site: visibleOnThisSite,
       we_vote_hosted_campaign_photo_large_url: CampaignPhotoLargeUrl,
@@ -214,41 +305,52 @@ class CampaignCardForList extends Component {
                   <CampaignOwnersList campaignXWeVoteId={campaignXWeVoteId} compressedMode />
                 </CampaignOwnersWrapper>
               </ClickableDiv>
-              {(inDraftMode || !visibleOnThisSite || voterCanEditThisCampaign) && (
-                <IndicatorRow>
-                  {inDraftMode && (
-                    <IndicatorButtonWrapper>
-                      <DraftModeIndicator>
-                        Draft
-                      </DraftModeIndicator>
-                    </IndicatorButtonWrapper>
-                  )}
-                  {!visibleOnThisSite && (
-                    <IndicatorButtonWrapper>
-                      <DraftModeIndicator>
-                        <span className="u-show-mobile">
-                          Not Visible
-                        </span>
-                        <span className="u-show-desktop-tablet">
-                          Not Visible On This Site
-                        </span>
-                      </DraftModeIndicator>
-                    </IndicatorButtonWrapper>
-                  )}
-                  {voterCanEditThisCampaign && (
-                    <IndicatorButtonWrapper>
-                      <EditCampaignIndicator onClick={this.onCampaignEditClick}>
-                        <span className="u-show-mobile">
-                          Edit
-                        </span>
-                        <span className="u-show-desktop-tablet">
-                          Edit Campaign
-                        </span>
-                      </EditCampaignIndicator>
-                    </IndicatorButtonWrapper>
-                  )}
-                </IndicatorRow>
-              )}
+              <IndicatorRow>
+                {inDraftMode && (
+                  <IndicatorDefaultButtonWrapper>
+                    <DraftModeIndicator>
+                      Draft
+                    </DraftModeIndicator>
+                  </IndicatorDefaultButtonWrapper>
+                )}
+                {!visibleOnThisSite && (
+                  <IndicatorButtonWrapper>
+                    <DraftModeIndicator>
+                      <span className="u-show-mobile">
+                        Not Visible
+                      </span>
+                      <span className="u-show-desktop-tablet">
+                        Not Visible On This Site
+                      </span>
+                    </DraftModeIndicator>
+                  </IndicatorButtonWrapper>
+                )}
+                {voterCanEditThisCampaign && (
+                  <IndicatorButtonWrapper>
+                    <EditCampaignIndicator onClick={this.onCampaignEditClick}>
+                      <span className="u-show-mobile">
+                        Edit
+                      </span>
+                      <span className="u-show-desktop-tablet">
+                        Edit Campaign
+                      </span>
+                    </EditCampaignIndicator>
+                  </IndicatorButtonWrapper>
+                )}
+                {!inDraftMode && (
+                  <IndicatorSupportButtonWrapper>
+                    <Suspense fallback={<span>&nbsp;</span>}>
+                      <SupportButtonBeforeCompletionScreen
+                        campaignSEOFriendlyPath={campaignSEOFriendlyPath}
+                        campaignXWeVoteId={campaignXWeVoteId}
+                        functionToUseToKeepHelping={this.functionToUseToKeepHelping}
+                        functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
+                        inCompressedMode
+                      />
+                    </Suspense>
+                  </IndicatorSupportButtonWrapper>
+                )}
+              </IndicatorRow>
             </OneCampaignTextColumn>
             <OneCampaignPhotoDesktopColumn className="u-show-desktop-tablet" onClick={this.onCampaignClick}>
               {CampaignPhotoMediumUrl ? (
@@ -334,23 +436,42 @@ const ClickableDiv = styled.div`
 
 const DraftModeIndicator = styled.span`
   background-color: #ccc;
-  border-radius: 5px;
+  border-radius: 4px;
   font-size: 14px;
-  padding: 3px 30px;
+  padding: 5px 12px;
 `;
 
 const IndicatorButtonWrapper = styled.div`
+  margin-bottom: 4px;
   margin-right: 8px;
+`;
+
+const IndicatorDefaultButtonWrapper = styled.div`
+  margin-bottom: 4px;
+  margin-right: 8px;
+  margin-top: 2px;
+`;
+
+const IndicatorSupportButtonWrapper = styled.div`
+  margin-bottom: 4px;
+  margin-right: 8px;
+  margin-top: -1px;
 `;
 
 const EditCampaignIndicator = styled.span`
   background-color: #fff;
-  border: 1px solid #2e3c5d;
-  border-radius: 5px;
+  border: 1px solid rgba(46, 60, 93, 0.5);
+  border-radius: 4px;
   color: #2e3c5d;
   cursor: pointer;
   font-size: 14px;
-  padding: 3px 30px;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 500;
+  line-height: 1.75;
+  user-select: none;
+  letter-spacing: 0.02857em;
+  padding: 4px 12px;
+  text-transform: none;
   &:hover {
     background-color: #f0f0f0;
   }
@@ -358,6 +479,7 @@ const EditCampaignIndicator = styled.span`
 
 const IndicatorRow = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: start;
   margin-top: 12px;
 `;
