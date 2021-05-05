@@ -149,7 +149,7 @@ class CampaignStartIntro extends Component {
               onClick={() => historyPush('/start-a-campaign-add-title')}
               variant="contained"
             >
-              Got it! I&apos;m ready to create my campaign
+              Got it! I&apos;m ready to create
             </Button>
           </MobileButtonPanel>
         </MobileButtonWrapper>

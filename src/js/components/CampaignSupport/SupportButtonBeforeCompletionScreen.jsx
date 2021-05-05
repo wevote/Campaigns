@@ -10,7 +10,7 @@ import { renderLog } from '../../utils/logging';
 import VoterStore from '../../stores/VoterStore';
 
 
-class CampaignDetailsActionButtonFooter extends Component {
+class SupportButtonBeforeCompletionScreen extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -23,7 +23,7 @@ class CampaignDetailsActionButtonFooter extends Component {
   }
 
   componentDidMount () {
-    // console.log('CampaignDetailsActionButtonFooter componentDidMount');
+    // console.log('SupportButtonBeforeCompletionScreen componentDidMount');
     this.onCampaignSupporterStoreChange();
     this.onVoterStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
@@ -32,7 +32,7 @@ class CampaignDetailsActionButtonFooter extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    // console.log('CampaignDetailsActionButtonFooter componentDidUpdate');
+    // console.log('SupportButtonBeforeCompletionScreen componentDidUpdate');
     const {
       campaignSEOFriendlyPath: campaignSEOFriendlyPathPrevious,
       campaignXWeVoteId: campaignXWeVoteIdPrevious,
@@ -56,11 +56,11 @@ class CampaignDetailsActionButtonFooter extends Component {
 
   componentDidCatch (error, info) {
     // We should get this information to Splunk!
-    console.error('CampaignDetailsActionButtonFooter caught error: ', `${error} with info: `, info);
+    console.error('SupportButtonBeforeCompletionScreen caught error: ', `${error} with info: `, info);
   }
 
   componentWillUnmount () {
-    // console.log('CampaignDetailsActionButtonFooter componentWillUnmount');
+    // console.log('SupportButtonBeforeCompletionScreen componentWillUnmount');
     this.campaignStoreListener.remove();
     this.campaignSupporterStoreListener.remove();
     this.voterStoreListener.remove();
@@ -68,7 +68,7 @@ class CampaignDetailsActionButtonFooter extends Component {
 
   // See https://reactjs.org/docs/error-boundaries.html
   static getDerivedStateFromError (error) { // eslint-disable-line no-unused-vars
-    console.error('Error caught in CampaignDetailsActionButtonFooter: ', error);
+    console.error('Error caught in SupportButtonBeforeCompletionScreen: ', error);
     // Update state so the next render will show the fallback UI, We should have a "Oh snap" page
     return { hasError: true };
   }
@@ -82,7 +82,7 @@ class CampaignDetailsActionButtonFooter extends Component {
       campaignSEOFriendlyPath,
       campaignXWeVoteId,
     } = this.props;
-    // console.log('CampaignDetailsActionButtonFooter onCampaignSupporterStoreChange campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
+    // console.log('SupportButtonBeforeCompletionScreen onCampaignSupporterStoreChange campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
     if (campaignXWeVoteId) {
       this.onCampaignOrCampaignSupporterChange(campaignXWeVoteId);
     } else if (campaignSEOFriendlyPath) {
@@ -139,7 +139,7 @@ class CampaignDetailsActionButtonFooter extends Component {
 
   submitSupportButtonMobile = () => {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.props;
-    // console.log('CampaignDetailsActionButtonFooter submitSupportButtonMobile');
+    // console.log('SupportButtonBeforeCompletionScreen submitSupportButtonMobile');
     const { voterFirstName, voterLastName, voterIsSignedInWithEmail } = this.state;
     if (!voterFirstName || !voterLastName || !voterIsSignedInWithEmail) {
       // Navigate to the mobile complete your profile page
@@ -159,13 +159,23 @@ class CampaignDetailsActionButtonFooter extends Component {
   };
 
   render () {
-    renderLog('CampaignDetailsActionButtonFooter');  // Set LOG_RENDER_EVENTS to log all renders
-    const { campaignSEOFriendlyPath, campaignXWeVoteId, classes } = this.props;
+    renderLog('SupportButtonBeforeCompletionScreen');  // Set LOG_RENDER_EVENTS to log all renders
+    const { campaignSEOFriendlyPath, campaignXWeVoteId, classes, inCompressedMode } = this.props;
     const hideFooterBehindModal = false;
-    const supportButtonClasses = classes.buttonDefault; // isWebApp() ? classes.buttonDefault : classes.buttonDefaultCordova;
-    // console.log('CampaignDetailsActionButtonFooter render campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
+    let supportButtonClasses;
+    const inWebApp = true; // isWebApp();
+    if (inWebApp) {
+      if (inCompressedMode) {
+        supportButtonClasses = classes.buttonCompressedMode;
+      } else {
+        supportButtonClasses = classes.buttonDefault;
+      }
+    } else {
+      supportButtonClasses = classes.buttonDefaultCordova;
+    }
+    // console.log('SupportButtonBeforeCompletionScreen render campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
     if (!campaignSEOFriendlyPath && !campaignXWeVoteId) {
-      // console.log('CampaignDetailsActionButtonFooter render voter NOT found');
+      // console.log('SupportButtonBeforeCompletionScreen render voter NOT found');
       return <div className="undefined-campaign-state" />;
     }
 
@@ -174,10 +184,10 @@ class CampaignDetailsActionButtonFooter extends Component {
     } = this.state;
     // console.log('voterCanVoteForPoliticianInCampaign: ', voterCanVoteForPoliticianInCampaign);
     if (!voterWeVoteId) {
-      // console.log('CampaignDetailsActionButtonFooter render voter NOT found');
+      // console.log('SupportButtonBeforeCompletionScreen render voter NOT found');
       return <div className="undefined-props" />;
     }
-    // console.log('CampaignDetailsActionButtonFooter render voter found');
+    // console.log('SupportButtonBeforeCompletionScreen render voter found');
     return (
       <Wrapper
         className={hideFooterBehindModal ? 'u-z-index-1000' : 'u-z-index-9000'}
@@ -189,7 +199,7 @@ class CampaignDetailsActionButtonFooter extends Component {
               color="primary"
               id="keepHelpingButtonFooter"
               onClick={() => this.props.functionToUseToKeepHelping()}
-              variant="contained"
+              variant={inCompressedMode ? 'outlined' : 'contained'}
             >
               I&apos;d like to keep helping!
             </Button>
@@ -199,7 +209,7 @@ class CampaignDetailsActionButtonFooter extends Component {
               color="primary"
               id="supportButtonFooter"
               onClick={this.submitSupportButtonMobile}
-              variant="contained"
+              variant={inCompressedMode ? 'outlined' : 'contained'}
             >
               {voterCanVoteForPoliticianInCampaign ? (
                 <span>
@@ -217,15 +227,24 @@ class CampaignDetailsActionButtonFooter extends Component {
     );
   }
 }
-CampaignDetailsActionButtonFooter.propTypes = {
+SupportButtonBeforeCompletionScreen.propTypes = {
   campaignXWeVoteId: PropTypes.string,
   campaignSEOFriendlyPath: PropTypes.string,
   classes: PropTypes.object,
   functionToUseToKeepHelping: PropTypes.func.isRequired,
   functionToUseWhenProfileComplete: PropTypes.func.isRequired,
+  inCompressedMode: PropTypes.bool,
 };
 
 const styles = () => ({
+  buttonCompressedMode: {
+    boxShadow: 'none !important',
+    fontSize: 14,
+    // height: '45px !important',
+    padding: '0 12px',
+    textTransform: 'none',
+    width: '100%',
+  },
   buttonDefault: {
     boxShadow: 'none !important',
     fontSize: 20,
@@ -245,16 +264,9 @@ const styles = () => ({
 });
 
 const ButtonPanel = styled.div`
-  background-color: #fff;
-  border-top: 1px solid #ddd;
-  padding: 10px;
 `;
 
 const Wrapper = styled.div`
-  position: fixed;
-  width: 100%;
-  bottom: 0;
-  display: block;
 `;
 
-export default withTheme(withStyles(styles)(CampaignDetailsActionButtonFooter));
+export default withTheme(withStyles(styles)(SupportButtonBeforeCompletionScreen));

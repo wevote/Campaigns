@@ -162,12 +162,6 @@ const Wrapper = styled.div`
     color: black !important;
     transition-duration: .25s;
   }
-  @media (max-width: 600px) {
-    width: 33.333%;
-  }
-  @media (max-width: 476px) {
-    width: 50%;
-  }
 `;
 
 export default withTheme(withStyles(styles)(ShareByCopyLink));
