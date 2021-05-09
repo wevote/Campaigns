@@ -71,6 +71,7 @@ class CampaignSupportThermometer extends React.Component {
 
   render () {
     renderLog('CampaignSupportThermometer');  // Set LOG_RENDER_EVENTS to log all renders
+    const { inCompressedMode } = this.props;
     const { numberOfSupportersGoal, supportersCount } = this.state;
     const calculatedPercentage = (supportersCount / numberOfSupportersGoal) * 100;
     const minimumPercentageForDisplay = 5;
@@ -79,18 +80,20 @@ class CampaignSupportThermometer extends React.Component {
     return (
       <Wrapper>
         <TextWrapper>
-          <SupportersText>
+          <SupportersText inCompressedMode={inCompressedMode}>
             {numberWithCommas(supportersCount)}
             {' '}
             {supportersCount === 1 ? 'supporter.' : 'have supported.'}
           </SupportersText>
-          {' '}
-          <GoalText>
-            Let&apos;s get to
-            {' '}
-            {numberWithCommas(numberOfSupportersGoal)}
-            !
-          </GoalText>
+          {!inCompressedMode && (
+            <GoalText>
+              {' '}
+              Let&apos;s get to
+              {' '}
+              {numberWithCommas(numberOfSupportersGoal)}
+              !
+            </GoalText>
+          )}
         </TextWrapper>
         <ProgressBarWrapper>
           <ProgressBar percentage={percentageForDisplay}>
@@ -104,6 +107,7 @@ class CampaignSupportThermometer extends React.Component {
 }
 CampaignSupportThermometer.propTypes = {
   campaignXWeVoteId: PropTypes.string,
+  inCompressedMode: PropTypes.bool,
 };
 
 const styles = () => ({
@@ -131,7 +135,7 @@ const ProgressBar = styled.div`
   height: 12px;
   margin: 0px 0 12px;
   span#progress-bar {
-    width: ${(props) => props.percentage}%;
+    width: ${({ percentage }) => percentage}%;
     display: block;
     height: 12px;
     border-radius: 6px 0 0 6px;
@@ -150,13 +154,13 @@ const ProgressBar = styled.div`
 `;
 
 const ProgressBarWrapper = styled.div`
-  margin-top: 10px;
+  margin-top: 6px;
 `;
 
 const SupportersText = styled.span`
-  font-size: 18px;
   color: black !important;
-  font-weight: 800;
+  font-size: ${({ inCompressedMode }) => (inCompressedMode ? '16px' : '18px')};
+  font-weight: ${({ inCompressedMode }) => (inCompressedMode ? '400' : '800')};
 `;
 
 const TextWrapper = styled.div`

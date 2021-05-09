@@ -87,7 +87,7 @@ class CampaignCardForList extends Component {
     const {
       campaignXWeVoteId,
     } = this.props;
-    // console.log('CampaignDetailsActionSideBox onCampaignSupporterStoreChange campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
+    // console.log('CampaignCardForList onCampaignSupporterStoreChange campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
     if (campaignXWeVoteId) {
       this.pullCampaignXSupporterVoterEntry(campaignXWeVoteId);
     }
@@ -135,6 +135,26 @@ class CampaignCardForList extends Component {
     return null;
   }
 
+  getCampaignBasePath () {
+    const { campaignX } = this.state;
+    // console.log('campaignX:', campaignX);
+    if (!campaignX) {
+      return null;
+    }
+    const {
+      seo_friendly_path: campaignSEOFriendlyPath,
+      campaignx_we_vote_id: campaignXWeVoteId,
+    } = campaignX;
+    let campaignBasePath;
+    if (campaignSEOFriendlyPath) {
+      campaignBasePath = `/c/${campaignSEOFriendlyPath}`;
+    } else {
+      campaignBasePath = `/id/${campaignXWeVoteId}`;
+    }
+
+    return campaignBasePath;
+  }
+
   pullCampaignXSupporterVoterEntry (campaignXWeVoteId) {
     // console.log('pullCampaignXSupporterVoterEntry campaignXWeVoteId:', campaignXWeVoteId);
     if (campaignXWeVoteId) {
@@ -165,26 +185,6 @@ class CampaignCardForList extends Component {
         campaignSupported: false,
       });
     }
-  }
-
-  getCampaignBasePath () {
-    const { campaignX } = this.state;
-    // console.log('campaignX:', campaignX);
-    if (!campaignX) {
-      return null;
-    }
-    const {
-      seo_friendly_path: campaignSEOFriendlyPath,
-      campaignx_we_vote_id: campaignXWeVoteId,
-    } = campaignX;
-    let campaignBasePath;
-    if (campaignSEOFriendlyPath) {
-      campaignBasePath = `/c/${campaignSEOFriendlyPath}`;
-    } else {
-      campaignBasePath = `/id/${campaignXWeVoteId}`;
-    }
-
-    return campaignBasePath;
   }
 
   goToNextPage () {

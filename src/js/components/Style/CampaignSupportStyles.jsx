@@ -14,15 +14,15 @@ const CampaignSupportDesktopButtonWrapper = styled.div`
 const CampaignSupportImageWrapper = styled.div`
   align-items: center;
   background-color: #eee;
-  border-radius: 5px;
+  ${({ borderRadiusOnTop }) => (borderRadiusOnTop ? `border-radius: ${borderRadiusOnTop} ${borderRadiusOnTop} 0 0;` : 'border-radius: 5px;')}
   display: flex;
   justify-content: center;
-  min-height: 325px;
+  min-height: 324px;
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     min-height: 279px;
   }
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    min-height: 159px;
+    min-height: 146px;
   }
 `;
 

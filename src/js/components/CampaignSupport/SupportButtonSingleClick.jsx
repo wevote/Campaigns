@@ -3,31 +3,27 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import AppActions from '../../actions/AppActions';
 import CampaignStore from '../../stores/CampaignStore';
+import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
+import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
+import initializejQuery from '../../utils/initializejQuery';
 import { isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
-import VoterStore from '../../stores/VoterStore';
 
-class SupportButton extends Component {
+class SupportButtonSingleClick extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      voterFirstName: '',
-      voterLastName: '',
-      voterSignedInWithEmail: false,
     };
   }
 
   componentDidMount () {
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    this.onVoterStoreChange();
-    this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
   }
 
   componentDidUpdate (prevProps) {
-    // console.log('SupportButton componentDidUpdate');
+    // console.log('SupportButtonSingleClick componentDidUpdate');
     const {
       campaignXWeVoteId: campaignXWeVoteIdPrevious,
     } = prevProps;
@@ -42,14 +38,14 @@ class SupportButton extends Component {
   }
 
   componentWillUnmount () {
-    // console.log('SupportButton componentWillUnmount');
+    // console.log('SupportButtonSingleClick componentWillUnmount');
     this.campaignStoreListener.remove();
-    this.voterStoreListener.remove();
   }
 
   onCampaignStoreChange () {
     const { campaignXWeVoteId } = this.props;
     if (campaignXWeVoteId) {
+      // Note 2021-05-08 We may want to indicate that this is a campaign with politician you can vote for
       const voterCanVoteForPoliticianInCampaign = CampaignStore.getVoterCanVoteForPoliticianInCampaign(campaignXWeVoteId);
       this.setState({
         voterCanVoteForPoliticianInCampaign,
@@ -57,33 +53,31 @@ class SupportButton extends Component {
     }
   }
 
-  onVoterStoreChange () {
-    const voterFirstName = VoterStore.getFirstName();
-    const voterLastName = VoterStore.getLastName();
-    const voterSignedInWithEmail = VoterStore.getVoterIsSignedInWithEmail();
-    this.setState({
-      voterFirstName,
-      voterLastName,
-      voterSignedInWithEmail,
-    });
-  }
-
-  submitSupportButtonDesktop = () => {
-    const { voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
-    // console.log('SupportButton submitSupportButtonDesktop');
-    if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
-      // Open complete your profile modal
-      AppActions.setShowCompleteYourProfileModal(true);
-    } else {
-      // Mark that voter supports this campaign
-      this.props.functionToUseWhenProfileComplete();
+  functionToUseWhenActionCompleteLocal = () => {
+    const { campaignXWeVoteId } = this.props;
+    // console.log('functionToUseWhenActionCompleteLocal campaignXWeVoteId: ', campaignXWeVoteId);
+    if (this.props.functionToUseWhenActionComplete) {
+      this.props.functionToUseWhenActionComplete(campaignXWeVoteId);
     }
   }
 
+  submitSupportButtonSingleClick = () => {
+    const { campaignXWeVoteId } = this.props;
+    const campaignSupported = true;
+    const campaignSupportedChanged = true;
+    // Use the same choice that was made for the primary campaign's 'visibleToPublic'
+    const visibleToPublic = CampaignSupporterStore.getVisibleToPublic();
+    // console.log('submitSupportButtonSingleClick, visibleToPublic:', visibleToPublic);
+    const saveVisibleToPublic = true;
+    initializejQuery(() => {
+      CampaignSupporterActions.supportCampaignSave(campaignXWeVoteId, campaignSupported, campaignSupportedChanged, visibleToPublic, saveVisibleToPublic);
+    }, this.functionToUseWhenActionCompleteLocal());
+  }
+
   render () {
-    renderLog('SupportButton');  // Set LOG_RENDER_EVENTS to log all renders
+    renderLog('SupportButtonSingleClick');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
-      console.log(`SupportButton window.location.href: ${window.location.href}`);
+      console.log(`SupportButtonSingleClick window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
     const { voterCanVoteForPoliticianInCampaign } = this.state;
@@ -91,6 +85,8 @@ class SupportButton extends Component {
     const supportButtonClasses = classes.buttonDefault; // isWebApp() ? classes.buttonDefault : classes.buttonDefaultCordova;
     return (
       <div>
+        {/* Add indication that voter can vote for candidates? */}
+        {voterCanVoteForPoliticianInCampaign && <span />}
         <Wrapper
           className={hideFooterBehindModal ? 'u-z-index-1000' : 'u-z-index-9000'}
         >
@@ -99,18 +95,10 @@ class SupportButton extends Component {
               classes={{ root: supportButtonClasses }}
               color="primary"
               id="supportButtonDesktop"
-              onClick={this.submitSupportButtonDesktop} // () =>
+              onClick={this.submitSupportButtonSingleClick}
               variant="contained"
             >
-              {voterCanVoteForPoliticianInCampaign ? (
-                <span>
-                  Support with my vote
-                </span>
-              ) : (
-                <span>
-                  I support this campaign
-                </span>
-              )}
+              1-Click Support
             </Button>
           </ButtonPanel>
         </Wrapper>
@@ -118,10 +106,10 @@ class SupportButton extends Component {
     );
   }
 }
-SupportButton.propTypes = {
+SupportButtonSingleClick.propTypes = {
   campaignXWeVoteId: PropTypes.string,
   classes: PropTypes.object,
-  functionToUseWhenProfileComplete: PropTypes.func.isRequired,
+  functionToUseWhenActionComplete: PropTypes.func.isRequired,
 };
 
 const styles = (theme) => ({
@@ -148,7 +136,7 @@ const styles = (theme) => ({
 
 const ButtonPanel = styled.div`
   background-color: #fff;
-  padding: 10px 0;
+  padding: 0;
 `;
 
 const Wrapper = styled.div`
@@ -156,4 +144,4 @@ const Wrapper = styled.div`
   display: block;
 `;
 
-export default withStyles(styles)(SupportButton);
+export default withStyles(styles)(SupportButtonSingleClick);

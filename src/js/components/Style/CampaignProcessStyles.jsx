@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const CampaignImage = styled.img`
-  border-radius: 5px;
+  ${({ noBorderRadius }) => (noBorderRadius ? '' : 'border-radius: 5px;')}
   max-width: 620px;
   min-height: 117px;
   width: 100%;
