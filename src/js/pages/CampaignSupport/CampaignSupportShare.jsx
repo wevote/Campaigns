@@ -29,6 +29,7 @@ import ShareOnFacebookButton from '../../components/Share/ShareOnFacebookButton'
 import ShareOnTwitterButton from '../../components/Share/ShareOnTwitterButton';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
+const RecommendedCampaignListRetrieveController = React.lazy(() => import('../../components/Campaign/RecommendedCampaignListRetrieveController'));
 const VoterFirstRetrieveController = loadable(() => import('../../components/Settings/VoterFirstRetrieveController'));
 
 
@@ -49,6 +50,7 @@ class CampaignSupportShare extends Component {
     this.props.setShowHeaderFooter(false);
     this.onAppStoreChange();
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
@@ -84,7 +86,7 @@ class CampaignSupportShare extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    // console.log('CampaignDetailsActionSideBox componentDidUpdate');
+    // console.log('CampaignSupportShare componentDidUpdate');
     const {
       showShareCampaignWithOneFriend: showShareCampaignWithOneFriendPrevious,
     } = prevProps;
@@ -113,6 +115,8 @@ class CampaignSupportShare extends Component {
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
     // console.log('onCampaignStoreChange campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
+    let recommendedCampaignXListCount = 0;
+    let recommendedCampaignXListHasBeenRetrieved = false;
     const {
       campaignPhotoLargeUrl,
       campaignSEOFriendlyPath,
@@ -133,12 +137,20 @@ class CampaignSupportShare extends Component {
       });
     }
     if (campaignXWeVoteId) {
+      recommendedCampaignXListCount = CampaignStore.getRecommendedCampaignXListCount(campaignXWeVoteId);
+      recommendedCampaignXListHasBeenRetrieved = CampaignStore.getRecommendedCampaignXListHasBeenRetrieved(campaignXWeVoteId);
       this.setState({
         campaignXWeVoteId,
+        recommendedCampaignXListCount,
+        recommendedCampaignXListHasBeenRetrieved,
       });
     } else if (campaignXWeVoteIdFromParams) {
+      recommendedCampaignXListCount = CampaignStore.getRecommendedCampaignXListCount(campaignXWeVoteIdFromParams);
+      recommendedCampaignXListHasBeenRetrieved = CampaignStore.getRecommendedCampaignXListHasBeenRetrieved(campaignXWeVoteIdFromParams);
       this.setState({
         campaignXWeVoteId: campaignXWeVoteIdFromParams,
+        recommendedCampaignXListCount,
+        recommendedCampaignXListHasBeenRetrieved,
       });
     }
   }
@@ -155,16 +167,17 @@ class CampaignSupportShare extends Component {
     return campaignBasePath;
   }
 
-  copyLink = () => {
-    // const { campaignXWeVoteId } = this.state;
-  }
-
   goToNextStep = () => {
     const { showShareCampaignWithOneFriend } = this.props;
+    const { recommendedCampaignXListCount, recommendedCampaignXListHasBeenRetrieved } = this.state;
     if (showShareCampaignWithOneFriend) {
-      // Since showing direct message choices is the final step, link should take voter back to the campaign updates page
-      // NOTE: When we add the "recommended-campaigns" feature, change this
-      historyPush(`${this.getCampaignBasePath()}/updates`);
+      // Since showing direct message choices is the final step,
+      // link should take voter back to the campaign updates page or on to the  "recommended-campaigns"
+      if (recommendedCampaignXListHasBeenRetrieved && recommendedCampaignXListCount > 0) {
+        historyPush(`${this.getCampaignBasePath()}/recommended-campaigns`);
+      } else {
+        historyPush(`${this.getCampaignBasePath()}/updates`);
+      }
     } else {
       historyPush(`${this.getCampaignBasePath()}/share-campaign-with-one-friend`);
     }
@@ -180,7 +193,11 @@ class CampaignSupportShare extends Component {
       console.log(`CampaignSupportShare window.location.href: ${window.location.href}`);
     }
     const { classes, iWillShare, showShareCampaignWithOneFriend } = this.props;
-    const { campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId, chosenWebsiteName } = this.state;
+    const {
+      campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
+      campaignXWeVoteId, chosenWebsiteName,
+      recommendedCampaignXListCount, recommendedCampaignXListHasBeenRetrieved,
+    } = this.state;
     let campaignProcessStepIntroductionText = 'Voters joined this campaign thanks to the people who shared it. Join them and help this campaign grow!';
     let campaignProcessStepTitle = 'Sharing leads to way more votes.';
     const htmlTitle = `${campaignTitle} - ${chosenWebsiteName}`;
@@ -192,7 +209,11 @@ class CampaignSupportShare extends Component {
       campaignProcessStepTitle = 'Before you go, can you help by recruiting a friend?';
       // Since showing direct message choices is the final step, link should take voter back to the campaign updates page
       // NOTE: When we add the "recommended-campaigns" feature, change this
-      skipForNowText = 'See news for this campaign';
+      if (recommendedCampaignXListHasBeenRetrieved && recommendedCampaignXListCount > 0) {
+        skipForNowText = 'continue';
+      } else {
+        skipForNowText = 'See latest news about this campaign';
+      }
     }
     const campaignDescriptionLimited = 'This is test from CampaignSupportShare.';
     return (
@@ -347,6 +368,9 @@ class CampaignSupportShare extends Component {
         </PageWrapperDefault>
         <Suspense fallback={<span>&nbsp;</span>}>
           <CampaignRetrieveController campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
+        </Suspense>
+        <Suspense fallback={<span>&nbsp;</span>}>
+          <RecommendedCampaignListRetrieveController campaignXWeVoteId={campaignXWeVoteId} />
         </Suspense>
         <Suspense fallback={<span>&nbsp;</span>}>
           <VoterFirstRetrieveController />

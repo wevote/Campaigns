@@ -8,6 +8,7 @@ import { historyPush } from '../../utils/cordovaUtils';
 import DelayedLoad from '../Widgets/DelayedLoad';
 import initializeFacebookSDK from '../../utils/initializeFacebookSDK';
 import initializeAppleSDK from '../../utils/initializeAppleSDK';
+import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
 import { renderLog } from '../../utils/logging';
 
 const HeaderBarLogo = loadable(() => import('./HeaderBarLogo'));
@@ -21,6 +22,14 @@ const useStyles = makeStyles((theme) => ({
   appBarRoot: {
     boxShadow: 'none',
     paddingBottom: '0',
+  },
+  ballotLink: {
+    color: '#000',
+    fontWeight: 400,
+    textDecoration: 'none',
+    '&:hover': {
+      color: '#4371cc',
+    },
   },
   innerWrapper: {
     margin: '0 auto',
@@ -190,7 +199,17 @@ export default function MainHeaderBar (displayHeader) {
                   </Typography>
                 )}
                 <MenuItem className={classes.menuItem} onClick={() => handleClose('/profile/started')}>Your campaigns</MenuItem>
-                {/* <MenuItem className={classes.menuItem} onClick={() => handleClose('/')}>Your ballot</MenuItem> */}
+                <MenuItem className={classes.menuItem}>
+                  <OpenExternalWebSite
+                    linkIdAttribute="weVoteBallot"
+                    url="https://wevote.us/ballot"
+                    target="_blank"
+                    body={(
+                      <span>Your ballot</span>
+                    )}
+                    className={classes.ballotLink}
+                  />
+                </MenuItem>
                 <MenuItem className={classes.menuItem} onClick={() => handleClose('/edit-profile')}>Settings</MenuItem>
                 {showStartACampaign && <MenuItem className={classes.menuItem} onClick={() => handleClose('/start-a-campaign')}>Start a campaign</MenuItem>}
                 {showMembership && <MenuItem className={classes.menuItemMobileOnly} onClick={() => handleClose('/membership')}>Membership</MenuItem>}

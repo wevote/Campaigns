@@ -35,7 +35,7 @@ class CompleteYourProfile extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    // console.log('CampaignDetailsActionSideBox componentDidUpdate');
+    // console.log('CompleteYourProfile componentDidUpdate');
     const {
       campaignXWeVoteId: campaignXWeVoteIdPrevious,
     } = prevProps;

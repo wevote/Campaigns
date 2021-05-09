@@ -27,6 +27,10 @@ export default {
     Dispatcher.dispatch({ type: 'organizationModalBallotItemWeVoteId', payload: ballotItemWeVoteId });
   },
 
+  setRecommendedCampaignListFirstRetrieveInitiated (value) {
+    Dispatcher.dispatch({ type: 'recommendedCampaignListFirstRetrieveInitiated', payload: value });
+  },
+
   setVoterGuideSettingsDashboardEditMode (getVoterGuideSettingsDashboardEditMode) {
     Dispatcher.dispatch({ type: 'getVoterGuideSettingsDashboardEditMode', payload: getVoterGuideSettingsDashboardEditMode });
   },

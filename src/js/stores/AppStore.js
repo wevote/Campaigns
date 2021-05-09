@@ -25,6 +25,7 @@ class AppStore extends ReduceStore {
       hideWeVoteLogo: false,
       hostname: '',
       organizationModalBallotItemWeVoteId: '',
+      recommendedCampaignListFirstRetrieveInitiated: false,
       scrolledDown: false,
       sharedItemCode: '',
       shareModalStep: '',
@@ -152,6 +153,10 @@ class AppStore extends ReduceStore {
 
   isOnChosenFullDomainUrl () {
     return this.getState().onChosenFullDomainUrl;
+  }
+
+  recommendedCampaignListFirstRetrieveInitiated () {
+    return this.getState().recommendedCampaignListFirstRetrieveInitiated;
   }
 
   showingOneCompleteYourProfileModal () {
@@ -314,6 +319,8 @@ class AppStore extends ReduceStore {
         return { ...state, getVoterGuideSettingsDashboardEditMode: action.payload };
       case 'organizationModalBallotItemWeVoteId':
         return { ...state, organizationModalBallotItemWeVoteId: action.payload };
+      case 'recommendedCampaignListFirstRetrieveInitiated':
+        return { ...state, recommendedCampaignListFirstRetrieveInitiated: action.payload };
       case 'scrolledDown':
         return { ...state, scrolledDown: action.payload };
       case 'showActivityTidbitDrawer':
