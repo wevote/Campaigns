@@ -6,12 +6,14 @@ import CampaignCardForList from '../Campaign/CampaignCardForList';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import DelayedLoad from '../Widgets/DelayedLoad';
+import isMobileScreenSize from '../../utils/isMobileScreenSize';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
 import { renderLog } from '../../utils/logging';
 
 const FirstCampaignListController = React.lazy(() => import('../Campaign/FirstCampaignListController'));
 
 const STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY = 3;
+const STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY_MOBILE = 2;
 
 class HomeCampaignList extends Component {
   constructor (props) {
@@ -28,6 +30,11 @@ class HomeCampaignList extends Component {
     if (this.props.startingNumberOfCampaignsToDisplay && this.props.startingNumberOfCampaignsToDisplay > 0) {
       this.setState({
         numberOfCampaignsToDisplay: this.props.startingNumberOfCampaignsToDisplay,
+      });
+    } else if (isMobileScreenSize) {
+      // We deviate from pure Responsive because reducing the campaigns down to 2 for mobile eliminate retrieving an extra image
+      this.setState({
+        numberOfCampaignsToDisplay: STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY_MOBILE,
       });
     }
     this.onCampaignStoreChange();
