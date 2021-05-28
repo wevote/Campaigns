@@ -78,7 +78,7 @@ class CampaignOwnersList extends Component {
         <ColumnFullWidth>
           <CampaignXOwnerListWrapper>
             {campaignXLeadOwnerProfilePhoto && (
-              <CampaignXOwnerLeadPhoto src={campaignXLeadOwnerProfilePhoto} />
+              <CampaignXOwnerLeadPhoto src={campaignXLeadOwnerProfilePhoto} width="32px" height="32px" />
             )}
             <CampaignXOwnerWrapper compressedMode={compressedMode}>
               {campaignXOwnerList.length === 1 ? (
@@ -176,7 +176,6 @@ const CampaignXOwnerListWrapper = styled.div`
 const CampaignXOwnerLeadPhoto = styled.img`
   border-radius: 3px;
   margin-right: 8px;
-  width: 32px;
 `;
 
 const CampaignXOwnerWrapper = styled.span`

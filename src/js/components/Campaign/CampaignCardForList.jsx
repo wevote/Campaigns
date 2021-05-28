@@ -354,7 +354,7 @@ class CampaignCardForList extends Component {
             </OneCampaignTextColumn>
             <OneCampaignPhotoDesktopColumn className="u-show-desktop-tablet" onClick={this.onCampaignClick}>
               {CampaignPhotoMediumUrl ? (
-                <CampaignImageDesktop src={CampaignPhotoMediumUrl} alt="Campaign" />
+                <CampaignImageDesktop src={CampaignPhotoMediumUrl} alt="Campaign" width="224px" height="117px" />
               ) : (
                 <CampaignImageDesktopPlaceholder>
                   <CampaignImagePlaceholderText>

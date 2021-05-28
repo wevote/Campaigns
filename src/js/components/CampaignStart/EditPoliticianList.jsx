@@ -84,7 +84,7 @@ class EditPoliticianList extends Component {
                 <CampaignPoliticianRow key={`campaignPoliticianList-${campaignPolitician.politician_name}-${externalUniqueId}`}>
                   <CampaignPoliticianWrapper>
                     <CampaignPoliticianNameAndImageWrapper>
-                      <CampaignPoliticianImage src={politicianImageUrl} />
+                      <CampaignPoliticianImage src={politicianImageUrl} width="32px" height="32px" />
                       <CampaignPoliticianName>
                         {campaignPolitician.politician_name}
                       </CampaignPoliticianName>
@@ -128,7 +128,6 @@ const CampaignPoliticianImage = styled.img`
   border-radius: 3px;
   margin-bottom: 8px;
   margin-right: 4px;
-  width: 32px;
 `;
 
 const CampaignPoliticianName = styled.div`
