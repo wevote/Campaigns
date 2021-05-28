@@ -31,7 +31,7 @@ class HomeCampaignList extends Component {
       this.setState({
         numberOfCampaignsToDisplay: this.props.startingNumberOfCampaignsToDisplay,
       });
-    } else if (isMobileScreenSize) {
+    } else if (isMobileScreenSize()) {
       // We deviate from pure Responsive because reducing the campaigns down to 2 for mobile eliminate retrieving an extra image
       this.setState({
         numberOfCampaignsToDisplay: STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY_MOBILE,
