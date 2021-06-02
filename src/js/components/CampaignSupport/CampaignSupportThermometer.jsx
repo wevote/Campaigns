@@ -10,7 +10,7 @@ class CampaignSupportThermometer extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      numberOfSupportersGoal: 1000,
+      supportersCountNextGoal: 0,
       supportersCount: 0,
     };
   }
@@ -59,11 +59,13 @@ class CampaignSupportThermometer extends React.Component {
       // console.log('CampaignSupportThermometer onCampaignStoreChange campaignX:', campaignX);
       const {
         supporters_count: supportersCount,
+        supporters_count_next_goal: supportersCountNextGoal,
         campaignx_we_vote_id: campaignXWeVoteIdFromDict,
       } = campaignX;
       if (campaignXWeVoteIdFromDict) {
         this.setState({
           supportersCount,
+          supportersCountNextGoal,
         });
       }
     }
@@ -72,8 +74,8 @@ class CampaignSupportThermometer extends React.Component {
   render () {
     renderLog('CampaignSupportThermometer');  // Set LOG_RENDER_EVENTS to log all renders
     const { inCompressedMode } = this.props;
-    const { numberOfSupportersGoal, supportersCount } = this.state;
-    const calculatedPercentage = (supportersCount / numberOfSupportersGoal) * 100;
+    const { supportersCount, supportersCountNextGoal } = this.state;
+    const calculatedPercentage = (supportersCount / supportersCountNextGoal) * 100;
     const minimumPercentageForDisplay = 5;
     const percentageForDisplay = (calculatedPercentage < minimumPercentageForDisplay) ? minimumPercentageForDisplay : calculatedPercentage;
 
@@ -90,7 +92,7 @@ class CampaignSupportThermometer extends React.Component {
               {' '}
               Let&apos;s get to
               {' '}
-              {numberWithCommas(numberOfSupportersGoal)}
+              {numberWithCommas(supportersCountNextGoal)}
               !
             </GoalText>
           )}

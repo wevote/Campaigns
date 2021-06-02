@@ -19,7 +19,6 @@ class CampaignCardForList extends Component {
     super(props);
     this.state = {
       campaignX: {},
-      numberOfSupportersGoal: 1000,
       payToPromoteStepCompleted: false,
       payToPromoteStepTurnedOn: false,
       sharingStepCompleted: false,
@@ -231,7 +230,7 @@ class CampaignCardForList extends Component {
     if (isCordova()) {
       console.log(`CampaignCardForList window.location.href: ${window.location.href}`);
     }
-    const { campaignSupported, campaignX, numberOfSupportersGoal, voterCanEditThisCampaign } = this.state;
+    const { campaignSupported, campaignX, voterCanEditThisCampaign } = this.state;
     if (!campaignX) {
       return null;
     }
@@ -242,6 +241,7 @@ class CampaignCardForList extends Component {
       in_draft_mode: inDraftMode,
       seo_friendly_path: campaignSEOFriendlyPath,
       supporters_count: supportersCount,
+      supporters_count_next_goal: supportersCountNextGoal,
       visible_on_this_site: visibleOnThisSite,
       we_vote_hosted_campaign_photo_large_url: CampaignPhotoLargeUrl,
       we_vote_hosted_campaign_photo_medium_url: CampaignPhotoMediumUrl,
@@ -281,7 +281,7 @@ class CampaignCardForList extends Component {
                     <SupportersActionLink className="u-link-color u-link-underline">
                       Let&apos;s get to
                       {' '}
-                      {numberWithCommas(numberOfSupportersGoal)}
+                      {numberWithCommas(supportersCountNextGoal)}
                       !
                     </SupportersActionLink>
                   )}
