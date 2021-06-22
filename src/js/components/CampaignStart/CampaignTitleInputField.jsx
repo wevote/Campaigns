@@ -27,7 +27,7 @@ class CampaignTitleInputField extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    // console.log('CampaignEndorsementInputField componentDidUpdate');
+    // console.log('CampaignTitleInputField componentDidUpdate');
     const {
       campaignXWeVoteId: campaignXWeVoteIdPrevious,
     } = prevProps;

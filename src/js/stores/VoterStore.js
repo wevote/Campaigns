@@ -46,6 +46,8 @@ class VoterStore extends ReduceStore {
         normalizedSmsPhoneNumber: '',
         notificationSettingsFlags: false,
       },
+      voterPhotoQueuedToSave: '',
+      voterPhotoQueuedToSaveSet: false,
     };
   }
 
@@ -273,6 +275,14 @@ class VoterStore extends ReduceStore {
 
   getVoterNotificationSettingsUpdateStatus () {
     return this.getState().voterNotificationSettingsUpdateStatus || {};
+  }
+
+  getVoterPhotoQueuedToSave () {
+    return this.getState().voterPhotoQueuedToSave;
+  }
+
+  getVoterPhotoQueuedToSaveSet () {
+    return this.getState().voterPhotoQueuedToSaveSet;
   }
 
   // Could be either Facebook photo or Twitter photo
@@ -751,6 +761,22 @@ class VoterStore extends ReduceStore {
           },
         };
 
+      case 'voterPhotoQueuedToSave':
+        // console.log('VoterStore voterPhotoQueuedToSave: ', action.payload);
+        if (action.payload === undefined) {
+          return {
+            ...state,
+            voterPhotoQueuedToSave: '',
+            voterPhotoQueuedToSaveSet: false,
+          };
+        } else {
+          return {
+            ...state,
+            voterPhotoQueuedToSave: action.payload,
+            voterPhotoQueuedToSaveSet: true,
+          };
+        }
+
       case 'voterPhotoSave':
         // console.log('VoterStore, voterPhotoSave');
         return {
@@ -885,12 +911,15 @@ class VoterStore extends ReduceStore {
             voter: {
               ...state.voter,
               // With this we are only updating the values we change with a voterUpdate call.
-              first_name: action.res.first_name,
-              last_name: action.res.last_name,
               facebook_email: action.res.email || state.voter.email,
+              first_name: action.res.first_name,
               interface_status_flags: interfaceStatusFlags,
+              last_name: action.res.last_name,
               notification_settings_flags: notificationSettingsFlags,
               voter_donation_history_list: action.res.voter_donation_history_list || state.voter.voter_donation_history_list,
+              voter_photo_url_large: action.res.we_vote_hosted_profile_image_url_large,
+              voter_photo_url_medium: action.res.we_vote_hosted_profile_image_url_medium,
+              voter_photo_url_tiny: action.res.we_vote_hosted_profile_image_url_tiny,
             },
           };
         } else {

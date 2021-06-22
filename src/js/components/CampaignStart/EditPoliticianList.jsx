@@ -25,7 +25,7 @@ class EditPoliticianList extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    // console.log('CampaignEndorsementInputField componentDidUpdate');
+    // console.log('EditPoliticianList componentDidUpdate');
     const {
       campaignXWeVoteId: campaignXWeVoteIdPrevious,
     } = prevProps;

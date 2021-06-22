@@ -11,6 +11,7 @@ import { renderLog } from '../../utils/logging';
 import VoterActions from '../../actions/VoterActions';
 import VoterFirstNameInputField from '../../components/Settings/VoterFirstNameInputField';
 import VoterLastNameInputField from '../../components/Settings/VoterLastNameInputField';
+import VoterPhotoUpload from '../../components/Settings/VoterPhotoUpload';
 import VoterStore from '../../stores/VoterStore';
 
 
@@ -54,17 +55,12 @@ class SettingsEditProfile extends Component {
     const voterFirstNameQueuedToSaveSet = VoterStore.getVoterFirstNameQueuedToSaveSet();
     const voterLastNameQueuedToSave = VoterStore.getVoterLastNameQueuedToSave();
     const voterLastNameQueuedToSaveSet = VoterStore.getVoterLastNameQueuedToSaveSet();
-    if (voterFirstNameQueuedToSaveSet && voterLastNameQueuedToSaveSet) {
-      VoterActions.voterCompleteYourProfileSave(voterFirstNameQueuedToSave, voterLastNameQueuedToSave);
-      VoterActions.voterFirstNameQueuedToSave(undefined);
-      VoterActions.voterLastNameQueuedToSave(undefined);
-    } else if (voterFirstNameQueuedToSaveSet) {
-      VoterActions.voterCompleteYourProfileSave(voterFirstNameQueuedToSave);
-      VoterActions.voterFirstNameQueuedToSave(undefined);
-    } else if (voterLastNameQueuedToSaveSet) {
-      VoterActions.voterCompleteYourProfileSave(false, voterLastNameQueuedToSave);
-      VoterActions.voterLastNameQueuedToSave(undefined);
-    }
+    const voterPhotoQueuedToSave = VoterStore.getVoterPhotoQueuedToSave();
+    const voterPhotoQueuedToSaveSet = VoterStore.getVoterPhotoQueuedToSaveSet();
+    VoterActions.voterCompleteYourProfileSave(voterFirstNameQueuedToSave, voterFirstNameQueuedToSaveSet, voterLastNameQueuedToSave, voterLastNameQueuedToSaveSet, voterPhotoQueuedToSave, voterPhotoQueuedToSaveSet);
+    VoterActions.voterFirstNameQueuedToSave(undefined);
+    VoterActions.voterLastNameQueuedToSave(undefined);
+    VoterActions.voterPhotoQueuedToSave(undefined);
     historyPush('/profile/started');
   }
 
@@ -107,6 +103,9 @@ class SettingsEditProfile extends Component {
             <YourNameWrapper>Edit your profile</YourNameWrapper>
           </IntroductionMessageSection>
           <InputFieldsWrapper>
+            <OneInputFieldWrapper>
+              <VoterPhotoUpload />
+            </OneInputFieldWrapper>
             <OneInputFieldWrapper>
               <VoterFirstNameInputField showLabel />
             </OneInputFieldWrapper>
