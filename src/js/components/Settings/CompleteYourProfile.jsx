@@ -157,17 +157,9 @@ class CompleteYourProfile extends Component {
     const voterFirstNameQueuedToSaveSet = VoterStore.getVoterFirstNameQueuedToSaveSet();
     const voterLastNameQueuedToSave = VoterStore.getVoterLastNameQueuedToSave();
     const voterLastNameQueuedToSaveSet = VoterStore.getVoterLastNameQueuedToSaveSet();
-    if (voterFirstNameQueuedToSaveSet && voterLastNameQueuedToSaveSet) {
-      VoterActions.voterCompleteYourProfileSave(voterFirstNameQueuedToSave, voterLastNameQueuedToSave);
-      VoterActions.voterFirstNameQueuedToSave(undefined);
-      VoterActions.voterLastNameQueuedToSave(undefined);
-    } else if (voterFirstNameQueuedToSaveSet) {
-      VoterActions.voterCompleteYourProfileSave(voterFirstNameQueuedToSave);
-      VoterActions.voterFirstNameQueuedToSave(undefined);
-    } else if (voterLastNameQueuedToSaveSet) {
-      VoterActions.voterCompleteYourProfileSave(false, voterLastNameQueuedToSave);
-      VoterActions.voterLastNameQueuedToSave(undefined);
-    }
+    VoterActions.voterCompleteYourProfileSave(voterFirstNameQueuedToSave, voterFirstNameQueuedToSaveSet, voterLastNameQueuedToSave, voterLastNameQueuedToSaveSet);
+    VoterActions.voterFirstNameQueuedToSave(undefined);
+    VoterActions.voterLastNameQueuedToSave(undefined);
     const voterIsSignedInWithEmail = VoterStore.getVoterIsSignedInWithEmail();
     const voterEmailQueuedToSave = VoterStore.getVoterEmailQueuedToSave();
     // const voterEmailQueuedToSaveSet = VoterStore.getVoterEmailQueuedToSaveSet();

@@ -4,7 +4,7 @@ import { AccountCircle } from '@material-ui/icons';
 import MenuIcon from '@material-ui/icons/Menu';
 import { withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
-import anonymous from '../../../img/global/icons/avatar-generic.png';
+import avatarGeneric from '../../../img/global/icons/avatar-generic.png';
 import LazyImage from '../../utils/LazyImage';
 import { renderLog } from '../../utils/logging';
 import { shortenText } from '../../utils/textFormat';
@@ -62,7 +62,7 @@ class VoterNameAndPhoto extends Component {
               {voterPhotoUrlMedium ? (
                 <LazyImage
                   src={voterPhotoUrlMedium}
-                  placeholder={anonymous}
+                  placeholder={avatarGeneric}
                   className="profile-photo"
                   height={24}
                   width={24}

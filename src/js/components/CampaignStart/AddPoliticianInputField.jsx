@@ -47,7 +47,7 @@ class AddPoliticianInputField extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    // console.log('CampaignEndorsementInputField componentDidUpdate');
+    // console.log('AddPoliticianInputField componentDidUpdate');
     const {
       campaignXWeVoteId: campaignXWeVoteIdPrevious,
     } = prevProps;

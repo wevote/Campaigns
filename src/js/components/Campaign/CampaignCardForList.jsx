@@ -42,7 +42,7 @@ class CampaignCardForList extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    // console.log('CampaignEndorsementInputField componentDidUpdate');
+    // console.log('CampaignCardForList componentDidUpdate');
     const {
       campaignXWeVoteId: campaignXWeVoteIdPrevious,
     } = prevProps;

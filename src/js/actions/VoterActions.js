@@ -127,11 +127,23 @@ export default {
     });
   },
 
-  voterCompleteYourProfileSave (firstName = false, lastName = false) {
+  voterCompleteYourProfileSave (firstName = '', firstNameChanged = false, lastName = '', lastNameChanged = false, voterPhotoQueuedToSave = '', voterPhotoQueuedToSaveSet = false) {
     Dispatcher.loadEndpoint('voterUpdate',
       {
         first_name: firstName,
+        first_name_changed: firstNameChanged,
         last_name: lastName,
+        last_name_changed: lastNameChanged,
+        voter_photo_from_file_reader: voterPhotoQueuedToSave,
+        voter_photo_changed: voterPhotoQueuedToSaveSet,
+      });
+  },
+
+  voterDeleteYourPhoto () {
+    Dispatcher.loadEndpoint('voterUpdate',
+      {
+        voter_photo_from_file_reader: '',
+        voter_photo_changed: true,
       });
   },
 
@@ -272,6 +284,11 @@ export default {
         last_name: lastName,
       });
   },
+
+  voterPhotoQueuedToSave (voterPhotoFromFileReader) {
+    Dispatcher.dispatch({ type: 'voterPhotoQueuedToSave', payload: voterPhotoFromFileReader });
+  },
+
 
   voterRetrieve () {
     Dispatcher.loadEndpoint('voterRetrieve');
