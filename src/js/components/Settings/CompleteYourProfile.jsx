@@ -15,6 +15,7 @@ import VoterActions from '../../actions/VoterActions';
 import VoterEmailInputField from './VoterEmailInputField';
 import VoterFirstNameInputField from './VoterFirstNameInputField';
 import VoterLastNameInputField from './VoterLastNameInputField';
+import VoterPhotoUpload from './VoterPhotoUpload';
 import VoterStore from '../../stores/VoterStore';
 
 
@@ -157,9 +158,12 @@ class CompleteYourProfile extends Component {
     const voterFirstNameQueuedToSaveSet = VoterStore.getVoterFirstNameQueuedToSaveSet();
     const voterLastNameQueuedToSave = VoterStore.getVoterLastNameQueuedToSave();
     const voterLastNameQueuedToSaveSet = VoterStore.getVoterLastNameQueuedToSaveSet();
-    VoterActions.voterCompleteYourProfileSave(voterFirstNameQueuedToSave, voterFirstNameQueuedToSaveSet, voterLastNameQueuedToSave, voterLastNameQueuedToSaveSet);
+    const voterPhotoQueuedToSave = VoterStore.getVoterPhotoQueuedToSave();
+    const voterPhotoQueuedToSaveSet = VoterStore.getVoterPhotoQueuedToSaveSet();
+    VoterActions.voterCompleteYourProfileSave(voterFirstNameQueuedToSave, voterFirstNameQueuedToSaveSet, voterLastNameQueuedToSave, voterLastNameQueuedToSaveSet, voterPhotoQueuedToSave, voterPhotoQueuedToSaveSet);
     VoterActions.voterFirstNameQueuedToSave(undefined);
     VoterActions.voterLastNameQueuedToSave(undefined);
+    VoterActions.voterPhotoQueuedToSave(undefined);
     const voterIsSignedInWithEmail = VoterStore.getVoterIsSignedInWithEmail();
     const voterEmailQueuedToSave = VoterStore.getVoterEmailQueuedToSave();
     // const voterEmailQueuedToSaveSet = VoterStore.getVoterEmailQueuedToSaveSet();
@@ -263,6 +267,7 @@ class CompleteYourProfile extends Component {
             </IntroductionText>
           )}
           <InputFieldsWrapper outerMarginsOff={outerMarginsOff}>
+            <VoterPhotoUpload />
             <VoterFirstNameInputField voterFirstNameMissing={voterFirstNameMissing} />
             <VoterLastNameInputField voterLastNameMissing={voterLastNameMissing} />
             <VoterEmailInputField voterEmailMissing={voterEmailMissing} />
