@@ -168,7 +168,6 @@ class MostRecentCampaignSupport extends React.Component {
     const { classes } = this.props;
     const { supportersOnStageNow } = this.state;
 
-    const voterPhotoUrlMedium = null;
     return (
       <Wrapper>
         <CommentsWrapper id="comments-wrapper">
@@ -177,9 +176,9 @@ class MostRecentCampaignSupport extends React.Component {
               {supportersOnStageNow.map((comment) => (
                 <CommentWrapper className="comment" key={comment.id}>
                   <CommentVoterPhotoWrapper>
-                    {voterPhotoUrlMedium ? (
+                    {comment.we_vote_hosted_profile_image_url_tiny ? (
                       <LazyImage
-                        src={voterPhotoUrlMedium}
+                        src={comment.we_vote_hosted_profile_image_url_tiny}
                         placeholder={anonymous}
                         className="profile-photo"
                         height={24}

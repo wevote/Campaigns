@@ -96,6 +96,7 @@ class VoterPhotoUpload extends Component {
                     classes={{
                       icon: classes.dropzoneIcon,
                       root: classes.dropzoneRoot,
+                      text: classes.dropzoneText,
                     }}
                     dropzoneText={dropzoneText}
                     filesLimit={1}
@@ -127,6 +128,12 @@ const styles = (theme) => ({
     [theme.breakpoints.down('sm')]: {
       minHeight: '160px',
     },
+  },
+  dropzoneText: {
+    color: '#818181',
+    fontSize: '18px',
+    fontFamily: "'Nunito Sans', 'Helvetica Neue Light', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+    fontWeight: '300',
   },
 });
 

@@ -106,7 +106,7 @@ class VisibleToPublicCheckbox extends Component {
                         onKeyDown={this.handleKeyPress}
                       />
                     )}
-                    label="Display my name and comment with this campaign"
+                    label="Display my name, photo and comment with this campaign"
                   />
                 </FormControl>
               </ColumnFullWidth>
