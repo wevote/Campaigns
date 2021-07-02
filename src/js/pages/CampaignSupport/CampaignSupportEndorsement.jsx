@@ -28,6 +28,9 @@ import initializejQuery from '../../utils/initializejQuery';
 import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
+import VoterActions from '../../actions/VoterActions';
+import VoterPhotoUpload from '../../components/Settings/VoterPhotoUpload';
+import VoterStore from '../../stores/VoterStore';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
 const VisibleToPublicCheckbox = React.lazy(() => import('../../components/CampaignSupport/VisibleToPublicCheckbox'));
@@ -54,6 +57,8 @@ class CampaignSupportEndorsement extends Component {
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
+    this.onVoterStoreChange();
+    this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
     // console.log('componentDidMount campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
@@ -142,6 +147,13 @@ class CampaignSupportEndorsement extends Component {
     }
   }
 
+  onVoterStoreChange () {
+    const voterPhotoUrlLarge = VoterStore.getVoterPhotoUrlLarge();
+    this.setState({
+      voterPhotoUrlLarge,
+    });
+  }
+
   getCampaignBasePath = () => {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
     let campaignBasePath = '';
@@ -189,6 +201,14 @@ class CampaignSupportEndorsement extends Component {
           CampaignSupporterActions.supporterEndorsementQueuedToSave(undefined);
         });
       }
+      const voterPhotoQueuedToSave = VoterStore.getVoterPhotoQueuedToSave();
+      const voterPhotoQueuedToSaveSet = VoterStore.getVoterPhotoQueuedToSaveSet();
+      if (voterPhotoQueuedToSaveSet) {
+        initializejQuery(() => {
+          VoterActions.voterPhotoSave(voterPhotoQueuedToSave, voterPhotoQueuedToSaveSet);
+          VoterActions.voterPhotoQueuedToSave(undefined);
+        });
+      }
       this.goToNextStep();
     }
   }
@@ -202,6 +222,7 @@ class CampaignSupportEndorsement extends Component {
     const {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
       campaignXPoliticianList, campaignXWeVoteId, chosenWebsiteName,
+      voterPhotoUrlLarge,
     } = this.state;
     let numberOfPoliticians = 0;
     if (campaignXPoliticianList && campaignXPoliticianList.length) {
@@ -247,6 +268,7 @@ class CampaignSupportEndorsement extends Component {
               <CampaignSupportSectionWrapper>
                 <CampaignSupportSection>
                   <CampaignEndorsementInputField campaignXWeVoteId={campaignXWeVoteId} />
+                  { !voterPhotoUrlLarge && <VoterPhotoUpload /> }
                   <VisibleToPublicCheckboxWrapper>
                     <Suspense fallback={<span>&nbsp;</span>}>
                       <VisibleToPublicCheckbox campaignXWeVoteId={campaignXWeVoteId} />

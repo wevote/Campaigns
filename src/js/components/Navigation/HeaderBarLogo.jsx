@@ -72,6 +72,11 @@ class HeaderBarLogo extends Component {
                     alt="We Vote logo"
                     src={light ? cordovaDot(logoLight) : cordovaDot(logoDark)}
                   />
+                  <CampaignsSubtitleOuter>
+                    <CampaignsSubtitleInner>
+                      campaigns
+                    </CampaignsSubtitleInner>
+                  </CampaignsSubtitleOuter>
                 </Link>
               </WeVoteLogoWrapper>
             )}
@@ -91,6 +96,18 @@ const styles = () => ({
     fontSize: 0,
   },
 });
+
+const CampaignsSubtitleInner = styled.span`
+  position: absolute;
+  font-size: 10px;
+  right: 16px;
+  top: -15px;
+  color: #2e3c5d;
+`;
+
+const CampaignsSubtitleOuter = styled.span`
+  position: relative;
+`;
 
 const ChosenSiteLogoImage = styled.img`
   height: 38px;

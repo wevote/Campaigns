@@ -61,7 +61,7 @@ class VoterPhotoUpload extends Component {
   }
 
   submitDeleteYourPhoto = () => {
-    VoterActions.voterDeleteYourPhoto();
+    VoterActions.voterPhotoDelete();
     VoterActions.voterPhotoQueuedToSave(undefined);
   }
 
@@ -70,9 +70,9 @@ class VoterPhotoUpload extends Component {
 
     const { classes } = this.props;
     const { voterPhotoUrlLarge } = this.state;
-    let dropzoneText = isMobileScreenSize() ? 'Upload photo' : 'Drag photo here (or click to find file)';
+    let dropzoneText = isMobileScreenSize() ? 'Upload profile photo' : 'Drag your profile photo here (or click to find file)';
     if (voterPhotoUrlLarge) {
-      dropzoneText = isMobileScreenSize() ? 'Upload new photo' : 'Drag new photo here (or click to find file)';
+      dropzoneText = isMobileScreenSize() ? 'Upload new photo' : 'Drag new profile photo here (or click to find file)';
     }
     return (
       <div className="">

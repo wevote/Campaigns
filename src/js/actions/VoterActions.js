@@ -139,11 +139,19 @@ export default {
       });
   },
 
-  voterDeleteYourPhoto () {
+  voterPhotoDelete () {
     Dispatcher.loadEndpoint('voterUpdate',
       {
         voter_photo_from_file_reader: '',
         voter_photo_changed: true,
+      });
+  },
+
+  voterPhotoSave (voterPhotoQueuedToSave = '', voterPhotoQueuedToSaveSet = false) {
+    Dispatcher.loadEndpoint('voterUpdate',
+      {
+        voter_photo_from_file_reader: voterPhotoQueuedToSave,
+        voter_photo_changed: voterPhotoQueuedToSaveSet,
       });
   },
 

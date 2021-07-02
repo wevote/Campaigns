@@ -30,6 +30,7 @@ class CampaignCardForList extends Component {
     this.goToNextPage = this.goToNextPage.bind(this);
     this.onCampaignClick = this.onCampaignClick.bind(this);
     this.onCampaignEditClick = this.onCampaignEditClick.bind(this);
+    this.onCampaignGetMinimumSupportersClick = this.onCampaignGetMinimumSupportersClick.bind(this);
     this.pullCampaignXSupporterVoterEntry = this.pullCampaignXSupporterVoterEntry.bind(this);
   }
 
@@ -130,6 +131,24 @@ class CampaignCardForList extends Component {
       historyPush(`/c/${SEOFriendlyPath}/edit`);
     } else {
       historyPush(`/id/${campaignXWeVoteId}/edit`);
+    }
+    return null;
+  }
+
+  onCampaignGetMinimumSupportersClick () {
+    const { campaignX } = this.state;
+    // console.log('campaignX:', campaignX);
+    if (!campaignX) {
+      return null;
+    }
+    const {
+      seo_friendly_path: SEOFriendlyPath,
+      campaignx_we_vote_id: campaignXWeVoteId,
+    } = campaignX;
+    if (SEOFriendlyPath) {
+      historyPush(`/c/${SEOFriendlyPath}/share-campaign`);
+    } else {
+      historyPush(`/id/${campaignXWeVoteId}/share-campaign`);
     }
     return null;
   }
@@ -239,6 +258,7 @@ class CampaignCardForList extends Component {
       campaign_title: campaignTitle,
       campaignx_we_vote_id: campaignXWeVoteId,
       in_draft_mode: inDraftMode,
+      is_supporters_count_minimum_exceeded: isSupportersCountMinimumExceeded,
       seo_friendly_path: campaignSEOFriendlyPath,
       supporters_count: supportersCount,
       supporters_count_next_goal: supportersCountNextGoal,
@@ -307,9 +327,16 @@ class CampaignCardForList extends Component {
               </ClickableDiv>
               <IndicatorRow>
                 {inDraftMode && (
-                  <IndicatorDefaultButtonWrapper>
+                  <IndicatorDefaultButtonWrapper onClick={this.onCampaignClick}>
                     <DraftModeIndicator>
                       Draft
+                    </DraftModeIndicator>
+                  </IndicatorDefaultButtonWrapper>
+                )}
+                {!!(!inDraftMode && !isSupportersCountMinimumExceeded) && (
+                  <IndicatorDefaultButtonWrapper onClick={this.onCampaignGetMinimumSupportersClick}>
+                    <DraftModeIndicator>
+                      Needs Five Supporters
                     </DraftModeIndicator>
                   </IndicatorDefaultButtonWrapper>
                 )}
@@ -447,6 +474,7 @@ const IndicatorButtonWrapper = styled.div`
 `;
 
 const IndicatorDefaultButtonWrapper = styled.div`
+  cursor: pointer;
   margin-bottom: 4px;
   margin-right: 8px;
   margin-top: 2px;
