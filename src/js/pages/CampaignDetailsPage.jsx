@@ -101,6 +101,7 @@ class CampaignDetailsPage extends Component {
       campaignSEOFriendlyPath,
       campaignTitle,
       campaignXWeVoteId,
+      isSupportersCountMinimumExceeded,
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     let pathToUseWhenProfileComplete;
     if (campaignSEOFriendlyPath) {
@@ -124,6 +125,7 @@ class CampaignDetailsPage extends Component {
       campaignDescriptionLimited,
       campaignPhotoLargeUrl,
       campaignTitle,
+      isSupportersCountMinimumExceeded,
       pathToUseWhenProfileComplete,
     });
   }
@@ -203,6 +205,16 @@ class CampaignDetailsPage extends Component {
     return null;
   }
 
+  onCampaignGetMinimumSupportersClick = () => {
+    const { SEOFriendlyPath, campaignXWeVoteId } = this.state;
+    if (SEOFriendlyPath) {
+      historyPush(`/c/${SEOFriendlyPath}/share-campaign`);
+    } else {
+      historyPush(`/id/${campaignXWeVoteId}/share-campaign`);
+    }
+    return null;
+  }
+
   render () {
     renderLog('CampaignDetailsPage');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
@@ -212,9 +224,9 @@ class CampaignDetailsPage extends Component {
     const {
       campaignDescription, campaignDescriptionLimited, campaignPhotoLargeUrl,
       campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId,
-      chosenWebsiteName, voterCanEditThisCampaign,
+      chosenWebsiteName, isSupportersCountMinimumExceeded, voterCanEditThisCampaign,
     } = this.state;
-    // console.log('render campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
+    // console.log('render isSupportersCountMinimumExceeded: ', isSupportersCountMinimumExceeded);
     const htmlTitle = `${campaignTitle} - ${chosenWebsiteName}`;
     return (
       <div>
@@ -259,6 +271,11 @@ class CampaignDetailsPage extends Component {
               </CampaignDescription>
               {voterCanEditThisCampaign && (
                 <IndicatorButtonWrapper>
+                  {(!isSupportersCountMinimumExceeded) && (
+                    <DraftModeIndicator onClick={this.onCampaignGetMinimumSupportersClick}>
+                      Needs Five Supporters
+                    </DraftModeIndicator>
+                  )}
                   <EditCampaignIndicator onClick={this.onCampaignEditClick}>
                     Edit This Campaign
                   </EditCampaignIndicator>
@@ -302,6 +319,11 @@ class CampaignDetailsPage extends Component {
                   </CampaignDescriptionDesktop>
                   {voterCanEditThisCampaign && (
                     <IndicatorButtonWrapper>
+                      {(!isSupportersCountMinimumExceeded) && (
+                        <DraftModeIndicator onClick={this.onCampaignGetMinimumSupportersClick}>
+                          Needs Five Supporters
+                        </DraftModeIndicator>
+                      )}
                       <EditCampaignIndicator onClick={this.onCampaignEditClick}>
                         Edit This Campaign
                       </EditCampaignIndicator>
@@ -520,6 +542,16 @@ const DetailsSectionMobile = styled.div`
   flex-flow: column;
 `;
 
+const DraftModeIndicator = styled.span`
+  background-color: #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 10px;
+  margin-top: 10px;
+  padding: 5px 12px;
+`;
+
 const EditCampaignIndicator = styled.span`
   background-color: #fff;
   border: 1px solid #2e3c5d;
@@ -527,14 +559,17 @@ const EditCampaignIndicator = styled.span`
   color: #2e3c5d;
   cursor: pointer;
   font-size: 14px;
-  padding: 3px 30px;
+  margin-top: 10px;
+  padding: 3px 12px;
   &:hover {
     background-color: #f0f0f0;
   }
 `;
 
 const IndicatorButtonWrapper = styled.div`
-  margin-top: 32px;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 `;
 
 const PageWrapper = styled.div`

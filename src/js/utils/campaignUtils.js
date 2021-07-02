@@ -13,6 +13,7 @@ export function getCampaignXValuesFromIdentifiers (campaignSEOFriendlyPath, camp
   let campaignSEOFriendlyPathFromObject = '';
   let campaignXWeVoteIdFromObject = '';
   let campaignXPoliticianList = [];
+  let isSupportersCountMinimumExceeded = false;
   if (campaignSEOFriendlyPath) {
     campaignX = CampaignStore.getCampaignXBySEOFriendlyPath(campaignSEOFriendlyPath);
   } else if (campaignXWeVoteId) {
@@ -24,6 +25,7 @@ export function getCampaignXValuesFromIdentifiers (campaignSEOFriendlyPath, camp
       campaign_description: campaignDescription,
       campaign_title: campaignTitle,
       campaignx_we_vote_id: campaignXWeVoteIdFromObject,
+      is_supporters_count_minimum_exceeded: isSupportersCountMinimumExceeded,
       we_vote_hosted_campaign_photo_large_url: campaignPhotoLargeUrl,
       we_vote_hosted_campaign_photo_medium_url: campaignPhotoMediumUrl,
       we_vote_hosted_campaign_photo_small_url: campaignPhotoSmallUrl,
@@ -39,6 +41,7 @@ export function getCampaignXValuesFromIdentifiers (campaignSEOFriendlyPath, camp
     campaignTitle,
     campaignXPoliticianList,
     campaignXWeVoteId: campaignXWeVoteIdFromObject,
+    isSupportersCountMinimumExceeded,
   };
 }
 

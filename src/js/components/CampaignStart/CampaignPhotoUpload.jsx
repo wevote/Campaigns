@@ -90,7 +90,7 @@ class CampaignPhotoUpload extends Component {
 
     const { classes } = this.props;
     const { campaignPhotoLargeUrl } = this.state;
-    let dropzoneText = isMobileScreenSize() ? 'Upload photo' : 'Drag photo here (or click to find file)';
+    let dropzoneText = isMobileScreenSize() ? 'Upload campaign photo' : 'Drag campaign photo here (or click to find file)';
     if (campaignPhotoLargeUrl) {
       dropzoneText = isMobileScreenSize() ? 'Upload new photo' : 'Drag new photo here (or click to find file)';
     }
