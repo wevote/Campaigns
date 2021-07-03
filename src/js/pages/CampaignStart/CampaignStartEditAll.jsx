@@ -16,6 +16,7 @@ import EditPoliticianList from '../../components/CampaignStart/EditPoliticianLis
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import initializejQuery from '../../utils/initializejQuery';
+import OpenExternalWebSite from '../../components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../../utils/logging';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
@@ -50,7 +51,13 @@ class CampaignStartEditAll extends Component {
       const {
         campaignSEOFriendlyPath,
         campaignXWeVoteId,
+        isBlockedByWeVote,
+        isBlockedByWeVoteReason,
       } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
+      this.setState({
+        isBlockedByWeVote,
+        isBlockedByWeVoteReason,
+      });
       if (campaignSEOFriendlyPath) {
         this.setState({
           campaignSEOFriendlyPath,
@@ -107,7 +114,13 @@ class CampaignStartEditAll extends Component {
       const {
         campaignSEOFriendlyPath,
         campaignXWeVoteId,
+        isBlockedByWeVote,
+        isBlockedByWeVoteReason,
       } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
+      this.setState({
+        isBlockedByWeVote,
+        isBlockedByWeVoteReason,
+      });
       if (campaignSEOFriendlyPath) {
         this.setState({
           campaignSEOFriendlyPath,
@@ -187,7 +200,7 @@ class CampaignStartEditAll extends Component {
       console.log(`CampaignStartEditAll window.location.href: ${window.location.href}`);
     }
     const { classes, editExistingCampaign } = this.props;
-    const { campaignSEOFriendlyPath, campaignXWeVoteId, chosenWebsiteName } = this.state;
+    const { campaignSEOFriendlyPath, campaignXWeVoteId, chosenWebsiteName, isBlockedByWeVote, isBlockedByWeVoteReason } = this.state;
     return (
       <div>
         <Suspense fallback={<span>&nbsp;</span>}>
@@ -221,6 +234,31 @@ class CampaignStartEditAll extends Component {
         <PageWrapper cordova={isCordova()}>
           <OuterWrapper>
             <InnerWrapper>
+              {isBlockedByWeVote && (
+                <CampaignStartSectionWrapper>
+                  <CampaignStartSection>
+                    <BlockedReason>
+                      Your campaign has been blocked by moderators from We Vote. Please make any requested modifications so you are in compliance with our terms of service and
+                      {' '}
+                      <OpenExternalWebSite
+                        linkIdAttribute="weVoteSupport"
+                        url="https://help.wevote.us/hc/en-us/requests/new"
+                        target="_blank"
+                        body={<span>contact We Vote support for help.</span>}
+                      />
+                      {isBlockedByWeVoteReason && (
+                        <>
+                          <br />
+                          <hr />
+                          &quot;
+                          {isBlockedByWeVoteReason}
+                          &quot;
+                        </>
+                      )}
+                    </BlockedReason>
+                  </CampaignStartSection>
+                </CampaignStartSectionWrapper>
+              )}
               <CampaignStartSectionWrapper>
                 <CampaignStartSection>
                   <CampaignTitleInputField
@@ -285,6 +323,16 @@ const styles = () => ({
     width: 250,
   },
 });
+
+const BlockedReason = styled.div`
+  background-color: #efc2c2;
+  border-radius: 4px;
+  color: #2e3c5d;
+  font-size: 18px;
+  margin-right: 10px;
+  margin-top: 10px;
+  padding: 5px 12px;
+`;
 
 const CampaignStartSection = styled.div`
   margin-bottom: 60px !important;

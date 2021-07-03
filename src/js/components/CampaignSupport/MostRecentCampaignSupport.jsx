@@ -8,6 +8,7 @@ import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import CampaignStore from '../../stores/CampaignStore';
 import LazyImage from '../../utils/LazyImage';
 import { renderLog } from '../../utils/logging';
+import returnFirstXWords from '../../utils/returnFirstXWords';
 import { timeFromDate } from '../../utils/dateFormat';
 import { stringContains } from '../../utils/textFormat';
 
@@ -190,7 +191,9 @@ class MostRecentCampaignSupport extends React.Component {
                     )}
                   </CommentVoterPhotoWrapper>
                   <CommentTextWrapper>
-                    <Comment>{comment.supporter_endorsement}</Comment>
+                    {comment.supporter_endorsement && (
+                      <Comment>{returnFirstXWords(comment.supporter_endorsement, 24, true)}</Comment>
+                    )}
                     <CommentNameWrapper>
                       {!stringContains('Voter-', comment.supporter_name) && (
                         <CommentName>
@@ -254,9 +257,14 @@ const CommentsWrapper = styled.div`
 `;
 
 const CommentTextWrapper = styled.div`
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
 `;
 
 const CommentVoterPhotoWrapper = styled.div`
+  align-items: flex-start;
+  display: flex;
   margin-right: 6px;
 `;
 

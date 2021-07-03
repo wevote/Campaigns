@@ -258,6 +258,7 @@ class CampaignCardForList extends Component {
       campaign_title: campaignTitle,
       campaignx_we_vote_id: campaignXWeVoteId,
       in_draft_mode: inDraftMode,
+      is_blocked_by_we_vote: isBlockedByWeVote,
       is_supporters_count_minimum_exceeded: isSupportersCountMinimumExceeded,
       seo_friendly_path: campaignSEOFriendlyPath,
       supporters_count: supportersCount,
@@ -325,6 +326,15 @@ class CampaignCardForList extends Component {
                   <CampaignOwnersList campaignXWeVoteId={campaignXWeVoteId} compressedMode />
                 </CampaignOwnersWrapper>
               </ClickableDiv>
+              <IndicatorRow>
+                {isBlockedByWeVote && (
+                  <IndicatorButtonWrapper>
+                    <BlockedIndicator onClick={this.onCampaignEditClick}>
+                      Blocked: Changes Needed
+                    </BlockedIndicator>
+                  </IndicatorButtonWrapper>
+                )}
+              </IndicatorRow>
               <IndicatorRow>
                 {inDraftMode && (
                   <IndicatorDefaultButtonWrapper onClick={this.onCampaignClick}>
@@ -409,6 +419,20 @@ const styles = (theme) => ({
   },
 });
 
+const BlockedIndicator = styled.span`
+  background-color: #efc2c2;
+  border-radius: 4px;
+  color: #2e3c5d;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 10px;
+  margin-top: 10px;
+  padding: 5px 12px;
+  &:hover {
+    background-color: #eaaeae;
+  }
+`;
+
 const CampaignImageDesktopSharedStyles = css`
   cursor: pointer;
   margin: 0;
@@ -464,8 +488,13 @@ const ClickableDiv = styled.div`
 const DraftModeIndicator = styled.span`
   background-color: #ccc;
   border-radius: 4px;
+  color: #2e3c5d;
+  cursor: pointer;
   font-size: 14px;
   padding: 5px 12px;
+  &:hover {
+    background-color: #bfbfbf;
+  }
 `;
 
 const IndicatorButtonWrapper = styled.div`

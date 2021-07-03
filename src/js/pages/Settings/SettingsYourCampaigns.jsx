@@ -20,6 +20,9 @@ class SettingsYourCampaigns extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      chosenWebsiteName: '',
+      voterFirstPlusLastName: '',
+      voterPhotoUrlLarge: '',
     };
   }
 
@@ -27,11 +30,8 @@ class SettingsYourCampaigns extends Component {
     // console.log('VoterFirstNameInputField, componentDidMount');
     this.onAppStoreChange();
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onVoterStoreChange();
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
-    const voterFirstPlusLastName = VoterStore.getFirstPlusLastName();
-    this.setState({
-      voterFirstPlusLastName,
-    });
   }
 
   componentWillUnmount () {
@@ -48,8 +48,10 @@ class SettingsYourCampaigns extends Component {
 
   onVoterStoreChange () {
     const voterFirstPlusLastName = VoterStore.getFirstPlusLastName();
+    const voterPhotoUrlLarge = VoterStore.getVoterPhotoUrlLarge();
     this.setState({
       voterFirstPlusLastName,
+      voterPhotoUrlLarge,
     });
   }
 
@@ -59,12 +61,17 @@ class SettingsYourCampaigns extends Component {
       console.log(`SettingsYourCampaigns window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
-    const { chosenWebsiteName, voterFirstPlusLastName } = this.state;
+    const { chosenWebsiteName, voterFirstPlusLastName, voterPhotoUrlLarge } = this.state;
     return (
       <div>
         <Helmet title={`Your Campaigns - ${chosenWebsiteName}`} />
         <PageWrapper cordova={isCordova()}>
           <IntroductionMessageSection>
+            {voterPhotoUrlLarge && (
+              <VoterPhotoWrapper>
+                <VoterPhotoImage src={voterPhotoUrlLarge} alt="Profile Photo" />
+              </VoterPhotoWrapper>
+            )}
             <YourNameWrapper>{voterFirstPlusLastName || 'Your profile'}</YourNameWrapper>
             <YourLocationWrapper>&nbsp;</YourLocationWrapper>
             <Button
@@ -106,6 +113,29 @@ const IntroductionMessageSection = styled.div`
   }
 `;
 
+const PageWrapper = styled.div`
+  margin: 0 auto;
+  max-width: 960px;
+  @media (max-width: 1005px) {
+    // Switch to 15px left/right margin when auto is too small
+    margin: 0 15px;
+  }
+`;
+
+const VoterPhotoImage = styled.img`
+  border-radius: 100px;
+  max-width: 200px;
+`;
+
+const VoterPhotoWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 15px;
+  width: 100%;
+`;
+
 const YourNameWrapper = styled.h1`
   font-size: 42px;
   text-align: center;
@@ -124,15 +154,6 @@ const YourLocationWrapper = styled.div`
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     font-size: 16px;
     margin: 20px 1em 1em;
-  }
-`;
-
-const PageWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
-  @media (max-width: 1005px) {
-    // Switch to 15px left/right margin when auto is too small
-    margin: 0 15px;
   }
 `;
 
