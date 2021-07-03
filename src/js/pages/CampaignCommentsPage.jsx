@@ -9,6 +9,7 @@ import CampaignStore from '../stores/CampaignStore';
 import CampaignSupporterStore from '../stores/CampaignSupporterStore';
 import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
 import { isCordova } from '../utils/cordovaUtils';
+import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../utils/logging';
 
 const CampaignCommentsList = React.lazy(() => import('../components/Campaign/CampaignCommentsList'));
@@ -72,6 +73,8 @@ class CampaignCommentsPage extends Component {
       campaignSEOFriendlyPath,
       campaignTitle,
       campaignXWeVoteId,
+      isBlockedByWeVote,
+      isBlockedByWeVoteReason,
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     if (campaignSEOFriendlyPath) {
       this.setState({
@@ -79,12 +82,16 @@ class CampaignCommentsPage extends Component {
       });
     }
     if (campaignXWeVoteId) {
+      const voterCanEditThisCampaign = CampaignStore.getVoterCanEditThisCampaign(campaignXWeVoteId);
       this.setState({
         campaignXWeVoteId,
+        voterCanEditThisCampaign,
       });
     }
     this.setState({
       campaignTitle,
+      isBlockedByWeVote,
+      isBlockedByWeVoteReason,
     });
   }
 
@@ -99,9 +106,41 @@ class CampaignCommentsPage extends Component {
     // const { classes } = this.props;
     const {
       campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId, chosenWebsiteName,
+      isBlockedByWeVote, isBlockedByWeVoteReason, voterCanEditThisCampaign,
     } = this.state;
     // console.log('render campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
     const htmlTitle = `Supporter Comments, ${campaignTitle} - ${chosenWebsiteName}`;
+    if (isBlockedByWeVote && !voterCanEditThisCampaign) {
+      return (
+        <PageWrapper cordova={isCordova()}>
+          <Helmet>
+            <title>{htmlTitle}</title>
+          </Helmet>
+          <CampaignTitleWrapper>
+            <CampaignTitleText>{campaignTitle}</CampaignTitleText>
+          </CampaignTitleWrapper>
+          <BlockedReason>
+            This campaign has been blocked by moderators from We Vote because it is currently violating our terms of service. It is only visible campaign owners. If you have any questions,
+            {' '}
+            <OpenExternalWebSite
+              linkIdAttribute="weVoteSupport"
+              url="https://help.wevote.us/hc/en-us/requests/new"
+              target="_blank"
+              body={<span>please contact We Vote support.</span>}
+            />
+            {isBlockedByWeVoteReason && (
+              <>
+                <br />
+                <hr />
+                &quot;
+                {isBlockedByWeVoteReason}
+                &quot;
+              </>
+            )}
+          </BlockedReason>
+        </PageWrapper>
+      );
+    }
     return (
       <div>
         <Suspense fallback={<span>&nbsp;</span>}>
@@ -112,6 +151,27 @@ class CampaignCommentsPage extends Component {
           <CampaignTitleWrapper>
             <CampaignTitleText>{campaignTitle}</CampaignTitleText>
           </CampaignTitleWrapper>
+          {isBlockedByWeVote && (
+            <BlockedReason>
+              Your campaign has been blocked by moderators from We Vote. Please make any requested modifications so you are in compliance with our terms of service and
+              {' '}
+              <OpenExternalWebSite
+                linkIdAttribute="weVoteSupport"
+                url="https://help.wevote.us/hc/en-us/requests/new"
+                target="_blank"
+                body={<span>contact We Vote support for help.</span>}
+              />
+              {isBlockedByWeVoteReason && (
+                <>
+                  <br />
+                  <hr />
+                  &quot;
+                  {isBlockedByWeVoteReason}
+                  &quot;
+                </>
+              )}
+            </BlockedReason>
+          )}
           <CampaignTopNavigation campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
           <CommentsSectionOuterWrapper>
             <CommentsSectionInnerWrapper>
@@ -143,6 +203,15 @@ const styles = () => ({
     width: 250,
   },
 });
+
+const BlockedReason = styled.div`
+  background-color: #efc2c2;
+  border-radius: 4px;
+  color: #2e3c5d;
+  font-size: 18px;
+  margin: 10px;
+  padding: 5px 12px;
+`;
 
 const CampaignTitleWrapper = styled.div`
   margin: 10px;

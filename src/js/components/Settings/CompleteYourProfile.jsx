@@ -267,10 +267,10 @@ class CompleteYourProfile extends Component {
             </IntroductionText>
           )}
           <InputFieldsWrapper outerMarginsOff={outerMarginsOff}>
-            <VoterPhotoUpload />
             <VoterFirstNameInputField voterFirstNameMissing={voterFirstNameMissing} />
             <VoterLastNameInputField voterLastNameMissing={voterLastNameMissing} />
             <VoterEmailInputField voterEmailMissing={voterEmailMissing} />
+            <VoterPhotoUpload />
           </InputFieldsWrapper>
           {!!(supportCampaign || supportCampaignOnCampaignHome) && (
             <CheckboxWrapper outerMarginsOff={outerMarginsOff}>

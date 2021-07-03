@@ -14,6 +14,7 @@ import DelayedLoad from '../components/Widgets/DelayedLoad';
 import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
 import initializejQuery from '../utils/initializejQuery';
+import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../utils/logging';
 import returnFirstXWords from '../utils/returnFirstXWords';
 
@@ -101,6 +102,8 @@ class CampaignDetailsPage extends Component {
       campaignSEOFriendlyPath,
       campaignTitle,
       campaignXWeVoteId,
+      isBlockedByWeVote,
+      isBlockedByWeVoteReason,
       isSupportersCountMinimumExceeded,
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     let pathToUseWhenProfileComplete;
@@ -125,6 +128,8 @@ class CampaignDetailsPage extends Component {
       campaignDescriptionLimited,
       campaignPhotoLargeUrl,
       campaignTitle,
+      isBlockedByWeVote,
+      isBlockedByWeVoteReason,
       isSupportersCountMinimumExceeded,
       pathToUseWhenProfileComplete,
     });
@@ -224,10 +229,50 @@ class CampaignDetailsPage extends Component {
     const {
       campaignDescription, campaignDescriptionLimited, campaignPhotoLargeUrl,
       campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId,
-      chosenWebsiteName, isSupportersCountMinimumExceeded, voterCanEditThisCampaign,
+      chosenWebsiteName, isBlockedByWeVote, isBlockedByWeVoteReason, isSupportersCountMinimumExceeded,
+      voterCanEditThisCampaign,
     } = this.state;
     // console.log('render isSupportersCountMinimumExceeded: ', isSupportersCountMinimumExceeded);
     const htmlTitle = `${campaignTitle} - ${chosenWebsiteName}`;
+    if (isBlockedByWeVote && !voterCanEditThisCampaign) {
+      return (
+        <PageWrapper cordova={isCordova()}>
+          <Helmet>
+            <title>{htmlTitle}</title>
+            <meta
+              name="description"
+              content={campaignDescriptionLimited}
+            />
+          </Helmet>
+          <CampaignTitleAndScoreBar className="u-show-mobile">
+            <CampaignTitleMobile>{campaignTitle}</CampaignTitleMobile>
+          </CampaignTitleAndScoreBar>
+          <DetailsSectionDesktopTablet className="u-show-desktop-tablet">
+            <CampaignTitleDesktop>{campaignTitle}</CampaignTitleDesktop>
+          </DetailsSectionDesktopTablet>
+          <BlockedReason>
+            This campaign has been blocked by moderators from We Vote because it is currently violating our terms of service. If you have any questions,
+            {' '}
+            <OpenExternalWebSite
+              linkIdAttribute="weVoteSupport"
+              url="https://help.wevote.us/hc/en-us/requests/new"
+              target="_blank"
+              body={<span>please contact We Vote support.</span>}
+            />
+            {isBlockedByWeVoteReason && (
+              <>
+                <br />
+                <hr />
+                &quot;
+                {isBlockedByWeVoteReason}
+                &quot;
+              </>
+            )}
+          </BlockedReason>
+        </PageWrapper>
+      );
+    }
+
     return (
       <div>
         <Suspense fallback={<span>&nbsp;</span>}>
@@ -241,6 +286,27 @@ class CampaignDetailsPage extends Component {
           />
         </Helmet>
         <PageWrapper cordova={isCordova()}>
+          {isBlockedByWeVote && (
+            <BlockedReason>
+              Your campaign has been blocked by moderators from We Vote. It is only visible campaign owners. Please make any requested modifications so you are in compliance with our terms of service and
+              {' '}
+              <OpenExternalWebSite
+                linkIdAttribute="weVoteSupport"
+                url="https://help.wevote.us/hc/en-us/requests/new"
+                target="_blank"
+                body={<span>contact We Vote support for help.</span>}
+              />
+              {isBlockedByWeVoteReason && (
+                <>
+                  <br />
+                  <hr />
+                  &quot;
+                  {isBlockedByWeVoteReason}
+                  &quot;
+                </>
+              )}
+            </BlockedReason>
+          )}
           <CampaignTopNavigation campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
           <DetailsSectionMobile className="u-show-mobile">
             <CampaignImageMobileWrapper>
@@ -271,6 +337,11 @@ class CampaignDetailsPage extends Component {
               </CampaignDescription>
               {voterCanEditThisCampaign && (
                 <IndicatorButtonWrapper>
+                  {isBlockedByWeVote && (
+                    <BlockedIndicator onClick={this.onCampaignEditClick}>
+                      Blocked: Changes Needed
+                    </BlockedIndicator>
+                  )}
                   {(!isSupportersCountMinimumExceeded) && (
                     <DraftModeIndicator onClick={this.onCampaignGetMinimumSupportersClick}>
                       Needs Five Supporters
@@ -319,6 +390,11 @@ class CampaignDetailsPage extends Component {
                   </CampaignDescriptionDesktop>
                   {voterCanEditThisCampaign && (
                     <IndicatorButtonWrapper>
+                      {isBlockedByWeVote && (
+                        <BlockedIndicator onClick={this.onCampaignEditClick}>
+                          Blocked: Changes Needed
+                        </BlockedIndicator>
+                      )}
                       {(!isSupportersCountMinimumExceeded) && (
                         <DraftModeIndicator onClick={this.onCampaignGetMinimumSupportersClick}>
                           Needs Five Supporters
@@ -388,6 +464,32 @@ const styles = () => ({
     width: 250,
   },
 });
+
+const BlockedIndicator = styled.span`
+  background-color: #efc2c2;
+  border-radius: 4px;
+  color: #2e3c5d;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 10px;
+  margin-top: 10px;
+  padding: 5px 12px;
+  &:hover {
+    background-color: #eaaeae;
+  }
+`;
+
+const BlockedReason = styled.div`
+  background-color: #efc2c2;
+  border-radius: 4px;
+  color: #2e3c5d;
+  font-size: 18px;
+  margin-top: 10px;
+  @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
+    margin: 10px;
+  }
+  padding: 5px 12px;
+`;
 
 const CampaignDescription = styled.div`
   font-size: 18px;
@@ -545,11 +647,15 @@ const DetailsSectionMobile = styled.div`
 const DraftModeIndicator = styled.span`
   background-color: #ccc;
   border-radius: 4px;
+  color: #2e3c5d;
   cursor: pointer;
   font-size: 14px;
   margin-right: 10px;
   margin-top: 10px;
   padding: 5px 12px;
+  &:hover {
+    background-color: #bfbfbf;
+  }
 `;
 
 const EditCampaignIndicator = styled.span`
