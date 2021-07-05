@@ -257,6 +257,7 @@ class CampaignCardForList extends Component {
       campaign_description: campaignDescription,
       campaign_title: campaignTitle,
       campaignx_we_vote_id: campaignXWeVoteId,
+      final_election_date_in_past: finalElectionDateInPast,
       in_draft_mode: inDraftMode,
       is_blocked_by_we_vote: isBlockedByWeVote,
       is_supporters_count_minimum_exceeded: isSupportersCountMinimumExceeded,
@@ -327,6 +328,13 @@ class CampaignCardForList extends Component {
                 </CampaignOwnersWrapper>
               </ClickableDiv>
               <IndicatorRow>
+                {finalElectionDateInPast && (
+                  <IndicatorButtonWrapper>
+                    <ElectionInPast>
+                      Election in Past
+                    </ElectionInPast>
+                  </IndicatorButtonWrapper>
+                )}
                 {isBlockedByWeVote && (
                   <IndicatorButtonWrapper>
                     <BlockedIndicator onClick={this.onCampaignEditClick}>
@@ -495,6 +503,20 @@ const DraftModeIndicator = styled.span`
   &:hover {
     background-color: #bfbfbf;
   }
+`;
+
+const ElectionInPast = styled.span`
+  background-color: #00cc66;
+  border-radius: 4px;
+  color: #2e3c5d;
+  // cursor: pointer;
+  font-size: 14px;
+  margin-right: 10px;
+  margin-top: 10px;
+  padding: 5px 12px;
+  // &:hover {
+  //   background-color: #00b359;
+  // }
 `;
 
 const IndicatorButtonWrapper = styled.div`

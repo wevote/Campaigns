@@ -20,6 +20,7 @@ class CampaignDetailsActionSideBox extends Component {
     super(props);
     this.state = {
       campaignSupported: false,
+      finalElectionDateInPast: false,
       voterProfileIsComplete: false,
       voterWeVoteId: '',
     };
@@ -46,12 +47,20 @@ class CampaignDetailsActionSideBox extends Component {
     } = this.props;
     if (campaignXWeVoteId) {
       if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
+        const finalElectionDateInPast = CampaignStore.getCampaignXFinalElectionDateInPastByWeVoteId(campaignXWeVoteId);
+        this.setState({
+          finalElectionDateInPast,
+        });
         this.pullCampaignXSupporterVoterEntry(campaignXWeVoteId);
       }
     } else if (campaignSEOFriendlyPath) {
       if (campaignSEOFriendlyPath !== campaignSEOFriendlyPathPrevious) {
         const campaignXWeVoteIdCalculated = CampaignStore.getCampaignXWeVoteIdFromCampaignSEOFriendlyPath(campaignSEOFriendlyPath);
         // console.log('campaignXWeVoteIdCalculated:', campaignXWeVoteIdCalculated);
+        const finalElectionDateInPast = CampaignStore.getCampaignXFinalElectionDateInPastByWeVoteId(campaignXWeVoteIdCalculated);
+        this.setState({
+          finalElectionDateInPast,
+        });
         this.pullCampaignXSupporterVoterEntry(campaignXWeVoteIdCalculated);
       }
     }
@@ -81,6 +90,21 @@ class CampaignDetailsActionSideBox extends Component {
   }
 
   onCampaignStoreChange () {
+    const {
+      campaignSEOFriendlyPath,
+      campaignXWeVoteId,
+    } = this.props;
+    // console.log('CampaignDetailsActionSideBox onCampaignSupporterStoreChange campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
+    let finalElectionDateInPast;
+    if (campaignXWeVoteId) {
+      finalElectionDateInPast = CampaignStore.getCampaignXFinalElectionDateInPastByWeVoteId(campaignXWeVoteId);
+    } else if (campaignSEOFriendlyPath) {
+      const campaignXWeVoteIdCalculated = CampaignStore.getCampaignXWeVoteIdFromCampaignSEOFriendlyPath(campaignSEOFriendlyPath);
+      finalElectionDateInPast = CampaignStore.getCampaignXFinalElectionDateInPastByWeVoteId(campaignXWeVoteIdCalculated);
+    }
+    this.setState({
+      finalElectionDateInPast,
+    });
     this.onCampaignSupporterStoreChange();
   }
 
@@ -165,7 +189,7 @@ class CampaignDetailsActionSideBox extends Component {
     }
 
     const {
-      campaignSupported, voterProfileIsComplete, voterWeVoteId,
+      campaignSupported, finalElectionDateInPast, voterProfileIsComplete, voterWeVoteId,
     } = this.state;
     if (!voterWeVoteId) {
       // console.log('CampaignDetailsActionSideBox render voter NOT found');
@@ -181,41 +205,71 @@ class CampaignDetailsActionSideBox extends Component {
             className={hideFooterBehindModal ? 'u-z-index-1000' : 'u-z-index-9000'}
           >
             <MostRecentCampaignSupport campaignXWeVoteId={campaignXWeVoteId} />
-            <ButtonPanel>
-              <Button
-                classes={{ root: supportButtonClasses }}
-                color="primary"
-                id="keepHelpingButtonDesktop"
-                onClick={() => this.props.functionToUseToKeepHelping()}
-                variant="contained"
-              >
-                I&apos;d like to keep helping!
-              </Button>
-            </ButtonPanel>
+            {finalElectionDateInPast ? (
+              <ButtonPanel>
+                <Button
+                  classes={{ root: supportButtonClasses }}
+                  color="primary"
+                  id="keepHelpingButtonDesktop"
+                  onClick={() => this.props.functionToUseToKeepHelping()}
+                  variant="contained"
+                >
+                  Share with friends!
+                </Button>
+              </ButtonPanel>
+            ) : (
+              <ButtonPanel>
+                <Button
+                  classes={{ root: supportButtonClasses }}
+                  color="primary"
+                  id="keepHelpingButtonDesktop"
+                  onClick={() => this.props.functionToUseToKeepHelping()}
+                  variant="contained"
+                >
+                  I&apos;d like to keep helping!
+                </Button>
+              </ButtonPanel>
+            )}
           </KeepHelpingWrapper>
         ) : (
           <section>
             <MostRecentCampaignSupport campaignXWeVoteId={campaignXWeVoteId} />
-            {voterProfileIsComplete ? (
-              <ProfileAlreadyComplete>
-                <Suspense fallback={<span>&nbsp;</span>}>
-                  <VisibleToPublicCheckbox campaignXWeVoteId={campaignXWeVoteId} />
-                </Suspense>
-                <SupportButton
-                  campaignXWeVoteId={campaignXWeVoteId}
-                  functionToUseWhenProfileComplete={this.props.functionToUseWhenProfileComplete}
-                />
-              </ProfileAlreadyComplete>
+            {finalElectionDateInPast ? (
+              <ButtonPanel>
+                <Button
+                  classes={{ root: supportButtonClasses }}
+                  color="primary"
+                  id="keepHelpingButtonDesktop"
+                  onClick={() => this.props.functionToUseToKeepHelping()}
+                  variant="contained"
+                >
+                  Share with friends!
+                </Button>
+              </ButtonPanel>
             ) : (
-              <CompleteYourProfileWrapper>
-                <Suspense fallback={<span>&nbsp;</span>}>
-                  <CompleteYourProfile
-                    campaignXWeVoteId={campaignXWeVoteId}
-                    functionToUseWhenProfileComplete={this.props.functionToUseWhenProfileComplete}
-                    supportCampaignOnCampaignHome
-                  />
-                </Suspense>
-              </CompleteYourProfileWrapper>
+              <>
+                {voterProfileIsComplete ? (
+                  <ProfileAlreadyComplete>
+                    <Suspense fallback={<span>&nbsp;</span>}>
+                      <VisibleToPublicCheckbox campaignXWeVoteId={campaignXWeVoteId} />
+                    </Suspense>
+                    <SupportButton
+                      campaignXWeVoteId={campaignXWeVoteId}
+                      functionToUseWhenProfileComplete={this.props.functionToUseWhenProfileComplete}
+                    />
+                  </ProfileAlreadyComplete>
+                ) : (
+                  <CompleteYourProfileWrapper>
+                    <Suspense fallback={<span>&nbsp;</span>}>
+                      <CompleteYourProfile
+                        campaignXWeVoteId={campaignXWeVoteId}
+                        functionToUseWhenProfileComplete={this.props.functionToUseWhenProfileComplete}
+                        supportCampaignOnCampaignHome
+                      />
+                    </Suspense>
+                  </CompleteYourProfileWrapper>
+                )}
+              </>
             )}
           </section>
         )}

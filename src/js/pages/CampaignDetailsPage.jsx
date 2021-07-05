@@ -34,6 +34,7 @@ class CampaignDetailsPage extends Component {
       campaignTitle: '',
       campaignXWeVoteId: '',
       chosenWebsiteName: '',
+      finalElectionDateInPast: false,
       pathToUseWhenProfileComplete: '',
       payToPromoteStepCompleted: false,
       payToPromoteStepTurnedOn: false,
@@ -102,6 +103,7 @@ class CampaignDetailsPage extends Component {
       campaignSEOFriendlyPath,
       campaignTitle,
       campaignXWeVoteId,
+      finalElectionDateInPast,
       isBlockedByWeVote,
       isBlockedByWeVoteReason,
       isSupportersCountMinimumExceeded,
@@ -128,6 +130,7 @@ class CampaignDetailsPage extends Component {
       campaignDescriptionLimited,
       campaignPhotoLargeUrl,
       campaignTitle,
+      finalElectionDateInPast,
       isBlockedByWeVote,
       isBlockedByWeVoteReason,
       isSupportersCountMinimumExceeded,
@@ -229,7 +232,8 @@ class CampaignDetailsPage extends Component {
     const {
       campaignDescription, campaignDescriptionLimited, campaignPhotoLargeUrl,
       campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId,
-      chosenWebsiteName, isBlockedByWeVote, isBlockedByWeVoteReason, isSupportersCountMinimumExceeded,
+      chosenWebsiteName, isBlockedByWeVote, isBlockedByWeVoteReason,
+      finalElectionDateInPast, isSupportersCountMinimumExceeded,
       voterCanEditThisCampaign,
     } = this.state;
     // console.log('render isSupportersCountMinimumExceeded: ', isSupportersCountMinimumExceeded);
@@ -335,6 +339,13 @@ class CampaignDetailsPage extends Component {
               <CampaignDescription>
                 {campaignDescription}
               </CampaignDescription>
+              {finalElectionDateInPast && (
+                <IndicatorButtonWrapper>
+                  <ElectionInPast>
+                    Election in Past
+                  </ElectionInPast>
+                </IndicatorButtonWrapper>
+              )}
               {voterCanEditThisCampaign && (
                 <IndicatorButtonWrapper>
                   {isBlockedByWeVote && (
@@ -388,6 +399,13 @@ class CampaignDetailsPage extends Component {
                   <CampaignDescriptionDesktop>
                     {campaignDescription}
                   </CampaignDescriptionDesktop>
+                  {finalElectionDateInPast && (
+                    <IndicatorButtonWrapper>
+                      <ElectionInPast>
+                        Election in Past
+                      </ElectionInPast>
+                    </IndicatorButtonWrapper>
+                  )}
                   {voterCanEditThisCampaign && (
                     <IndicatorButtonWrapper>
                       {isBlockedByWeVote && (
@@ -419,12 +437,13 @@ class CampaignDetailsPage extends Component {
               </ColumnTwoThirds>
               <ColumnOneThird>
                 <Suspense fallback={<span>&nbsp;</span>}>
-                  <CampaignSupportThermometer campaignXWeVoteId={campaignXWeVoteId} />
+                  <CampaignSupportThermometer campaignXWeVoteId={campaignXWeVoteId} finalElectionDateInPast={finalElectionDateInPast} />
                 </Suspense>
                 <Suspense fallback={<span>&nbsp;</span>}>
                   <CampaignDetailsActionSideBox
                     campaignSEOFriendlyPath={campaignSEOFriendlyPath}
                     campaignXWeVoteId={campaignXWeVoteId}
+                    finalElectionDateInPast={finalElectionDateInPast}
                     functionToUseToKeepHelping={this.functionToUseToKeepHelping}
                     functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
                   />
@@ -434,16 +453,18 @@ class CampaignDetailsPage extends Component {
           </DetailsSectionDesktopTablet>
         </PageWrapper>
         <SupportButtonFooterWrapper className="u-show-mobile">
-          <SupportButtonPanel>
-            <Suspense fallback={<span>&nbsp;</span>}>
-              <SupportButtonBeforeCompletionScreen
-                campaignSEOFriendlyPath={campaignSEOFriendlyPath}
-                campaignXWeVoteId={campaignXWeVoteId}
-                functionToUseToKeepHelping={this.functionToUseToKeepHelping}
-                functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
-              />
-            </Suspense>
-          </SupportButtonPanel>
+          {!finalElectionDateInPast && (
+            <SupportButtonPanel>
+              <Suspense fallback={<span>&nbsp;</span>}>
+                <SupportButtonBeforeCompletionScreen
+                  campaignSEOFriendlyPath={campaignSEOFriendlyPath}
+                  campaignXWeVoteId={campaignXWeVoteId}
+                  functionToUseToKeepHelping={this.functionToUseToKeepHelping}
+                  functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
+                />
+              </Suspense>
+            </SupportButtonPanel>
+          )}
         </SupportButtonFooterWrapper>
         <CompleteYourProfileModalController
           campaignXWeVoteId={campaignXWeVoteId}
@@ -670,6 +691,20 @@ const EditCampaignIndicator = styled.span`
   &:hover {
     background-color: #f0f0f0;
   }
+`;
+
+const ElectionInPast = styled.span`
+  background-color: #00cc66;
+  border-radius: 4px;
+  color: #2e3c5d;
+  // cursor: pointer;
+  font-size: 14px;
+  margin-right: 10px;
+  margin-top: 10px;
+  padding: 5px 12px;
+  // &:hover {
+  //   background-color: #00b359;
+  // }
 `;
 
 const IndicatorButtonWrapper = styled.div`

@@ -120,6 +120,14 @@ class CampaignStore extends ReduceStore {
     return campaignX;
   }
 
+  getCampaignXFinalElectionDateInPastByWeVoteId (campaignXWeVoteId) {
+    const campaignX = this.getState().allCachedCampaignXDicts[campaignXWeVoteId];
+    if (campaignX === undefined || campaignX.final_election_date_in_past === undefined) {
+      return false;
+    }
+    return campaignX.final_election_date_in_past;
+  }
+
   getCampaignXByWeVoteId (campaignXWeVoteId) {
     const campaignX = this.getState().allCachedCampaignXDicts[campaignXWeVoteId];
     if (campaignX === undefined) {
