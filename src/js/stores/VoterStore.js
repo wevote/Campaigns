@@ -63,6 +63,13 @@ class VoterStore extends ReduceStore {
     return this.getState().voter.email || '';
   }
 
+  getVoterFirstName () {
+    if (this.getState().voter) {
+      return this.getState().voter.first_name || '';
+    }
+    return '';
+  }
+
   getVoterWeVoteId () {
     return this.getState().voter.we_vote_id || '';
   }

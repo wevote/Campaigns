@@ -200,7 +200,7 @@ class CampaignSupportShare extends Component {
     } = this.state;
     let campaignProcessStepIntroductionText = 'Voters joined this campaign thanks to the people who shared it. Join them and help this campaign grow!';
     let campaignProcessStepTitle = 'Sharing leads to way more votes.';
-    const htmlTitle = `${campaignTitle} - ${chosenWebsiteName}`;
+    const htmlTitle = `Sharing ${campaignTitle} - ${chosenWebsiteName}`;
     let skipForNowText = 'Skip for now';
     if (iWillShare) {
       campaignProcessStepTitle = 'Thank you for sharing! Sharing leads to way more votes.';
