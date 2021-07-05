@@ -29,6 +29,9 @@ class CampaignStartEditAll extends Component {
       campaignSEOFriendlyPath: '',
       campaignXWeVoteId: '',
       chosenWebsiteName: '',
+      isBlockedByWeVote: false,
+      isBlockedByWeVoteReason: false,
+      voterIsCampaignXOwner: true, // Start by assuming true
     };
   }
 
@@ -53,10 +56,12 @@ class CampaignStartEditAll extends Component {
         campaignXWeVoteId,
         isBlockedByWeVote,
         isBlockedByWeVoteReason,
+        voterIsCampaignXOwner,
       } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
       this.setState({
         isBlockedByWeVote,
         isBlockedByWeVoteReason,
+        voterIsCampaignXOwner,
       });
       if (campaignSEOFriendlyPath) {
         this.setState({
@@ -116,10 +121,12 @@ class CampaignStartEditAll extends Component {
         campaignXWeVoteId,
         isBlockedByWeVote,
         isBlockedByWeVoteReason,
+        voterIsCampaignXOwner,
       } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
       this.setState({
         isBlockedByWeVote,
         isBlockedByWeVoteReason,
+        voterIsCampaignXOwner,
       });
       if (campaignSEOFriendlyPath) {
         this.setState({
@@ -158,7 +165,7 @@ class CampaignStartEditAll extends Component {
 
   submitCampaignEditAll = () => {
     const { editExistingCampaign } = this.props;
-    const { campaignXWeVoteId } = this.state;
+    const { campaignXWeVoteId, voterIsCampaignXOwner } = this.state;
     const campaignDescriptionQueuedToSave = CampaignStartStore.getCampaignDescriptionQueuedToSave();
     const campaignDescriptionQueuedToSaveSet = CampaignStartStore.getCampaignDescriptionQueuedToSaveSet();
     const campaignPhotoQueuedToSave = CampaignStartStore.getCampaignPhotoQueuedToSave();
@@ -169,7 +176,7 @@ class CampaignStartEditAll extends Component {
     const campaignTitleQueuedToSave = CampaignStartStore.getCampaignTitleQueuedToSave();
     const campaignTitleQueuedToSaveSet = CampaignStartStore.getCampaignTitleQueuedToSaveSet();
     // console.log('CampaignStartEditAll campaignPoliticianStarterListQueuedToSaveSet:', campaignPoliticianStarterListQueuedToSaveSet);
-    if (campaignDescriptionQueuedToSaveSet || campaignPhotoQueuedToSaveSet || campaignPoliticianDeleteList || campaignPoliticianStarterListQueuedToSaveSet || campaignTitleQueuedToSaveSet) {
+    if (voterIsCampaignXOwner && (campaignDescriptionQueuedToSaveSet || campaignPhotoQueuedToSaveSet || campaignPoliticianDeleteList || campaignPoliticianStarterListQueuedToSaveSet || campaignTitleQueuedToSaveSet)) {
       const campaignPoliticianDeleteListJson = JSON.stringify(campaignPoliticianDeleteList);
       const campaignPoliticianStarterListQueuedToSaveJson = JSON.stringify(campaignPoliticianStarterListQueuedToSave);
       // console.log('CampaignStartEditAll campaignPoliticianStarterListQueuedToSaveJson:', campaignPoliticianStarterListQueuedToSaveJson);
@@ -200,7 +207,10 @@ class CampaignStartEditAll extends Component {
       console.log(`CampaignStartEditAll window.location.href: ${window.location.href}`);
     }
     const { classes, editExistingCampaign } = this.props;
-    const { campaignSEOFriendlyPath, campaignXWeVoteId, chosenWebsiteName, isBlockedByWeVote, isBlockedByWeVoteReason } = this.state;
+    const {
+      campaignSEOFriendlyPath, campaignXWeVoteId, chosenWebsiteName,
+      isBlockedByWeVote, isBlockedByWeVoteReason, voterIsCampaignXOwner
+    } = this.state;
     return (
       <div>
         <Suspense fallback={<span>&nbsp;</span>}>
@@ -219,75 +229,89 @@ class CampaignStartEditAll extends Component {
               >
                 Cancel
               </Button>
-              <Button
-                classes={{ root: classes.buttonSave }}
-                color="primary"
-                id="saveCampaignEditAll"
-                onClick={this.submitCampaignEditAll}
-                variant="contained"
-              >
-                Save
-              </Button>
+              {voterIsCampaignXOwner && (
+                <Button
+                  classes={{ root: classes.buttonSave }}
+                  color="primary"
+                  id="saveCampaignEditAll"
+                  onClick={this.submitCampaignEditAll}
+                  variant="contained"
+                >
+                  Save
+                </Button>
+              )}
             </SaveCancelButtonsWrapper>
           </SaveCancelInnerWrapper>
         </SaveCancelOuterWrapper>
         <PageWrapper cordova={isCordova()}>
           <OuterWrapper>
-            <InnerWrapper>
-              {isBlockedByWeVote && (
+            {voterIsCampaignXOwner ? (
+              <InnerWrapper>
+                {isBlockedByWeVote && (
+                  <CampaignStartSectionWrapper>
+                    <CampaignStartSection>
+                      <BlockedReason>
+                        Your campaign has been blocked by moderators from We Vote. Please make any requested modifications so you are in compliance with our terms of service and
+                        {' '}
+                        <OpenExternalWebSite
+                          linkIdAttribute="weVoteSupport"
+                          url="https://help.wevote.us/hc/en-us/requests/new"
+                          target="_blank"
+                          body={<span>contact We Vote support for help.</span>}
+                        />
+                        {isBlockedByWeVoteReason && (
+                          <>
+                            <br />
+                            <hr />
+                            &quot;
+                            {isBlockedByWeVoteReason}
+                            &quot;
+                          </>
+                        )}
+                      </BlockedReason>
+                    </CampaignStartSection>
+                  </CampaignStartSectionWrapper>
+                )}
                 <CampaignStartSectionWrapper>
                   <CampaignStartSection>
-                    <BlockedReason>
-                      Your campaign has been blocked by moderators from We Vote. Please make any requested modifications so you are in compliance with our terms of service and
-                      {' '}
-                      <OpenExternalWebSite
-                        linkIdAttribute="weVoteSupport"
-                        url="https://help.wevote.us/hc/en-us/requests/new"
-                        target="_blank"
-                        body={<span>contact We Vote support for help.</span>}
-                      />
-                      {isBlockedByWeVoteReason && (
-                        <>
-                          <br />
-                          <hr />
-                          &quot;
-                          {isBlockedByWeVoteReason}
-                          &quot;
-                        </>
-                      )}
-                    </BlockedReason>
-                  </CampaignStartSection>
-                </CampaignStartSectionWrapper>
-              )}
-              <CampaignStartSectionWrapper>
-                <CampaignStartSection>
-                  <CampaignTitleInputField
-                    campaignTitlePlaceholder="Title of your campaign"
-                    campaignXWeVoteId={campaignXWeVoteId}
-                    editExistingCampaign={editExistingCampaign}
-                  />
-                  <EditPoliticianList
-                    campaignXWeVoteId={campaignXWeVoteId}
-                    editExistingCampaign={editExistingCampaign}
-                  />
-                  <AddCandidateInputField
-                    campaignXWeVoteId={campaignXWeVoteId}
-                    editExistingCampaign={editExistingCampaign}
-                  />
-                  <PhotoUploadWrapper>
-                    Try to upload a photo that is 1200 x 628 pixels or larger. We can accept one photo up to 5 megabytes in size.
-                    <CampaignPhotoUpload
+                    <CampaignTitleInputField
+                      campaignTitlePlaceholder="Title of your campaign"
                       campaignXWeVoteId={campaignXWeVoteId}
                       editExistingCampaign={editExistingCampaign}
                     />
-                  </PhotoUploadWrapper>
-                  <CampaignDescriptionInputField
-                    campaignXWeVoteId={campaignXWeVoteId}
-                    editExistingCampaign={editExistingCampaign}
-                  />
-                </CampaignStartSection>
-              </CampaignStartSectionWrapper>
-            </InnerWrapper>
+                    <EditPoliticianList
+                      campaignXWeVoteId={campaignXWeVoteId}
+                      editExistingCampaign={editExistingCampaign}
+                    />
+                    <AddCandidateInputField
+                      campaignXWeVoteId={campaignXWeVoteId}
+                      editExistingCampaign={editExistingCampaign}
+                    />
+                    <PhotoUploadWrapper>
+                      Try to upload a photo that is 1200 x 628 pixels or larger. We can accept one photo up to 5 megabytes in size.
+                      <CampaignPhotoUpload
+                        campaignXWeVoteId={campaignXWeVoteId}
+                        editExistingCampaign={editExistingCampaign}
+                      />
+                    </PhotoUploadWrapper>
+                    <CampaignDescriptionInputField
+                      campaignXWeVoteId={campaignXWeVoteId}
+                      editExistingCampaign={editExistingCampaign}
+                    />
+                  </CampaignStartSection>
+                </CampaignStartSectionWrapper>
+              </InnerWrapper>
+            ) : (
+              <InnerWrapper>
+                <CampaignStartSectionWrapper>
+                  <CampaignStartSection>
+                    <BlockedReason>
+                      You do not have permission to edit this campaign.
+                    </BlockedReason>
+                  </CampaignStartSection>
+                </CampaignStartSectionWrapper>
+              </InnerWrapper>
+            )}
           </OuterWrapper>
         </PageWrapper>
       </div>
