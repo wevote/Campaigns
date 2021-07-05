@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
+import loadable from '@loadable/component';
 import { Button, InputAdornment, TextField } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Elements } from '@stripe/react-stripe-js';
@@ -17,20 +18,22 @@ import { renderLog } from '../utils/logging';
 import DonateStore from '../stores/DonateStore';
 
 const stripePromise = loadStripe(webAppConfig.STRIPE_API_KEY);
+const VoterFirstRetrieveController = loadable(() => import('../components/Settings/VoterFirstRetrieveController'));
 
 class Membership extends Component {
   constructor (props) {
     super(props);
 
     this.state = {
-      value: 0,
+      monthlyDonationValue: '5.00',
+      monthlyDonationOtherValue: '',
       joining: false,
       loaded: false,
       subscriptionCount: -1,
       waitingForDonationWithStripe: false,
       showWaiting: false,
     };
-    this.onFieldChange = this.onFieldChange.bind(this);
+    this.onOtherAmountFieldChange = this.onOtherAmountFieldChange.bind(this);
     this.onBecomeAMember = this.onBecomeAMember.bind(this);
     this.stopShowWaiting = this.stopShowWaiting.bind(this);
   }
@@ -40,6 +43,8 @@ class Membership extends Component {
       // console.log('Membership, componentDidMount after init jQuery');
       // DonateStore.resetState();  I don't think this does anything!
       // 2/25/21 1pm hack TODO DonateActions.donationRefreshDonationList();
+      const { showFooter } = this.props;
+      showFooter(false);
       this.setState({ loaded: true });
       this.donateStoreListener = DonateStore.addListener(this.onDonateStoreChange.bind(this));
       // dumpCookies();
@@ -77,11 +82,11 @@ class Membership extends Component {
     return {};
   }
 
-  onFieldChange (event) {
+  onOtherAmountFieldChange (event) {
     if (event && event.target) {
-      const val = event.target.value.length > 0 ? event.target.value : '0';
       this.setState({
-        value: val,
+        monthlyDonationValue: '',
+        monthlyDonationOtherValue: event.target.value.length > 0 ? event.target.value : '',
       });
     }
   }
@@ -122,14 +127,23 @@ class Membership extends Component {
     }, 500);
   }
 
-  changeValue (newValue) {
+  changeValueFromButton (newValue) {
     const { joining } = this.state;
     if (!joining) {
       const { showFooter } = this.props;
-      showFooter(false);
+      showFooter(true);
     }
     this.setState({
-      value: newValue,
+      monthlyDonationValue: newValue,
+      monthlyDonationOtherValue: '',
+      joining: true,
+    });
+  }
+
+  openPaymentForm () {
+    const { showFooter } = this.props;
+    showFooter(true);
+    this.setState({
       joining: true,
     });
   }
@@ -137,7 +151,7 @@ class Membership extends Component {
   render () {
     renderLog('Membership');  // Set LOG_RENDER_EVENTS to log all renders
     const { classes } = this.props;
-    const { joining, value, loaded, showWaiting } = this.state;
+    const { joining, monthlyDonationValue, monthlyDonationOtherValue, loaded, showWaiting } = this.state;
     if (!loaded) {
       return LoadingWheel;
     }
@@ -152,12 +166,11 @@ class Membership extends Component {
                 <ContentTitle>Become a WeVote.US member</ContentTitle>
                 <PageSubStatement joining={joining}>
                   Voters come to WeVote.US to start and sign campaigns that encourage more people to vote.
-                  Leading up to election day, review your ballot on ballot.WeVote.US, and discuss what is on your
-                  ballot with your friends.
+                  {' '}
                   {/* Become a member today and fuel our mission to help every American to vote. */}
                   {/* Become a member today and fuel our mission to help every American vote with confidence. */}
                   {/* Become a member today and fuel our mission to help every American feel motivated to vote. */}
-                  Become a member today and fuel our mission to help motivate every American to vote.
+                  Become a member today and fuel our mission to motivate EVERY American to vote.
                 </PageSubStatement>
               </IntroductionMessageSection>
               <ContributeGridWrapper>
@@ -167,36 +180,36 @@ class Membership extends Component {
                 <ContributeGridSection>
                   <ContributeGridItem>
                     <Button
-                      classes={{ root: classes.buttonRoot }}
+                      classes={(monthlyDonationValue === '3' || monthlyDonationValue === '3.00') ? { root: classes.buttonRootSelected } : { root: classes.buttonRoot }}
                       variant="contained"
-                      onClick={() => this.changeValue('3.00')}
+                      onClick={() => this.changeValueFromButton('3.00')}
                     >
                       $3
                     </Button>
                   </ContributeGridItem>
                   <ContributeGridItem>
                     <Button
-                      classes={{ root: classes.buttonRoot }}
+                      classes={(monthlyDonationValue === '5' || monthlyDonationValue === '5.00') ? { root: classes.buttonRootSelected } : { root: classes.buttonRoot }}
                       variant="contained"
-                      onClick={() => this.changeValue('5.00')}
+                      onClick={() => this.changeValueFromButton('5.00')}
                     >
                       $5
                     </Button>
                   </ContributeGridItem>
                   <ContributeGridItem>
                     <Button
-                      classes={{ root: classes.buttonRoot }}
+                      classes={(monthlyDonationValue === '10' || monthlyDonationValue === '10.00') ? { root: classes.buttonRootSelected } : { root: classes.buttonRoot }}
                       variant="contained"
-                      onClick={() => this.changeValue('10.00')}
+                      onClick={() => this.changeValueFromButton('10.00')}
                     >
                       $10
                     </Button>
                   </ContributeGridItem>
                   <ContributeGridItem>
                     <Button
-                      classes={{ root: classes.buttonRoot }}
+                      classes={(monthlyDonationValue === '20' || monthlyDonationValue === '20.00') ? { root: classes.buttonRootSelected } : { root: classes.buttonRoot }}
                       variant="contained"
-                      onClick={() => this.changeValue('20.00')}
+                      onClick={() => this.changeValueFromButton('20.00')}
                     >
                       $20
                     </Button>
@@ -212,17 +225,17 @@ class Membership extends Component {
                           backgroundColor: 'darkblue',
                           color: 'white',
                         }}
-                        onClick={() => this.changeValue('5.00')}
+                        onClick={() => this.openPaymentForm()}
                       >
                         Join
                       </Button>
                     ) : (
                       <TextField
                         id="currency-input"
-                        label="Amount"
+                        label="Other Amount"
                         variant="outlined"
-                        value={value}
-                        onChange={this.onFieldChange}
+                        value={monthlyDonationOtherValue}
+                        onChange={this.onOtherAmountFieldChange}
                         InputLabelProps={{
                           classes: {
                             root: classes.textFieldInputRoot,
@@ -249,7 +262,7 @@ class Membership extends Component {
             <PaymentCenteredWrapper>
               <Elements stripe={stripePromise}>
                 <InjectedCheckoutForm
-                  value={value}
+                  value={monthlyDonationOtherValue || monthlyDonationValue}
                   classes={{}}
                   stopShowWaiting={this.stopShowWaiting}
                   onBecomeAMember={this.onBecomeAMember}
@@ -260,6 +273,9 @@ class Membership extends Component {
           </PaymentWrapper>
           <DonationListForm waitForWebhook />
         </PageWrapper>
+        <Suspense fallback={<span>&nbsp;</span>}>
+          <VoterFirstRetrieveController />
+        </Suspense>
       </div>
     );
   }
@@ -271,10 +287,20 @@ Membership.propTypes = {
 
 const styles = () => ({
   buttonRoot: {
+    border: '1px solid #2e3c5d',
     fontSize: 18,
     textTransform: 'none',
     width: '100%',
     color: 'black',
+    backgroundColor: 'white',
+  },
+  buttonRootSelected: {
+    border: '1px solid red',
+    fontSize: 18,
+    fontWeight: 600,
+    textTransform: 'none',
+    width: '100%',
+    color: 'red',
     backgroundColor: 'white',
   },
   textFieldRoot: {
@@ -287,6 +313,7 @@ const styles = () => ({
     fontSize: 18,
     color: 'black',
     backgroundColor: 'white',
+    width: 150,
   },
   stripeAlertError: {
     background: 'rgb(255, 177, 160)',
@@ -357,7 +384,6 @@ const IntroductionMessageSection = styled.div`
 `;
 
 const PageSubStatement = styled.div`
-  display: ${({ joining }) => ((joining) ? 'none' : 'unset')};
   font-size: 18px;
   text-align: left;
   margin: 0 0 1em;

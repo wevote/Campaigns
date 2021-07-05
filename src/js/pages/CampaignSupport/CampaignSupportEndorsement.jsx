@@ -224,6 +224,7 @@ class CampaignSupportEndorsement extends Component {
       campaignXPoliticianList, campaignXWeVoteId, chosenWebsiteName,
       voterPhotoUrlLarge,
     } = this.state;
+    const htmlTitle = `Why do you support ${campaignTitle}? - ${chosenWebsiteName}`;
     let numberOfPoliticians = 0;
     if (campaignXPoliticianList && campaignXPoliticianList.length) {
       numberOfPoliticians = campaignXPoliticianList.length;
@@ -231,7 +232,7 @@ class CampaignSupportEndorsement extends Component {
     const politicianListSentenceString = politicianListToSentenceString(campaignXPoliticianList);
     return (
       <div>
-        <Helmet title={`Why Do You Support? - ${chosenWebsiteName}`} />
+        <Helmet title={htmlTitle} />
         <PageWrapperDefault cordova={isCordova()}>
           <ContentOuterWrapperDefault>
             <ContentInnerWrapperDefault>

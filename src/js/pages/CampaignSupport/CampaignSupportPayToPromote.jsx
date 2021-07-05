@@ -2,6 +2,7 @@ import React, { Component, Suspense } from 'react';
 import loadable from '@loadable/component';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
+import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import AppStore from '../../stores/AppStore';
@@ -17,15 +18,14 @@ import {
 } from '../../components/Style/CampaignSupportStyles';
 import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSteps';
-import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
-import initializejQuery from '../../utils/initializejQuery';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
+import VoterStore from '../../stores/VoterStore';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
+const CampaignSupportThermometer = React.lazy(() => import('../../components/CampaignSupport/CampaignSupportThermometer'));
 const VoterFirstRetrieveController = loadable(() => import('../../components/Settings/VoterFirstRetrieveController'));
 
 
@@ -38,6 +38,7 @@ class CampaignSupportPayToPromote extends Component {
       campaignTitle: '',
       campaignXWeVoteId: '',
       chosenWebsiteName: '',
+      voterFirstName: '',
     };
   }
 
@@ -47,6 +48,8 @@ class CampaignSupportPayToPromote extends Component {
     this.onAppStoreChange();
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
+    this.onVoterStoreChange();
+    this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
     // console.log('componentDidMount campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
@@ -84,6 +87,7 @@ class CampaignSupportPayToPromote extends Component {
     this.props.setShowHeaderFooter(true);
     this.appStoreListener.remove();
     this.campaignStoreListener.remove();
+    this.voterStoreListener.remove();
   }
 
   onAppStoreChange () {
@@ -127,6 +131,13 @@ class CampaignSupportPayToPromote extends Component {
     }
   }
 
+  onVoterStoreChange () {
+    const voterFirstName = VoterStore.getVoterFirstName();
+    this.setState({
+      voterFirstName,
+    });
+  }
+
   getCampaignBasePath = () => {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
     let campaignBasePath = '';
@@ -135,17 +146,16 @@ class CampaignSupportPayToPromote extends Component {
     } else {
       campaignBasePath = `/id/${campaignXWeVoteId}`;
     }
-
     return campaignBasePath;
+  }
+
+  goToIWillChipIn = () => {
+    const pathForNextStep = `${this.getCampaignBasePath()}/pay-to-promote-process`;
+    historyPush(pathForNextStep);
   }
 
   goToIWillShare = () => {
     const pathForNextStep = `${this.getCampaignBasePath()}/i-will-share-campaign`;
-    historyPush(pathForNextStep);
-  }
-
-  goToNextStep = () => {
-    const pathForNextStep = `${this.getCampaignBasePath()}/share-campaign`;
     historyPush(pathForNextStep);
   }
 
@@ -154,30 +164,47 @@ class CampaignSupportPayToPromote extends Component {
     historyPush(pathForNextStep);
   }
 
-  submitSupporterEndorsement = () => {
-    const { campaignXWeVoteId } = this.state;
-    const supporterEndorsementQueuedToSave = CampaignSupporterStore.getSupporterEndorsementQueuedToSave();
-    const supporterEndorsementQueuedToSaveSet = CampaignSupporterStore.getSupporterEndorsementQueuedToSaveSet();
-    if (supporterEndorsementQueuedToSaveSet && campaignXWeVoteId) {
-      // console.log('CampaignSupportPayToPromote, supporterEndorsementQueuedToSave:', supporterEndorsementQueuedToSave);
-      initializejQuery(() => {
-        CampaignSupporterActions.supporterEndorsementSave(campaignXWeVoteId, supporterEndorsementQueuedToSave);
-        CampaignSupporterActions.supporterEndorsementQueuedToSave(undefined);
-      });
-    }
-    this.goToNextStep();
-  }
-
   render () {
     renderLog('CampaignSupportPayToPromote');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
       console.log(`CampaignSupportPayToPromote window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
-    const { campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId, chosenWebsiteName } = this.state;
+    const {
+      campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId,
+      chosenWebsiteName, voterFirstName,
+    } = this.state;
+    const htmlTitle = `Chip in to support ${campaignTitle} - ${chosenWebsiteName}`;
+    let chipInDescriptionText1 = '';
+    if (voterFirstName) {
+      chipInDescriptionText1 += voterFirstName;
+      chipInDescriptionText1 += ', it can take a lot of time to personally encourage your friends to vote. ';
+    } else {
+      chipInDescriptionText1 += 'Personally encouraging your friends to vote can take a lot of your time. ';
+    }
+    const chipInDescriptionText2 = (
+      <>
+        WeVote.US (a nonpartisan nonprofit) is here to help you reach more voters in a fraction of the time.
+        {' '}
+        Chipping in allows WeVote.US to:
+        <ul>
+          <li>
+            <strong>Find like-minded people</strong>
+            {' '}
+            to support this campaign
+          </li>
+          <li>
+            <strong>Distribute this campaign</strong>
+            {' '}
+            to people through ads and our website
+          </li>
+        </ul>
+        This campaign can achieve its goals if everyone chips in. Can you help reach the supporter goal?
+      </>
+    );
     return (
       <div>
-        <Helmet title={`Chip In - ${chosenWebsiteName}`} />
+        <Helmet title={htmlTitle} />
         <PageWrapperDefault cordova={isCordova()}>
           <ContentOuterWrapperDefault>
             <ContentInnerWrapperDefault>
@@ -199,8 +226,14 @@ class CampaignSupportPayToPromote extends Component {
                 Can you chip in $3 to get this campaign in front of more people?
               </CampaignProcessStepTitle>
               <CampaignProcessStepIntroductionText>
-                People are more likely to support your campaign if it’s clear why you care. Explain how this candidate winning will impact you, your family, or your community.
+                {chipInDescriptionText1}
+                {chipInDescriptionText2}
               </CampaignProcessStepIntroductionText>
+              <CampaignThermometerWrapper>
+                <Suspense fallback={<span>&nbsp;</span>}>
+                  <CampaignSupportThermometer campaignXWeVoteId={campaignXWeVoteId} />
+                </Suspense>
+              </CampaignThermometerWrapper>
               <CampaignSupportSectionWrapper>
                 <CampaignSupportSection>
                   <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
@@ -209,7 +242,7 @@ class CampaignSupportPayToPromote extends Component {
                         classes={{ root: classes.buttonDesktop }}
                         color="primary"
                         id="submitPayToPromoteDesktop"
-                        onClick={this.submitSupporterEndorsement}
+                        onClick={this.goToIWillChipIn}
                         variant="contained"
                       >
                         Yes, I&apos;ll chip in $3 to boost this campaign
@@ -222,7 +255,7 @@ class CampaignSupportPayToPromote extends Component {
                         classes={{ root: classes.buttonDefault }}
                         color="primary"
                         id="submitPayToPromoteMobile"
-                        onClick={this.submitCampaignDescription}
+                        onClick={this.goToIWillChipIn}
                         variant="contained"
                       >
                         Yes, I&apos;ll chip in $3
@@ -330,5 +363,10 @@ const styles = () => ({
     },
   },
 });
+
+const CampaignThermometerWrapper = styled.div`
+  margin-top: 25px;
+  min-height: 75px;
+`;
 
 export default withStyles(styles)(CampaignSupportPayToPromote);

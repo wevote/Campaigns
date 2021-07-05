@@ -209,7 +209,7 @@ class CampaignStartEditAll extends Component {
     const { classes, editExistingCampaign } = this.props;
     const {
       campaignSEOFriendlyPath, campaignXWeVoteId, chosenWebsiteName,
-      isBlockedByWeVote, isBlockedByWeVoteReason, voterIsCampaignXOwner
+      isBlockedByWeVote, isBlockedByWeVoteReason, voterIsCampaignXOwner,
     } = this.state;
     return (
       <div>

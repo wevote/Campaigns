@@ -99,7 +99,7 @@ class CheckoutForm extends React.Component {
 
     if (emailFieldError) {
       this.setState({
-        emailValidationErrorText: 'Our payment processor requires an email address for this transaction.',
+        emailValidationErrorText: 'Our payment processor Stripe requires an email address for this transaction.',
         emailFieldError: false,
       });
     } else {
@@ -208,12 +208,12 @@ class CheckoutForm extends React.Component {
           />
           <SplitIconButton
             buttonText={showWaiting ? <CircularProgress style={{ color: 'white' }} size={18} /> : <>Become a member</>}
-            backgroundColor="rgb(33, 95, 254)"
-            separatorColor="rgb(33, 95, 254)"
+            backgroundColor="#2e3c5d"
+            separatorColor="#2e3c5d"
             styles={iconButtonStyles}
             adjustedIconWidth={30}
             disabled={showWaiting}
-            externalUniqueId="facebookSignIn"
+            externalUniqueId="becomeAMember"
             icon={<ReactSVG src={whiteLock} />}
             id="stripeCheckOutForm"
             onClick={() => this.submitStripePayment(emailFromVoter)}
@@ -226,7 +226,6 @@ class CheckoutForm extends React.Component {
     );
   }
 }
-
 CheckoutForm.propTypes = {
   stripe: PropTypes.object,
   elements: PropTypes.object,
