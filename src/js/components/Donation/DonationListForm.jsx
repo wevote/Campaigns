@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { AppBar, Tab, Tabs } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -31,6 +32,7 @@ class DonationListForm extends Component {
   render () {
     renderLog('DonationListForm');  // Set LOG_RENDER_EVENTS to log all renders
     const { value } = this.state;
+    const { membershipsFirst } = this.props;
     // console.log('this.value =========', value);
 
     const donationSubscriptionHistory = DonateStore.getVoterSubscriptionHistory();
@@ -41,11 +43,10 @@ class DonationListForm extends Component {
       return null;
     }
 
-
     if (donationPaymentHistory && donationPaymentHistory.length > 0) {
       return (
         <div>
-          <h4>Existing memberships and prior payments:</h4>
+          <h4>Prior &apos;Chip In&apos; payments, and any existing memberships</h4>
           <input type="hidden" value={this.state.activeKey} />
           <ThemeProvider theme={campaignTheme(false, 40)}>
             <AppBar position="relative" color="default">
@@ -54,11 +55,11 @@ class DonationListForm extends Component {
                 onChange={this.handleChange}
                 aria-label="payments or subscription choice bar"
               >
-                <Tab label="Memberships"
+                <Tab label={membershipsFirst ? 'Memberships' :  'Payment history'}
                      id={`scrollable-auto-tab-${0}`}
                      aria-controls={`scrollable-auto-tabpanel-${0}`}
                 />
-                <Tab label="Payment history"
+                <Tab label={membershipsFirst ? 'Payment history' : 'Memberships'}
                      id={`scrollable-auto-tab-${1}`}
                      aria-controls={`scrollable-auto-tabpanel-${1}`}
                 />
@@ -66,10 +67,10 @@ class DonationListForm extends Component {
             </AppBar>
             <div style={{ paddingBottom: 16 }}>
               <TabPanel value={value} index={0}>
-                <DonationList membershipTabShown showOrganizationPlan={false} />
+                <DonationList membershipTabShown={membershipsFirst} showPremiumPlan={false} />
               </TabPanel>
               <TabPanel value={value} index={1}>
-                <DonationList membershipTabShown={false} showOrganizationPlan={false} />
+                <DonationList membershipTabShown={!membershipsFirst} showPremiumPlan={false} />
               </TabPanel>
             </div>
           </ThemeProvider>
@@ -80,5 +81,7 @@ class DonationListForm extends Component {
     }
   }
 }
-
+DonationListForm.propTypes = {
+  membershipsFirst: PropTypes.bool,
+};
 export default DonationListForm;

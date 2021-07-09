@@ -43,11 +43,11 @@ class CheckoutForm extends React.Component {
   componentWillUnmount () {
     this.donateStoreListener.remove();
     if (this.stripeErrorTimer) {
-      clearTimeout(this.stripeErrorTimer);
+      if (this.stripeErrorTimer) clearTimeout(this.stripeErrorTimer);
       this.stripeErrorTimer = null;
     }
     if (this.stripeSubmitTimer) {
-      clearTimeout(this.stripeSubmitTimer);
+      if (this.stripeSubmitTimer) clearTimeout(this.stripeSubmitTimer);
       this.stripeSubmitTimer = null;
     }
   }
@@ -93,7 +93,7 @@ class CheckoutForm extends React.Component {
 
   // See https://www.npmjs.com/package/@stripe/react-stripe-js#using-class-components
   submitStripePayment = async (emailFromVoter) => {
-    const { stripe, value, elements, onBecomeAMember } = this.props;
+    const { stripe, value, elements, onBecomeAMember, isChipIn, campaignXWeVoteId } = this.props;
     const { emailFieldError, emailFieldText } = this.state;
     console.log('submitStripePayment was called ==================');
 
@@ -106,7 +106,7 @@ class CheckoutForm extends React.Component {
       const email = (emailFromVoter && emailFromVoter.length > 0) ? emailFromVoter : emailFieldText;
 
       // eslint-disable-next-line no-unused-vars
-      const { error, paymentMethod: { id: paymentMethodId } } = await stripe.createPaymentMethod({
+      const { paymentMethod: { id: paymentMethodId } } = await stripe.createPaymentMethod({
         type: 'card',
         card: elements.getElement(CardElement),
         billing_details: {
@@ -118,16 +118,20 @@ class CheckoutForm extends React.Component {
       const { token } = tokenResult;
       console.log(`stripe token object from component/dialog: ${token}`);
       if (token) {
-        // Flip donateMonthly to false, to test chip in donations { ChipIn, "Chip In", single, one-time }
+        // Flip isMonthlyDonation to false, to test chip in donations { ChipIn, "Chip In", single, one-time }
         // This test option, does not change the ui, simply the way the donation is stored
         //
-        const donateMonthly = true;
-        const isOrganizationPlan = false;
+        const isMonthlyDonation = false;
+        const isPremiumPlan = false;
+        const couponCode = '';
+        const premiumPlanType = '';
 
         const donationPennies = moneyStringToPennies(value);
 
-        DonateActions.donationWithStripe(token.id, token.client_ip,
-          paymentMethodId, email, donationPennies, donateMonthly, isOrganizationPlan, '', '');
+        DonateActions.donationWithStripe(token.id, email, donationPennies, isChipIn, isMonthlyDonation, isPremiumPlan, token.client_ip, campaignXWeVoteId, paymentMethodId, couponCode, premiumPlanType);
+
+        // DonateActions.donationWithStripe(token.id, token.client_ip,
+        // paymentMethodId, email, donationPennies, isMonthlyDonation, isPremiumPlan, '', '');
         onBecomeAMember();
         this.setState({
           donationWithStripeSubmitted: true,
@@ -154,7 +158,7 @@ class CheckoutForm extends React.Component {
 
   render () {
     renderLog('CheckoutForm');  // Set LOG_RENDER_EVENTS to log all renders
-    const { classes, showWaiting } = this.props;
+    const { classes, isChipIn, showWaiting } = this.props;
     const { emailValidationErrorText, emailFieldError, paymentError, stripeErrorMessageForVoter } = this.state;
     const voter = VoterStore.getVoter();
     const emailFromVoter = (voter && voter.email) || '';
@@ -162,6 +166,7 @@ class CheckoutForm extends React.Component {
     const paymentErrorText = (stripeErrorMessageForVoter) || 'Please verify your information.';
     const error = emailFieldError || paymentError;
     const errorText = emailFieldError ? emailValidationErrorText : paymentErrorText;
+    const buttonText = isChipIn ? 'Chip In Today' : 'Become a member';
 
     return (
       <>
@@ -207,7 +212,7 @@ class CheckoutForm extends React.Component {
             }}
           />
           <SplitIconButton
-            buttonText={showWaiting ? <CircularProgress style={{ color: 'white' }} size={18} /> : <>Become a member</>}
+            buttonText={showWaiting ? <CircularProgress style={{ color: 'white' }} size={18} /> : buttonText}
             backgroundColor="#2e3c5d"
             separatorColor="#2e3c5d"
             styles={iconButtonStyles}
@@ -234,6 +239,8 @@ CheckoutForm.propTypes = {
   onBecomeAMember: PropTypes.func,
   showWaiting: PropTypes.bool,
   stopShowWaiting: PropTypes.func,
+  isChipIn: PropTypes.bool,
+  campaignXWeVoteId: PropTypes.string,
 };
 
 const StripeTagLine = styled.div`

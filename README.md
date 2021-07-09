@@ -4,7 +4,7 @@ This We Vote Campaigns repository contains a Node/React/Flux Javascript applicat
 
 Interested in [volunteering or applying for an internship](https://www.idealist.org/en/nonprofit/f917ce3db61a46cb8ad2b0d4e335f0af-we-vote-oakland#opportunities)? [Starting presentation here](https://prezi.com/5v4drd74pt6n/we-vote-introduction-strategic-landscape/).
 Please also [read about our values](https://docs.google.com/document/d/12qBXevI3mVKUsGmXL8mrDMPnWJ1SYw9zX9LGW5cozgg/edit) and
-[see our Code of Conduct](CODE_OF_CONDUCT.md)
+see our Code of Conduct (CODE_OF_CONDUCT)
 To join us, please [review our openings here](https://www.idealist.org/en/nonprofit/f917ce3db61a46cb8ad2b0d4e335f0af-we-vote-oakland#opportunities), and express your interest by emailing JoinUs@WeVote.US
 
 
@@ -180,3 +180,8 @@ Airdrop the url  `https://316caa1ce659.ngrok.io` to your phone.
 The app should start right up.
 
 That url is a publicly accessible link, so while your ngrok is running, anyone you want can see your app and run it on their phone's web browser.
+
+
+## Test Stripe, by setting up ngrok to send stripe webhooks to your local python server
+
+See https://github.com/wevote/WeVoteServer/blob/develop/docs/README_DONATION_SETUP.md

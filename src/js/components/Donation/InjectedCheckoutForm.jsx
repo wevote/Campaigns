@@ -9,6 +9,8 @@ const InjectedCheckoutForm = (params) => {
     onBecomeAMember,
     showWaiting,
     stopShowWaiting,
+    isChipIn,
+    campaignXWeVoteId,
   } = params;
   console.log('InjectedCheckoutForm --------- showWaiting', showWaiting);
   if (value && classes) {
@@ -27,6 +29,8 @@ const InjectedCheckoutForm = (params) => {
             onBecomeAMember={onBecomeAMember}
             showWaiting={showWaiting}
             stopShowWaiting={stopShowWaiting}
+            isChipIn={isChipIn}
+            campaignXWeVoteId={campaignXWeVoteId}
           />
         )}
       </ElementsConsumer>

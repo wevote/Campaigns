@@ -1,6 +1,5 @@
 import { ReduceStore } from 'flux/utils';
 import Dispatcher from '../components/Dispatcher/Dispatcher';
-// import VoterActions from "../actions/VoterActions";
 
 class VoterSessionStore extends ReduceStore {
   getInitialState () {
