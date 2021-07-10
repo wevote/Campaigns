@@ -23,6 +23,7 @@ class SettingsEditProfile extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      voterPhotoTooBig: false,
     };
   }
 
@@ -61,6 +62,7 @@ class SettingsEditProfile extends Component {
     VoterActions.voterFirstNameQueuedToSave(undefined);
     VoterActions.voterLastNameQueuedToSave(undefined);
     VoterActions.voterPhotoQueuedToSave(undefined);
+    VoterActions.voterPhotoTooBigReset();
     historyPush('/profile/started');
   }
 

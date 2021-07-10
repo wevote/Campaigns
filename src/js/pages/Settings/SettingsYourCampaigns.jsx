@@ -48,9 +48,11 @@ class SettingsYourCampaigns extends Component {
 
   onVoterStoreChange () {
     const voterFirstPlusLastName = VoterStore.getFirstPlusLastName();
+    const voterPhotoTooBig = VoterStore.getVoterPhotoTooBig();
     const voterPhotoUrlLarge = VoterStore.getVoterPhotoUrlLarge();
     this.setState({
       voterFirstPlusLastName,
+      voterPhotoTooBig,
       voterPhotoUrlLarge,
     });
   }
@@ -61,7 +63,7 @@ class SettingsYourCampaigns extends Component {
       console.log(`SettingsYourCampaigns window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
-    const { chosenWebsiteName, voterFirstPlusLastName, voterPhotoUrlLarge } = this.state;
+    const { chosenWebsiteName, voterFirstPlusLastName, voterPhotoTooBig, voterPhotoUrlLarge } = this.state;
     return (
       <div>
         <Helmet title={`Your Campaigns - ${chosenWebsiteName}`} />
@@ -83,6 +85,11 @@ class SettingsYourCampaigns extends Component {
             >
               Edit profile
             </Button>
+            {voterPhotoTooBig && (
+              <VoterPhotoTooBig>
+                The profile photo you tried to save is too big and cannot be saved. The size limit is 5 Megabytes. None of your changes were saved. Please click &apos;Edit profile&apos; and try again.
+              </VoterPhotoTooBig>
+            )}
           </IntroductionMessageSection>
           <CampaignListTabs />
           <SettingsCampaignList />
@@ -125,6 +132,16 @@ const PageWrapper = styled.div`
 const VoterPhotoImage = styled.img`
   border-radius: 100px;
   max-width: 200px;
+`;
+
+const VoterPhotoTooBig = styled.div`
+  background-color: #efc2c2;
+  border-radius: 4px;
+  color: #2e3c5d;
+  font-size: 18px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  padding: 5px 12px;
 `;
 
 const VoterPhotoWrapper = styled.div`

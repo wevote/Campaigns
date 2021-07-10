@@ -9,6 +9,7 @@ import AppStore from '../../stores/AppStore';
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import CompleteYourProfileModalController from '../../components/Settings/CompleteYourProfileModalController';
 import CampaignStartStore from '../../stores/CampaignStartStore';
+import DelayedLoad from '../../components/Widgets/DelayedLoad';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
@@ -233,7 +234,13 @@ class CampaignStartPreview extends Component {
                   {campaignPhotoLargeUrl ? (
                     <CampaignImage src={campaignPhotoLargeUrl} alt="Campaign" />
                   ) : (
-                    <CampaignImageMissing>Photo Missing</CampaignImageMissing>
+                    <CampaignImageMissingWrapper>
+                      <CampaignImageMissing>
+                        <DelayedLoad showLoadingText waitBeforeShow={4000}>
+                          Photo Missing
+                        </DelayedLoad>
+                      </CampaignImageMissing>
+                    </CampaignImageMissingWrapper>
                   )}
                   {campaignDescription ? (
                     <CampaignDescription>{campaignDescription}</CampaignDescription>
@@ -301,6 +308,11 @@ const CampaignImageMissing = styled.div`
   color: red;
   font-size: 18px;
   font-weight: 600;
+`;
+
+const CampaignImageMissingWrapper = styled.div`
+  display: flex;
+  justify-content: flex-start;
 `;
 
 const CampaignPoliticianList = styled.div`
