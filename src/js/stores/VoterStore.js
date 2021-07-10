@@ -292,6 +292,10 @@ class VoterStore extends ReduceStore {
     return this.getState().voterPhotoQueuedToSaveSet;
   }
 
+  getVoterPhotoTooBig () {
+    return this.getState().voter_photo_too_big || false;
+  }
+
   // Could be either Facebook photo or Twitter photo
   getVoterPhotoUrlLarge () {
     return this.getState().voter.voter_photo_url_large || '';
@@ -791,6 +795,13 @@ class VoterStore extends ReduceStore {
           voter: { ...state.voter, facebook_profile_image_url_https: action.res.facebook_profile_image_url_https },
         };
 
+      case 'voterPhotoTooBigReset':
+        // console.log('VoterStore, voterPhotoTooBigReset');
+        return {
+          ...state,
+          voter_photo_too_big: false,
+        };
+
       case 'voterRetrieve':
         // console.log("VoterStore, voterRetrieve state on entry: ",  state);
         // console.log("VoterStore, voterRetrieve state on entry: ",  state.voter);
@@ -928,10 +939,12 @@ class VoterStore extends ReduceStore {
               voter_photo_url_medium: action.res.we_vote_hosted_profile_image_url_medium,
               voter_photo_url_tiny: action.res.we_vote_hosted_profile_image_url_tiny,
             },
+            voter_photo_too_big: action.res.voter_photo_too_big || false,
           };
         } else {
           return {
             ...state,
+            voter_photo_too_big: action.res.voter_photo_too_big,
           };
         }
 

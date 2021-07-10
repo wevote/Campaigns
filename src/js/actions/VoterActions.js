@@ -148,11 +148,16 @@ export default {
   },
 
   voterPhotoSave (voterPhotoQueuedToSave = '', voterPhotoQueuedToSaveSet = false) {
+    // console.log('VoterActions voterPhotoSave');
     Dispatcher.loadEndpoint('voterUpdate',
       {
         voter_photo_from_file_reader: voterPhotoQueuedToSave,
         voter_photo_changed: voterPhotoQueuedToSaveSet,
       });
+  },
+
+  voterPhotoTooBigReset () {
+    Dispatcher.dispatch({ type: 'voterPhotoTooBigReset', payload: true });
   },
 
   voterEmailAddressRetrieve () {

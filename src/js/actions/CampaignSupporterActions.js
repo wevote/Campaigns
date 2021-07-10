@@ -9,7 +9,7 @@ export default {
   },
 
   supportCampaignSave (campaignXWeVoteId, campaignSupported, campaignSupportedChanged, visibleToPublic, visibleToPublicChanged) {
-    // console.log('supportCampaignSave: ', supportCampaignSave);
+    // console.log('supportCampaignSave');
     Dispatcher.loadEndpoint('campaignSupporterSave',
       {
         campaign_supported: campaignSupported,

@@ -191,7 +191,7 @@ class CampaignSupportPayToPromote extends Component {
           <li>
             <strong>Find like-minded people</strong>
             {' '}
-            to support this campaign
+            who can vote for the candidates in this campaign
           </li>
           <li>
             <strong>Distribute this campaign</strong>
