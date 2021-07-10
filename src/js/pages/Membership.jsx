@@ -267,11 +267,13 @@ class Membership extends Component {
                   stopShowWaiting={this.stopShowWaiting}
                   onBecomeAMember={this.onBecomeAMember}
                   showWaiting={showWaiting}
+                  isChipIn={false}
+                  campaignXWeVoteId=""
                 />
               </Elements>
             </PaymentCenteredWrapper>
           </PaymentWrapper>
-          <DonationListForm waitForWebhook />
+          <DonationListForm waitForWebhook membershipsFirst />
         </PageWrapper>
         <Suspense fallback={<span>&nbsp;</span>}>
           <VoterFirstRetrieveController />
@@ -295,12 +297,12 @@ const styles = () => ({
     backgroundColor: 'white',
   },
   buttonRootSelected: {
-    border: '1px solid red',
+    border: '1px solid #236AC7',
     fontSize: 18,
     fontWeight: 600,
     textTransform: 'none',
     width: '100%',
-    color: 'red',
+    color: '#236AC7',
     backgroundColor: 'white',
   },
   textFieldRoot: {

@@ -74,7 +74,8 @@ class DonationList extends Component {
       const { record_enum: recordEnum, refund_days_limit: refundDaysLimit,
         created, amount, brand, last4, funding, last_charged: lastCharged,
         exp_month: expMonth, exp_year: expYear, stripe_status: stripeStatus,
-        stripe_subscription_id: subscriptionId } = item;
+        stripe_subscription_id: subscriptionId, is_chip_in: isChip,
+        campaign_title: campaignTitle } = item;
       const refundDays = parseInt(refundDaysLimit, 10);
       const isActive = moment.utc(created).local().isAfter(moment(new Date()).subtract(refundDays, 'days')) &&
           !stripeStatus.includes('refund');
@@ -83,13 +84,19 @@ class DonationList extends Component {
       const cancelText = '';
       const stripeStatusCap = stripeStatus.charAt(0).toUpperCase() + stripeStatus.slice(1);
       const status = stripeStatusCap === 'Succeeded' ? 'Paid' : stripeStatusCap;
+      let paymentText;
+      if (isChip) {
+        paymentText = 'Chip In';
+      } else {
+        paymentText = recordEnum === 'PAYMENT_FROM_UI' ? 'One time' : 'Subscription';
+      }
       rows.push({
         id: id++,
         date: moment.utc(created).format('MMM D, YYYY'),
         amount,
         monthly: !waiting ? amount : 'waiting',
-        isChip: false,
-        payment: recordEnum === 'PAYMENT_FROM_UI' ? 'One time' : 'Subscription',
+        isChip,
+        payment: paymentText,
         card: brand,
         ends: last4,
         expires: `${expMonth}/${expYear}`,
@@ -100,13 +107,14 @@ class DonationList extends Component {
         isActive,
         cancelText,
         subscriptionId,
+        campaignTitle,
       });
     });
     return rows;
   }
 
   subscriptionRows = () => {
-    const { membershipTabShown, showOrganizationPlan } = this.props;
+    const { membershipTabShown, showPremiumPlan } = this.props;
     const subscriptions = DonateStore.getVoterSubscriptionHistory();
     const rows = [];
     let id = 0;
@@ -140,7 +148,7 @@ class DonationList extends Component {
         active,
         isActive,
         cancelText,
-        showOrganizationPlan,
+        showPremiumPlan,
         subscriptionId,
       });
     });
@@ -171,8 +179,7 @@ class DonationList extends Component {
 
   render () {
     renderLog('DonationList');  // Set LOG_RENDER_EVENTS to log all renders
-    const { membershipTabShown, showOrganizationPlan } = this.props;
-    const isDeskTop = !this.isMobile();
+    const { membershipTabShown, showPremiumPlan } = this.props;
 
     if (membershipTabShown) {
       const subscriptionRows = this.subscriptionRows();
@@ -181,47 +188,37 @@ class DonationList extends Component {
           <Table aria-label="Subscription table">
             <TableHead>
               <TableRow>
-                {isDeskTop && <StyledTableHeaderCell align="center">Active</StyledTableHeaderCell>}
-                <StyledTableHeaderCell align="center">Started</StyledTableHeaderCell>
-                <StyledTableHeaderCell align="right">Monthly</StyledTableHeaderCell>
-                <StyledTableHeaderCell align="center">Last Charged</StyledTableHeaderCell>
-                {isDeskTop && (
-                  <>
-                    <StyledTableHeaderCell align="center">Card</StyledTableHeaderCell>
-                    <StyledTableHeaderCell align="center">Ends With</StyledTableHeaderCell>
-                    <StyledTableHeaderCell align="center">Expires</StyledTableHeaderCell>
-                  </>
-                )}
-                <StyledTableHeaderCell align="center">Info</StyledTableHeaderCell>
+                <StyledTableHeaderCellTablet align="center">Active</StyledTableHeaderCellTablet>
+                <StyledTableHeaderCellAll align="center">Started</StyledTableHeaderCellAll>
+                <StyledTableHeaderCellAll align="right">Monthly</StyledTableHeaderCellAll>
+                <StyledTableHeaderCellTablet align="center">Last Charged</StyledTableHeaderCellTablet>
+                <StyledTableHeaderCellTablet align="center">Card</StyledTableHeaderCellTablet>
+                <StyledTableHeaderCellDesktop align="center">Ends With</StyledTableHeaderCellDesktop>
+                <StyledTableHeaderCellDesktop align="center">Expires</StyledTableHeaderCellDesktop>
+                <StyledTableHeaderCellAll align="center">Info</StyledTableHeaderCellAll>
               </TableRow>
             </TableHead>
             <TableBody>
               {subscriptionRows.map((row) => (
                 <TableRow key={row.id}>
-                  {isDeskTop && (
-                    <StyledTableCell align="center">{row.active}</StyledTableCell>
-                  )}
-                  <StyledTableCell align="center">{row.date}</StyledTableCell>
-                  <StyledTableCell align="right">{`$${row.amount}`}</StyledTableCell>
-                  <StyledTableCell align="center">{row.lastCharged}</StyledTableCell>
-                  {isDeskTop && (
-                    <>
-                      <StyledTableCell align="center">
-                        <Tooltip title={row.subscriptionId || 'Toolman Taylor'} placement="right"><span>{row.brand}</span></Tooltip>
-                      </StyledTableCell>
-                      <StyledTableCell align="center">{row.last4}</StyledTableCell>
-                      <StyledTableCell align="center">{row.expires}</StyledTableCell>
-                    </>
-                  )}
-                  <StyledTableCell align="center">
+                  <StyledTableCellTablet align="center">{row.active}</StyledTableCellTablet>
+                  <StyledTableCellAll align="center">{row.date}</StyledTableCellAll>
+                  <StyledTableCellAll align="right">{`$${row.amount}`}</StyledTableCellAll>
+                  <StyledTableCellTablet align="center">{row.lastCharged}</StyledTableCellTablet>
+                  <StyledTableCellTablet align="center">
+                    <Tooltip title={row.subscriptionId || 'Toolman Taylor'} placement="right"><span>{row.brand}</span></Tooltip>
+                  </StyledTableCellTablet>
+                  <StyledTableCellDesktop align="center">{row.last4}</StyledTableCellDesktop>
+                  <StyledTableCellDesktop align="center">{row.expires}</StyledTableCellDesktop>
+                  <StyledTableCellAll align="center">
                     <DonationCancelOrRefund item={row}
                                             refundDonation={!membershipTabShown}
                                             active={row.isActive}
                                             cancelText=""
-                                            showOrganizationPlan={showOrganizationPlan}
+                                            showPremiumPlan={showPremiumPlan}
                                             refreshRequired={this.refreshRequired}
                     />
-                  </StyledTableCell>
+                  </StyledTableCellAll>
                 </TableRow>
               ))}
             </TableBody>
@@ -235,46 +232,36 @@ class DonationList extends Component {
           <Table aria-label="Donation table">
             <TableHead>
               <TableRow>
-                <StyledTableHeaderCell align="left">Date Paid</StyledTableHeaderCell>
-                <StyledTableHeaderCell align="center">Donation Type</StyledTableHeaderCell>
-                <StyledTableHeaderCell align="right">Amount</StyledTableHeaderCell>
-                {isDeskTop && (
-                  <>
-                    <StyledTableHeaderCell align="center">Payment</StyledTableHeaderCell>
-                    <StyledTableHeaderCell align="center">Card</StyledTableHeaderCell>
-                    <StyledTableHeaderCell align="center">Ends</StyledTableHeaderCell>
-                    <StyledTableHeaderCell align="center">Exp</StyledTableHeaderCell>
-                    <StyledTableHeaderCell align="center">Status</StyledTableHeaderCell>
-                    <StyledTableHeaderCell align="center">Funding</StyledTableHeaderCell>
-                  </>
-                )}
+                <StyledTableHeaderCellAll align="left">Date Paid</StyledTableHeaderCellAll>
+                <StyledTableHeaderCellDesktop align="center">Donation Type</StyledTableHeaderCellDesktop>
+                <StyledTableHeaderCellAll align="right">Amount</StyledTableHeaderCellAll>
+                <StyledTableHeaderCellAll align="center">Campaign</StyledTableHeaderCellAll>
+                <StyledTableHeaderCellTablet align="center">Card</StyledTableHeaderCellTablet>
+                <StyledTableHeaderCellTablet align="center">Ends</StyledTableHeaderCellTablet>
+                <StyledTableHeaderCellTablet align="center">Exp</StyledTableHeaderCellTablet>
+                <StyledTableHeaderCellTablet align="center">Status</StyledTableHeaderCellTablet>
+                <StyledTableHeaderCellDesktop align="center">Funding</StyledTableHeaderCellDesktop>
                 {/* <StyledTableHeaderCell align="center">Info</StyledTableHeaderCell> */}
               </TableRow>
             </TableHead>
             <TableBody>
               {paymentRows.map((row) => (
                 <TableRow key={row.id}>
-                  <StyledTableCell align="left">{row.date}</StyledTableCell>
-                  <StyledTableCell align="center">{row.isChip ? 'Chip In' : 'Membership Payment'}</StyledTableCell>
-                  <StyledTableCell align="right">{`$${row.amount}`}</StyledTableCell>
-                  {isDeskTop && (
-                    <>
-                      <StyledTableCell align="center">
-                        <Tooltip title={row.subscriptionId || 'Toolman Taylor'} placement="right"><span>{row.payment}</span></Tooltip>
-                      </StyledTableCell>
-                      <StyledTableCell align="center">{row.card}</StyledTableCell>
-                      <StyledTableCell align="center">{row.ends}</StyledTableCell>
-                      <StyledTableCell align="center">{row.expires}</StyledTableCell>
-                      <StyledTableCell align="center">{row.status}</StyledTableCell>
-                      <StyledTableCell align="center">{row.funding}</StyledTableCell>
-                    </>
-                  )}
-                  {/* <StyledTableCell align="center"> */}
+                  <StyledTableCellAll align="left">{row.date}</StyledTableCellAll>
+                  <StyledTableCellDesktop align="center">{row.isChip ? 'Chip In' : 'Membership Payment'}</StyledTableCellDesktop>
+                  <StyledTableCellAll align="right">{`$${row.amount}`}</StyledTableCellAll>
+                  <StyledTableCellAll align="center">{row.campaignTitle}</StyledTableCellAll>
+                  <StyledTableCellTablet align="center">{row.card}</StyledTableCellTablet>
+                  <StyledTableCellTablet align="center">{row.ends}</StyledTableCellTablet>
+                  <StyledTableCellTablet align="center">{row.expires}</StyledTableCellTablet>
+                  <StyledTableCellTablet align="center">{row.status}</StyledTableCellTablet>
+                  <StyledTableCellDesktop align="center">{row.funding}</StyledTableCellDesktop>
+                  {/* <StyledTableCellTablet align="center"> */}
                   {/*  <DonationCancelOrRefund item={row} */}
                   {/*                          refundDonation={membershipTabShown} */}
                   {/*                          active={row.isActive} */}
                   {/*                          cancelText="" */}
-                  {/*                          showOrganizationPlan={showOrganizationPlan} */}
+                  {/*                          showPremiumPlan={showPremiumPlan} */}
                   {/*  /> */}
                   {/* </StyledTableCell> */}
                 </TableRow>
@@ -288,15 +275,46 @@ class DonationList extends Component {
 }
 DonationList.propTypes = {
   membershipTabShown: PropTypes.bool,
-  showOrganizationPlan: PropTypes.bool,
+  showPremiumPlan: PropTypes.bool,
 };
 
-const StyledTableCell = styled(TableCell)`
+const StyledTableCellAll = styled(TableCell)`
   padding: 8px;
 `;
-const StyledTableHeaderCell = styled(TableCell)`
+
+const StyledTableCellTablet = styled(TableCell)`
+  padding: 8px;
+  @media (max-width: 700px) {
+    display: none;
+  }
+`;
+
+const StyledTableCellDesktop = styled(TableCell)`
+  padding: 8px;
+  @media (max-width: 1200px) {
+    display: none;
+  }
+`;
+
+const StyledTableHeaderCellAll = styled(TableCell)`
   padding: 8px;
   color: black;
+`;
+
+const StyledTableHeaderCellTablet = styled(TableCell)`
+  padding: 8px;
+  color: black;
+  @media (max-width: 700px) {
+    display: none;
+  }
+`;
+
+const StyledTableHeaderCellDesktop = styled(TableCell)`
+  padding: 8px;
+  color: black;
+  @media (max-width: 1200px) {
+    display: none;
+  }
 `;
 
 export default DonationList;

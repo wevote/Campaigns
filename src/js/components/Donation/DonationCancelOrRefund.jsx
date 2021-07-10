@@ -40,10 +40,10 @@ export default class DonationCancelOrRefund extends Component {
   render () {
     renderLog('DonationCancelOrRefund');
 
-    const { item, refundDonation, active, cancelText, showOrganizationPlan } = this.props;
+    const { item, refundDonation, active, cancelText, showPremiumPlan } = this.props;
     const { amount, funding, brand, last4, expires } = item;
     let label = refundDonation ? 'Refund Donation' : 'Cancel Membership';
-    if (showOrganizationPlan) {
+    if (showPremiumPlan) {
       label = refundDonation ? 'Refund Plan Payment' : 'Cancel Paid Plan';
     }
 
@@ -142,7 +142,7 @@ DonationCancelOrRefund.propTypes = {
   refundDonation: PropTypes.bool, // true to enable refunding of donations, false to enable cancellation of subscriptions
   active: PropTypes.bool,
   cancelText: PropTypes.string,
-  showOrganizationPlan: PropTypes.bool,
+  showPremiumPlan: PropTypes.bool,
 };
 
 const StyledModalFrame = styled.div`

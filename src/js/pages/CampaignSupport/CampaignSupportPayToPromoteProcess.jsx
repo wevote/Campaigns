@@ -7,6 +7,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
+import CampaignActions from '../../actions/CampaignActions';
 import AppStore from '../../stores/AppStore';
 import DonateActions from '../../actions/DonateActions';
 import DonationListForm from '../../components/Donation/DonationListForm';
@@ -71,29 +72,34 @@ class CampaignSupportPayToPromoteProcess extends Component {
         campaignTitle,
         campaignXWeVoteId,
       } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
-      this.setState({
-        campaignTitle,
-      });
-      if (campaignSEOFriendlyPath) {
+      if (!campaignXWeVoteId) {
+        console.log('CampaignSupportPayToPromoteProcess mount did not receive a campaignXWeVoteId');
+        CampaignActions.campaignRetrieveBySEOFriendlyPath(campaignSEOFriendlyPathFromParams);
+      } else {
         this.setState({
-          campaignSEOFriendlyPath,
+          campaignTitle,
         });
-      } else if (campaignSEOFriendlyPathFromParams) {
-        this.setState({
-          campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams,
-        });
+        if (campaignSEOFriendlyPath) {
+          this.setState({
+            campaignSEOFriendlyPath,
+          });
+        } else if (campaignSEOFriendlyPathFromParams) {
+          this.setState({
+            campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams,
+          });
+        }
+        if (campaignXWeVoteId) {
+          this.setState({
+            campaignXWeVoteId,
+          });
+        } else if (campaignXWeVoteIdFromParams) {
+          this.setState({
+            campaignXWeVoteId: campaignXWeVoteIdFromParams,
+          });
+        }
+        // Take the "calculated" identifiers and retrieve if missing
+        retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
       }
-      if (campaignXWeVoteId) {
-        this.setState({
-          campaignXWeVoteId,
-        });
-      } else if (campaignXWeVoteIdFromParams) {
-        this.setState({
-          campaignXWeVoteId: campaignXWeVoteIdFromParams,
-        });
-      }
-      // Take the "calculated" identifiers and retrieve if missing
-      retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
     });
   }
 
@@ -204,7 +210,7 @@ class CampaignSupportPayToPromoteProcess extends Component {
 
   getCampaignBasePath = () => {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
-    let campaignBasePath = '';
+    let campaignBasePath;
     if (campaignSEOFriendlyPath) {
       campaignBasePath = `/c/${campaignSEOFriendlyPath}`;
     } else {
@@ -249,9 +255,13 @@ class CampaignSupportPayToPromoteProcess extends Component {
     const { classes } = this.props;
     const {
       campaignTitle, chipInPaymentValue, chipInPaymentOtherValue, chosenWebsiteName,
-      loaded, showWaiting, voterFirstName,
+      loaded, showWaiting, voterFirstName, campaignXWeVoteId,
     } = this.state;
     const htmlTitle = `Payment to support ${campaignTitle} - ${chosenWebsiteName}`;
+    if (campaignXWeVoteId === undefined || campaignXWeVoteId === '') {
+      console.error('Must have a campaignXWeVoteId defined in CampaignSupportPayToPromoteProcess to make a "chip in"');
+      return LoadingWheel;
+    }
     if (!loaded) {
       return LoadingWheel;
     }
@@ -379,11 +389,13 @@ class CampaignSupportPayToPromoteProcess extends Component {
                   stopShowWaiting={this.stopShowWaiting}
                   onBecomeAMember={this.onChipIn}
                   showWaiting={showWaiting}
+                  isChipIn
+                  campaignXWeVoteId={campaignXWeVoteId}
                 />
               </Elements>
             </PaymentCenteredWrapper>
           </PaymentWrapper>
-          <DonationListForm waitForWebhook />
+          <DonationListForm waitForWebhook membershipsFirst={false} />
           <SkipForNowButtonWrapper>
             <SkipForNowButtonPanel>
               <Button
@@ -420,12 +432,12 @@ const styles = () => ({
     backgroundColor: 'white',
   },
   buttonRootSelected: {
-    border: '1px solid red',
+    border: '1px solid #236AC7',  // as in the Material UI example
     fontSize: 18,
     fontWeight: 600,
     textTransform: 'none',
     width: '100%',
-    color: 'red',
+    color: '#236AC7',
     backgroundColor: 'white',
   },
   buttonSimpleLink: {
@@ -451,7 +463,6 @@ const styles = () => ({
     fontSize: 18,
     color: 'black',
     backgroundColor: 'white',
-    width: '100%',
   },
   stripeAlertError: {
     background: 'rgb(255, 177, 160)',
