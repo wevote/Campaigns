@@ -11,7 +11,7 @@ import CampaignActions from '../../actions/CampaignActions';
 import AppStore from '../../stores/AppStore';
 import DonateActions from '../../actions/DonateActions';
 import DonationListForm from '../../components/Donation/DonationListForm';
-import LoadingWheel from '../../components/LoadingWheel';
+import LoadingWheelComp from '../../components/LoadingWheelComp';
 import InjectedCheckoutForm from '../../components/Donation/InjectedCheckoutForm';
 import webAppConfig from '../../config';
 import CampaignStore from '../../stores/CampaignStore';
@@ -111,7 +111,6 @@ class CampaignSupportPayToPromoteProcess extends Component {
     this.voterStoreListener.remove();
     if (this.timer) {
       clearTimeout(this.timer);
-      this.timer = null;
     }
   }
 
@@ -228,6 +227,7 @@ class CampaignSupportPayToPromoteProcess extends Component {
         console.log(`pollForWebhookCompletion polling -- clearTimeout: ${latestCount}`);
         console.log(`pollForWebhookCompletion polling -- pollCount: ${pollCount}`);
         clearTimeout(this.timer);
+        this.timer = null;
         this.setState({ subscriptionCount: -1 });
         return;
       }
@@ -259,11 +259,15 @@ class CampaignSupportPayToPromoteProcess extends Component {
     } = this.state;
     const htmlTitle = `Payment to support ${campaignTitle} - ${chosenWebsiteName}`;
     if (campaignXWeVoteId === undefined || campaignXWeVoteId === '') {
-      console.error('Must have a campaignXWeVoteId defined in CampaignSupportPayToPromoteProcess to make a "chip in"');
-      return LoadingWheel;
+      // console.error('Must have a campaignXWeVoteId defined in CampaignSupportPayToPromoteProcess to make a "chip in"');
+      return (
+        <LoadingWheelComp />
+      );
     }
     if (!loaded) {
-      return LoadingWheel;
+      return (
+        <LoadingWheelComp message="Waiting..." />
+      );
     }
 
     return (
@@ -387,7 +391,7 @@ class CampaignSupportPayToPromoteProcess extends Component {
                   value={chipInPaymentOtherValue || chipInPaymentValue}
                   classes={{}}
                   stopShowWaiting={this.stopShowWaiting}
-                  onBecomeAMember={this.onChipIn}
+                  onDonation={this.onChipIn}
                   showWaiting={showWaiting}
                   isChipIn
                   campaignXWeVoteId={campaignXWeVoteId}
@@ -395,7 +399,7 @@ class CampaignSupportPayToPromoteProcess extends Component {
               </Elements>
             </PaymentCenteredWrapper>
           </PaymentWrapper>
-          <DonationListForm waitForWebhook membershipsFirst={false} />
+          <DonationListForm isCampaign leftTabIsMembership={false} />
           <SkipForNowButtonWrapper>
             <SkipForNowButtonPanel>
               <Button

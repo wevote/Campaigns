@@ -61,11 +61,9 @@ class CompleteYourProfile extends Component {
     this.voterStoreListener.remove();
     if (this.closeVerifyModalTimer) {
       clearTimeout(this.closeVerifyModalTimer);
-      this.closeVerifyModalTimer = null;
     }
     if (this.functionToUseWhenProfileCompleteTimer) {
       clearTimeout(this.functionToUseWhenProfileCompleteTimer);
-      this.functionToUseWhenProfileCompleteTimer = null;
     }
   }
 

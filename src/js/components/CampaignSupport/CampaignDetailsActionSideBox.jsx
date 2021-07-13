@@ -78,7 +78,6 @@ class CampaignDetailsActionSideBox extends Component {
     this.voterStoreListener.remove();
     if (this.clearVerificationTimer) {
       clearTimeout(this.clearVerificationTimer);
-      this.clearVerificationTimer = null;
     }
   }
 
