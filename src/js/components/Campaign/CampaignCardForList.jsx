@@ -61,6 +61,9 @@ class CampaignCardForList extends Component {
   componentWillUnmount () {
     this.campaignStoreListener.remove();
     this.campaignSupporterStoreListener.remove();
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
   }
 
   onCampaignStoreChange () {

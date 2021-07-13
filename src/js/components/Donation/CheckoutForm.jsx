@@ -1,16 +1,17 @@
-import React from 'react';
-import { CircularProgress, TextField } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import { withStyles, withTheme } from '@material-ui/core/styles';
+import { LockOutlined } from '@material-ui/icons';
+import { styled as muiStyled } from '@material-ui/styles';
 import { CardElement } from '@stripe/react-stripe-js';
 import PropTypes from 'prop-types';
-import { ReactSVG } from 'react-svg';
+import React from 'react';
 import styled from 'styled-components';
-import whiteLock from '../../../img/global/svg-icons/white-lock.svg';
 import DonateActions from '../../actions/DonateActions';
 import DonateStore from '../../stores/DonateStore';
 import VoterStore from '../../stores/VoterStore';
 import { renderLog } from '../../utils/logging';
 import moneyStringToPennies from '../../utils/moneyStringToPennies';
+import LoadingWheelComp from '../LoadingWheelComp';
 import SplitIconButton from '../Widgets/SplitIconButton';
 
 
@@ -18,6 +19,11 @@ const iconButtonStyles = {
   width: window.innerWidth < 1280 ? 220 : 300,
   margin: '16px',
 };
+
+/*
+July 2021 TODO: Same named file in the WebApp and Campaigns -- PLEASE KEEP THEM IDENTICAL -- make symmetrical changes and test on both sides
+*/
+
 
 class CheckoutForm extends React.Component {
   constructor (props) {
@@ -30,9 +36,15 @@ class CheckoutForm extends React.Component {
       emailFieldText: '',
       emailValidationErrorText: '',
     };
+    this.continuePolling = this.continuePolling.bind(this);
     this.emailChange = this.emailChange.bind(this);
     this.onDonateStoreChange = this.onDonateStoreChange.bind(this);
-    // this.handleSubmit = this.handleSubmit.bind(this);
+    this.pollForWebhookCompletionAtList = this.pollForWebhookCompletionAtList.bind(this);
+    this.submitStripePayment = this.submitStripePayment.bind(this);
+    this.preDonationCounts = {
+      subscriptions: -1,
+      payments: -1,
+    };
   }
 
   componentDidMount () {
@@ -42,24 +54,15 @@ class CheckoutForm extends React.Component {
 
   componentWillUnmount () {
     this.donateStoreListener.remove();
-    if (this.stripeErrorTimer) {
-      if (this.stripeErrorTimer) clearTimeout(this.stripeErrorTimer);
-      this.stripeErrorTimer = null;
-    }
-    if (this.stripeSubmitTimer) {
-      if (this.stripeSubmitTimer) clearTimeout(this.stripeSubmitTimer);
-      this.stripeSubmitTimer = null;
-    }
+    if (this.stripeErrorTimer) clearTimeout(this.stripeErrorTimer);
   }
 
   onDonateStoreChange = () => {
-    const { stopShowWaiting } = this.props;
-    const { donationWithStripeSubmitted } = this.state;
+    const { donationWithStripeSubmitted, paymentErrorMessage } = this.state;
     console.log('onDonateStoreChange');
     try {
       const { apiSuccess } = DonateStore.getAll();
-      // const all = DonateStore.getAll();
-      let stripeErrorMessageForVoter = DonateStore.donationError();
+      let stripeErrorMessageForVoter = DonateStore.donationError() || paymentErrorMessage;
       const getAmountPaidViaStripe = DonateStore.getAmountPaidViaStripe();
       if (apiSuccess === false ||
         (getAmountPaidViaStripe === 0 && donationWithStripeSubmitted && stripeErrorMessageForVoter.length === 0)) {
@@ -75,7 +78,6 @@ class CheckoutForm extends React.Component {
             paymentError: false,
             stripeErrorMessageForVoter: '',
           });
-          stopShowWaiting();
         }, 5000);
       }
       console.log('getAmountPaidViaStripe:', getAmountPaidViaStripe);
@@ -84,7 +86,13 @@ class CheckoutForm extends React.Component {
         this.setState({
           donationWithStripeSubmitted: false,
         });
-        stopShowWaiting();
+      }
+
+      if (DonateStore.donationResponseReceived()) {
+        console.log('onDonateStoreChange  ---  donationResponseReceived');
+        if (DonateStore.donationSuccess()) {
+          console.log('onDonateStoreChange  ---  donationSuccess');
+        }
       }
     } catch (err) {
       console.log('onDonateStoreChange caught error: ', err);
@@ -92,55 +100,89 @@ class CheckoutForm extends React.Component {
   };
 
   // See https://www.npmjs.com/package/@stripe/react-stripe-js#using-class-components
+  setPreDonationCounts () {
+    this.preDonationCounts = {
+      subscriptions: DonateStore.getNumberOfActiveSubscriptions(),
+      payments: DonateStore.getNumberOfPayments(),
+    };
+  }
+
   submitStripePayment = async (emailFromVoter) => {
-    const { stripe, value, elements, onBecomeAMember, isChipIn, campaignXWeVoteId } = this.props;
+    const { stripe, value, elements, isMonthly, isChipIn, campaignXWeVoteId } = this.props;
     const { emailFieldError, emailFieldText } = this.state;
     console.log('submitStripePayment was called ==================');
 
     if (emailFieldError) {
       this.setState({
-        emailValidationErrorText: 'Our payment processor Stripe requires an email address for this transaction.',
+        emailValidationErrorText: 'Our payment processor requires an email address for this transaction.',
         emailFieldError: false,
       });
     } else {
       const email = (emailFromVoter && emailFromVoter.length > 0) ? emailFromVoter : emailFieldText;
 
-      // eslint-disable-next-line no-unused-vars
-      const { paymentMethod: { id: paymentMethodId } } = await stripe.createPaymentMethod({
-        type: 'card',
-        card: elements.getElement(CardElement),
-        billing_details: {
-          email,
-        },
-      });
+      let paymentMethodId;
+      let error;
+      try {
+        ({ error,  paymentMethod: { id: paymentMethodId } } = await stripe.createPaymentMethod({
+          type: 'card',
+          card: elements.getElement(CardElement),
+          billing_details: {
+            email,
+          },
+        }));
+      } catch (error2) {
+        console.log('Stripe createPaymentMethodError: ', error2);
+      }
 
       const tokenResult = await stripe.createToken(elements.getElement(CardElement));
       const { token } = tokenResult;
       console.log(`stripe token object from component/dialog: ${token}`);
       if (token) {
-        // Flip isMonthlyDonation to false, to test chip in donations { ChipIn, "Chip In", single, one-time }
-        // This test option, does not change the ui, simply the way the donation is stored
-        //
-        const isMonthlyDonation = false;
+        const isMonthlyDonation = isMonthly;
         const isPremiumPlan = false;
         const couponCode = '';
         const premiumPlanType = '';
-
         const donationPennies = moneyStringToPennies(value);
+        this.setPreDonationCounts();
 
         DonateActions.donationWithStripe(token.id, email, donationPennies, isChipIn, isMonthlyDonation, isPremiumPlan, token.client_ip, campaignXWeVoteId, paymentMethodId, couponCode, premiumPlanType);
 
-        // DonateActions.donationWithStripe(token.id, token.client_ip,
-        // paymentMethodId, email, donationPennies, isMonthlyDonation, isPremiumPlan, '', '');
-        onBecomeAMember();
+        this.pollForWebhookCompletionAtList(20);
+
         this.setState({
           donationWithStripeSubmitted: true,
+          paymentError: false,
+          paymentErrorMessage: '',
         });
       } else {
+        const { /* code, */ message } = error;
+        console.log('Stripe returned error message:', message);
         this.setState({
           paymentError: true,
+          paymentErrorMessage: message,
         });
       }
+    }
+  }
+
+  pollForWebhookCompletionAtList = (maxPolls) => {
+    let pollCount = maxPolls;
+    console.log('pollForWebhookCompletion entry ----- ');
+
+    if (this.continuePolling()) {
+      this.setState({ isPolling: true });
+      this.setPollInterval = setInterval(() => {
+        pollCount--;
+        if (pollCount > 0 && this.continuePolling()) {
+          console.log(`pollForWebhookCompletion polling ----- ${pollCount}`);
+          DonateActions.donationRefreshDonationList();
+        } else {
+          clearInterval(this.setPollInterval);
+          this.setPollInterval = null;
+          this.clearPreDonationCounts();
+        }
+      }, 1000);
+      this.setState({ isPolling: false });
     }
   }
 
@@ -156,17 +198,36 @@ class CheckoutForm extends React.Component {
     });
   }
 
+  clearPreDonationCounts () {
+    this.preDonationCounts = {
+      subscriptions: -1,
+      payments: -1,
+    };
+  }
+
+  continuePolling () {
+    console.log(` continuePolling subs ${DonateStore.getNumberOfActiveSubscriptions()} vs ${this.preDonationCounts.subscriptions}  payments ${DonateStore.getNumberOfPayments()} vs ${this.preDonationCounts.payments}`);
+
+    return this.preDonationCounts.payments > -1 &&
+      DonateStore.getNumberOfActiveSubscriptions() === this.preDonationCounts.subscriptions &&
+      DonateStore.getNumberOfPayments() === this.preDonationCounts.payments;
+  }
+
+
   render () {
     renderLog('CheckoutForm');  // Set LOG_RENDER_EVENTS to log all renders
-    const { classes, isChipIn, showWaiting } = this.props;
-    const { emailValidationErrorText, emailFieldError, paymentError, stripeErrorMessageForVoter } = this.state;
+    const { campaignXWeVoteId, classes, isMonthly, showWaiting } = this.props;
+    const { emailValidationErrorText, emailFieldError, isPolling, paymentError, stripeErrorMessageForVoter } = this.state;
     const voter = VoterStore.getVoter();
     const emailFromVoter = (voter && voter.email) || '';
     console.log('render emailFieldError:', emailFieldError);
-    const paymentErrorText = (stripeErrorMessageForVoter) || 'Please verify your information.';
+    const paymentErrorText = stripeErrorMessageForVoter  || 'Please verify your information.';
     const error = emailFieldError || paymentError;
     const errorText = emailFieldError ? emailValidationErrorText : paymentErrorText;
-    const buttonText = isChipIn ? 'Chip In Today' : 'Become a member';
+    let buttonText = 'Become a member';
+    if (!isMonthly) {
+      buttonText = campaignXWeVoteId && campaignXWeVoteId.length ? 'Chip In Today' : 'Donate Today';
+    }
 
     return (
       <>
@@ -211,22 +272,25 @@ class CheckoutForm extends React.Component {
               },
             }}
           />
-          <SplitIconButton
-            buttonText={showWaiting ? <CircularProgress style={{ color: 'white' }} size={18} /> : buttonText}
-            backgroundColor="#2e3c5d"
-            separatorColor="#2e3c5d"
-            styles={iconButtonStyles}
-            adjustedIconWidth={30}
-            disabled={showWaiting}
-            externalUniqueId="becomeAMember"
-            icon={<ReactSVG src={whiteLock} />}
-            id="stripeCheckOutForm"
-            onClick={() => this.submitStripePayment(emailFromVoter)}
-          />
+          <ButtonContainer>
+            <SplitIconButton
+              buttonText={buttonText}
+              backgroundColor="#2e3c5d"
+              separatorColor="#2e3c5d"
+              styles={iconButtonStyles}
+              adjustedIconWidth={40}
+              disabled={showWaiting}
+              externalUniqueId="becomeAMember"
+              icon={<LockStyled />}
+              id="stripeCheckOutForm"
+              onClick={() => this.submitStripePayment(emailFromVoter)}
+            />
+          </ButtonContainer>
           <StripeTagLine>
             Secure processing provided by Stripe
           </StripeTagLine>
         </form>
+        {isPolling ? <LoadingWheelComp /> : null}
       </>
     );
   }
@@ -236,9 +300,8 @@ CheckoutForm.propTypes = {
   elements: PropTypes.object,
   value: PropTypes.string,
   classes: PropTypes.object,
-  onBecomeAMember: PropTypes.func,
   showWaiting: PropTypes.bool,
-  stopShowWaiting: PropTypes.func,
+  isMonthly: PropTypes.bool,
   isChipIn: PropTypes.bool,
   campaignXWeVoteId: PropTypes.string,
 };
@@ -251,9 +314,11 @@ const StripeTagLine = styled.div`
 
 const TextFieldContainer = styled.div`
   color: grey;
-  //background-color: aqua;
   font-size: 12px;
   padding: 5px 0 10px 0;
+`;
+const ButtonContainer = styled.div`
+  margin-top: 10px;
 `;
 
 const styles = () => ({
@@ -281,5 +346,7 @@ const styles = () => ({
     },
   },
 });
+
+const LockStyled = muiStyled(LockOutlined)({ color: 'white' });
 
 export default withTheme(withStyles(styles)(CheckoutForm));

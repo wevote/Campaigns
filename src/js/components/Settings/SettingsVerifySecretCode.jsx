@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import { Button, Dialog, OutlinedInput } from '@material-ui/core';
 import { withStyles, withTheme } from '@material-ui/core/styles';
 import { ArrowBack, ArrowBackIos } from '@material-ui/icons';
-import { Button, Dialog, OutlinedInput } from '@material-ui/core';
 import clsx from 'clsx';
-import { renderLog } from '../../utils/logging';
-import { hasIPhoneNotch, isIPhone4in, isIOS, isCordova, isWebApp } from '../../utils/cordovaUtils';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import styled from 'styled-components';
 import VoterActions from '../../actions/VoterActions';
 import VoterStore from '../../stores/VoterStore';
+import { hasIPhoneNotch, isCordova, isIOS, isIPhone4in, isWebApp } from '../../utils/cordovaUtils';
+import { renderLog } from '../../utils/logging';
+
 /* global $ */
 
 class SettingsVerifySecretCode extends Component {
@@ -98,11 +99,9 @@ class SettingsVerifySecretCode extends Component {
     this.voterStoreListener.remove();
     if (this.closeVerifyModalLocalTimer) {
       clearTimeout(this.closeVerifyModalLocalTimer);
-      this.closeVerifyModalLocalTimer = null;
     }
     if (this.clearSecretCodeVerificationStatusTimer) {
       clearTimeout(this.clearSecretCodeVerificationStatusTimer);
-      this.clearSecretCodeVerificationStatusTimer = null;
     }
     window.removeEventListener('paste', this.onPaste);
   }
@@ -151,10 +150,17 @@ class SettingsVerifySecretCode extends Component {
   }
 
   handleKeyDown6 (e) {
-    if (e.keyCode === 8 && this.state.digit6 === '') {
+    const ENTER_KEY_CODE = 13;
+    const BACKSPACE_KEY_CODE = 8;
+    if (e.keyCode === BACKSPACE_KEY_CODE && this.state.digit6 === '') {
       e.target.parentElement.previousElementSibling.firstElementChild.value = '';
       e.target.parentElement.previousElementSibling.firstElementChild.focus();
       this.setState({ digit5: '' });
+    }
+    const keyCodesForSubmit = [ENTER_KEY_CODE];
+    if (keyCodesForSubmit.includes(e.keyCode)) {
+      e.preventDefault();
+      this.voterVerifySecretCode(e);
     }
   }
 
@@ -172,13 +178,10 @@ class SettingsVerifySecretCode extends Component {
   onVoterStoreChange () {
     const secretCodeVerificationStatus = VoterStore.getSecretCodeVerificationStatus();
     const { incorrectSecretCodeEntered, numberOfTriesRemaining, secretCodeVerified, voterMustRequestNewCode, voterSecretCodeRequestsLocked } = secretCodeVerificationStatus;
-    // console.log('onVoterStoreChange secretCodeVerificationStatus:', secretCodeVerificationStatus);
-    // console.log(`onVoterStoreChange secretCodeVerified: ${secretCodeVerified}`);
+    // console.log('onVoterStoreChange secretCodeVerified: ' + secretCodeVerified);
     if (secretCodeVerified) {
-      // console.log('onVoterStoreChange secretCodeVerified: yes,   voter:', VoterStore.getVoter());
-      this.closeVerifyModalLocalTimer = setTimeout(() => {
-        this.closeVerifyModalLocal(true);
-      }, 500);
+      // console.log('onVoterStoreChange secretCodeVerified: yes');
+      this.closeVerifyModalLocal();
     } else {
       let errorMessageToDisplay = '';
       let errorToDisplay = false;
@@ -442,13 +445,24 @@ class SettingsVerifySecretCode extends Component {
     this.setState({ voterVerifySecretCodeSubmitted: true });
   };
 
-  closeVerifyModalLocal = (verified = false) => {
+  closeVerifyModalLocal = () => {
     // console.log('voterVerifySecretCode this.props.closeVerifyModal:', this.props.closeVerifyModal);
-    // console.log('voterVerifySecretCode voter:', VoterStore.getVoter());
     if (this.props.closeVerifyModal) {
-      this.props.closeVerifyModal(verified);
+      this.props.closeVerifyModal();
     }
   };
+
+  handleDigit6Blur = () => {
+    const { digit1, digit2, digit3, digit4, digit5, digit6, voterPhoneNumber } = this.state;
+    this.setState({ condensed: false });
+    if (digit6 && isCordova()) {
+      // Jan 2020 this comment looks wrong, but might still contain a clue:  When there is a voterEmailAddress value and the keyboard closes, submit
+      const secretCode = `${digit1}${digit2}${digit3}${digit4}${digit5}${digit6}`;
+      const codeSentToSMSPhoneNumber = !!voterPhoneNumber;
+      VoterActions.voterVerifySecretCode(secretCode, codeSentToSMSPhoneNumber);
+    }
+  };
+
 
   render () {
     renderLog('SettingsVerifySecretCode');  // Set LOG_RENDER_EVENTS to log all renders
@@ -502,7 +516,7 @@ class SettingsVerifySecretCode extends Component {
                 onPaste={this.onPaste}
                 type="tel"
                 value={this.state.digit1}
-                autoFocus={isCordova()}
+                autoFocus
               />
               <OutlinedInput
                 classes={{ root: classes.inputBase, input: classes.input }}
@@ -710,7 +724,7 @@ const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: ${(props) => (props.condensed ? 'flex-start' : 'space-evenly')};
-  height: ${() => (isWebApp() ? '100%' : 'unset')};
+  height: ${() => (isWebApp() ?  '100%' : 'unset')};
   width: 80%;
   max-width: 400px;
   margin: 0 auto;
@@ -731,7 +745,7 @@ const Title = styled.h3`
   margin-bottom: ${(props) => (props.condensed ? '16px' : '36px')};
   color: black;
   text-align: center;
-  'media(min-width: 569px)' {
+  @media(min-width: 569px) {
     font-size: 36px;
   }
 `;

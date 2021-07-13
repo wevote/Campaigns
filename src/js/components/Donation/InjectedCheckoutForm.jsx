@@ -1,15 +1,20 @@
-import React from 'react';
 import { ElementsConsumer } from '@stripe/react-stripe-js';
+import React from 'react';
+import { renderLog } from '../../utils/logging';
 import CheckoutForm from './CheckoutForm';
 
+/*
+July 2021 TODO: Same named file in the WebApp and Campaigns -- PLEASE KEEP THEM IDENTICAL -- make symmetrical changes and test on both sides
+*/
+
 const InjectedCheckoutForm = (params) => {
+  renderLog('InjectedCheckoutForm');
   const {
     value,
     classes,
-    onBecomeAMember,
     showWaiting,
-    stopShowWaiting,
     isChipIn,
+    isMonthly,
     campaignXWeVoteId,
   } = params;
   console.log('InjectedCheckoutForm --------- showWaiting', showWaiting);
@@ -26,9 +31,8 @@ const InjectedCheckoutForm = (params) => {
             elements={elements}
             value={value}
             classes={classes}
-            onBecomeAMember={onBecomeAMember}
             showWaiting={showWaiting}
-            stopShowWaiting={stopShowWaiting}
+            isMonthly={isMonthly}
             isChipIn={isChipIn}
             campaignXWeVoteId={campaignXWeVoteId}
           />

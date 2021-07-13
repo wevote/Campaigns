@@ -188,7 +188,6 @@ export default class SettingsAccount extends Component {
     this.voterStoreListener.remove();
     if (this.timer) {
       clearTimeout(this.timer);
-      this.timer = null;
     }
     restoreStylesAfterCordovaKeyboard('SettingsAccount');
   }

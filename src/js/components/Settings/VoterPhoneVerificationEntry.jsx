@@ -60,7 +60,6 @@ class VoterPhoneVerificationEntry extends Component {
     // console.log('VoterPhoneVerificationEntry componentWillUnmount voter:', VoterStore.getVoter());
     if (this.closeVerifyModalTimer) {
       clearTimeout(this.closeVerifyModalTimer);
-      this.closeVerifyModalTimer = null;
     }
     const { is_signed_in: isSignedIn, needsVoterRetrieve } = VoterStore.getVoter();
     if (!isSignedIn && needsVoterRetrieve) {

@@ -52,10 +52,9 @@ class Membership extends Component {
   }
 
   componentWillUnmount () {
-    this.donateStoreListener.remove();
+    if (this.donateStoreListener) this.donateStoreListener.remove();
     if (this.timer) {
       clearTimeout(this.timer);
-      this.timer = null;
     }
   }
 
@@ -118,6 +117,7 @@ class Membership extends Component {
         console.log(`pollForWebhookCompletion polling -- clearTimeout: ${latestCount}`);
         console.log(`pollForWebhookCompletion polling -- pollCount: ${pollCount}`);
         clearTimeout(this.timer);
+        this.timer = null;
         this.setState({ subscriptionCount: -1 });
         return;
       }
@@ -152,6 +152,7 @@ class Membership extends Component {
     renderLog('Membership');  // Set LOG_RENDER_EVENTS to log all renders
     const { classes } = this.props;
     const { joining, monthlyDonationValue, monthlyDonationOtherValue, loaded, showWaiting } = this.state;
+    const isMonthly = true;
     if (!loaded) {
       return LoadingWheel;
     }
@@ -167,9 +168,6 @@ class Membership extends Component {
                 <PageSubStatement joining={joining}>
                   Voters come to WeVote.US to start and sign campaigns that encourage more people to vote.
                   {' '}
-                  {/* Become a member today and fuel our mission to help every American to vote. */}
-                  {/* Become a member today and fuel our mission to help every American vote with confidence. */}
-                  {/* Become a member today and fuel our mission to help every American feel motivated to vote. */}
                   Become a member today and fuel our mission to motivate EVERY American to vote.
                 </PageSubStatement>
               </IntroductionMessageSection>
@@ -264,16 +262,13 @@ class Membership extends Component {
                 <InjectedCheckoutForm
                   value={monthlyDonationOtherValue || monthlyDonationValue}
                   classes={{}}
-                  stopShowWaiting={this.stopShowWaiting}
-                  onBecomeAMember={this.onBecomeAMember}
+                  isMonthly={isMonthly}
                   showWaiting={showWaiting}
-                  isChipIn={false}
-                  campaignXWeVoteId=""
                 />
               </Elements>
             </PaymentCenteredWrapper>
           </PaymentWrapper>
-          <DonationListForm waitForWebhook membershipsFirst />
+          <DonationListForm isCampaign leftTabIsMembership />
         </PageWrapper>
         <Suspense fallback={<span>&nbsp;</span>}>
           <VoterFirstRetrieveController />

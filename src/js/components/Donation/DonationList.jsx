@@ -12,46 +12,25 @@ import DonationCancelOrRefund from './DonationCancelOrRefund';
 
 /* global $ */
 
+/*
+July 2021 TODO: Same named file in the WebApp and Campaigns -- PLEASE KEEP THEM IDENTICAL -- make symmetrical changes and test on both sides
+*/
+
 class DonationList extends Component {
   constructor (props) {
     super(props);
-    this.state = {
-      enablePolling: false,
-    };
     this.isMobile = this.isMobile.bind(this);
     this.refreshRequired = this.refreshRequired.bind(this);
   }
 
   componentDidMount () {
-    this.onDonateStoreChange();
-    this.donateStoreListener = DonateStore.addListener(this.onDonateStoreChange.bind(this));
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
-    this.setState({
-      refreshCount: 0,
-      activeSubscriptionCount: DonateStore.getNumberOfActiveSubscriptions(),
-    });
     DonateActions.donationRefreshDonationList();
   }
 
   componentWillUnmount () {
-    this.donateStoreListener.remove();
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = null;
-    }
+    if (this.cancelMembershipTimer) clearTimeout(this.cancelMembershipTimer);
   }
-
-  onDonateStoreChange = () => {
-    const { refreshCount, activeSubscriptionCount, enablePolling } = this.state;
-    const stripeSuccess = DonateStore.donationError().length === 0;
-    if (enablePolling && stripeSuccess &&
-        activeSubscriptionCount === DonateStore.getNumberOfActiveSubscriptions()) {
-      this.pollForWebhookCompletionAtList(60);
-    }
-    this.setState({
-      refreshCount: refreshCount + 1,
-    });
-  };
 
   onVoterStoreChange = () => {
     // In case you sign-in while viewing the Membership page
@@ -59,8 +38,9 @@ class DonationList extends Component {
   };
 
   refreshRequired = () => {
-    DonateActions.donationRefreshDonationList();
-    this.setState({ enablePolling: true });
+    this.cancelMembershipTimer = setTimeout(() => {
+      DonateActions.donationRefreshDonationList();
+    }, 1000);
   }
 
   isMobile = () => $(window).width() < 1280;
@@ -71,11 +51,14 @@ class DonationList extends Component {
     let id = 0;
     donationPaymentHistory.forEach((item) => {
       // console.log('paymentRows item:', item);
-      const { record_enum: recordEnum, refund_days_limit: refundDaysLimit,
+      const { refund_days_limit: refundDaysLimit,
         created, amount, brand, last4, funding, last_charged: lastCharged,
         exp_month: expMonth, exp_year: expYear, stripe_status: stripeStatus,
-        stripe_subscription_id: subscriptionId, is_chip_in: isChip,
-        campaign_title: campaignTitle } = item;
+        stripe_subscription_id: subscriptionId, is_chip_in: isChipIn,
+        is_monthly_donation: isMonthlyDonation, is_premium_plan: isPremiumPlan,
+        campaign_title: campaignTitle,
+        campaignx_wevote_id: campaignxWeVoteId,
+      } = item;
       const refundDays = parseInt(refundDaysLimit, 10);
       const isActive = moment.utc(created).local().isAfter(moment(new Date()).subtract(refundDays, 'days')) &&
           !stripeStatus.includes('refund');
@@ -84,37 +67,47 @@ class DonationList extends Component {
       const cancelText = '';
       const stripeStatusCap = stripeStatus.charAt(0).toUpperCase() + stripeStatus.slice(1);
       const status = stripeStatusCap === 'Succeeded' ? 'Paid' : stripeStatusCap;
-      let paymentText;
-      if (isChip) {
-        paymentText = 'Chip In';
-      } else {
-        paymentText = recordEnum === 'PAYMENT_FROM_UI' ? 'One time' : 'Subscription';
+      // "One Time" donation to WeVote via WebApp
+      // "Chip in" is a one time donation for Campaigns and the net proceeds goes to that campaign for ads
+      // "Membership" is a monthly payment of a donation subscription to WeVote from either the Campaigns or WebApp apps
+      // "Premium Plan" is our premium plan that provides customization for Organizations.
+
+      const payment = (subscriptionId.length || campaignxWeVoteId.length) ? 'Subscription' : 'One time';
+      let type = 'Donation';
+      if (isMonthlyDonation && !isPremiumPlan) {
+        type = 'Membership';
+      } else if (isMonthlyDonation && isPremiumPlan) {
+        type = 'Premium Plan';
+      } else if (isChipIn) {
+        type = 'Chip In';
       }
+
       rows.push({
         id: id++,
-        date: moment.utc(created).format('MMM D, YYYY'),
+        active,
         amount,
-        monthly: !waiting ? amount : 'waiting',
-        isChip,
-        payment: paymentText,
+        campaignTitle,
+        cancelText,
         card: brand,
+        date: moment.utc(created).format('MMM D, YYYY'),
         ends: last4,
         expires: `${expMonth}/${expYear}`,
-        status,
         funding,
-        lastCharged,
-        active,
         isActive,
-        cancelText,
+        isChipIn,
+        lastCharged,
+        monthly: !waiting ? amount : 'waiting',
+        payment,
+        status,
         subscriptionId,
-        campaignTitle,
+        type,
       });
     });
     return rows;
   }
 
   subscriptionRows = () => {
-    const { membershipTabShown, showPremiumPlan } = this.props;
+    const { displayMembershipTab, showPremiumPlan } = this.props;
     const subscriptions = DonateStore.getVoterSubscriptionHistory();
     const rows = [];
     let id = 0;
@@ -124,7 +117,7 @@ class DonationList extends Component {
         subscription_canceled_at: subscriptionCanceledAt, subscription_ended_at: subscriptionEndedAt,
         subscription_created_at: created, amount, brand, last4, last_charged: lastCharged,
         exp_month: expMonth, exp_year: expYear, stripe_status: stripeStatus,
-        stripe_subscription_id: subscriptionId } = item;
+        stripe_subscription_id: subscriptionId, is_chip_in: isChipIn } = item;
       // const refundDays = parseInt(refundDaysLimit, 10); No refunds in campaigns
       const isActive = subscriptionCanceledAt === 'None' && subscriptionEndedAt === 'None';
       const active = isActive ? 'Active' : 'No';
@@ -137,14 +130,14 @@ class DonationList extends Component {
         date: created.length > 5 ? moment.utc(created).format('MMM D, YYYY') : 'waiting',
         amount,
         monthly: !waiting ? amount : 'waiting',
-        isChip: false,
+        isChipIn,
         payment: recordEnum === 'PAYMENT_FROM_UI' ? 'One time' : 'Subscription',
         brand: brand.length ? brand : 'waiting',
         last4: last4.length ? last4 : 'waiting',
         expires: expMonth > 0 ? `${expMonth}/${expYear}` : '/',
         status,
         lastCharged: lastCharged.length ? moment.utc(lastCharged).format('MMM D, YYYY') : 'waiting',
-        membershipTabShown,
+        displayMembershipTab,
         active,
         isActive,
         cancelText,
@@ -155,33 +148,11 @@ class DonationList extends Component {
     return rows;
   }
 
-  pollForWebhookCompletionAtList (pollCount) {
-    const { enablePolling } = this.state;
-    const { activeSubscriptionCount } = this.state;
-    const latestCount = DonateStore.getNumberOfActiveSubscriptions();
-    console.log(`pollForWebhookCompletionAtList polling -- start: ${activeSubscriptionCount} ? ${latestCount}`);
-    this.timer = setTimeout(() => {
-      if (pollCount === 0 || (activeSubscriptionCount > latestCount)) {
-        // console.log(`pollForWebhookCompletionAtList polling -- pollCount: ${pollCount}`);
-        clearTimeout(this.timer);
-        this.setState({ activeSubscriptionCount, enablePolling: false });
-        return;
-      }
-      // console.log(`pollForWebhookCompletion polling ----- ${pollCount}`);
-      DonateActions.donationRefreshDonationList();
-
-      if (enablePolling) {
-        this.pollForWebhookCompletionAtList(pollCount - 1);  // recursive call
-      }
-    }, 500);
-  }
-
-
   render () {
     renderLog('DonationList');  // Set LOG_RENDER_EVENTS to log all renders
-    const { membershipTabShown, showPremiumPlan } = this.props;
+    const { isCampaign, displayMembershipTab, showPremiumPlan } = this.props;
 
-    if (membershipTabShown) {
+    if (displayMembershipTab) {
       const subscriptionRows = this.subscriptionRows();
       return (
         <TableContainer component={Paper}>
@@ -212,7 +183,7 @@ class DonationList extends Component {
                   <StyledTableCellDesktop align="center">{row.expires}</StyledTableCellDesktop>
                   <StyledTableCellAll align="center">
                     <DonationCancelOrRefund item={row}
-                                            refundDonation={!membershipTabShown}
+                                            refundDonation={!displayMembershipTab}
                                             active={row.isActive}
                                             cancelText=""
                                             showPremiumPlan={showPremiumPlan}
@@ -235,7 +206,7 @@ class DonationList extends Component {
                 <StyledTableHeaderCellAll align="left">Date Paid</StyledTableHeaderCellAll>
                 <StyledTableHeaderCellDesktop align="center">Donation Type</StyledTableHeaderCellDesktop>
                 <StyledTableHeaderCellAll align="right">Amount</StyledTableHeaderCellAll>
-                <StyledTableHeaderCellAll align="center">Campaign</StyledTableHeaderCellAll>
+                <StyledTableHeaderCellAll align="center">{isCampaign ? 'Campaign' : 'Payment'}</StyledTableHeaderCellAll>
                 <StyledTableHeaderCellTablet align="center">Card</StyledTableHeaderCellTablet>
                 <StyledTableHeaderCellTablet align="center">Ends</StyledTableHeaderCellTablet>
                 <StyledTableHeaderCellTablet align="center">Exp</StyledTableHeaderCellTablet>
@@ -248,9 +219,10 @@ class DonationList extends Component {
               {paymentRows.map((row) => (
                 <TableRow key={row.id}>
                   <StyledTableCellAll align="left">{row.date}</StyledTableCellAll>
-                  <StyledTableCellDesktop align="center">{row.isChip ? 'Chip In' : 'Membership Payment'}</StyledTableCellDesktop>
+                  {/* eslint-disable-next-line no-nested-ternary */}
+                  <StyledTableCellDesktop align="center">{!isCampaign ? row.type : (row.isChipIn ? 'Chip In' : 'Membership Payment')}</StyledTableCellDesktop>
                   <StyledTableCellAll align="right">{`$${row.amount}`}</StyledTableCellAll>
-                  <StyledTableCellAll align="center">{row.campaignTitle}</StyledTableCellAll>
+                  <StyledTableCellAll align="center">{!isCampaign ? row.payment : row.campaignTitle}</StyledTableCellAll>
                   <StyledTableCellTablet align="center">{row.card}</StyledTableCellTablet>
                   <StyledTableCellTablet align="center">{row.ends}</StyledTableCellTablet>
                   <StyledTableCellTablet align="center">{row.expires}</StyledTableCellTablet>
@@ -274,7 +246,8 @@ class DonationList extends Component {
   }
 }
 DonationList.propTypes = {
-  membershipTabShown: PropTypes.bool,
+  isCampaign: PropTypes.bool,
+  displayMembershipTab: PropTypes.bool,
   showPremiumPlan: PropTypes.bool,
 };
 
@@ -299,6 +272,7 @@ const StyledTableCellDesktop = styled(TableCell)`
 const StyledTableHeaderCellAll = styled(TableCell)`
   padding: 8px;
   color: black;
+  min-width: 80px;
 `;
 
 const StyledTableHeaderCellTablet = styled(TableCell)`
