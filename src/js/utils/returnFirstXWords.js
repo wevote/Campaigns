@@ -12,10 +12,10 @@ export default function returnFirstXWords (originalString, numberOfWordsToReturn
   let xWords = '';
   for (let i = 0; i < wordsArray.length; i++) {
     if (i >= numberOfWordsToReturn) {
+      needForEllipses = true;
       break;
     }
     xWords += `${wordsArray[i]} `;
-    needForEllipses = true;
   }
   // Finally remove leading or trailing spaces
   xWords = xWords.trim();

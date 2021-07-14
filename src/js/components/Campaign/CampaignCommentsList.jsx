@@ -113,6 +113,7 @@ class CampaignCommentsList extends Component {
             return (
               <div key={`campaignXSupporterItem-${campaignXWeVoteId}-${campaignXSupporter.voter_we_vote_id}`}>
                 <CampaignCommentForList
+                  campaignXWeVoteId={campaignXWeVoteId}
                   campaignXSupporterId={campaignXSupporter.id}
                 />
               </div>

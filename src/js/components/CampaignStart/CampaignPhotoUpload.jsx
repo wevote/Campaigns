@@ -53,6 +53,7 @@ class CampaignPhotoUpload extends Component {
   componentWillUnmount () {
     this.campaignStartStoreListener.remove();
     this.campaignStoreListener.remove();
+    // TODO Figure out how to add fileReader.removeEventListener
   }
 
   handleDrop (files) {
