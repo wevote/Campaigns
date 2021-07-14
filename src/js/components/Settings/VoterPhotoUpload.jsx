@@ -37,6 +37,7 @@ class VoterPhotoUpload extends Component {
 
   componentWillUnmount () {
     this.voterStoreListener.remove();
+    // TODO Figure out how to add fileReader.removeEventListener
   }
 
   handleDrop (files) {

@@ -192,7 +192,7 @@ class MostRecentCampaignSupport extends React.Component {
                   </CommentVoterPhotoWrapper>
                   <CommentTextWrapper>
                     {comment.supporter_endorsement && (
-                      <Comment>{returnFirstXWords(comment.supporter_endorsement, 24, true)}</Comment>
+                      <Comment>{returnFirstXWords(comment.supporter_endorsement, 18, true)}</Comment>
                     )}
                     <CommentNameWrapper>
                       {!stringContains('Voter-', comment.supporter_name) && (

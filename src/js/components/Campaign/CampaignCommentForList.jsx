@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import TruncateMarkup from 'react-truncate-markup';
 import { withStyles } from '@material-ui/core/styles';
 import { AccountCircle } from '@material-ui/icons';
 import anonymous from '../../../img/global/icons/avatar-generic.png';
+import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { isCordova } from '../../utils/cordovaUtils';
 import LazyImage from '../../utils/LazyImage';
 import { renderLog } from '../../utils/logging';
 import { timeFromDate } from '../../utils/dateFormat';
 import { stringContains } from '../../utils/textFormat';
+import VoterStore from '../../stores/VoterStore';
 
 class CampaignCommentForList extends Component {
   constructor (props) {
@@ -23,25 +26,48 @@ class CampaignCommentForList extends Component {
 
   componentDidMount () {
     // console.log('CampaignCommentForList componentDidMount');
+    this.onCampaignStoreChange();
+    this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     const { campaignXSupporterId } = this.props;
     const campaignXSupporter = CampaignSupporterStore.getCampaignXSupporterById(campaignXSupporterId);
-    // console.log('componentDidMount campaignXSupporter:', campaignXSupporter);
+    const voterWeVoteId = VoterStore.getVoterWeVoteId();
     this.setState({
       campaignXSupporter,
+      voterWeVoteId,
     });
   }
 
   componentWillUnmount () {
+    this.campaignStoreListener.remove();
     this.campaignSupporterStoreListener.remove();
+  }
+
+  onCampaignStoreChange () {
+    const { campaignXWeVoteId } = this.props;
+    const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
+    const {
+      seo_friendly_path: campaignSEOFriendlyPath,
+    } = campaignX;
+    let pathToUseToEditSupporterEndorsement;
+    if (campaignSEOFriendlyPath) {
+      pathToUseToEditSupporterEndorsement = `/c/${campaignSEOFriendlyPath}/why-do-you-support`;
+    } else if (campaignXWeVoteId) {
+      pathToUseToEditSupporterEndorsement = `/id/${campaignXWeVoteId}/why-do-you-support`;
+    }
+    this.setState({
+      pathToUseToEditSupporterEndorsement,
+    });
   }
 
   onCampaignSupporterStoreChange () {
     const { campaignXSupporterId } = this.props;
     const campaignXSupporter = CampaignSupporterStore.getCampaignXSupporterById(campaignXSupporterId);
     // console.log('onCampaignSupporterStoreChange campaignXSupporter:', campaignXSupporter);
+    const voterWeVoteId = VoterStore.getVoterWeVoteId();
     this.setState({
       campaignXSupporter,
+      voterWeVoteId,
     });
   }
 
@@ -57,7 +83,7 @@ class CampaignCommentForList extends Component {
       console.log(`CampaignCommentForList window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
-    const { campaignXSupporter, showFullSupporterEndorsement } = this.state;
+    const { campaignXSupporter, pathToUseToEditSupporterEndorsement, showFullSupporterEndorsement, voterWeVoteId } = this.state;
     if (!campaignXSupporter || !('id' in campaignXSupporter)) {
       return null;
     }
@@ -66,8 +92,10 @@ class CampaignCommentForList extends Component {
       id,
       supporter_endorsement: supporterEndorsement,
       supporter_name: supporterName,
+      voter_we_vote_id: supporterVoterWeVoteId,
       we_vote_hosted_profile_image_url_tiny: voterPhotoUrlTiny,
     } = campaignXSupporter;
+    // console.log('supporterVoterWeVoteId:', supporterVoterWeVoteId);
     return (
       <Wrapper cordova={isCordova()}>
         <OneCampaignOuterWrapper>
@@ -92,6 +120,14 @@ class CampaignCommentForList extends Component {
                   {showFullSupporterEndorsement ? (
                     <div>
                       {supporterEndorsement}
+                      {supporterVoterWeVoteId === voterWeVoteId && (
+                        <>
+                          &nbsp;
+                          <Link to={pathToUseToEditSupporterEndorsement}>
+                            edit
+                          </Link>
+                        </>
+                      )}
                     </div>
                   ) : (
                     <TruncateMarkup
@@ -110,6 +146,14 @@ class CampaignCommentForList extends Component {
                     >
                       <div>
                         {supporterEndorsement}
+                        {supporterVoterWeVoteId === voterWeVoteId && (
+                          <>
+                            &nbsp;
+                            <Link to={pathToUseToEditSupporterEndorsement}>
+                              edit
+                            </Link>
+                          </>
+                        )}
                       </div>
                     </TruncateMarkup>
                   )}
@@ -135,6 +179,7 @@ class CampaignCommentForList extends Component {
 }
 CampaignCommentForList.propTypes = {
   campaignXSupporterId: PropTypes.number,
+  campaignXWeVoteId: PropTypes.string,
   classes: PropTypes.object,
 };
 
