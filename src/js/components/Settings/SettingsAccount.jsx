@@ -96,7 +96,11 @@ export default class SettingsAccount extends Component {
         pathname = '/settings/profile';
         signInStartFullUrl = `${origin}${pathname}`;
         // console.log('SettingsAccount getStartedForCampaigns, new origin: ', origin, ', pathname: ', pathname, ', signInStartFullUrl: ', signInStartFullUrl);
-        cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/', 'wevote.us');
+        if (origin && stringContains('wevote.us', origin)) {
+          cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/', 'wevote.us');
+        } else {
+          cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/');
+        }
         this.setState({
           pleaseSignInTitle: 'Please sign in to get started.',
           pleaseSignInSubTitle: 'Use Twitter to verify your account most quickly.',
@@ -105,7 +109,11 @@ export default class SettingsAccount extends Component {
         pathname = '/settings/profile';
         signInStartFullUrl = `${origin}${pathname}`;
         // console.log('SettingsAccount getStartedForCampaigns, new origin: ', origin, ', pathname: ', pathname, ', signInStartFullUrl: ', signInStartFullUrl);
-        cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/', 'wevote.us');
+        if (origin && stringContains('wevote.us', origin)) {
+          cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/', 'wevote.us');
+        } else {
+          cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/');
+        }
         this.setState({
           pleaseSignInTitle: 'Please sign in to get started.',
           pleaseSignInSubTitle: 'Use Twitter to verify your account most quickly.',
@@ -114,7 +122,11 @@ export default class SettingsAccount extends Component {
         pathname = '/settings/profile';
         signInStartFullUrl = `${origin}${pathname}`;
         // console.log('SettingsAccount getStartedForCampaigns, new origin: ', origin, ', pathname: ', pathname, ', signInStartFullUrl: ', signInStartFullUrl);
-        cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/', 'wevote.us');
+        if (origin && stringContains('wevote.us', origin)) {
+          cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/', 'wevote.us');
+        } else {
+          cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/');
+        }
         this.setState({
           pleaseSignInTitle: 'Please sign in to get started.',
           pleaseSignInSubTitle: 'Don\'t worry, we won\'t post anything automatically.',

@@ -188,10 +188,12 @@ class CompleteYourProfile extends Component {
       });
     } else if (!voterIsSignedInWithEmail) {
       // All required fields were found
+      AppActions.setBlockCampaignXRedirectOnSignIn(false);
       this.sendSignInCodeEmail(event, voterEmailQueuedToSave);
     } else {
       VoterActions.voterRetrieve();
       this.functionToUseWhenProfileCompleteTimer = setTimeout(() => {
+        AppActions.setBlockCampaignXRedirectOnSignIn(false);
         this.props.functionToUseWhenProfileComplete();
       }, 500);
     }

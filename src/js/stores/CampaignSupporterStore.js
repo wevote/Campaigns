@@ -79,16 +79,38 @@ class CampaignSupporterStore extends ReduceStore {
     return this.getState().voterSignedInWithEmail || false;
   }
 
+  updateCampaignXSupporterGenericList (campaignXSupporterGenericListIncoming, campaignSupporterFromAPIResponse) {
+    const campaignXSupporterGenericList = campaignXSupporterGenericListIncoming;
+    // console.log('Incoming campaignXSupporterGenericList:', campaignXSupporterGenericList);
+    // console.log('Incoming campaignSupporterFromAPIResponse:', campaignSupporterFromAPIResponse);
+    if (!(campaignSupporterFromAPIResponse.campaignx_we_vote_id in campaignXSupporterGenericList)) {
+      // console.log('campaignx_we_vote_id not in campaignXSupporterGenericList, adding: ', campaignSupporterFromAPIResponse.campaignx_we_vote_id);
+      campaignXSupporterGenericList[campaignSupporterFromAPIResponse.campaignx_we_vote_id] = [];
+    }
+    const tempCampaignXSupporterGenericList = campaignXSupporterGenericList[campaignSupporterFromAPIResponse.campaignx_we_vote_id] || [];
+    let alreadyExists = false;
+    for (let i = 0; i < tempCampaignXSupporterGenericList.length; ++i) {
+      if (tempCampaignXSupporterGenericList[i].voter_we_vote_id === campaignSupporterFromAPIResponse.voter_we_vote_id) {
+        tempCampaignXSupporterGenericList[i] = campaignSupporterFromAPIResponse;
+        alreadyExists = true;
+      }
+    }
+    if (!alreadyExists) {
+      tempCampaignXSupporterGenericList.unshift(campaignSupporterFromAPIResponse);
+    }
+    campaignXSupporterGenericList[campaignSupporterFromAPIResponse.campaignx_we_vote_id] = tempCampaignXSupporterGenericList;
+    return campaignXSupporterGenericList;
+  }
+
   reduce (state, action) {
     const {
       allCachedCampaignXSupporters, allCachedCampaignXSupporterVoterEntries,
+    } = state;
+    let {
       latestCampaignXSupporterEndorsements, latestCampaignXSupporters,
     } = state;
-    let alreadyExists;
     let campaignXList;
     let campaignXSupporter;
-    let tempCampaignXSupporterList;
-    let tempCampaignXSupporterEndorsementList;
 
     let revisedState;
     switch (action.type) {
@@ -109,25 +131,17 @@ class CampaignSupporterStore extends ReduceStore {
           //   allCachedCampaignXWeVoteIdsBySEOFriendlyPath[oneCampaignX.seo_friendly_path] = oneCampaignX.campaignx_we_vote_id;
           // }
           if ('latest_campaignx_supporter_endorsement_list' in oneCampaignX) {
-            if (oneCampaignX.campaignx_we_vote_id in latestCampaignXSupporterEndorsements) {
-              // Merge with list retrieved previously
-            } else {
-              latestCampaignXSupporterEndorsements[oneCampaignX.campaignx_we_vote_id] = oneCampaignX.latest_campaignx_supporter_endorsement_list;
-            }
             for (let i = 0; i < oneCampaignX.latest_campaignx_supporter_endorsement_list.length; ++i) {
               campaignXSupporter = oneCampaignX.latest_campaignx_supporter_endorsement_list[i];
               allCachedCampaignXSupporters[campaignXSupporter.id] = campaignXSupporter;
+              latestCampaignXSupporterEndorsements = this.updateCampaignXSupporterGenericList(latestCampaignXSupporterEndorsements, campaignXSupporter);
             }
           }
           if ('latest_campaignx_supporter_list' in oneCampaignX) {
-            if (oneCampaignX.campaignx_we_vote_id in latestCampaignXSupporters) {
-              // Merge with list retrieved previously
-            } else {
-              latestCampaignXSupporters[oneCampaignX.campaignx_we_vote_id] = oneCampaignX.latest_campaignx_supporter_list;
-            }
             for (let i = 0; i < oneCampaignX.latest_campaignx_supporter_list.length; ++i) {
               campaignXSupporter = oneCampaignX.latest_campaignx_supporter_list[i];
               allCachedCampaignXSupporters[campaignXSupporter.id] = campaignXSupporter;
+              latestCampaignXSupporters = this.updateCampaignXSupporterGenericList(latestCampaignXSupporters, campaignXSupporter);
             }
           }
           if ('voter_campaignx_supporter' in oneCampaignX) {
@@ -156,25 +170,17 @@ class CampaignSupporterStore extends ReduceStore {
         revisedState = state;
         if (action.res.campaignx_we_vote_id) {
           if ('latest_campaignx_supporter_endorsement_list' in action.res) {
-            if (action.res.campaignx_we_vote_id in latestCampaignXSupporterEndorsements) {
-              // Merge with list retrieved previously
-            } else {
-              latestCampaignXSupporterEndorsements[action.res.campaignx_we_vote_id] = action.res.latest_campaignx_supporter_endorsement_list;
-            }
             for (let i = 0; i < action.res.latest_campaignx_supporter_endorsement_list.length; ++i) {
               campaignXSupporter = action.res.latest_campaignx_supporter_endorsement_list[i];
               allCachedCampaignXSupporters[campaignXSupporter.id] = campaignXSupporter;
+              latestCampaignXSupporterEndorsements = this.updateCampaignXSupporterGenericList(latestCampaignXSupporterEndorsements, campaignXSupporter);
             }
           }
           if ('latest_campaignx_supporter_list' in action.res) {
-            if (action.res.campaignx_we_vote_id in latestCampaignXSupporters) {
-              // Merge with list retrieved previously
-            } else {
-              latestCampaignXSupporters[action.res.campaignx_we_vote_id] = action.res.latest_campaignx_supporter_list;
-            }
             for (let i = 0; i < action.res.latest_campaignx_supporter_list.length; ++i) {
               campaignXSupporter = action.res.latest_campaignx_supporter_list[i];
               allCachedCampaignXSupporters[campaignXSupporter.id] = campaignXSupporter;
+              latestCampaignXSupporters = this.updateCampaignXSupporterGenericList(latestCampaignXSupporters, campaignXSupporter);
             }
           }
           if ('voter_campaignx_supporter' in action.res) {
@@ -187,6 +193,8 @@ class CampaignSupporterStore extends ReduceStore {
         // console.log('allCachedCampaignXSupporters:', allCachedCampaignXSupporters);
         revisedState = { ...revisedState, allCachedCampaignXSupporters };
         revisedState = { ...revisedState, allCachedCampaignXSupporterVoterEntries };
+        revisedState = { ...revisedState, latestCampaignXSupporters };
+        revisedState = { ...revisedState, latestCampaignXSupporterEndorsements };
         return revisedState;
 
       case 'campaignSupporterSave':
@@ -196,40 +204,9 @@ class CampaignSupporterStore extends ReduceStore {
         }
         // console.log('campaignSupporterSave latestCampaignXSupporters before:', latestCampaignXSupporters);
         if (action.res.supporter_endorsement) {
-          if (!(action.res.campaignx_we_vote_id in latestCampaignXSupporterEndorsements)) {
-            latestCampaignXSupporterEndorsements[action.res.campaignx_we_vote_id] = [];
-          }
-          tempCampaignXSupporterEndorsementList = latestCampaignXSupporterEndorsements[action.res.campaignx_we_vote_id] || [];
-          alreadyExists = false;
-          for (let i = 0; i < tempCampaignXSupporterEndorsementList.length; ++i) {
-            if (tempCampaignXSupporterEndorsementList[i].voter_we_vote_id === action.res.voter_we_vote_id) {
-              tempCampaignXSupporterEndorsementList[i] = action.res;
-              alreadyExists = true;
-            }
-          }
-          if (!alreadyExists) {
-            tempCampaignXSupporterEndorsementList.unshift(action.res);
-          }
-          latestCampaignXSupporterEndorsements[action.res.campaignx_we_vote_id] = tempCampaignXSupporterEndorsementList;
+          latestCampaignXSupporterEndorsements = this.updateCampaignXSupporterGenericList(latestCampaignXSupporterEndorsements, action.res);
         }
-        if (!(action.res.campaignx_we_vote_id in latestCampaignXSupporters)) {
-          // console.log('campaignx_we_vote_id: ', action.res.campaignx_we_vote_id, ' not in latestCampaignXSupporters:', latestCampaignXSupporters);
-          latestCampaignXSupporters[action.res.campaignx_we_vote_id] = [];
-        }
-        tempCampaignXSupporterList = latestCampaignXSupporters[action.res.campaignx_we_vote_id] || [];
-        // console.log('campaignSupporterSave tempCampaignXSupporterList previous:', tempCampaignXSupporterList);
-        alreadyExists = false;
-        for (let i = 0; i < tempCampaignXSupporterList.length; ++i) {
-          if (tempCampaignXSupporterList[i].voter_we_vote_id === action.res.voter_we_vote_id) {
-            tempCampaignXSupporterList[i] = action.res;
-            alreadyExists = true;
-          }
-        }
-        // console.log('campaignSupporterSave alreadyExists:', alreadyExists);
-        if (!alreadyExists) {
-          tempCampaignXSupporterList.unshift(action.res);
-        }
-        latestCampaignXSupporters[action.res.campaignx_we_vote_id] = tempCampaignXSupporterList;
+        latestCampaignXSupporters = this.updateCampaignXSupporterGenericList(latestCampaignXSupporters, action.res);
         // console.log('campaignSupporterSave latestCampaignXSupporters after:', latestCampaignXSupporters);
         return {
           ...state,

@@ -33,6 +33,7 @@ class CompleteYourProfileModalController extends Component {
   }
 
   closeModal () {
+    // console.log('CompleteYourProfileModalController closeModal');
     AppActions.setShowCompleteYourProfileModal(false);
   }
 

@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import cookies from '../../utils/cookies';
 import AppActions from '../../actions/AppActions';
 import voterSignOut from '../../utils/voterSignOut';
 import VoterStore from '../../stores/VoterStore';
 import { renderLog } from '../../utils/logging';
+import { stringContains } from '../../utils/textFormat';
 
 
 class SignInButton extends Component {
@@ -33,8 +35,18 @@ class SignInButton extends Component {
   }
 
   openSignInModal = () => {
-    // console.log('openSignInModal');
+    // console.log('SignInButton openSignInModal');
+    const { origin, pathname } = window.location;
+    const signInStartFullUrl = `${origin}${pathname}`;
+    const oneDayExpires = 86400;
+    // console.log('SettingsAccount getStartedForCampaigns, new origin: ', origin, ', pathname: ', pathname, ', signInStartFullUrl: ', signInStartFullUrl);
+    if (origin && stringContains('wevote.us', origin)) {
+      cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/', 'wevote.us');
+    } else {
+      cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/');
+    }
     AppActions.setShowSignInModal(true);
+    AppActions.setBlockCampaignXRedirectOnSignIn(true);
   };
 
   signOut = () => {

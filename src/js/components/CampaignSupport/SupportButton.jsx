@@ -76,6 +76,7 @@ class SupportButton extends Component {
       AppActions.setShowCompleteYourProfileModal(true);
     } else {
       // Mark that voter supports this campaign
+      AppActions.setBlockCampaignXRedirectOnSignIn(false);
       this.props.functionToUseWhenProfileComplete();
     }
   }

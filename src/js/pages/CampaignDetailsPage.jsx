@@ -195,11 +195,13 @@ class CampaignDetailsPage extends Component {
       // If it has changed, use new value
       visibleToPublic = CampaignSupporterStore.getVisibleToPublicQueuedToSave();
     }
-    // console.log('functionToUseWhenProfileComplete, visibleToPublic:', visibleToPublic, ', visibleToPublicChanged:', visibleToPublicChanged);
+    // console.log('functionToUseWhenProfileComplete, visibleToPublic:', visibleToPublic, ', visibleToPublicChanged:', visibleToPublicChanged, ', blockCampaignXRedirectOnSignIn:', AppStore.blockCampaignXRedirectOnSignIn());
     const saveVisibleToPublic = true;
-    initializejQuery(() => {
-      CampaignSupporterActions.supportCampaignSave(campaignXWeVoteId, campaignSupported, campaignSupportedChanged, visibleToPublic, saveVisibleToPublic);
-    }, this.goToNextPage());
+    if (!AppStore.blockCampaignXRedirectOnSignIn()) {
+      initializejQuery(() => {
+        CampaignSupporterActions.supportCampaignSave(campaignXWeVoteId, campaignSupported, campaignSupportedChanged, visibleToPublic, saveVisibleToPublic);
+      }, this.goToNextPage());
+    }
   }
 
   onCampaignEditClick = () => {
