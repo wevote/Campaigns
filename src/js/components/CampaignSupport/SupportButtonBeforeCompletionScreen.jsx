@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Button } from '@material-ui/core';
 import { withStyles, withTheme } from '@material-ui/core/styles';
 import styled from 'styled-components';
+import AppActions from '../../actions/AppActions';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { historyPush } from '../../utils/cordovaUtils';
@@ -150,6 +151,7 @@ class SupportButtonBeforeCompletionScreen extends Component {
       }
     } else {
       // Mark that voter supports this campaign
+      AppActions.setBlockCampaignXRedirectOnSignIn(false);
       this.props.functionToUseWhenProfileComplete();
     }
   }

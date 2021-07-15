@@ -13,6 +13,7 @@ class AppStore extends ReduceStore {
   getInitialState () {
     return {
       activityTidbitWeVoteIdForDrawer: '',
+      blockCampaignXRedirectOnSignIn: false, // When signing in from the header, don't mark a campaign as supported
       campaignFirstRetrieveInitiated: false,
       campaignListFirstRetrieveInitiated: false,
       chosenPreventSharingOpinions: false,
@@ -57,6 +58,10 @@ class AppStore extends ReduceStore {
 
   activityTidbitWeVoteIdForDrawer () {
     return this.getState().activityTidbitWeVoteIdForDrawer;
+  }
+
+  blockCampaignXRedirectOnSignIn () {
+    return this.getState().blockCampaignXRedirectOnSignIn;
   }
 
   campaignFirstRetrieveInitiated () {
@@ -309,6 +314,8 @@ class AppStore extends ReduceStore {
           activityTidbitWeVoteIdForDrawer: action.payload,
           showActivityTidbitDrawer: true,
         };
+      case 'blockCampaignXRedirectOnSignIn':
+        return { ...state, blockCampaignXRedirectOnSignIn: action.payload };
       case 'campaignFirstRetrieveInitiated':
         return { ...state, campaignFirstRetrieveInitiated: action.payload };
       case 'campaignListFirstRetrieveInitiated':

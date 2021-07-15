@@ -135,6 +135,8 @@ const styles = (theme) => ({
     fontSize: '18px',
     fontFamily: "'Nunito Sans', 'Helvetica Neue Light', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
     fontWeight: '300',
+    paddingLeft: 5,
+    paddingRight: 5,
   },
 });
 

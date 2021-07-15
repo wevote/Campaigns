@@ -11,6 +11,10 @@ export default {
     Dispatcher.dispatch({ type: 'activityTidbitWeVoteIdForDrawerAndOpen', payload: activityTidbitWeVoteId });
   },
 
+  setBlockCampaignXRedirectOnSignIn (value) {
+    Dispatcher.dispatch({ type: 'blockCampaignXRedirectOnSignIn', payload: value });
+  },
+
   setCampaignFirstRetrieveInitiated (value) {
     Dispatcher.dispatch({ type: 'campaignFirstRetrieveInitiated', payload: value });
   },

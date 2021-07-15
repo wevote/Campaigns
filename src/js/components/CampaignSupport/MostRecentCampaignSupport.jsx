@@ -266,6 +266,7 @@ const CommentVoterPhotoWrapper = styled.div`
   align-items: flex-start;
   display: flex;
   margin-right: 6px;
+  width: 24px;
 `;
 
 const CommentWrapper = styled.div`
