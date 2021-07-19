@@ -1,5 +1,5 @@
 import { ReduceStore } from 'flux/utils';
-import Dispatcher from '../components/Dispatcher/AppDispatcher';
+import Dispatcher from '../dispatcher/AppDispatcher';
 import VoterActions from '../actions/VoterActions'; // eslint-disable-line import/no-cycle
 import VoterStore from './VoterStore'; // eslint-disable-line import/no-cycle
 import webAppConfig from '../config'; // eslint-disable-line import/no-cycle

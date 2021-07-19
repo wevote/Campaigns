@@ -9,17 +9,17 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import CampaignActions from '../../actions/CampaignActions';
 import AppStore from '../../stores/AppStore';
-import DonateActions from '../../actions/DonateActions';
-import DonationListForm from '../../components/Donation/DonationListForm';
+import DonateActions from '../../common/actions/DonateActions';
+import DonationListForm from '../../common/components/Donation/DonationListForm';
 import LoadingWheelComp from '../../components/LoadingWheelComp';
-import InjectedCheckoutForm from '../../components/Donation/InjectedCheckoutForm';
+import InjectedCheckoutForm from '../../common/components/Donation/InjectedCheckoutForm';
 import webAppConfig from '../../config';
 import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
-import DonateStore from '../../stores/DonateStore';
+import DonateStore from '../../common/stores/DonateStore';
 import VoterStore from '../../stores/VoterStore';
 import {
   SkipForNowButtonPanel,

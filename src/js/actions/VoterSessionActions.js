@@ -1,4 +1,4 @@
-import Dispatcher from '../components/Dispatcher/Dispatcher';
+import Dispatcher from '../dispatcher/Dispatcher';
 import cookies from '../utils/cookies';
 import AppActions from './AppActions';
 import { stringContains } from '../utils/textFormat';
