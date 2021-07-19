@@ -1,5 +1,5 @@
 import { ReduceStore } from 'flux/utils';
-import Dispatcher from '../components/Dispatcher/Dispatcher';
+import Dispatcher from '../dispatcher/Dispatcher';
 import TwitterActions from '../actions/TwitterActions';
 
 

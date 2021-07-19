@@ -1,4 +1,4 @@
-import Dispatcher from '../components/Dispatcher/Dispatcher';
+import Dispatcher from '../dispatcher/Dispatcher';
 
 let { hostname } = window.location;
 hostname = hostname || '';

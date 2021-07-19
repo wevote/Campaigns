@@ -1,6 +1,6 @@
 import { ReduceStore } from 'flux/utils';
 import assign from 'object-assign';
-import Dispatcher from '../components/Dispatcher/Dispatcher';
+import Dispatcher from '../dispatcher/Dispatcher';
 
 class SearchAllStore extends ReduceStore {
   getInitialState () {

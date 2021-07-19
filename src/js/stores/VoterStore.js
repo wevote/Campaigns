@@ -1,6 +1,6 @@
 import { ReduceStore } from 'flux/utils';
 import cookies from '../utils/cookies';
-import Dispatcher from '../components/Dispatcher/Dispatcher';
+import Dispatcher from '../dispatcher/Dispatcher';
 import { stringContains } from '../utils/textFormat';
 
 

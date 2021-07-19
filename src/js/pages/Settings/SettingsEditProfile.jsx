@@ -23,7 +23,7 @@ class SettingsEditProfile extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      voterPhotoTooBig: false,
+      // voterPhotoTooBig: false,
     };
   }
 

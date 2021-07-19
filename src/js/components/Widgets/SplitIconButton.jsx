@@ -4,9 +4,11 @@ import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { getTextColorFromBackground } from '../../utils/color';
+import { renderLog } from '../../utils/logging';
 
 class SplitIconButton extends PureComponent {
   render () {
+    renderLog('SplitIconButton');  // Set LOG_RENDER_EVENTS to log all renders
     const {
       backgroundColor,
       buttonText,
