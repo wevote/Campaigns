@@ -75,7 +75,17 @@ class HomePage extends Component {
             <IntroductionMessageSection>
               <PageStatement>Helping the best candidates win votes</PageStatement>
               <PageSubStatement>
-                Vote for candidates you like. Oppose candidates you don&apos;t.
+                Support the candidates you like with your vote.
+                {' '}
+                <span className="u-show-desktop-tablet">
+                  <br />
+                </span>
+                Oppose candidates you don&apos;t like.
+                {' '}
+                <span className="u-show-desktop-tablet">
+                  <br />
+                </span>
+                Encourage votes instead of donations.
               </PageSubStatement>
               <Button
                 classes={{ root: classes.buttonRoot }}

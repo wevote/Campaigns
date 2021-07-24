@@ -84,11 +84,11 @@ class ShareOnTwitterButton extends Component {
       return domainAddress;
     }
     const {
-      seo_friendly_path: SEOFriendlyPath,
+      seo_friendly_path: campaignSEOFriendlyPath,
       campaignx_we_vote_id: campaignXWeVoteId,
     } = campaignX;
-    if (SEOFriendlyPath) {
-      return `${domainAddress}/c/${SEOFriendlyPath}`;
+    if (campaignSEOFriendlyPath) {
+      return `${domainAddress}/c/${campaignSEOFriendlyPath}`;
     } else {
       return `${domainAddress}/id/${campaignXWeVoteId}`;
     }
