@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import TruncateMarkup from 'react-truncate-markup';
 import { withStyles } from '@material-ui/core/styles';
+import {
+  BlockedIndicator, DraftModeIndicator, EditIndicator, ElectionInPast,
+  IndicatorButtonWrapper, IndicatorDefaultButtonWrapper, IndicatorRow,
+} from '../Style/CampaignIndicatorStyles';
 import CampaignOwnersList from '../CampaignSupport/CampaignOwnersList';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
@@ -104,13 +108,13 @@ class CampaignCardForList extends Component {
     }
     const {
       in_draft_mode: inDraftMode,
-      seo_friendly_path: SEOFriendlyPath,
+      seo_friendly_path: campaignSEOFriendlyPath,
       campaignx_we_vote_id: campaignXWeVoteId,
     } = campaignX;
     if (inDraftMode) {
       historyPush('/start-a-campaign-preview');
-    } else if (SEOFriendlyPath) {
-      historyPush(`/c/${SEOFriendlyPath}`);
+    } else if (campaignSEOFriendlyPath) {
+      historyPush(`/c/${campaignSEOFriendlyPath}`);
     } else {
       historyPush(`/id/${campaignXWeVoteId}`);
     }
@@ -125,13 +129,13 @@ class CampaignCardForList extends Component {
     }
     const {
       in_draft_mode: inDraftMode,
-      seo_friendly_path: SEOFriendlyPath,
+      seo_friendly_path: campaignSEOFriendlyPath,
       campaignx_we_vote_id: campaignXWeVoteId,
     } = campaignX;
     if (inDraftMode) {
       historyPush('/start-a-campaign-preview');
-    } else if (SEOFriendlyPath) {
-      historyPush(`/c/${SEOFriendlyPath}/edit`);
+    } else if (campaignSEOFriendlyPath) {
+      historyPush(`/c/${campaignSEOFriendlyPath}/edit`);
     } else {
       historyPush(`/id/${campaignXWeVoteId}/edit`);
     }
@@ -145,11 +149,11 @@ class CampaignCardForList extends Component {
       return null;
     }
     const {
-      seo_friendly_path: SEOFriendlyPath,
+      seo_friendly_path: campaignSEOFriendlyPath,
       campaignx_we_vote_id: campaignXWeVoteId,
     } = campaignX;
-    if (SEOFriendlyPath) {
-      historyPush(`/c/${SEOFriendlyPath}/share-campaign`);
+    if (campaignSEOFriendlyPath) {
+      historyPush(`/c/${campaignSEOFriendlyPath}/share-campaign`);
     } else {
       historyPush(`/id/${campaignXWeVoteId}/share-campaign`);
     }
@@ -345,19 +349,19 @@ class CampaignCardForList extends Component {
                     </BlockedIndicator>
                   </IndicatorButtonWrapper>
                 )}
+                {!!(!inDraftMode && !isSupportersCountMinimumExceeded) && (
+                  <IndicatorButtonWrapper onClick={this.onCampaignGetMinimumSupportersClick}>
+                    <DraftModeIndicator>
+                      Needs Five Supporters
+                    </DraftModeIndicator>
+                  </IndicatorButtonWrapper>
+                )}
               </IndicatorRow>
               <IndicatorRow>
                 {inDraftMode && (
                   <IndicatorDefaultButtonWrapper onClick={this.onCampaignClick}>
                     <DraftModeIndicator>
                       Draft
-                    </DraftModeIndicator>
-                  </IndicatorDefaultButtonWrapper>
-                )}
-                {!!(!inDraftMode && !isSupportersCountMinimumExceeded) && (
-                  <IndicatorDefaultButtonWrapper onClick={this.onCampaignGetMinimumSupportersClick}>
-                    <DraftModeIndicator>
-                      Needs Five Supporters
                     </DraftModeIndicator>
                   </IndicatorDefaultButtonWrapper>
                 )}
@@ -375,14 +379,14 @@ class CampaignCardForList extends Component {
                 )}
                 {voterCanEditThisCampaign && (
                   <IndicatorButtonWrapper>
-                    <EditCampaignIndicator onClick={this.onCampaignEditClick}>
+                    <EditIndicator onClick={this.onCampaignEditClick}>
                       <span className="u-show-mobile">
                         Edit
                       </span>
                       <span className="u-show-desktop-tablet">
                         Edit Campaign
                       </span>
-                    </EditCampaignIndicator>
+                    </EditIndicator>
                   </IndicatorButtonWrapper>
                 )}
                 {!inDraftMode && (
@@ -430,19 +434,19 @@ const styles = (theme) => ({
   },
 });
 
-const BlockedIndicator = styled.span`
-  background-color: #efc2c2;
-  border-radius: 4px;
-  color: #2e3c5d;
-  cursor: pointer;
-  font-size: 14px;
-  margin-right: 10px;
-  margin-top: 10px;
-  padding: 5px 12px;
-  &:hover {
-    background-color: #eaaeae;
-  }
-`;
+// const BlockedIndicator = styled.span`
+//   background-color: #efc2c2;
+//   border-radius: 4px;
+//   color: #2e3c5d;
+//   cursor: pointer;
+//   font-size: 14px;
+//   margin-right: 10px;
+//   margin-top: 10px;
+//   padding: 5px 12px;
+//   &:hover {
+//     background-color: #eaaeae;
+//   }
+// `;
 
 const CampaignImageDesktopSharedStyles = css`
   cursor: pointer;
@@ -496,43 +500,62 @@ const ClickableDiv = styled.div`
   width: 100%;
 `;
 
-const DraftModeIndicator = styled.span`
-  background-color: #ccc;
-  border-radius: 4px;
-  color: #2e3c5d;
-  cursor: pointer;
-  font-size: 14px;
-  padding: 5px 12px;
-  &:hover {
-    background-color: #bfbfbf;
-  }
-`;
+// const DraftModeIndicator = styled.span`
+//   background-color: #ccc;
+//   border-radius: 4px;
+//   color: #2e3c5d;
+//   cursor: pointer;
+//   font-size: 14px;
+//   padding: 5px 12px;
+//   &:hover {
+//     background-color: #bfbfbf;
+//   }
+// `;
 
-const ElectionInPast = styled.span`
-  background-color: #00cc66;
-  border-radius: 4px;
-  color: #2e3c5d;
-  // cursor: pointer;
-  font-size: 14px;
-  margin-right: 10px;
-  margin-top: 10px;
-  padding: 5px 12px;
-  // &:hover {
-  //   background-color: #00b359;
-  // }
-`;
+// const EditIndicator = styled.span`
+//   background-color: #fff;
+//   border: 1px solid rgba(46, 60, 93, 0.5);
+//   border-radius: 4px;
+//   color: #2e3c5d;
+//   cursor: pointer;
+//   font-size: 14px;
+//   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+//   font-weight: 500;
+//   line-height: 1.75;
+//   user-select: none;
+//   letter-spacing: 0.02857em;
+//   padding: 4px 12px;
+//   text-transform: none;
+//   &:hover {
+//     background-color: #f0f0f0;
+//   }
+// `;
 
-const IndicatorButtonWrapper = styled.div`
-  margin-bottom: 4px;
-  margin-right: 8px;
-`;
+// const ElectionInPast = styled.span`
+//   background-color: #00cc66;
+//   border-radius: 4px;
+//   color: #2e3c5d;
+//   // cursor: pointer;
+//   font-size: 14px;
+//   margin-right: 10px;
+//   margin-top: 10px;
+//   padding: 5px 12px;
+//   // &:hover {
+//   //   background-color: #00b359;
+//   // }
+// `;
 
-const IndicatorDefaultButtonWrapper = styled.div`
-  cursor: pointer;
-  margin-bottom: 4px;
-  margin-right: 8px;
-  margin-top: 2px;
-`;
+// const IndicatorButtonWrapper = styled.div`
+//   margin-bottom: 4px;
+//   margin-right: 8px;
+// `;
+
+// const IndicatorDefaultButtonWrapper = styled.div`
+//   cursor: pointer;
+//   margin-bottom: 4px;
+//   margin-right: 8px;
+//   margin-top: 2px;
+// `;
 
 const IndicatorSupportButtonWrapper = styled.div`
   margin-bottom: 4px;
@@ -540,31 +563,12 @@ const IndicatorSupportButtonWrapper = styled.div`
   margin-top: -1px;
 `;
 
-const EditCampaignIndicator = styled.span`
-  background-color: #fff;
-  border: 1px solid rgba(46, 60, 93, 0.5);
-  border-radius: 4px;
-  color: #2e3c5d;
-  cursor: pointer;
-  font-size: 14px;
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-  font-weight: 500;
-  line-height: 1.75;
-  user-select: none;
-  letter-spacing: 0.02857em;
-  padding: 4px 12px;
-  text-transform: none;
-  &:hover {
-    background-color: #f0f0f0;
-  }
-`;
-
-const IndicatorRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: start;
-  margin-top: 12px;
-`;
+// const IndicatorRow = styled.div`
+//   display: flex;
+//   flex-wrap: wrap;
+//   justify-content: start;
+//   margin-top: 12px;
+// `;
 
 const OneCampaignDescription = styled.div`
   font-size: 14px;

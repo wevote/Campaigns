@@ -27,12 +27,16 @@ class CompleteYourProfileMobile extends Component {
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     const { match: { params }, setShowHeaderFooter } = this.props;
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
-    const { becomeMember, startCampaign, supportCampaign } = this.props;
+    const { becomeMember, createNewsItem, startCampaign, supportCampaign } = this.props;
     let pathToUseWhenProfileComplete = '';
     if (becomeMember) {
       pathToUseWhenProfileComplete = '/DONATE-PATH-HERE';
     } else if (startCampaign) {
       pathToUseWhenProfileComplete = '/profile/started';
+    } else if (createNewsItem && campaignSEOFriendlyPath) {
+      pathToUseWhenProfileComplete = `/c/${campaignSEOFriendlyPath}/add-update`;
+    } else if (createNewsItem && campaignXWeVoteId) {
+      pathToUseWhenProfileComplete = `/id/${campaignXWeVoteId}/add-update`;
     } else if (supportCampaign && campaignSEOFriendlyPath) {
       pathToUseWhenProfileComplete = `/c/${campaignSEOFriendlyPath}/why-do-you-support`;
     } else if (supportCampaign && campaignXWeVoteId) {
@@ -62,12 +66,16 @@ class CompleteYourProfileMobile extends Component {
 
   cancelFunction = () => {
     // console.log('CompleteYourProfileMobile cancelFunction');
-    const { becomeMember, startCampaign, supportCampaign } = this.props;
+    const { becomeMember, createNewsItem, startCampaign, supportCampaign } = this.props;
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
     if (becomeMember) {
       historyPush('/start-a-campaign-preview');
     } else if (startCampaign) {
       historyPush('/start-a-campaign-preview');
+    } else if (createNewsItem && campaignSEOFriendlyPath) {
+      historyPush(`/c/${campaignSEOFriendlyPath}/updates`);
+    } else if (createNewsItem && campaignXWeVoteId) {
+      historyPush(`/id/${campaignXWeVoteId}/updates`);
     } else if (supportCampaign && campaignSEOFriendlyPath) {
       historyPush(`/c/${campaignSEOFriendlyPath}`);
     } else if (supportCampaign && campaignXWeVoteId) {
@@ -82,12 +90,14 @@ class CompleteYourProfileMobile extends Component {
 
   render () {
     renderLog('CompleteYourProfileMobile');  // Set LOG_RENDER_EVENTS to log all renders
-    const { becomeMember, classes, startCampaign, supportCampaign } = this.props;
+    const { becomeMember, classes, createNewsItem, startCampaign, supportCampaign } = this.props;
     const { campaignXWeVoteId, chosenWebsiteName } = this.state;
     let completeProfileTitle = <span>&nbsp;</span>;
     let htmlPageTitle = `Complete Your Profile - ${chosenWebsiteName}`;
     if (becomeMember) {
       completeProfileTitle = <span>becomeMember</span>;
+    } else if (createNewsItem) {
+      completeProfileTitle = <span>Complete your profile</span>;
     } else if (startCampaign) {
       completeProfileTitle = <span>Complete your profile</span>;
     } else if (supportCampaign) {
@@ -115,6 +125,7 @@ class CompleteYourProfileMobile extends Component {
                 becomeMember={becomeMember}
                 campaignXWeVoteId={campaignXWeVoteId}
                 functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
+                createNewsItem={createNewsItem}
                 startCampaign={startCampaign}
                 supportCampaign={supportCampaign}
               />
@@ -128,6 +139,7 @@ class CompleteYourProfileMobile extends Component {
 CompleteYourProfileMobile.propTypes = {
   classes: PropTypes.object,
   becomeMember: PropTypes.bool,
+  createNewsItem: PropTypes.bool,
   match: PropTypes.object,
   startCampaign: PropTypes.bool,
   supportCampaign: PropTypes.bool,

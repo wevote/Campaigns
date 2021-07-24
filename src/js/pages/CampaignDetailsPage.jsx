@@ -4,6 +4,10 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import AppStore from '../stores/AppStore';
+import {
+  BlockedIndicator, DraftModeIndicator, EditIndicator, ElectionInPast,
+  IndicatorButtonWrapper, IndicatorRow,
+} from '../components/Style/CampaignIndicatorStyles';
 import CampaignOwnersList from '../components/CampaignSupport/CampaignOwnersList';
 import CampaignTopNavigation from '../components/Navigation/CampaignTopNavigation';
 import CampaignStore from '../stores/CampaignStore';
@@ -216,9 +220,9 @@ class CampaignDetailsPage extends Component {
   }
 
   onCampaignGetMinimumSupportersClick = () => {
-    const { SEOFriendlyPath, campaignXWeVoteId } = this.state;
-    if (SEOFriendlyPath) {
-      historyPush(`/c/${SEOFriendlyPath}/share-campaign`);
+    const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
+    if (campaignSEOFriendlyPath) {
+      historyPush(`/c/${campaignSEOFriendlyPath}/share-campaign`);
     } else {
       historyPush(`/id/${campaignXWeVoteId}/share-campaign`);
     }
@@ -360,9 +364,9 @@ class CampaignDetailsPage extends Component {
                       Needs Five Supporters
                     </DraftModeIndicator>
                   )}
-                  <EditCampaignIndicator onClick={this.onCampaignEditClick}>
+                  <EditIndicator onClick={this.onCampaignEditClick}>
                     Edit This Campaign
-                  </EditCampaignIndicator>
+                  </EditIndicator>
                 </IndicatorButtonWrapper>
               )}
             </CampaignDescriptionWrapper>
@@ -401,30 +405,38 @@ class CampaignDetailsPage extends Component {
                   <CampaignDescriptionDesktop>
                     {campaignDescription}
                   </CampaignDescriptionDesktop>
-                  {finalElectionDateInPast && (
-                    <IndicatorButtonWrapper>
-                      <ElectionInPast>
-                        Election in Past
-                      </ElectionInPast>
-                    </IndicatorButtonWrapper>
-                  )}
-                  {voterCanEditThisCampaign && (
-                    <IndicatorButtonWrapper>
-                      {isBlockedByWeVote && (
-                        <BlockedIndicator onClick={this.onCampaignEditClick}>
-                          Blocked: Changes Needed
-                        </BlockedIndicator>
-                      )}
-                      {(!isSupportersCountMinimumExceeded) && (
-                        <DraftModeIndicator onClick={this.onCampaignGetMinimumSupportersClick}>
-                          Needs Five Supporters
-                        </DraftModeIndicator>
-                      )}
-                      <EditCampaignIndicator onClick={this.onCampaignEditClick}>
-                        Edit This Campaign
-                      </EditCampaignIndicator>
-                    </IndicatorButtonWrapper>
-                  )}
+                  <IndicatorRow>
+                    {finalElectionDateInPast && (
+                      <IndicatorButtonWrapper>
+                        <ElectionInPast>
+                          Election in Past
+                        </ElectionInPast>
+                      </IndicatorButtonWrapper>
+                    )}
+                    {voterCanEditThisCampaign && (
+                      <IndicatorButtonWrapper>
+                        {isBlockedByWeVote && (
+                          <BlockedIndicator onClick={this.onCampaignEditClick}>
+                            Blocked: Changes Needed
+                          </BlockedIndicator>
+                        )}
+                        {(!isSupportersCountMinimumExceeded) && (
+                          <DraftModeIndicator onClick={this.onCampaignGetMinimumSupportersClick}>
+                            Needs Five Supporters
+                          </DraftModeIndicator>
+                        )}
+                      </IndicatorButtonWrapper>
+                    )}
+                  </IndicatorRow>
+                  <IndicatorRow>
+                    {voterCanEditThisCampaign && (
+                      <IndicatorButtonWrapper>
+                        <EditIndicator onClick={this.onCampaignEditClick}>
+                          Edit This Campaign
+                        </EditIndicator>
+                      </IndicatorButtonWrapper>
+                    )}
+                  </IndicatorRow>
                 </CampaignDescriptionDesktopWrapper>
                 <CommentsListWrapper>
                   <DelayedLoad waitBeforeShow={500}>
@@ -488,19 +500,19 @@ const styles = () => ({
   },
 });
 
-const BlockedIndicator = styled.span`
-  background-color: #efc2c2;
-  border-radius: 4px;
-  color: #2e3c5d;
-  cursor: pointer;
-  font-size: 14px;
-  margin-right: 10px;
-  margin-top: 10px;
-  padding: 5px 12px;
-  &:hover {
-    background-color: #eaaeae;
-  }
-`;
+// const BlockedIndicator = styled.span`
+//   background-color: #efc2c2;
+//   border-radius: 4px;
+//   color: #2e3c5d;
+//   cursor: pointer;
+//   font-size: 14px;
+//   margin-right: 10px;
+//   margin-top: 10px;
+//   padding: 5px 12px;
+//   &:hover {
+//     background-color: #eaaeae;
+//   }
+// `;
 
 const BlockedReason = styled.div`
   background-color: #efc2c2;
@@ -667,53 +679,53 @@ const DetailsSectionMobile = styled.div`
   flex-flow: column;
 `;
 
-const DraftModeIndicator = styled.span`
-  background-color: #ccc;
-  border-radius: 4px;
-  color: #2e3c5d;
-  cursor: pointer;
-  font-size: 14px;
-  margin-right: 10px;
-  margin-top: 10px;
-  padding: 5px 12px;
-  &:hover {
-    background-color: #bfbfbf;
-  }
-`;
+// const DraftModeIndicator = styled.span`
+//   background-color: #ccc;
+//   border-radius: 4px;
+//   color: #2e3c5d;
+//   cursor: pointer;
+//   font-size: 14px;
+//   margin-right: 10px;
+//   margin-top: 10px;
+//   padding: 5px 12px;
+//   &:hover {
+//     background-color: #bfbfbf;
+//   }
+// `;
 
-const EditCampaignIndicator = styled.span`
-  background-color: #fff;
-  border: 1px solid #2e3c5d;
-  border-radius: 5px;
-  color: #2e3c5d;
-  cursor: pointer;
-  font-size: 14px;
-  margin-top: 10px;
-  padding: 3px 12px;
-  &:hover {
-    background-color: #f0f0f0;
-  }
-`;
+// const EditIndicator = styled.span`
+//   background-color: #fff;
+//   border: 1px solid #2e3c5d;
+//   border-radius: 5px;
+//   color: #2e3c5d;
+//   cursor: pointer;
+//   font-size: 14px;
+//   margin-top: 10px;
+//   padding: 3px 12px;
+//   &:hover {
+//     background-color: #f0f0f0;
+//   }
+// `;
 
-const ElectionInPast = styled.span`
-  background-color: #00cc66;
-  border-radius: 4px;
-  color: #2e3c5d;
-  // cursor: pointer;
-  font-size: 14px;
-  margin-right: 10px;
-  margin-top: 10px;
-  padding: 5px 12px;
-  // &:hover {
-  //   background-color: #00b359;
-  // }
-`;
+// const ElectionInPast = styled.span`
+//   background-color: #00cc66;
+//   border-radius: 4px;
+//   color: #2e3c5d;
+//   // cursor: pointer;
+//   font-size: 14px;
+//   margin-right: 10px;
+//   margin-top: 10px;
+//   padding: 5px 12px;
+//   // &:hover {
+//   //   background-color: #00b359;
+//   // }
+// `;
 
-const IndicatorButtonWrapper = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-`;
+// const IndicatorButtonWrapper = styled.div`
+//   display: flex;
+//   justify-content: flex-start;
+//   flex-wrap: wrap;
+// `;
 
 const PageWrapper = styled.div`
   margin: 0 auto;
