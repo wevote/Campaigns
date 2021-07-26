@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { FacebookMessengerShareButton } from 'react-share';
 import CampaignStore from '../../stores/CampaignStore';
+import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import { isAndroid, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 import { androidFacebookClickHandler, generateQuoteForSharing } from './shareButtonCommon';
@@ -84,7 +85,7 @@ class ShareByFacebookDirectMessageButton extends Component {
   }
 
   saveActionShareButton = () => {
-    //
+    CampaignSupporterActions.shareButtonClicked(true);
   }
 
   render () {

@@ -14,6 +14,18 @@ const BlockedIndicator = styled.span`
   }
 `;
 
+const BlockedReason = styled.div`
+  background-color: #efc2c2;
+  border-radius: 4px;
+  color: #2e3c5d;
+  font-size: 18px;
+  margin-top: 10px;
+  @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
+    margin: 10px;
+  }
+  padding: 5px 12px;
+`;
+
 const DraftModeIndicator = styled.span`
   background-color: #ccc;
   border-radius: 4px;
@@ -80,6 +92,7 @@ const IndicatorRow = styled.div`
 
 export {
   BlockedIndicator,
+  BlockedReason,
   DraftModeIndicator,
   EditIndicator,
   ElectionInPast,

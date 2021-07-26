@@ -88,29 +88,34 @@ class CampaignNewsItemForList extends Component {
     });
   }
 
-  onCampaignNewsItemDraftOrBlockedClick = () => {
-    const { campaignXNewsItemWeVoteId, campaignXWeVoteId } = this.props;
+  getCampaignBasePath = () => {
+    const { campaignXWeVoteId } = this.props;
     const { campaignSEOFriendlyPath } = this.state;
+    let campaignBasePath;
     if (campaignSEOFriendlyPath) {
-      historyPush(`/c/${campaignSEOFriendlyPath}/add-update/${campaignXNewsItemWeVoteId}`);
-    } else if (campaignXWeVoteId) {
-      historyPush(`/id/${campaignXWeVoteId}/add-update/${campaignXNewsItemWeVoteId}`);
+      campaignBasePath = `/c/${campaignSEOFriendlyPath}`;
+    } else {
+      campaignBasePath = `/id/${campaignXWeVoteId}`;
     }
+    return campaignBasePath;
+  }
+
+  onCampaignNewsItemDraftOrBlockedClick = () => {
+    const { campaignXNewsItemWeVoteId } = this.props;
+    historyPush(`${this.getCampaignBasePath()}/add-update/${campaignXNewsItemWeVoteId}`);
     return null;
   }
 
   onCampaignNewsItemEditClick = () => {
-    const { campaignXNewsItemWeVoteId, campaignXWeVoteId } = this.props;
-    const { campaignSEOFriendlyPath } = this.state;
-    if (campaignSEOFriendlyPath) {
-      historyPush(`/c/${campaignSEOFriendlyPath}/add-update/${campaignXNewsItemWeVoteId}`);
-    } else if (campaignXWeVoteId) {
-      historyPush(`/id/${campaignXWeVoteId}/add-update/${campaignXNewsItemWeVoteId}`);
-    }
+    const { campaignXNewsItemWeVoteId } = this.props;
+    historyPush(`${this.getCampaignBasePath()}/add-update/${campaignXNewsItemWeVoteId}`);
     return null;
   }
 
   goToDedicatedPublicNewsItemPage = () => {
+    const { campaignXNewsItemWeVoteId } = this.props;
+    historyPush(`${this.getCampaignBasePath()}/u/${campaignXNewsItemWeVoteId}`);
+    return null;
   }
 
   render () {
@@ -138,20 +143,19 @@ class CampaignNewsItemForList extends Component {
           <OneCampaignInnerWrapper>
             <NewsItemWrapper className="comment" key={campaignXNewsItemWeVoteId}>
               {campaignNewsSubject && (
-                <NewsItemSubjectWrapper>
+                <NewsItemSubjectWrapper className="u-cursor--pointer u-link-color-on-hover u-link-underline-on-hover" onClick={this.goToDedicatedPublicNewsItemPage}>
                   {campaignNewsSubject}
                 </NewsItemSubjectWrapper>
               )}
               {campaignNewsText && (
-                <NewsItemTextWrapper>
+                <NewsItemTextWrapper className="u-cursor--pointer u-link-color-on-hover" onClick={this.goToDedicatedPublicNewsItemPage}>
                   <TruncateMarkup
                     lines={4}
                     ellipsis={(
                       <span>
                         <span className="u-text-fade-at-end">&nbsp;</span>
                         <span
-                          className="u-cursor--pointer u-link-underline u-link-color--gray"
-                          onClick={this.goToDedicatedPublicNewsItemPage}
+                          className="u-cursor--pointer u-link-underline u-link-color--gray u-link-color-on-hover"
                         >
                           Read more
                         </span>
@@ -249,13 +253,15 @@ const styles = (theme) => ({
 });
 
 const NewsItemSubjectWrapper = styled.div`
-  font-size: 22px;
+  font-size: 20px;
+  font-weight: 600;
   margin: 0;
   margin-bottom: 8px;
 `;
 
 const NewsItemTextWrapper = styled.div`
-  font-size: 18px;
+  font-size: 16px;
+  line-height: 1.4;
   margin: 0;
   margin-bottom: 8px;
 `;

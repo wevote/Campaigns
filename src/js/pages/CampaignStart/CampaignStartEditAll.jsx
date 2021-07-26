@@ -5,6 +5,9 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import AppStore from '../../stores/AppStore';
+import {
+  BlockedReason,
+} from '../../components/Style/CampaignIndicatorStyles';
 import AddCandidateInputField from '../../components/CampaignStart/AddPoliticianInputField';
 import CampaignDescriptionInputField from '../../components/CampaignStart/CampaignDescriptionInputField';
 import CampaignPhotoUpload from '../../components/CampaignStart/CampaignPhotoUpload';
@@ -348,15 +351,15 @@ const styles = () => ({
   },
 });
 
-const BlockedReason = styled.div`
-  background-color: #efc2c2;
-  border-radius: 4px;
-  color: #2e3c5d;
-  font-size: 18px;
-  margin-right: 10px;
-  margin-top: 10px;
-  padding: 5px 12px;
-`;
+// const BlockedReason = styled.div`
+//   background-color: #efc2c2;
+//   border-radius: 4px;
+//   color: #2e3c5d;
+//   font-size: 18px;
+//   margin-right: 10px;
+//   margin-top: 10px;
+//   padding: 5px 12px;
+// `;
 
 const CampaignStartSection = styled.div`
   margin-bottom: 60px !important;

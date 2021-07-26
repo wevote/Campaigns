@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { EmailShareButton } from 'react-share';
 import CampaignStore from '../../stores/CampaignStore';
+import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import { isAndroid, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 import {
@@ -87,7 +88,7 @@ class ShareByEmailButton extends Component {
   }
 
   saveActionShareButton = () => {
-    //
+    CampaignSupporterActions.shareButtonClicked(true);
   }
 
   render () {

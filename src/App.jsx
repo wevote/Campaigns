@@ -18,6 +18,7 @@ const About = React.lazy(() => import('./js/pages/About'));
 const AddContacts = React.lazy(() => import('./js/pages/AddContacts'));
 const Attributions = React.lazy(() => import('./js/pages/Attributions'));
 const CampaignCommentsPage = React.lazy(() => import('./js/pages/CampaignCommentsPage'));
+const CampaignNewsItemDetailsPage = React.lazy(() => import('./js/pages/CampaignNewsItemDetailsPage'));
 const CampaignDetailsPage = React.lazy(() => import('./js/pages/CampaignDetailsPage'));
 const CampaignNewsItemText = React.lazy(() => import('./js/pages/CampaignNewsItemPublish/CampaignNewsItemText'));
 const CampaignRecommendedCampaigns = React.lazy(() => import('./js/pages/CampaignSupport/CampaignRecommendedCampaigns'));
@@ -118,6 +119,7 @@ class App extends Component {
                   <Route exact path="/c/:campaignSEOFriendlyPath/add-update/:campaignXNewsItemWeVoteId" render={(props) => <CampaignNewsItemText match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/comments" render={(props) => <CampaignCommentsPage match={props.match} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/edit" render={(props) => <CampaignStartEditAll match={props.match} editExistingCampaign setShowHeaderFooter={this.setShowHeaderFooter} />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/u/:campaignXNewsItemWeVoteId" render={(props) => <CampaignNewsItemDetailsPage match={props.match} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/updates" render={(props) => <CampaignUpdatesPage match={props.match} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/complete-your-profile-for-news-item" render={(props) => <CompleteYourProfileMobile match={props.match} createNewsItem setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/complete-your-support-for-this-campaign" render={(props) => <CompleteYourProfileMobile match={props.match} supportCampaign setShowHeaderFooter={this.setShowHeaderFooter} />} />
@@ -136,6 +138,7 @@ class App extends Component {
                   <Route exact path="/id/:campaignXWeVoteId/add-update/:campaignXNewsItemWeVoteId" render={(props) => <CampaignNewsItemText match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/id/:campaignXWeVoteId/comments" render={(props) => <CampaignCommentsPage match={props.match} />} />
                   <Route exact path="/id/:campaignXWeVoteId/edit" render={(props) => <CampaignStartEditAll match={props.match} editExistingCampaign setShowHeaderFooter={this.setShowHeaderFooter} />} />
+                  <Route exact path="/id/:campaignXWeVoteId/u/:campaignXNewsItemWeVoteId" render={(props) => <CampaignNewsItemDetailsPage match={props.match} />} />
                   <Route exact path="/id/:campaignXWeVoteId/updates" render={(props) => <CampaignUpdatesPage match={props.match} />} />
                   <Route exact path="/id/:campaignXWeVoteId/complete-your-profile-for-news-item" render={(props) => <CompleteYourProfileMobile match={props.match} createNewsItem setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/id/:campaignXWeVoteId/complete-your-support-for-this-campaign" render={(props) => <CompleteYourProfileMobile match={props.match} supportCampaign setShowHeaderFooter={this.setShowHeaderFooter} />} />

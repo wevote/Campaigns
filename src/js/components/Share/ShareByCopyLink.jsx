@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { withStyles, withTheme } from '@material-ui/core/styles';
 import AppStore from '../../stores/AppStore';
 import CampaignStore from '../../stores/CampaignStore';
+import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import { openSnackbar } from '../Widgets/SnackNotifier';
 import { renderLog } from '../../utils/logging';
 
@@ -99,6 +100,7 @@ class ShareByCopyLink extends Component {
 
   copyLink () {
     // console.log('ShareByCopyLink copyLink');
+    CampaignSupporterActions.shareButtonClicked(true);
     openSnackbar({ message: 'Copied!' });
     this.setState({
       copyLinkCopied: true,

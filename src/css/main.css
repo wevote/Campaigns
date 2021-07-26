@@ -72,11 +72,19 @@ html {
   color: #4371cc;
 }
 
+.u-link-color-on-hover:hover {
+  color: #4371cc;
+}
+
 .u-link-color--gray {
   color: #aaa;
 }
 
 .u-link-underline {
+  text-decoration: underline;
+}
+
+.u-link-underline-on-hover:hover {
   text-decoration: underline;
 }
 

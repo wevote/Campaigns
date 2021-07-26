@@ -1,11 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import PropTypes from 'prop-types';
+import loadable from '@loadable/component';
 import { Button } from '@material-ui/core';
 import { withStyles, withTheme } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import AppActions from '../../actions/AppActions';
 import AppStore from '../../stores/AppStore';
 import CampaignStore from '../../stores/CampaignStore';
+import DelayedLoad from '../Widgets/DelayedLoad';
 import initializejQuery from '../../utils/initializejQuery';
 import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
 import { renderLog } from '../../utils/logging';
@@ -18,6 +20,8 @@ import VoterLastNameInputField from './VoterLastNameInputField';
 import VoterPhotoUpload from './VoterPhotoUpload';
 import VoterStore from '../../stores/VoterStore';
 
+const SignInButton = loadable(() => import('../Navigation/SignInButton'));
+const SignInModalController = loadable(() => import('../Settings/SignInModalController'));
 
 class CompleteYourProfile extends Component {
   constructor (props) {
@@ -94,6 +98,10 @@ class CompleteYourProfile extends Component {
 
     const voter = VoterStore.getVoter();
     const { signed_in_with_email: voterIsSignedInWithEmail, we_vote_id: voterWeVoteId } = voter;
+    const voterIsSignedIn = VoterStore.getVoterIsSignedIn();
+    this.setState({
+      voterIsSignedIn,
+    });
     // console.log(`CompleteYourProfile onVoterStoreChange isSignedIn: ${isSignedIn}, voterIsSignedInWithEmail: ${voterIsSignedInWithEmail}`);
     if (voterIsSignedInWithEmail) {
       // console.log('CompleteYourProfile onVoterStoreChange voterIsSignedInWithEmail');
@@ -226,7 +234,8 @@ class CompleteYourProfile extends Component {
     } = this.props;
 
     const {
-      showVerifyModal, voterWeVoteId, voterCanVoteForPoliticianInCampaign, voterEmailMissing,
+      showVerifyModal, voterWeVoteId, voterCanVoteForPoliticianInCampaign,
+      voterEmailMissing, voterIsSignedIn,
       voterFirstNameMissing, voterLastNameMissing, voterEmailQueuedToSaveLocal,
     } = this.state;
     if (!voterWeVoteId) {
@@ -239,7 +248,7 @@ class CompleteYourProfile extends Component {
     let outerMarginsOff = false;
     if (becomeMember) {
       buttonText = 'Continue';
-      introductionText = <span>becomeMember</span>;
+      introductionText = <span>Thank you for becoming a member of WeVote.US!</span>;
     } else if (startCampaign) {
       buttonText = 'Continue';
       introductionText = <span>Let people you know see you, so they can feel safe supporting your campaign.</span>;
@@ -260,10 +269,28 @@ class CompleteYourProfile extends Component {
     }
     return (
       <Wrapper>
+        <Suspense fallback={<span>&nbsp;</span>}>
+          <SignInModalController />
+        </Suspense>
         <section>
           {!!(introductionText) && (
             <IntroductionText>
               {introductionText}
+              {!voterIsSignedIn && (
+                <DelayedLoad waitBeforeShow={500}>
+                  <Suspense fallback={<span>&nbsp;</span>}>
+                    <SignInWrapper>
+                      <AlreadyHaveAccount>
+                        Already have an account?
+                        {' '}
+                      </AlreadyHaveAccount>
+                      <div className="u-cursor--pointer u-link-color u-link-underline">
+                        <SignInButton hideSignOut />
+                      </div>
+                    </SignInWrapper>
+                  </Suspense>
+                </DelayedLoad>
+              )}
             </IntroductionText>
           )}
           <InputFieldsWrapper outerMarginsOff={outerMarginsOff}>
@@ -354,6 +381,10 @@ const styles = () => ({
   },
 });
 
+const AlreadyHaveAccount = styled.div`
+  margin-right: 2px;
+`;
+
 const ButtonWrapper = styled.div`
   background-color: #fff;
   margin: ${(props) => (props.outerMarginsOff ? '8px 0 0 0' : '8px 15px 0 15px')};
@@ -376,6 +407,13 @@ const InputFieldsWrapper = styled.div`
 const IntroductionText = styled.div`
   font-size: 15px;
   margin: 10px 15px;
+`;
+
+const SignInWrapper = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 4px;
+  width: 100%;
 `;
 
 const Wrapper = styled.div`

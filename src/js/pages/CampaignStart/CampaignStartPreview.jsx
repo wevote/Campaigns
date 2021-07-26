@@ -237,7 +237,9 @@ class CampaignStartPreview extends Component {
                     <CampaignImageMissingWrapper>
                       <CampaignImageMissing>
                         <DelayedLoad showLoadingText waitBeforeShow={4000}>
-                          Photo Missing
+                          <>
+                            Photo Missing
+                          </>
                         </DelayedLoad>
                       </CampaignImageMissing>
                     </CampaignImageMissingWrapper>
