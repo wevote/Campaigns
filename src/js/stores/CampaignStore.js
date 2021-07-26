@@ -164,6 +164,11 @@ class CampaignStore extends ReduceStore {
     return this.getState().allCachedCampaignXNewsItems[campaignXNewsItemWeVoteId] || {};
   }
 
+  getCampaignXNewsItemsExist (campaignXWeVoteId) {
+    const newsItemListWeVoteIds = this.getState().allCachedNewsItemWeVoteIdsByCampaignX[campaignXWeVoteId] || [];
+    return Boolean(newsItemListWeVoteIds.length);
+  }
+
   getCampaignXNewsItemList (campaignXWeVoteId) {
     const newsItemListWeVoteIds = this.getState().allCachedNewsItemWeVoteIdsByCampaignX[campaignXWeVoteId] || [];
     const campaignXNewsItemList = [];

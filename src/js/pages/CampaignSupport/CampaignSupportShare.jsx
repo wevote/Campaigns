@@ -18,6 +18,8 @@ import {
 } from '../../components/Style/CampaignSupportStyles';
 import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiers } from '../../utils/campaignUtils';
+import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
+import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSteps';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
@@ -42,6 +44,7 @@ class CampaignSupportShare extends Component {
       campaignTitle: '',
       campaignXWeVoteId: '',
       chosenWebsiteName: '',
+      shareButtonClicked: false,
     };
   }
 
@@ -52,6 +55,8 @@ class CampaignSupportShare extends Component {
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
+    this.onCampaignSupporterStoreChange();
+    this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
     // console.log('componentDidMount campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
@@ -99,9 +104,11 @@ class CampaignSupportShare extends Component {
   }
 
   componentWillUnmount () {
+    CampaignSupporterActions.shareButtonClicked(false);
     this.props.setShowHeaderFooter(true);
     this.appStoreListener.remove();
     this.campaignStoreListener.remove();
+    this.campaignSupporterStoreListener.remove();
   }
 
   onAppStoreChange () {
@@ -155,6 +162,13 @@ class CampaignSupportShare extends Component {
     }
   }
 
+  onCampaignSupporterStoreChange () {
+    const shareButtonClicked = CampaignSupporterStore.getShareButtonClicked();
+    this.setState({
+      shareButtonClicked,
+    });
+  }
+
   getCampaignBasePath = () => {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
     let campaignBasePath = '';
@@ -169,8 +183,8 @@ class CampaignSupportShare extends Component {
 
   goToNextStep = () => {
     const { showShareCampaignWithOneFriend } = this.props;
-    const { recommendedCampaignXListCount, recommendedCampaignXListHasBeenRetrieved } = this.state;
-    if (showShareCampaignWithOneFriend) {
+    const { recommendedCampaignXListCount, recommendedCampaignXListHasBeenRetrieved, shareButtonClicked } = this.state;
+    if (shareButtonClicked || showShareCampaignWithOneFriend) {
       // Since showing direct message choices is the final step,
       // link should take voter back to the campaign updates page or on to the  "recommended-campaigns"
       if (recommendedCampaignXListHasBeenRetrieved && recommendedCampaignXListCount > 0) {
@@ -197,6 +211,7 @@ class CampaignSupportShare extends Component {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
       campaignXWeVoteId, chosenWebsiteName,
       recommendedCampaignXListCount, recommendedCampaignXListHasBeenRetrieved,
+      shareButtonClicked,
     } = this.state;
     let campaignProcessStepIntroductionText = 'Voters joined this campaign thanks to the people who shared it. Join them and help this campaign grow!';
     let campaignProcessStepTitle = 'Sharing leads to way more votes.';
@@ -210,7 +225,7 @@ class CampaignSupportShare extends Component {
       // Since showing direct message choices is the final step, link should take voter back to the campaign updates page
       // NOTE: When we add the "recommended-campaigns" feature, change this
       if (recommendedCampaignXListHasBeenRetrieved && recommendedCampaignXListCount > 0) {
-        skipForNowText = 'continue';
+        skipForNowText = 'Continue';
       } else {
         skipForNowText = 'See latest news about this campaign';
       }
@@ -351,14 +366,25 @@ class CampaignSupportShare extends Component {
                 <CampaignSupportSection>
                   <SkipForNowButtonWrapper>
                     <SkipForNowButtonPanel>
-                      <Button
-                        classes={{ root: classes.buttonSimpleLink }}
-                        color="primary"
-                        id="skipPayToPromote"
-                        onClick={this.submitSkipForNow}
-                      >
-                        {skipForNowText}
-                      </Button>
+                      {shareButtonClicked ? (
+                        <Button
+                          classes={{ root: classes.buttonSimpleLink }}
+                          color="primary"
+                          id="Continue"
+                          onClick={this.submitSkipForNow}
+                        >
+                          Continue
+                        </Button>
+                      ) : (
+                        <Button
+                          classes={{ root: classes.buttonSimpleLink }}
+                          color="primary"
+                          id="skipPayToPromote"
+                          onClick={this.submitSkipForNow}
+                        >
+                          {skipForNowText}
+                        </Button>
+                      )}
                     </SkipForNowButtonPanel>
                   </SkipForNowButtonWrapper>
                 </CampaignSupportSection>

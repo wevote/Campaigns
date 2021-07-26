@@ -31,7 +31,7 @@ class CampaignStartStore extends ReduceStore {
 
   campaignDescriptionExists () {
     if (this.getState().campaignDescription) {
-      return Boolean(this.getState().campaignDescription.length > 10);
+      return Boolean(this.getState().campaignDescription.length > 0);
     } else {
       return false;
     }

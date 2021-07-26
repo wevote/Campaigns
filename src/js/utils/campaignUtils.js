@@ -63,12 +63,15 @@ export function retrieveCampaignXFromIdentifiers (campaignSEOFriendlyPath, campa
     initializejQuery(() => {
       CampaignActions.campaignRetrieveBySEOFriendlyPath(campaignSEOFriendlyPath);
     });
+    return false;
   } else if (campaignXWeVoteId) {
     initializejQuery(() => {
       CampaignActions.campaignRetrieve(campaignXWeVoteId);
     });
+    return true;
+  } else {
+    return false;
   }
-  return true;
 }
 
 export function retrieveCampaignXFromIdentifiersIfNeeded (campaignSEOFriendlyPath, campaignXWeVoteId) {

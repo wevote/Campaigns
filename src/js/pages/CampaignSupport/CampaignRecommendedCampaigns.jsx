@@ -129,12 +129,14 @@ class CampaignRecommendedCampaigns extends Component {
       recommendedCampaignXList = CampaignStore.getRecommendedCampaignXList(campaignXWeVoteId);
       recommendedCampaignXListHasBeenRetrieved = CampaignStore.getRecommendedCampaignXListHasBeenRetrieved(campaignXWeVoteId);
       this.setState({
+        campaignXNewsItemsExist: CampaignStore.getCampaignXNewsItemsExist(campaignXWeVoteId),
         campaignXWeVoteId,
       });
     } else if (campaignXWeVoteIdFromParams) {
       recommendedCampaignXList = CampaignStore.getRecommendedCampaignXList(campaignXWeVoteIdFromParams);
       recommendedCampaignXListHasBeenRetrieved = CampaignStore.getRecommendedCampaignXListHasBeenRetrieved(campaignXWeVoteIdFromParams);
       this.setState({
+        campaignXNewsItemsExist: CampaignStore.getCampaignXNewsItemsExist(campaignXWeVoteIdFromParams),
         campaignXWeVoteId: campaignXWeVoteIdFromParams,
       });
     }
@@ -185,6 +187,10 @@ class CampaignRecommendedCampaigns extends Component {
     }
 
     return campaignBasePath;
+  }
+
+  goToDetailsPage = () => {
+    historyPush(`${this.getCampaignBasePath()}`);
   }
 
   goToUpdatesPage = () => {
@@ -322,7 +328,8 @@ class CampaignRecommendedCampaigns extends Component {
     const { classes } = this.props;
     const {
       allRecommendedCampaignOptionsReviewed, campaignSEOFriendlyPath, campaignTitle,
-      campaignXWeVoteId, chosenWebsiteName, descriptionUnfurledMode, numberOfCampaignsLeftToSupport,
+      campaignXNewsItemsExist, campaignXWeVoteId, chosenWebsiteName,
+      descriptionUnfurledMode, numberOfCampaignsLeftToSupport,
       recommendedCampaignDescription, recommendedCampaignTitle, recommendedCampaignXListHasBeenRetrieved,
       recommendedCampaignXWeVoteId, recommendedCampaignPhotoLargeUrl,
     } = this.state;
@@ -351,14 +358,25 @@ class CampaignRecommendedCampaigns extends Component {
                   <CampaignSupportSection>
                     <SkipForNowButtonWrapper>
                       <SkipForNowButtonPanel>
-                        <Button
-                          classes={{ root: classes.buttonSimpleLink }}
-                          color="primary"
-                          id="skipPayToPromote"
-                          onClick={this.goToUpdatesPage}
-                        >
-                          See news about the campaign you supported
-                        </Button>
+                        {campaignXNewsItemsExist ? (
+                          <Button
+                            classes={{ root: classes.buttonSimpleLink }}
+                            color="primary"
+                            id="goToUpdatesPage"
+                            onClick={this.goToUpdatesPage}
+                          >
+                            See news about the campaign you supported
+                          </Button>
+                        ) : (
+                          <Button
+                            classes={{ root: classes.buttonSimpleLink }}
+                            color="primary"
+                            id="goToCampaignDetails"
+                            onClick={this.goToDetailsPage}
+                          >
+                            Return to the campaign you supported
+                          </Button>
+                        )}
                       </SkipForNowButtonPanel>
                     </SkipForNowButtonWrapper>
                   </CampaignSupportSection>
@@ -476,14 +494,25 @@ class CampaignRecommendedCampaigns extends Component {
                 <CampaignSupportSection>
                   <SkipForNowButtonWrapper>
                     <SkipForNowButtonPanel>
-                      <Button
-                        classes={{ root: classes.buttonSimpleLink }}
-                        color="primary"
-                        id="skipPayToPromote"
-                        onClick={this.goToUpdatesPage}
-                      >
-                        See news about the campaign you supported
-                      </Button>
+                      {campaignXNewsItemsExist ? (
+                        <Button
+                          classes={{ root: classes.buttonSimpleLink }}
+                          color="primary"
+                          id="goToUpdatesPage"
+                          onClick={this.goToUpdatesPage}
+                        >
+                          See news about the campaign you supported
+                        </Button>
+                      ) : (
+                        <Button
+                          classes={{ root: classes.buttonSimpleLink }}
+                          color="primary"
+                          id="goToCampaignDetails"
+                          onClick={this.goToDetailsPage}
+                        >
+                          Return to the campaign you supported
+                        </Button>
+                      )}
                     </SkipForNowButtonPanel>
                   </SkipForNowButtonWrapper>
                 </CampaignSupportSection>

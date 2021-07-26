@@ -20,6 +20,10 @@ export default {
       });
   },
 
+  shareButtonClicked (value) {
+    Dispatcher.dispatch({ type: 'shareButtonClicked', payload: value });
+  },
+
   supporterEndorsementQueuedToSave (supporterEndorsement) {
     Dispatcher.dispatch({ type: 'supporterEndorsementQueuedToSave', payload: supporterEndorsement });
   },

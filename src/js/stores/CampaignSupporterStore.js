@@ -8,6 +8,7 @@ class CampaignSupporterStore extends ReduceStore {
       allCachedCampaignXSupporterVoterEntries: {}, // Dictionary with campaignx_we_vote_id as key and the CampaignXSupporter for this voter as value
       latestCampaignXSupporterEndorsements: {}, // Dict with key campaignx_we_vote_id and value of List of Dicts w/ latest campaignx_supporter entries with supporter_endorsement values
       latestCampaignXSupporters: {}, // Dict with key campaignx_we_vote_id and value of List of Dicts w/ latest campaignx_supporter entries, ordered newest to oldest
+      shareButtonClicked: false,
       supporterEndorsementQueuedToSave: '',
       supporterEndorsementQueuedToSaveSet: false,
       visibleToPublic: true, // Default setting
@@ -46,6 +47,10 @@ class CampaignSupporterStore extends ReduceStore {
 
   getCampaignXSupporterVoterEntry (campaignXWeVoteId) {
     return this.getState().allCachedCampaignXSupporterVoterEntries[campaignXWeVoteId] || {};
+  }
+
+  getShareButtonClicked () {
+    return this.getState().shareButtonClicked;
   }
 
   getSupporterEndorsementQueuedToSave () {
@@ -215,6 +220,20 @@ class CampaignSupporterStore extends ReduceStore {
           latestCampaignXSupporters,
           voterSignedInWithEmail: Boolean(action.res.voter_signed_in_with_email),
         };
+
+      case 'shareButtonClicked':
+        // console.log('CampaignSupporterStore shareButtonClicked: ', action.payload);
+        if (action.payload === undefined) {
+          return {
+            ...state,
+            shareButtonClicked: false,
+          };
+        } else {
+          return {
+            ...state,
+            shareButtonClicked: action.payload,
+          };
+        }
 
       case 'supporterEndorsementQueuedToSave':
         // console.log('CampaignSupporterStore supporterEndorsementQueuedToSave: ', action.payload);

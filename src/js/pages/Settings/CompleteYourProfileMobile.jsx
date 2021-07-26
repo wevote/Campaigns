@@ -30,7 +30,7 @@ class CompleteYourProfileMobile extends Component {
     const { becomeMember, createNewsItem, startCampaign, supportCampaign } = this.props;
     let pathToUseWhenProfileComplete = '';
     if (becomeMember) {
-      pathToUseWhenProfileComplete = '/DONATE-PATH-HERE';
+      pathToUseWhenProfileComplete = '/membership';
     } else if (startCampaign) {
       pathToUseWhenProfileComplete = '/profile/started';
     } else if (createNewsItem && campaignSEOFriendlyPath) {
