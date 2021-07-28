@@ -289,7 +289,7 @@ class CampaignSupportPayToPromote extends Component {
                     </CampaignSupportMobileButtonPanel>
                   </CampaignSupportMobileButtonWrapper>
                   <SkipForNowButtonWrapper>
-                    <SkipForNowButtonPanel>
+                    <SkipForNowButtonPanel show>
                       <Button
                         classes={{ root: classes.buttonSimpleLink }}
                         color="primary"

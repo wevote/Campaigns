@@ -357,7 +357,7 @@ class CampaignRecommendedCampaigns extends Component {
                 <CampaignSupportSectionWrapper>
                   <CampaignSupportSection>
                     <SkipForNowButtonWrapper>
-                      <SkipForNowButtonPanel>
+                      <SkipForNowButtonPanel show>
                         {campaignXNewsItemsExist ? (
                           <Button
                             classes={{ root: classes.buttonSimpleLink }}
@@ -493,7 +493,7 @@ class CampaignRecommendedCampaigns extends Component {
               <CampaignSupportSectionWrapper>
                 <CampaignSupportSection>
                   <SkipForNowButtonWrapper>
-                    <SkipForNowButtonPanel>
+                    <SkipForNowButtonPanel show>
                       {campaignXNewsItemsExist ? (
                         <Button
                           classes={{ root: classes.buttonSimpleLink }}
