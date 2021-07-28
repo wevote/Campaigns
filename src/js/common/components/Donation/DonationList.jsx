@@ -137,7 +137,7 @@ class DonationList extends Component {
         last4: last4.length ? last4 : 'waiting',
         expires: expMonth > 0 ? `${expMonth}/${expYear}` : '/',
         status,
-        lastCharged: lastCharged.length ? moment.utc(lastCharged).format('MMM D, YYYY') : 'waiting',
+        lastCharged: lastCharged.length  > 5 ? moment.utc(lastCharged).format('MMM D, YYYY') : 'waiting',
         displayMembershipTab,
         active,
         isActive,
