@@ -15,9 +15,13 @@ import CampaignSupporterActions from '../actions/CampaignSupporterActions';
 import CampaignSupporterStore from '../stores/CampaignSupporterStore';
 import CompleteYourProfileModalController from '../components/Settings/CompleteYourProfileModalController';
 import DelayedLoad from '../components/Widgets/DelayedLoad';
-import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
+import {
+  getCampaignXValuesFromIdentifiers,
+  retrieveCampaignXFromIdentifiersIfNeeded,
+} from '../utils/campaignUtils';
 import { historyPush, isCordova } from '../utils/cordovaUtils';
 import initializejQuery from '../utils/initializejQuery';
+import keepHelpingDestination from '../utils/keepHelpingDestination';
 import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../utils/logging';
 import returnFirstXWords from '../utils/returnFirstXWords';
@@ -51,15 +55,15 @@ class CampaignDetailsPage extends Component {
 
   componentDidMount () {
     // console.log('CampaignDetailsPage componentDidMount');
-    this.onCampaignStoreChange();
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
     this.onAppStoreChange();
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
+    this.onCampaignSupporterStoreChange();
     this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
-    // retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
     let pathToUseWhenProfileComplete;
     if (campaignSEOFriendlyPath) {
       this.setState({
@@ -75,6 +79,8 @@ class CampaignDetailsPage extends Component {
     this.setState({
       pathToUseWhenProfileComplete,
     });
+    // Take the "calculated" identifiers and retrieve if missing
+    retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
   }
 
   componentWillUnmount () {
@@ -145,10 +151,10 @@ class CampaignDetailsPage extends Component {
 
   onCampaignSupporterStoreChange () {
     const { campaignXWeVoteId } = this.state;
-    const step2Completed = CampaignSupporterStore.supporterEndorsementExists(campaignXWeVoteId);
-    const payToPromoteStepCompleted = false;
+    const step2Completed = CampaignSupporterStore.voterSupporterEndorsementExists(campaignXWeVoteId);
+    const payToPromoteStepCompleted = CampaignSupporterStore.voterChipInExists(campaignXWeVoteId);
     const sharingStepCompleted = false;
-    // console.log('onCampaignSupporterStoreChange sharingStepCompleted: ', sharingStepCompleted, ', step2Completed: ', step2Completed, ', payToPromoteStepCompleted:', payToPromoteStepCompleted);
+    // console.log('onCampaignSupporterStoreChange step2Completed: ', step2Completed, ', sharingStepCompleted: ', sharingStepCompleted, ', payToPromoteStepCompleted:', payToPromoteStepCompleted);
     this.setState({
       sharingStepCompleted,
       step2Completed,
@@ -176,17 +182,10 @@ class CampaignDetailsPage extends Component {
   }
 
   functionToUseToKeepHelping = () => {
-    // console.log('functionToUseToKeepHelping');
     const { payToPromoteStepCompleted, payToPromoteStepTurnedOn, sharingStepCompleted, step2Completed } = this.state;
-    if (!sharingStepCompleted) {
-      historyPush(`${this.getCampaignBasePath()}/share-campaign`);
-    } else if (payToPromoteStepTurnedOn && !payToPromoteStepCompleted) {
-      historyPush(`${this.getCampaignBasePath()}/pay-to-promote`);
-    } else if (!step2Completed) {
-      historyPush(`${this.getCampaignBasePath()}/why-do-you-support`);
-    } else {
-      historyPush(`${this.getCampaignBasePath()}/share-campaign`);
-    }
+    // console.log('functionToUseToKeepHelping sharingStepCompleted:', sharingStepCompleted, ', payToPromoteStepCompleted:', payToPromoteStepCompleted, ', step2Completed:', step2Completed);
+    const keepHelpingDestinationString = keepHelpingDestination(step2Completed, payToPromoteStepCompleted, payToPromoteStepTurnedOn, sharingStepCompleted);
+    historyPush(`${this.getCampaignBasePath()}/${keepHelpingDestinationString}`);
   }
 
   functionToUseWhenProfileComplete = () => {

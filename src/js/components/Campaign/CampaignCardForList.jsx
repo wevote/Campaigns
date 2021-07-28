@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import TruncateMarkup from 'react-truncate-markup';
 import { withStyles } from '@material-ui/core/styles';
+import AppStore from '../../stores/AppStore';
 import {
   BlockedIndicator, DraftModeIndicator, EditIndicator, ElectionInPast,
   IndicatorButtonWrapper, IndicatorDefaultButtonWrapper, IndicatorRow,
@@ -14,6 +15,7 @@ import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { renderLog } from '../../utils/logging';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import initializejQuery from '../../utils/initializejQuery';
+import keepHelpingDestination from '../../utils/keepHelpingDestination';
 import { numberWithCommas } from '../../utils/textFormat';
 
 const SupportButtonBeforeCompletionScreen = React.lazy(() => import('../CampaignSupport/SupportButtonBeforeCompletionScreen'));
@@ -40,10 +42,12 @@ class CampaignCardForList extends Component {
 
   componentDidMount () {
     // console.log('CampaignCardForList componentDidMount');
-    this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.onCampaignStoreChange();
+    this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.onCampaignSupporterStoreChange();
+    this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
   }
 
   componentDidUpdate (prevProps) {
@@ -63,11 +67,23 @@ class CampaignCardForList extends Component {
   }
 
   componentWillUnmount () {
+    this.appStoreListener.remove();
     this.campaignStoreListener.remove();
     this.campaignSupporterStoreListener.remove();
     if (this.timer) {
       clearTimeout(this.timer);
     }
+  }
+
+  onAppStoreChange () {
+    const inPrivateLabelMode = AppStore.inPrivateLabelMode();
+    // const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
+    // For now, we assume that paid sites with chosenSiteLogoUrl will turn off "Chip in"
+    const payToPromoteStepTurnedOn = !inPrivateLabelMode;
+    this.setState({
+      payToPromoteStepTurnedOn,
+      // siteConfigurationHasBeenRetrieved,
+    });
   }
 
   onCampaignStoreChange () {
@@ -191,8 +207,8 @@ class CampaignCardForList extends Component {
       } = campaignXSupporterVoterEntry;
       // console.log('onCampaignSupporterStoreChange campaignSupported: ', campaignSupported);
       if (campaignXWeVoteIdFromCampaignXSupporter) {
-        const step2Completed = CampaignSupporterStore.supporterEndorsementExists(campaignXWeVoteId);
-        const payToPromoteStepCompleted = false;
+        const step2Completed = CampaignSupporterStore.voterSupporterEndorsementExists(campaignXWeVoteId);
+        const payToPromoteStepCompleted = CampaignSupporterStore.voterChipInExists(campaignXWeVoteId);
         const sharingStepCompleted = false;
         this.setState({
           campaignSupported,
@@ -220,17 +236,11 @@ class CampaignCardForList extends Component {
   }
 
   functionToUseToKeepHelping () {
-    // console.log('functionToUseToKeepHelping');
     const { payToPromoteStepCompleted, payToPromoteStepTurnedOn, sharingStepCompleted, step2Completed } = this.state;
-    if (!sharingStepCompleted) {
-      historyPush(`${this.getCampaignBasePath()}/share-campaign`);
-    } else if (payToPromoteStepTurnedOn && !payToPromoteStepCompleted) {
-      historyPush(`${this.getCampaignBasePath()}/pay-to-promote`);
-    } else if (!step2Completed) {
-      historyPush(`${this.getCampaignBasePath()}/why-do-you-support`);
-    } else {
-      historyPush(`${this.getCampaignBasePath()}/share-campaign`);
-    }
+    console.log(payToPromoteStepCompleted, payToPromoteStepTurnedOn, sharingStepCompleted, step2Completed);
+    const keepHelpingDestinationString = keepHelpingDestination(step2Completed, payToPromoteStepCompleted, payToPromoteStepTurnedOn, sharingStepCompleted);
+    console.log('functionToUseToKeepHelping keepHelpingDestinationString:', keepHelpingDestinationString);
+    historyPush(`${this.getCampaignBasePath()}/${keepHelpingDestinationString}`);
   }
 
   functionToUseWhenProfileComplete () {

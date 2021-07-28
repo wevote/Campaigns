@@ -9,6 +9,22 @@ export default {
     Dispatcher.dispatch({ type: 'campaignNewsItemTextQueuedToSave', payload: campaignNewsItemText });
   },
 
+  campaignNewsItemPublish (
+    campaignWeVoteId,
+    campaignNewsItemWeVoteId,
+    sendNow,
+  ) {
+    // console.log('campaignNewsItemPublish: ', sendNow);
+    Dispatcher.loadEndpoint('campaignNewsItemSave',
+      {
+        campaignx_we_vote_id: campaignWeVoteId,
+        campaignx_news_item_we_vote_id: campaignNewsItemWeVoteId,
+        in_draft_mode: false,
+        in_draft_mode_changed: true,
+        send_now: sendNow,
+      });
+  },
+
   campaignNewsItemTextSave (
     campaignWeVoteId,
     campaignNewsItemWeVoteId,

@@ -98,6 +98,7 @@ class CampaignSupportEndorsement extends Component {
     this.props.setShowHeaderFooter(true);
     this.appStoreListener.remove();
     this.campaignStoreListener.remove();
+    this.voterStoreListener.remove();
   }
 
   onAppStoreChange () {

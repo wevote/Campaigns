@@ -22,10 +22,22 @@ class CampaignSupporterStore extends ReduceStore {
     return this.getInitialState();
   }
 
-  supporterEndorsementExists (campaignXWeVoteId) {
+  voterChipInExists (campaignXWeVoteId) {
     if (campaignXWeVoteId) {
       const campaignXSupporterVoterEntry = this.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
-      // console.log('supporterEndorsementExists, campaignXSupporterVoterEntry:', campaignXSupporterVoterEntry);
+      // console.log('voterSupporterEndorsementExists, campaignXSupporterVoterEntry:', campaignXSupporterVoterEntry);
+      if ('chip_in_total' in campaignXSupporterVoterEntry && campaignXSupporterVoterEntry.chip_in_total) {
+        console.log('CampaignSupporterStore chip_in_total: ', campaignXSupporterVoterEntry.chip_in_total, ', voterChipInExists:', Boolean(campaignXSupporterVoterEntry.chip_in_total !== 'none'));
+        return Boolean(campaignXSupporterVoterEntry.chip_in_total !== 'none');
+      }
+    }
+    return false;
+  }
+
+  voterSupporterEndorsementExists (campaignXWeVoteId) {
+    if (campaignXWeVoteId) {
+      const campaignXSupporterVoterEntry = this.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
+      // console.log('voterSupporterEndorsementExists, campaignXSupporterVoterEntry:', campaignXSupporterVoterEntry);
       if ('supporter_endorsement' in campaignXSupporterVoterEntry && campaignXSupporterVoterEntry.supporter_endorsement) {
         return Boolean(campaignXSupporterVoterEntry.supporter_endorsement.length > 0);
       }
@@ -64,7 +76,7 @@ class CampaignSupporterStore extends ReduceStore {
   getVisibleToPublic (campaignXWeVoteId) {
     if (campaignXWeVoteId) {
       const campaignXSupporterVoterEntry = this.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
-      // console.log('supporterEndorsementExists, campaignXSupporterVoterEntry:', campaignXSupporterVoterEntry);
+      // console.log('voterSupporterEndorsementExists, campaignXSupporterVoterEntry:', campaignXSupporterVoterEntry);
       if ('visible_to_public' in campaignXSupporterVoterEntry) {
         return Boolean(campaignXSupporterVoterEntry.visible_to_public);
       }
