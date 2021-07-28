@@ -134,10 +134,12 @@ class AppStore extends ReduceStore {
   }
 
   isOnWeVoteRootUrl () {
+    console.log('AppStore onWeVoteRootUrl:', this.getState().onWeVoteRootUrl);
     return this.getState().onWeVoteRootUrl || isCordova() || stringContains('localhost:', window.location.href);
   }
 
   isOnWeVoteSubdomainUrl () {
+    console.log('AppStore onWeVoteSubdomainUrl:', this.getState().onWeVoteSubdomainUrl);
     return this.getState().onWeVoteSubdomainUrl;
   }
 
@@ -399,7 +401,7 @@ class AppStore extends ReduceStore {
             hostname = webAppConfig.WE_VOTE_HOSTNAME;
           }
 
-          // console.log('siteConfigurationRetrieve hostname:', hostname);
+          console.log('siteConfigurationRetrieve hostname:', hostname);
           if (hostname === 'wevote.us' || hostname === 'campaigns.wevote.us' || hostname === 'quality.wevote.us' || hostname === 'localhost') {
             onWeVoteRootUrl = true;
           } else if (stringContains('wevote.us', hostname)) {
