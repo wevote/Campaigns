@@ -43,8 +43,8 @@ class MostRecentCampaignSupport extends React.Component {
 
     if (this.timeInterval) {
       clearInterval(this.timeInterval);
-      this.timeInterval = null;
     }
+    this.timeInterval = null;
     // this.timeInterval = setInterval(() => this.setCommentsToDisplay(), 30000);
     this.timeInterval = setInterval(() => this.moveSupportersOnStage(), 3000);
   }
@@ -80,8 +80,8 @@ class MostRecentCampaignSupport extends React.Component {
     this.campaignStoreListener.remove();
     if (this.timeInterval) {
       clearInterval(this.timeInterval);
-      this.timeInterval = null;
     }
+    this.timeInterval = null;
   }
 
   onFirstLoadOfSupporterData (allLatestSupporters) {

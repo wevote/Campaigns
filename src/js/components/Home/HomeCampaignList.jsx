@@ -118,7 +118,7 @@ class HomeCampaignList extends Component {
           )}
         </LoadMoreItemsManuallyWrapper>
         {!numberOfCampaignsDisplayed && (
-          <DelayedLoad waitBeforeShow={500}>
+          <DelayedLoad waitBeforeShow={2000}>
             <CampaignsNotAvailableToShow>
               We don&apos;t have any upcoming campaigns to show. Please try again later!
             </CampaignsNotAvailableToShow>

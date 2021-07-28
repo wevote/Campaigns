@@ -2,7 +2,6 @@ import React, { Component, Suspense } from 'react';
 import loadable from '@loadable/component';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-// import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import AppStore from '../../stores/AppStore';
@@ -21,22 +20,18 @@ import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
 import CampaignNewsItemActions from '../../actions/CampaignNewsItemActions';
 import CampaignNewsItemPublishSteps from '../../components/Navigation/CampaignNewsItemPublishSteps';
-import CampaignNewsItemStore from '../../stores/CampaignNewsItemStore';
-import CampaignNewsItemTextInputField from '../../components/CampaignNewsItemPublish/CampaignNewsItemTextInputField';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import initializejQuery from '../../utils/initializejQuery';
 import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
-import VoterActions from '../../actions/VoterActions';
-import VoterPhotoUpload from '../../components/Settings/VoterPhotoUpload';
-import VoterStore from '../../stores/VoterStore';
+import { numberWithCommas } from '../../utils/textFormat';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
 const VoterFirstRetrieveController = loadable(() => import('../../components/Settings/VoterFirstRetrieveController'));
 
 
-class CampaignNewsItemText extends Component {
+class CampaignNewsItemSend extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -45,18 +40,17 @@ class CampaignNewsItemText extends Component {
       campaignTitle: '',
       campaignXWeVoteId: '',
       chosenWebsiteName: '',
+      supportersCount: 0,
     };
   }
 
   componentDidMount () {
-    // console.log('CampaignNewsItemText componentDidMount');
+    // console.log('CampaignNewsItemSend componentDidMount');
     this.props.setShowHeaderFooter(false);
     this.onAppStoreChange();
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    this.onVoterStoreChange();
-    this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
     const { match: { params } } = this.props;
     const {
       campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams,
@@ -107,7 +101,6 @@ class CampaignNewsItemText extends Component {
     this.props.setShowHeaderFooter(true);
     this.appStoreListener.remove();
     this.campaignStoreListener.remove();
-    this.voterStoreListener.remove();
   }
 
   onAppStoreChange () {
@@ -150,22 +143,25 @@ class CampaignNewsItemText extends Component {
     }
     if (campaignXWeVoteId) {
       this.leaveIfNotAllowedToEdit(campaignXWeVoteId);
+      const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
+      const {
+        supporters_count: supportersCount,
+      } = campaignX;
       this.setState({
         campaignXWeVoteId,
+        supportersCount,
       });
     } else if (campaignXWeVoteIdFromParams) {
+      const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
+      const {
+        supporters_count: supportersCount,
+      } = campaignX;
       this.leaveIfNotAllowedToEdit(campaignXWeVoteIdFromParams);
       this.setState({
         campaignXWeVoteId: campaignXWeVoteIdFromParams,
+        supportersCount,
       });
     }
-  }
-
-  onVoterStoreChange () {
-    const voterPhotoUrlLarge = VoterStore.getVoterPhotoUrlLarge();
-    this.setState({
-      voterPhotoUrlLarge,
-    });
   }
 
   getCampaignBasePath = () => {
@@ -192,30 +188,14 @@ class CampaignNewsItemText extends Component {
     }
   }
 
-  submitCampaignNewsItemText = () => {
+  publishCampaignNewsItem = (sendNow = false) => {
     const { campaignXNewsItemWeVoteId, campaignXWeVoteId } = this.state;
-    if (campaignXWeVoteId) {
-      const campaignNewsItemSubjectQueuedToSave = CampaignNewsItemStore.getCampaignNewsItemSubjectQueuedToSave();
-      const campaignNewsItemSubjectQueuedToSaveSet = CampaignNewsItemStore.getCampaignNewsItemSubjectQueuedToSaveSet();
-      const campaignNewsItemTextQueuedToSave = CampaignNewsItemStore.getCampaignNewsItemTextQueuedToSave();
-      const campaignNewsItemTextQueuedToSaveSet = CampaignNewsItemStore.getCampaignNewsItemTextQueuedToSaveSet();
-      // console.log('CampaignNewsItemText, campaignNewsItemTextQueuedToSave:', campaignNewsItemTextQueuedToSave);
+    if (campaignXNewsItemWeVoteId) {
+      // console.log('CampaignNewsItemSend, publishCampaignNewsItem:', campaignXNewsItemWeVoteId, ', sendNow:', sendNow);
       initializejQuery(() => {
-        CampaignNewsItemActions.campaignNewsItemTextSave(campaignXWeVoteId, campaignXNewsItemWeVoteId, campaignNewsItemSubjectQueuedToSave, campaignNewsItemSubjectQueuedToSaveSet, campaignNewsItemTextQueuedToSave, campaignNewsItemTextQueuedToSaveSet);
-        CampaignNewsItemActions.campaignNewsItemTextQueuedToSave(undefined);
+        CampaignNewsItemActions.campaignNewsItemPublish(campaignXWeVoteId, campaignXNewsItemWeVoteId, sendNow);
       });
-      const voterPhotoQueuedToSave = VoterStore.getVoterPhotoQueuedToSave();
-      const voterPhotoQueuedToSaveSet = VoterStore.getVoterPhotoQueuedToSaveSet();
-      if (voterPhotoQueuedToSaveSet) {
-        initializejQuery(() => {
-          VoterActions.voterPhotoSave(voterPhotoQueuedToSave, voterPhotoQueuedToSaveSet);
-          VoterActions.voterPhotoQueuedToSave(undefined);
-        });
-      }
-      initializejQuery(() => {
-        CampaignNewsItemActions.campaignNewsItemTextQueuedToSave(undefined);
-      });
-      historyPush(`${this.getCampaignBasePath()}/u/${campaignXNewsItemWeVoteId}`);
+      historyPush(`${this.getCampaignBasePath()}/share/${campaignXNewsItemWeVoteId}`);
     }
   }
 
@@ -233,15 +213,15 @@ class CampaignNewsItemText extends Component {
   }
 
   render () {
-    renderLog('CampaignNewsItemText');  // Set LOG_RENDER_EVENTS to log all renders
+    renderLog('CampaignNewsItemSend');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
-      console.log(`CampaignNewsItemText window.location.href: ${window.location.href}`);
+      console.log(`CampaignNewsItemSend window.location.href: ${window.location.href}`);
     }
     const { classes } = this.props;
     const {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
-      campaignXNewsItemWeVoteId, campaignXPoliticianList, campaignXWeVoteId, chosenWebsiteName,
-      voterPhotoUrlLarge,
+      campaignXNewsItemWeVoteId, campaignXPoliticianList, campaignXWeVoteId,
+      chosenWebsiteName, supportersCount,
     } = this.state;
     const htmlTitle = `Send update to supporters ${campaignTitle}? - ${chosenWebsiteName}`;
     let numberOfPoliticians = 0;
@@ -256,7 +236,7 @@ class CampaignNewsItemText extends Component {
           <ContentOuterWrapperDefault>
             <ContentInnerWrapperDefault>
               <CampaignNewsItemPublishSteps
-                atStepNumber1
+                atStepNumber3
                 campaignBasePath={this.getCampaignBasePath()}
                 campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId}
                 campaignXWeVoteId={campaignXWeVoteId}
@@ -271,40 +251,45 @@ class CampaignNewsItemText extends Component {
                 )}
               </CampaignSupportImageWrapper>
               <CampaignProcessStepTitle>
-                Send update to campaign supporters
+                Send to
+                {' '}
+                {supportersCount > 0 && (
+                  <>
+                    {numberWithCommas(supportersCount)}
+                    {' '}
+                  </>
+                )}
+                supporters now, or publish without sending
               </CampaignProcessStepTitle>
               <CampaignProcessStepIntroductionText>
-                Supporters of
-                {' '}
-                {politicianListSentenceString}
-                {' '}
-                would love to hear good news about
-                {' '}
-                {numberOfPoliticians > 1 ? (
-                  <>these candidates&apos;</>
-                ) : (
-                  <>this candidate&apos;s</>
-                )}
-                {' '}
-                progress towards winning.
+                Update created? Check. Update previewed? Check.
               </CampaignProcessStepIntroductionText>
               <CampaignSupportSectionWrapper>
                 <CampaignSupportSection>
-                  <CampaignNewsItemTextInputField
-                    campaignXWeVoteId={campaignXWeVoteId}
-                    campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId}
-                  />
-                  { !voterPhotoUrlLarge && <VoterPhotoUpload /> }
                   <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                     <CampaignSupportDesktopButtonPanel>
                       <Button
                         classes={{ root: classes.buttonDesktop }}
                         color="primary"
-                        id="saveCampaignNewsItemText"
-                        onClick={this.submitCampaignNewsItemText}
+                        disabled
+                        id="saveCampaignNewsItemSend"
+                        onClick={() => this.publishCampaignNewsItem(true)}
                         variant="contained"
                       >
-                        Save and preview
+                        Send now (Coming Soon)
+                      </Button>
+                    </CampaignSupportDesktopButtonPanel>
+                  </CampaignSupportDesktopButtonWrapper>
+                  <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
+                    <CampaignSupportDesktopButtonPanel>
+                      <Button
+                        classes={{ root: classes.buttonDesktop }}
+                        color="primary"
+                        id="publishWithoutSendingDesktop"
+                        onClick={() => this.publishCampaignNewsItem(false)}
+                        variant="outlined"
+                      >
+                        Publish without sending
                       </Button>
                     </CampaignSupportDesktopButtonPanel>
                   </CampaignSupportDesktopButtonWrapper>
@@ -313,61 +298,79 @@ class CampaignNewsItemText extends Component {
                       <Button
                         classes={{ root: classes.buttonDefault }}
                         color="primary"
-                        id="saveCampaignNewsItemTextMobile"
-                        onClick={this.submitCampaignNewsItemText}
+                        disabled
+                        id="saveCampaignNewsItemSendMobile"
+                        onClick={() => this.publishCampaignNewsItem(true)}
                         variant="contained"
                       >
-                        Save and preview
+                        Send now (Coming Soon)
+                      </Button>
+                    </CampaignSupportMobileButtonPanel>
+                    <CampaignSupportMobileButtonPanel>
+                      <Button
+                        classes={{ root: classes.buttonDefault }}
+                        color="primary"
+                        id="publishWithoutSendingMobile"
+                        onClick={() => this.publishCampaignNewsItem(false)}
+                        variant="outlined"
+                      >
+                        Publish without sending
                       </Button>
                     </CampaignSupportMobileButtonPanel>
                   </CampaignSupportMobileButtonWrapper>
                   <AdviceBoxWrapper>
                     <AdviceBox>
                       <AdviceBoxTitle>
-                        Supporters have already agreed to vote for your candidate(s)
+                        You can only send an email update every three days
                       </AdviceBoxTitle>
                       <AdviceBoxText>
-                        Share good news to help people remember to vote, but don&apos;t overwhelm them with more reasons to support candidate(s) they already plan to vote for.
+                        One email will be sent to each of your supporters within 30 minutes of clicking &apos;Send now&apos;. We don&apos;t want to overwhelm your supporters, so only one update can be sent every three days.
                       </AdviceBoxText>
                       <AdviceBoxText>
                         &nbsp;
                       </AdviceBoxText>
                       <AdviceBoxTitle>
-                        Don&apos;t ask for donations
+                        Publish as many updates as you would like
                       </AdviceBoxTitle>
                       <AdviceBoxText>
-                        Many people are turned away from politics by what they consider to be excessive requests for donations. Support
-                        {' '}
-                        {politicianListSentenceString}
-                        {' '}
-                        here with votes, and use other venues for fundraising.
+                        While you can only send an email once every three days, you may post as many updates
+                        {numberOfPoliticians > 0 && (
+                          <>
+                            {' '}
+                            about
+                            {' '}
+                            {politicianListSentenceString}
+                            {' '}
+                          </>
+                        )}
+                        as you would like on your campaign web page. All updates, whether emailed or not, appear in the updates section.
                       </AdviceBoxText>
                       <AdviceBoxText>
                         &nbsp;
                       </AdviceBoxText>
                       <AdviceBoxTitle>
-                        Make it personal
+                        Share this update directly with friends
                       </AdviceBoxTitle>
                       <AdviceBoxText>
-                        Make it clear why you care.
+                        Once you &apos;Send now&apos; or &apos;Publish without sending&apos;, you will be able to share this update far-and-wide.
                       </AdviceBoxText>
                       <AdviceBoxText>
                         &nbsp;
                       </AdviceBoxText>
                       <AdviceBoxTitle>
-                        Respect others
+                        Thank you!
                       </AdviceBoxTitle>
                       <AdviceBoxText>
-                        Don’t bully, use hate speech, threaten violence or make things up.
+                        Caring about American Democracy has never been more important. Thank you for doing your part to encourage more Americans to vote.
                       </AdviceBoxText>
                     </AdviceBox>
                   </AdviceBoxWrapper>
                   <SkipForNowButtonWrapper>
-                    <SkipForNowButtonPanel show>
+                    <SkipForNowButtonPanel>
                       <Button
                         classes={{ root: classes.buttonSimpleLink }}
                         color="primary"
-                        id="cancelCampaignNewsItemText"
+                        id="cancelCampaignNewsItemSend"
                         onClick={this.clickCancel}
                       >
                         Cancel
@@ -389,7 +392,7 @@ class CampaignNewsItemText extends Component {
     );
   }
 }
-CampaignNewsItemText.propTypes = {
+CampaignNewsItemSend.propTypes = {
   classes: PropTypes.object,
   match: PropTypes.object,
   setShowHeaderFooter: PropTypes.func,
@@ -438,4 +441,4 @@ const styles = () => ({
   },
 });
 
-export default withStyles(styles)(CampaignNewsItemText);
+export default withStyles(styles)(CampaignNewsItemSend);

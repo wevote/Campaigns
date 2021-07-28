@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
@@ -8,6 +8,8 @@ import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
 import { renderLog } from '../../utils/logging';
 
 const STARTING_NUMBER_OF_NEWS_ITEMS_TO_DISPLAY = 1;
+
+const CampaignNewsItemCreateButton = React.lazy(() => import('../../components/CampaignNewsItemPublish/CampaignNewsItemCreateButton'));
 
 class CampaignNewsItemList extends Component {
   constructor (props) {
@@ -53,9 +55,11 @@ class CampaignNewsItemList extends Component {
 
   onCampaignStoreChange () {
     const { campaignXWeVoteId } = this.props;
+    const voterCanEditThisCampaign = CampaignStore.getVoterCanEditThisCampaign(campaignXWeVoteId);
     const campaignXNewsItemList = CampaignStore.getCampaignXNewsItemList(campaignXWeVoteId);
     this.setState({
       campaignXNewsItemList,
+      voterCanEditThisCampaign,
     });
   }
 
@@ -69,19 +73,37 @@ class CampaignNewsItemList extends Component {
 
   render () {
     renderLog('CampaignNewsItemList');  // Set LOG_RENDER_EVENTS to log all renders
-    const { campaignXWeVoteId, hideEncouragementToComment } = this.props;
-    const { campaignXNewsItemList, numberOfNewsItemsToDisplay } = this.state;
+    const { campaignSEOFriendlyPath, campaignXWeVoteId, hideEncouragementToComment, showAddNewsItemIfNeeded } = this.props;
+    const { campaignXNewsItemList, numberOfNewsItemsToDisplay, voterCanEditThisCampaign } = this.state;
 
     if (!campaignXNewsItemList || campaignXNewsItemList.length === 0) {
-      return (
-        <Wrapper>
-          {!hideEncouragementToComment && (
-            <NoNewsFound>
-              No updates have been published yet. Stay tuned!
-            </NoNewsFound>
-          )}
-        </Wrapper>
-      );
+      if (voterCanEditThisCampaign && showAddNewsItemIfNeeded) {
+        return (
+          <Wrapper>
+            <UpdateSupportersWrapper>
+              No updates have been published yet. Post the first update!
+              <br />
+              <br />
+              <Suspense fallback={<span>&nbsp;</span>}>
+                <CampaignNewsItemCreateButton
+                  campaignSEOFriendlyPath={campaignSEOFriendlyPath}
+                  campaignXWeVoteId={campaignXWeVoteId}
+                />
+              </Suspense>
+            </UpdateSupportersWrapper>
+          </Wrapper>
+        );
+      } else {
+        return (
+          <Wrapper>
+            {!hideEncouragementToComment && (
+              <NoNewsFound>
+                No updates have been published yet. Stay tuned!
+              </NoNewsFound>
+            )}
+          </Wrapper>
+        );
+      }
     }
     let numberOfCampaignsDisplayed = 0;
     return (
@@ -119,8 +141,10 @@ class CampaignNewsItemList extends Component {
   }
 }
 CampaignNewsItemList.propTypes = {
+  campaignSEOFriendlyPath: PropTypes.string,
   campaignXWeVoteId: PropTypes.string,
   hideEncouragementToComment: PropTypes.bool,
+  showAddNewsItemIfNeeded: PropTypes.bool,
   startingNumberOfNewsItemsToDisplay: PropTypes.number,
 };
 
@@ -138,6 +162,12 @@ const LoadMoreItemsManuallyWrapper = styled.div`
 `;
 
 const NoNewsFound = styled.div`
+  border-top: 1px solid #ddd;
+  margin-top: 25px;
+  padding-top: 25px;
+`;
+
+const UpdateSupportersWrapper = styled.div`
   border-top: 1px solid #ddd;
   margin-top: 25px;
   padding-top: 25px;

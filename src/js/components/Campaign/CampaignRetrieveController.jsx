@@ -20,6 +20,21 @@ class CampaignRetrieveController extends Component {
     this.campaignFirstRetrieve();
   }
 
+  componentDidUpdate (prevProps) {
+    const {
+      campaignXWeVoteId: campaignXWeVoteIdPrevious,
+    } = prevProps;
+    const {
+      campaignXWeVoteId,
+    } = this.props;
+    // console.log('CampaignRetrieveController componentDidUpdate, campaignXWeVoteIdPrevious:', campaignXWeVoteIdPrevious, ', campaignXWeVoteId:', campaignXWeVoteId);
+    if (campaignXWeVoteId && campaignXWeVoteIdPrevious) {
+      if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
+        this.campaignFirstRetrieve();
+      }
+    }
+  }
+
   componentWillUnmount () {
     this.voterStoreListener.remove();
   }
@@ -37,9 +52,11 @@ class CampaignRetrieveController extends Component {
         const voterFirstRetrieveCompleted = VoterStore.voterFirstRetrieveCompleted();
         // console.log('CampaignRetrieveController campaignRetrieveInitiated: ', campaignRetrieveInitiated, ', voterFirstRetrieveCompleted: ', voterFirstRetrieveCompleted);
         if (voterFirstRetrieveCompleted && !campaignRetrieveInitiated) {
+          const updatedCampaignRetrieveInitiated = retrieveCampaignXFromIdentifiers(campaignSEOFriendlyPath, campaignXWeVoteId);
+          // console.log('campaignRetrieveInitiated:', campaignRetrieveInitiated, 'updatedCampaignRetrieveInitiated:', updatedCampaignRetrieveInitiated);
           this.setState({
-            campaignRetrieveInitiated: true,
-          }, () => { retrieveCampaignXFromIdentifiers(campaignSEOFriendlyPath, campaignXWeVoteId); });
+            campaignRetrieveInitiated: updatedCampaignRetrieveInitiated,
+          });
         }
       });
     }

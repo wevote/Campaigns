@@ -134,11 +134,27 @@ class AppStore extends ReduceStore {
   }
 
   isOnWeVoteRootUrl () {
-    return this.getState().onWeVoteRootUrl || isCordova() || stringContains('localhost:', window.location.href);
+    console.log('AppStore onWeVoteRootUrl before:', this.getState().onWeVoteRootUrl);
+    let { onWeVoteRootUrl } = this.getState();
+    if (onWeVoteRootUrl === undefined) {
+      // onChosenFullDomainUrl, onFacebookSupportedDomainUrl, onWeVoteSubdomainUrl,
+      const { hostname } = window.location;
+      ({ onWeVoteRootUrl } = this.calculateUrlSettings(hostname));
+      console.log('AppStore onWeVoteRootUrl was undefined:', onWeVoteRootUrl);
+    }
+    return onWeVoteRootUrl || isCordova() || stringContains('localhost:', window.location.href);
   }
 
   isOnWeVoteSubdomainUrl () {
-    return this.getState().onWeVoteSubdomainUrl;
+    console.log('AppStore onWeVoteSubdomainUrl before:', this.getState().onWeVoteSubdomainUrl);
+    let { onWeVoteSubdomainUrl } = this.getState();
+    if (onWeVoteSubdomainUrl === undefined) {
+      // onChosenFullDomainUrl, onFacebookSupportedDomainUrl, onWeVoteSubdomainUrl,
+      const { hostname } = window.location;
+      ({ onWeVoteSubdomainUrl } = this.calculateUrlSettings(hostname));
+      console.log('AppStore onWeVoteSubdomainUrl was undefined:', onWeVoteSubdomainUrl);
+    }
+    return onWeVoteSubdomainUrl;
   }
 
   isOnPartnerUrl () {
@@ -291,6 +307,32 @@ class AppStore extends ReduceStore {
     return this.getState().voterFirstRetrieveInitiated;
   }
 
+  calculateUrlSettings (incomingHostname) {
+    let hostname = incomingHostname;
+    let onChosenFullDomainUrl = false;
+    let onFacebookSupportedDomainUrl = false;
+    let onWeVoteRootUrl = false;
+    let onWeVoteSubdomainUrl = false;
+
+    if (isCordova()) {
+      hostname = webAppConfig.WE_VOTE_HOSTNAME;
+    }
+
+    console.log('calculateUrlSettings hostname:', hostname);
+    if (hostname === 'wevote.us' || hostname === 'campaigns.wevote.us' || hostname === 'quality.wevote.us' || hostname === 'localhost') {
+      onWeVoteRootUrl = true;
+    } else if (stringContains('wevote.us', hostname)) {
+      onWeVoteSubdomainUrl = true;
+    } else {
+      onChosenFullDomainUrl = true;
+    }
+    if (hostname === 'wevote.us' || hostname === 'quality.wevote.us' || hostname === 'localhost' || isCordova()) {
+      // We should move this to the server if we can't change the Facebook sign in root url
+      onFacebookSupportedDomainUrl = true;
+    }
+    return { onChosenFullDomainUrl, onFacebookSupportedDomainUrl, onWeVoteSubdomainUrl, onWeVoteRootUrl };
+  }
+
   reduce (state, action) {
     let apiStatus;
     let apiSuccess;
@@ -390,27 +432,7 @@ class AppStore extends ReduceStore {
           chosen_website_name: chosenWebsiteName,
         } = action.res);
         if (apiSuccess) {
-          let onWeVoteRootUrl = false;
-          let onWeVoteSubdomainUrl = false;
-          let onFacebookSupportedDomainUrl = false;
-          let onChosenFullDomainUrl = false;
-
-          if (isCordova()) {
-            hostname = webAppConfig.WE_VOTE_HOSTNAME;
-          }
-
-          // console.log('siteConfigurationRetrieve hostname:', hostname);
-          if (hostname === 'wevote.us' || hostname === 'quality.wevote.us' || hostname === 'localhost') {
-            onWeVoteRootUrl = true;
-          } else if (stringContains('wevote.us', hostname)) {
-            onWeVoteSubdomainUrl = true;
-          } else {
-            onChosenFullDomainUrl = true;
-          }
-          if (hostname === 'wevote.us' || hostname === 'quality.wevote.us' || hostname === 'localhost' || isCordova()) {
-            // We should move this to the server if we can't change the Facebook sign in root url
-            onFacebookSupportedDomainUrl = true;
-          }
+          const { onChosenFullDomainUrl, onFacebookSupportedDomainUrl, onWeVoteSubdomainUrl, onWeVoteRootUrl } = this.calculateUrlSettings(hostname);
           externalVoterId = VoterStore.getExternalVoterId();
           // console.log('AppStore externalVoterId:', externalVoterId, ', siteOwnerOrganizationWeVoteId:', siteOwnerOrganizationWeVoteId);
           ({ voterExternalIdHasBeenSavedOnce } = state);

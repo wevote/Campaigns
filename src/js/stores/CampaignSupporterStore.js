@@ -8,6 +8,7 @@ class CampaignSupporterStore extends ReduceStore {
       allCachedCampaignXSupporterVoterEntries: {}, // Dictionary with campaignx_we_vote_id as key and the CampaignXSupporter for this voter as value
       latestCampaignXSupporterEndorsements: {}, // Dict with key campaignx_we_vote_id and value of List of Dicts w/ latest campaignx_supporter entries with supporter_endorsement values
       latestCampaignXSupporters: {}, // Dict with key campaignx_we_vote_id and value of List of Dicts w/ latest campaignx_supporter entries, ordered newest to oldest
+      shareButtonClicked: false,
       supporterEndorsementQueuedToSave: '',
       supporterEndorsementQueuedToSaveSet: false,
       visibleToPublic: true, // Default setting
@@ -21,10 +22,22 @@ class CampaignSupporterStore extends ReduceStore {
     return this.getInitialState();
   }
 
-  supporterEndorsementExists (campaignXWeVoteId) {
+  voterChipInExists (campaignXWeVoteId) {
     if (campaignXWeVoteId) {
       const campaignXSupporterVoterEntry = this.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
-      // console.log('supporterEndorsementExists, campaignXSupporterVoterEntry:', campaignXSupporterVoterEntry);
+      // console.log('voterSupporterEndorsementExists, campaignXSupporterVoterEntry:', campaignXSupporterVoterEntry);
+      if ('chip_in_total' in campaignXSupporterVoterEntry && campaignXSupporterVoterEntry.chip_in_total) {
+        console.log('CampaignSupporterStore chip_in_total: ', campaignXSupporterVoterEntry.chip_in_total, ', voterChipInExists:', Boolean(campaignXSupporterVoterEntry.chip_in_total !== 'none'));
+        return Boolean(campaignXSupporterVoterEntry.chip_in_total !== 'none');
+      }
+    }
+    return false;
+  }
+
+  voterSupporterEndorsementExists (campaignXWeVoteId) {
+    if (campaignXWeVoteId) {
+      const campaignXSupporterVoterEntry = this.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
+      // console.log('voterSupporterEndorsementExists, campaignXSupporterVoterEntry:', campaignXSupporterVoterEntry);
       if ('supporter_endorsement' in campaignXSupporterVoterEntry && campaignXSupporterVoterEntry.supporter_endorsement) {
         return Boolean(campaignXSupporterVoterEntry.supporter_endorsement.length > 0);
       }
@@ -48,6 +61,10 @@ class CampaignSupporterStore extends ReduceStore {
     return this.getState().allCachedCampaignXSupporterVoterEntries[campaignXWeVoteId] || {};
   }
 
+  getShareButtonClicked () {
+    return this.getState().shareButtonClicked;
+  }
+
   getSupporterEndorsementQueuedToSave () {
     return this.getState().supporterEndorsementQueuedToSave;
   }
@@ -59,7 +76,7 @@ class CampaignSupporterStore extends ReduceStore {
   getVisibleToPublic (campaignXWeVoteId) {
     if (campaignXWeVoteId) {
       const campaignXSupporterVoterEntry = this.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
-      // console.log('supporterEndorsementExists, campaignXSupporterVoterEntry:', campaignXSupporterVoterEntry);
+      // console.log('voterSupporterEndorsementExists, campaignXSupporterVoterEntry:', campaignXSupporterVoterEntry);
       if ('visible_to_public' in campaignXSupporterVoterEntry) {
         return Boolean(campaignXSupporterVoterEntry.visible_to_public);
       }
@@ -215,6 +232,20 @@ class CampaignSupporterStore extends ReduceStore {
           latestCampaignXSupporters,
           voterSignedInWithEmail: Boolean(action.res.voter_signed_in_with_email),
         };
+
+      case 'shareButtonClicked':
+        // console.log('CampaignSupporterStore shareButtonClicked: ', action.payload);
+        if (action.payload === undefined) {
+          return {
+            ...state,
+            shareButtonClicked: false,
+          };
+        } else {
+          return {
+            ...state,
+            shareButtonClicked: action.payload,
+          };
+        }
 
       case 'supporterEndorsementQueuedToSave':
         // console.log('CampaignSupporterStore supporterEndorsementQueuedToSave: ', action.payload);

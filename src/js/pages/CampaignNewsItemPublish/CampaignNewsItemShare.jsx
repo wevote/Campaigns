@@ -20,7 +20,7 @@ import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiers } from '../../utils/campaignUtils';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSteps';
+import CampaignNewsItemPublishSteps from '../../components/Navigation/CampaignNewsItemPublishSteps';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
@@ -35,7 +35,7 @@ const RecommendedCampaignListRetrieveController = React.lazy(() => import('../..
 const VoterFirstRetrieveController = loadable(() => import('../../components/Settings/VoterFirstRetrieveController'));
 
 
-class CampaignSupportShare extends Component {
+class CampaignNewsItemShare extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -49,7 +49,7 @@ class CampaignSupportShare extends Component {
   }
 
   componentDidMount () {
-    // console.log('CampaignSupportShare componentDidMount');
+    // console.log('CampaignNewsItemShare componentDidMount');
     this.props.setShowHeaderFooter(false);
     this.onAppStoreChange();
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
@@ -58,7 +58,11 @@ class CampaignSupportShare extends Component {
     this.onCampaignSupporterStoreChange();
     this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     const { match: { params } } = this.props;
-    const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
+    const {
+      campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams,
+      campaignXNewsItemWeVoteId,
+      campaignXWeVoteId: campaignXWeVoteIdFromParams,
+    } = params;
     // console.log('componentDidMount campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
     const {
       campaignPhotoLargeUrl,
@@ -67,6 +71,7 @@ class CampaignSupportShare extends Component {
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     this.setState({
       campaignPhotoLargeUrl,
+      campaignXNewsItemWeVoteId,
     });
     if (campaignSEOFriendlyPath) {
       this.setState({
@@ -78,10 +83,12 @@ class CampaignSupportShare extends Component {
       });
     }
     if (campaignXWeVoteId) {
+      this.leaveIfNotAllowedToEdit(campaignXWeVoteId);
       this.setState({
         campaignXWeVoteId,
       });
     } else if (campaignXWeVoteIdFromParams) {
+      this.leaveIfNotAllowedToEdit(campaignXWeVoteIdFromParams);
       this.setState({
         campaignXWeVoteId: campaignXWeVoteIdFromParams,
       });
@@ -91,7 +98,8 @@ class CampaignSupportShare extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    // console.log('CampaignSupportShare componentDidUpdate');
+    // console.log('CampaignNewsItemShare componentDidUpdate');
+    this.leaveIfNotAllowedToEdit();
     const {
       showShareCampaignWithOneFriend: showShareCampaignWithOneFriendPrevious,
     } = prevProps;
@@ -120,7 +128,11 @@ class CampaignSupportShare extends Component {
 
   onCampaignStoreChange () {
     const { match: { params } } = this.props;
-    const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
+    const {
+      campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams,
+      campaignXNewsItemWeVoteId,
+      campaignXWeVoteId: campaignXWeVoteIdFromParams,
+    } = params;
     // console.log('onCampaignStoreChange campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
     let recommendedCampaignXListCount = 0;
     let recommendedCampaignXListHasBeenRetrieved = false;
@@ -133,6 +145,7 @@ class CampaignSupportShare extends Component {
     this.setState({
       campaignPhotoLargeUrl,
       campaignTitle,
+      campaignXNewsItemWeVoteId,
     });
     if (campaignSEOFriendlyPath) {
       this.setState({
@@ -144,6 +157,7 @@ class CampaignSupportShare extends Component {
       });
     }
     if (campaignXWeVoteId) {
+      this.leaveIfNotAllowedToEdit(campaignXWeVoteId);
       recommendedCampaignXListCount = CampaignStore.getRecommendedCampaignXListCount(campaignXWeVoteId);
       recommendedCampaignXListHasBeenRetrieved = CampaignStore.getRecommendedCampaignXListHasBeenRetrieved(campaignXWeVoteId);
       this.setState({
@@ -152,6 +166,7 @@ class CampaignSupportShare extends Component {
         recommendedCampaignXListHasBeenRetrieved,
       });
     } else if (campaignXWeVoteIdFromParams) {
+      this.leaveIfNotAllowedToEdit(campaignXWeVoteIdFromParams);
       recommendedCampaignXListCount = CampaignStore.getRecommendedCampaignXListCount(campaignXWeVoteIdFromParams);
       recommendedCampaignXListHasBeenRetrieved = CampaignStore.getRecommendedCampaignXListHasBeenRetrieved(campaignXWeVoteIdFromParams);
       this.setState({
@@ -177,23 +192,16 @@ class CampaignSupportShare extends Component {
     } else {
       campaignBasePath = `/id/${campaignXWeVoteId}`;
     }
-
     return campaignBasePath;
   }
 
   goToNextStep = () => {
     const { showShareCampaignWithOneFriend } = this.props;
-    const { recommendedCampaignXListCount, recommendedCampaignXListHasBeenRetrieved, shareButtonClicked } = this.state;
+    const { campaignXNewsItemWeVoteId, shareButtonClicked } = this.state;
     if (shareButtonClicked || showShareCampaignWithOneFriend) {
-      // Since showing direct message choices is the final step,
-      // link should take voter back to the campaign updates page or on to the  "recommended-campaigns"
-      if (recommendedCampaignXListHasBeenRetrieved && recommendedCampaignXListCount > 0) {
-        historyPush(`${this.getCampaignBasePath()}/recommended-campaigns`);
-      } else {
-        historyPush(`${this.getCampaignBasePath()}/updates`);
-      }
+      historyPush(`${this.getCampaignBasePath()}/updates`);
     } else {
-      historyPush(`${this.getCampaignBasePath()}/share-campaign-with-one-friend`);
+      historyPush(`${this.getCampaignBasePath()}/share-with-one-friend/${campaignXNewsItemWeVoteId}`);
     }
   }
 
@@ -201,15 +209,28 @@ class CampaignSupportShare extends Component {
     this.goToNextStep();
   }
 
+  leaveIfNotAllowedToEdit () {
+    const { campaignXWeVoteId } = this.state;
+    // const campaignIsLoaded = CampaignStore.campaignXIsLoaded(campaignXWeVoteId);
+    // console.log('leaveIfNotAllowedToEdit, campaignXWeVoteId:', campaignXWeVoteId, ', campaignIsLoaded:', campaignIsLoaded);
+    if (CampaignStore.campaignXIsLoaded(campaignXWeVoteId)) {
+      const voterCanEditThisCampaign = CampaignStore.getVoterCanEditThisCampaign(campaignXWeVoteId);
+      // console.log('voterCanEditThisCampaign:', voterCanEditThisCampaign);
+      if (!voterCanEditThisCampaign) {
+        historyPush(`${this.getCampaignBasePath()}/updates`);
+      }
+    }
+  }
+
   render () {
-    renderLog('CampaignSupportShare');  // Set LOG_RENDER_EVENTS to log all renders
+    renderLog('CampaignNewsItemShare');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
-      console.log(`CampaignSupportShare window.location.href: ${window.location.href}`);
+      console.log(`CampaignNewsItemShare window.location.href: ${window.location.href}`);
     }
     const { classes, iWillShare, showShareCampaignWithOneFriend } = this.props;
     const {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
-      campaignXWeVoteId, chosenWebsiteName,
+      campaignXNewsItemWeVoteId, campaignXWeVoteId, chosenWebsiteName,
       recommendedCampaignXListCount, recommendedCampaignXListHasBeenRetrieved,
       shareButtonClicked,
     } = this.state;
@@ -230,7 +251,7 @@ class CampaignSupportShare extends Component {
         skipForNowText = 'See latest news about this campaign';
       }
     }
-    const campaignDescriptionLimited = 'This is test from CampaignSupportShare.';
+    const campaignDescriptionLimited = 'This is test from CampaignNewsItemShare.';
     return (
       <div>
         <Helmet>
@@ -243,10 +264,11 @@ class CampaignSupportShare extends Component {
         <PageWrapperDefault cordova={isCordova()}>
           <ContentOuterWrapperDefault>
             <ContentInnerWrapperDefault>
-              <CampaignSupportSteps
-                atSharingStep
+              <CampaignNewsItemPublishSteps
+                atStepNumber4
                 campaignBasePath={this.getCampaignBasePath()}
                 campaignXWeVoteId={campaignXWeVoteId}
+                campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId}
               />
               <CampaignSupportImageWrapper>
                 {campaignPhotoLargeUrl ? (
@@ -365,7 +387,7 @@ class CampaignSupportShare extends Component {
               <CampaignSupportSectionWrapper>
                 <CampaignSupportSection>
                   <SkipForNowButtonWrapper>
-                    <SkipForNowButtonPanel show>
+                    <SkipForNowButtonPanel>
                       {shareButtonClicked ? (
                         <Button
                           classes={{ root: classes.buttonSimpleLink }}
@@ -405,7 +427,7 @@ class CampaignSupportShare extends Component {
     );
   }
 }
-CampaignSupportShare.propTypes = {
+CampaignNewsItemShare.propTypes = {
   classes: PropTypes.object,
   iWillShare: PropTypes.bool,
   match: PropTypes.object,
@@ -464,4 +486,4 @@ const PublicOrPrivateSectionText = styled.span`
   color: #999;
 `;
 
-export default withStyles(styles)(CampaignSupportShare);
+export default withStyles(styles)(CampaignNewsItemShare);

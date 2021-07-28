@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { TwitterShareButton } from 'react-share';
 import AppStore from '../../stores/AppStore';
 import CampaignStore from '../../stores/CampaignStore';
+import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import { isAndroid, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 import { androidTwitterClickHandler, generateQuoteForSharing } from './shareButtonCommon';
@@ -95,7 +96,7 @@ class ShareOnTwitterButton extends Component {
   }
 
   saveActionShareButton = () => {
-    //
+    CampaignSupporterActions.shareButtonClicked(true);
   }
 
   render () {
