@@ -26,17 +26,11 @@ class CampaignSupportSteps extends Component {
     // console.log('CampaignSupportSteps, componentDidMount');
     this.onAppStoreChange();
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onCampaignSupporterStoreChange();
     this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
-    const { atPayToPromoteStep, atSharingStep, campaignXWeVoteId } = this.props;
     const step1Completed = true;
-    const step2Completed = atPayToPromoteStep || atSharingStep || CampaignSupporterStore.supporterEndorsementExists(campaignXWeVoteId);
-    const payToPromoteStepCompleted = atSharingStep;
-    const sharingStepCompleted = false;
     this.setState({
       step1Completed,
-      step2Completed,
-      payToPromoteStepCompleted,
-      sharingStepCompleted,
     });
   }
 
@@ -73,7 +67,7 @@ class CampaignSupportSteps extends Component {
 
   onCampaignSupporterStoreChange () {
     const { atPayToPromoteStep, atSharingStep, campaignXWeVoteId } = this.props;
-    const step2Completed = atPayToPromoteStep || atSharingStep || CampaignSupporterStore.supporterEndorsementExists(campaignXWeVoteId);
+    const step2Completed = atPayToPromoteStep || atSharingStep || CampaignSupporterStore.voterSupporterEndorsementExists(campaignXWeVoteId);
     const payToPromoteStepCompleted = atSharingStep;
     const sharingStepCompleted = false;
     // console.log('onCampaignSupporterStoreChange step1Completed: ', step1Completed, ', step2Completed: ', step2Completed, ', payToPromoteStepCompleted:', payToPromoteStepCompleted);

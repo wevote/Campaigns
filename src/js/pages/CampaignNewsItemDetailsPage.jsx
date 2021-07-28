@@ -1,4 +1,5 @@
 import React, { Component, Suspense } from 'react';
+import { Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
@@ -9,15 +10,20 @@ import {
   BlockedIndicator, BlockedReason, DraftModeIndicator, EditIndicator,
   ElectionInPast, IndicatorButtonWrapper, IndicatorRow,
 } from '../components/Style/CampaignIndicatorStyles';
+import CampaignNewsItemPublishSteps from '../components/Navigation/CampaignNewsItemPublishSteps';
 import CampaignStore from '../stores/CampaignStore';
 import CampaignSupporterActions from '../actions/CampaignSupporterActions';
 import CampaignSupporterStore from '../stores/CampaignSupporterStore';
 import CompleteYourProfileModalController from '../components/Settings/CompleteYourProfileModalController';
 import { formatDateToMonthDayYear } from '../utils/dateFormat';
 import DelayedLoad from '../components/Widgets/DelayedLoad';
-import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
+import {
+  getCampaignXValuesFromIdentifiers,
+  retrieveCampaignXFromIdentifiersIfNeeded,
+} from '../utils/campaignUtils';
 import { historyPush, isCordova, isIOS } from '../utils/cordovaUtils';
 import initializejQuery from '../utils/initializejQuery';
+import keepHelpingDestination from '../utils/keepHelpingDestination';
 import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../utils/logging';
 import returnFirstXWords from '../utils/returnFirstXWords';
@@ -54,15 +60,15 @@ class CampaignNewsItemDetailsPage extends Component {
 
   componentDidMount () {
     // console.log('CampaignNewsItemDetailsPage componentDidMount');
-    this.onCampaignStoreChange();
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
     this.onAppStoreChange();
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
+    this.onCampaignSupporterStoreChange();
     this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
-    // retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
     let pathToUseWhenProfileComplete;
     if (campaignSEOFriendlyPath) {
       this.setState({
@@ -78,6 +84,8 @@ class CampaignNewsItemDetailsPage extends Component {
     this.setState({
       pathToUseWhenProfileComplete,
     });
+    // Take the "calculated" identifiers and retrieve if missing
+    retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
   }
 
   componentDidUpdate (prevProps, prevState) {
@@ -99,8 +107,9 @@ class CampaignNewsItemDetailsPage extends Component {
   componentWillUnmount () {
     if (this.timer) {
       clearTimeout(this.timer);
-      this.timer = null;
     }
+    this.timer = null;
+    this.props.setShowHeaderFooter(true);
     this.appStoreListener.remove();
     this.campaignStoreListener.remove();
     this.campaignSupporterStoreListener.remove();
@@ -153,38 +162,48 @@ class CampaignNewsItemDetailsPage extends Component {
       });
     }
     const campaignDescriptionLimited = returnFirstXWords(campaignDescription, 200);
-    const campaignXNewsItem = CampaignStore.getCampaignXNewsItemByWeVoteId(campaignXNewsItemWeVoteId);
-    const {
-      campaign_news_subject: campaignNewsSubject,
-      campaign_news_text: campaignNewsText,
-      date_posted: datePosted,
-      in_draft_mode: inDraftMode,
-      speaker_name: speakerName,
-      we_vote_hosted_profile_image_url_tiny: speakerProfileImageUrlTiny,
-    } = campaignXNewsItem;
-
     this.setState({
       campaignDescriptionLimited,
-      campaignNewsSubject,
-      campaignNewsText,
       campaignPhotoLargeUrl,
       campaignTitle,
-      datePosted,
       finalElectionDateInPast,
-      inDraftMode,
       isBlockedByWeVote,
       isBlockedByWeVoteReason,
       isSupportersCountMinimumExceeded,
       pathToUseWhenProfileComplete,
-      speakerName,
-      speakerProfileImageUrlTiny,
     });
+    if (campaignXNewsItemWeVoteId) {
+      const campaignXNewsItem = CampaignStore.getCampaignXNewsItemByWeVoteId(campaignXNewsItemWeVoteId);
+      const {
+        campaign_news_subject: campaignNewsSubject,
+        campaign_news_text: campaignNewsText,
+        date_posted: datePosted,
+        in_draft_mode: inDraftMode,
+        speaker_name: speakerName,
+        we_vote_hosted_profile_image_url_tiny: speakerProfileImageUrlTiny,
+      } = campaignXNewsItem;
+
+      if (inDraftMode) {
+        this.props.setShowHeaderFooter(false);
+      } else {
+        this.props.setShowHeaderFooter(true);
+      }
+      this.setState({
+        campaignNewsSubject,
+        campaignNewsText,
+        campaignXNewsItemWeVoteId,
+        datePosted,
+        inDraftMode,
+        speakerName,
+        speakerProfileImageUrlTiny,
+      });
+    }
   }
 
   onCampaignSupporterStoreChange () {
     const { campaignXWeVoteId } = this.state;
-    const step2Completed = CampaignSupporterStore.supporterEndorsementExists(campaignXWeVoteId);
-    const payToPromoteStepCompleted = false;
+    const step2Completed = CampaignSupporterStore.voterSupporterEndorsementExists(campaignXWeVoteId);
+    const payToPromoteStepCompleted = CampaignSupporterStore.voterChipInExists(campaignXWeVoteId);
     const sharingStepCompleted = false;
     // console.log('onCampaignSupporterStoreChange sharingStepCompleted: ', sharingStepCompleted, ', step2Completed: ', step2Completed, ', payToPromoteStepCompleted:', payToPromoteStepCompleted);
     this.setState({
@@ -219,15 +238,8 @@ class CampaignNewsItemDetailsPage extends Component {
   functionToUseToKeepHelping = () => {
     // console.log('functionToUseToKeepHelping');
     const { payToPromoteStepCompleted, payToPromoteStepTurnedOn, sharingStepCompleted, step2Completed } = this.state;
-    if (!sharingStepCompleted) {
-      historyPush(`${this.getCampaignBasePath()}/share-campaign`);
-    } else if (payToPromoteStepTurnedOn && !payToPromoteStepCompleted) {
-      historyPush(`${this.getCampaignBasePath()}/pay-to-promote`);
-    } else if (!step2Completed) {
-      historyPush(`${this.getCampaignBasePath()}/why-do-you-support`);
-    } else {
-      historyPush(`${this.getCampaignBasePath()}/share-campaign`);
-    }
+    const keepHelpingDestinationString = keepHelpingDestination(step2Completed, payToPromoteStepCompleted, payToPromoteStepTurnedOn, sharingStepCompleted);
+    historyPush(`${this.getCampaignBasePath()}/${keepHelpingDestinationString}`);
   }
 
   functionToUseWhenProfileComplete = () => {
@@ -248,6 +260,13 @@ class CampaignNewsItemDetailsPage extends Component {
         CampaignSupporterActions.supportCampaignSave(campaignXWeVoteId, campaignSupported, campaignSupportedChanged, visibleToPublic, saveVisibleToPublic);
       }, this.goToNextPage());
     }
+  }
+
+  continueToNextStep = () => {
+    const { match: { params } } = this.props;
+    const { campaignXNewsItemWeVoteId } = params;
+    historyPush(`${this.getCampaignBasePath()}/send/${campaignXNewsItemWeVoteId}`);
+    return null;
   }
 
   onCampaignEditClick = () => {
@@ -276,7 +295,7 @@ class CampaignNewsItemDetailsPage extends Component {
     const {
       campaignDescriptionLimited, campaignNewsSubject,
       campaignNewsText, campaignPhotoLargeUrl,
-      campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId,
+      campaignSEOFriendlyPath, campaignTitle, campaignXNewsItemWeVoteId, campaignXWeVoteId,
       chosenWebsiteName, datePosted, inDraftMode, isBlockedByWeVote, isBlockedByWeVoteReason,
       finalElectionDateInPast, isSupportersCountMinimumExceeded,
       speakerName, speakerProfileImageUrlTiny,
@@ -348,6 +367,23 @@ class CampaignNewsItemDetailsPage extends Component {
       </>
     );
 
+    if (!campaignTitle && !campaignNewsText) {
+      return (
+        <div>
+          <Suspense fallback={<span>&nbsp;</span>}>
+            <CampaignRetrieveController campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
+          </Suspense>
+          <Helmet>
+            <title>{htmlTitle}</title>
+            <meta
+              name="description"
+              content={campaignDescriptionLimited}
+            />
+          </Helmet>
+        </div>
+      );
+    }
+
     return (
       <div>
         <Suspense fallback={<span>&nbsp;</span>}>
@@ -360,11 +396,55 @@ class CampaignNewsItemDetailsPage extends Component {
             content={campaignDescriptionLimited}
           />
         </Helmet>
+        {inDraftMode && (
+          <UpdateSupportersHeader>
+            <CampaignNewsItemPublishSteps
+              atStepNumber2
+              campaignBasePath={this.getCampaignBasePath()}
+              campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId}
+              campaignXWeVoteId={campaignXWeVoteId}
+            />
+            <EditContinueOuterWrapper>
+              <EditContinueInnerWrapper>
+                <PreviewHeader>
+                  Preview
+                </PreviewHeader>
+                <EditContinueButtonsWrapper>
+                  <Button
+                    classes={{ root: classes.buttonEdit }}
+                    color="primary"
+                    id="campaignGoBackToEditNewsItemText"
+                    onClick={this.onCampaignNewsItemEditClick}
+                    variant="outlined"
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    classes={{ root: classes.buttonSave }}
+                    color="primary"
+                    id="continueToNextStep"
+                    onClick={this.continueToNextStep}
+                    variant="contained"
+                  >
+                    Continue
+                  </Button>
+                </EditContinueButtonsWrapper>
+              </EditContinueInnerWrapper>
+            </EditContinueOuterWrapper>
+          </UpdateSupportersHeader>
+        )}
         <PageWrapper cordova={isCordova()}>
-          {inDraftMode && (
-            <BlockedReason>
-              This is a preview of your update. It is only visible campaign owners.
-            </BlockedReason>
+          {!inDraftMode && (
+            <BackToNavigationBar className="u-cursor--pointer u-link-color-on-hover u-link-underline-on-hover" onClick={this.goToCampaignBasePath}>
+              {isIOS() ? (
+                <ArrowBackIos className="button-icon" />
+              ) : (
+                <ArrowBack className="button-icon" />
+              )}
+              <BackToCampaignTitle>
+                {campaignTitle}
+              </BackToCampaignTitle>
+            </BackToNavigationBar>
           )}
           {isBlockedByWeVote && (
             <BlockedReason>
@@ -387,16 +467,6 @@ class CampaignNewsItemDetailsPage extends Component {
               )}
             </BlockedReason>
           )}
-          <BackToNavigationBar className="u-cursor--pointer u-link-color-on-hover u-link-underline-on-hover" onClick={this.goToCampaignBasePath}>
-            {isIOS() ? (
-              <ArrowBackIos className="button-icon" />
-            ) : (
-              <ArrowBack className="button-icon" />
-            )}
-            <BackToCampaignTitle>
-              {campaignTitle}
-            </BackToCampaignTitle>
-          </BackToNavigationBar>
           <CampaignUpdateBar>
             <CampaignUpdate>
               For Immediate Release
@@ -438,7 +508,7 @@ class CampaignNewsItemDetailsPage extends Component {
                 {campaignNewsText}
               </CampaignDescription>
               <IndicatorRow>
-                {finalElectionDateInPast && (
+                {(finalElectionDateInPast && !inDraftMode) && (
                   <IndicatorButtonWrapper>
                     <ElectionInPast>
                       Election in Past
@@ -454,7 +524,7 @@ class CampaignNewsItemDetailsPage extends Component {
                         </BlockedIndicator>
                       </IndicatorButtonWrapper>
                     )}
-                    {(!isSupportersCountMinimumExceeded) && (
+                    {(!isSupportersCountMinimumExceeded && !inDraftMode) && (
                       <IndicatorButtonWrapper>
                         <DraftModeIndicator onClick={this.onCampaignGetMinimumSupportersClick}>
                           Needs Five Supporters
@@ -479,16 +549,18 @@ class CampaignNewsItemDetailsPage extends Component {
                 </>
               </PressReleaseEnd>
             </CampaignDescriptionWrapper>
-            <CommentsListWrapper>
-              <DelayedLoad waitBeforeShow={1000}>
-                <Suspense fallback={<span>&nbsp;</span>}>
-                  <CampaignSubSectionTitle>
-                    Reasons for supporting
-                  </CampaignSubSectionTitle>
-                  <CampaignCommentsList campaignXWeVoteId={campaignXWeVoteId} startingNumberOfCommentsToDisplay={2} />
-                </Suspense>
-              </DelayedLoad>
-            </CommentsListWrapper>
+            {!inDraftMode && (
+              <CommentsListWrapper>
+                <DelayedLoad waitBeforeShow={1000}>
+                  <Suspense fallback={<span>&nbsp;</span>}>
+                    <CampaignSubSectionTitle>
+                      Reasons for supporting
+                    </CampaignSubSectionTitle>
+                    <CampaignCommentsList campaignXWeVoteId={campaignXWeVoteId} startingNumberOfCommentsToDisplay={2} />
+                  </Suspense>
+                </DelayedLoad>
+              </CommentsListWrapper>
+            )}
           </DetailsSectionMobile>
           <DetailsSectionDesktopTablet className="u-show-desktop-tablet">
             <ColumnsWrapper>
@@ -523,7 +595,7 @@ class CampaignNewsItemDetailsPage extends Component {
                     {campaignNewsText}
                   </CampaignDescriptionDesktop>
                   <IndicatorRow>
-                    {finalElectionDateInPast && (
+                    {(finalElectionDateInPast && !inDraftMode) && (
                       <IndicatorButtonWrapper>
                         <ElectionInPast>
                           Election in Past
@@ -539,7 +611,7 @@ class CampaignNewsItemDetailsPage extends Component {
                             </BlockedIndicator>
                           </IndicatorButtonWrapper>
                         )}
-                        {(!isSupportersCountMinimumExceeded) && (
+                        {(!isSupportersCountMinimumExceeded && !inDraftMode) && (
                           <IndicatorButtonWrapper>
                             <DraftModeIndicator onClick={this.onCampaignGetMinimumSupportersClick}>
                               Needs Five Supporters
@@ -564,16 +636,18 @@ class CampaignNewsItemDetailsPage extends Component {
                     </>
                   </PressReleaseEnd>
                 </CampaignDescriptionDesktopWrapper>
-                <CommentsListWrapper>
-                  <DelayedLoad waitBeforeShow={500}>
-                    <Suspense fallback={<span>&nbsp;</span>}>
-                      <CampaignSubSectionTitle>
-                        Reasons for supporting
-                      </CampaignSubSectionTitle>
-                      <CampaignCommentsList campaignXWeVoteId={campaignXWeVoteId} startingNumberOfCommentsToDisplay={2} />
-                    </Suspense>
-                  </DelayedLoad>
-                </CommentsListWrapper>
+                {!inDraftMode && (
+                  <CommentsListWrapper>
+                    <DelayedLoad waitBeforeShow={500}>
+                      <Suspense fallback={<span>&nbsp;</span>}>
+                        <CampaignSubSectionTitle>
+                          Reasons for supporting
+                        </CampaignSubSectionTitle>
+                        <CampaignCommentsList campaignXWeVoteId={campaignXWeVoteId} startingNumberOfCommentsToDisplay={2} />
+                      </Suspense>
+                    </DelayedLoad>
+                  </CommentsListWrapper>
+                )}
               </ColumnTwoThirds>
               <ColumnOneThird>
                 <Suspense fallback={<span>&nbsp;</span>}>
@@ -586,26 +660,29 @@ class CampaignNewsItemDetailsPage extends Component {
                     finalElectionDateInPast={finalElectionDateInPast}
                     functionToUseToKeepHelping={this.functionToUseToKeepHelping}
                     functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
+                    inDraftMode={inDraftMode}
                   />
                 </Suspense>
               </ColumnOneThird>
             </ColumnsWrapper>
           </DetailsSectionDesktopTablet>
         </PageWrapper>
-        <SupportButtonFooterWrapper className="u-show-mobile">
-          {!finalElectionDateInPast && (
-            <SupportButtonPanel>
-              <Suspense fallback={<span>&nbsp;</span>}>
-                <SupportButtonBeforeCompletionScreen
-                  campaignSEOFriendlyPath={campaignSEOFriendlyPath}
-                  campaignXWeVoteId={campaignXWeVoteId}
-                  functionToUseToKeepHelping={this.functionToUseToKeepHelping}
-                  functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
-                />
-              </Suspense>
-            </SupportButtonPanel>
-          )}
-        </SupportButtonFooterWrapper>
+        {!inDraftMode && (
+          <SupportButtonFooterWrapper className="u-show-mobile">
+            {!finalElectionDateInPast && (
+              <SupportButtonPanel>
+                <Suspense fallback={<span>&nbsp;</span>}>
+                  <SupportButtonBeforeCompletionScreen
+                    campaignSEOFriendlyPath={campaignSEOFriendlyPath}
+                    campaignXWeVoteId={campaignXWeVoteId}
+                    functionToUseToKeepHelping={this.functionToUseToKeepHelping}
+                    functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
+                  />
+                </Suspense>
+              </SupportButtonPanel>
+            )}
+          </SupportButtonFooterWrapper>
+        )}
         <CompleteYourProfileModalController
           campaignXWeVoteId={campaignXWeVoteId}
           functionToUseWhenProfileComplete={this.functionToUseWhenProfileComplete}
@@ -618,6 +695,7 @@ class CampaignNewsItemDetailsPage extends Component {
 CampaignNewsItemDetailsPage.propTypes = {
   classes: PropTypes.object,
   match: PropTypes.object,
+  setShowHeaderFooter: PropTypes.func,
 };
 
 const styles = (theme) => ({
@@ -626,6 +704,25 @@ const styles = (theme) => ({
     height: 32,
     marginRight: 8,
     width: 32,
+  },
+  buttonEdit: {
+    boxShadow: 'none !important',
+    fontSize: '18px',
+    height: '45px !important',
+    padding: '0 30px',
+    textTransform: 'none',
+    width: 100,
+  },
+  buttonSave: {
+    boxShadow: 'none !important',
+    fontSize: '18px',
+    height: '45px !important',
+    marginLeft: 10,
+    textTransform: 'none',
+    width: 200,
+    [theme.breakpoints.down('sm')]: {
+      width: 150,
+    },
   },
   buttonRoot: {
     width: 250,
@@ -823,6 +920,30 @@ const DetailsSectionMobile = styled.div`
   flex-flow: column;
 `;
 
+const EditContinueButtonsWrapper = styled.div`
+  display: flex;
+`;
+
+const EditContinueInnerWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: 960px;
+  padding: 8px 0;
+  @media (max-width: 1005px) {
+    // Switch to 15px left/right margin when auto is too small
+    margin: 0 15px;
+  }
+`;
+
+const EditContinueOuterWrapper = styled.div`
+  background-color: #f6f4f6;
+  border-bottom: 1px solid #ddd;
+  // margin: 10px 0;
+  width: 100%;
+`;
+
 const NewsItemSubjectDesktop = styled.h1`
   font-size: 32px;
   margin: 0 0 24px 0;
@@ -857,14 +978,17 @@ const PressReleaseEnd = styled.div`
   margin-top: 20px;
 `;
 
+const PreviewHeader = styled.div`
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+`;
+
 const SpeakerAndPhotoOuterWrapper = styled.div`
   align-items: center;
   display: flex;
   justify-content: flex-start;
   margin-bottom: 20px;
-  @media (max-width: 1005px) {
-    margin: 0 15px 20px 15px;
-  }
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
     margin: 0 6px 10px 6px;
   }
@@ -891,6 +1015,11 @@ const SupportButtonPanel = styled.div`
   background-color: #fff;
   border-top: 1px solid #ddd;
   padding: 10px;
+`;
+
+const UpdateSupportersHeader = styled.div`
+  margin-bottom: 24px;
+  margin-top: 30px;
 `;
 
 export default withStyles(styles)(CampaignNewsItemDetailsPage);

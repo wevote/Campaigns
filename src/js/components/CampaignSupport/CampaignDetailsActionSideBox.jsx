@@ -180,7 +180,7 @@ class CampaignDetailsActionSideBox extends Component {
 
   render () {
     renderLog('CampaignDetailsActionSideBox');  // Set LOG_RENDER_EVENTS to log all renders
-    const { campaignSEOFriendlyPath, campaignXWeVoteId, classes } = this.props;
+    const { campaignSEOFriendlyPath, campaignXWeVoteId, classes, inDraftMode } = this.props;
     // console.log('CampaignDetailsActionSideBox render campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
     if (!campaignSEOFriendlyPath && !campaignXWeVoteId) {
       // console.log('CampaignDetailsActionSideBox render voter NOT found');
@@ -204,69 +204,77 @@ class CampaignDetailsActionSideBox extends Component {
             className={hideFooterBehindModal ? 'u-z-index-1000' : 'u-z-index-9000'}
           >
             <MostRecentCampaignSupport campaignXWeVoteId={campaignXWeVoteId} />
-            {finalElectionDateInPast ? (
-              <ButtonPanel>
-                <Button
-                  classes={{ root: supportButtonClasses }}
-                  color="primary"
-                  id="keepHelpingButtonDesktop"
-                  onClick={() => this.props.functionToUseToKeepHelping()}
-                  variant="contained"
-                >
-                  Share with friends!
-                </Button>
-              </ButtonPanel>
-            ) : (
-              <ButtonPanel>
-                <Button
-                  classes={{ root: supportButtonClasses }}
-                  color="primary"
-                  id="keepHelpingButtonDesktop"
-                  onClick={() => this.props.functionToUseToKeepHelping()}
-                  variant="contained"
-                >
-                  I&apos;d like to keep helping!
-                </Button>
-              </ButtonPanel>
+            {!inDraftMode && (
+              <>
+                {finalElectionDateInPast ? (
+                  <ButtonPanel>
+                    <Button
+                      classes={{ root: supportButtonClasses }}
+                      color="primary"
+                      id="keepHelpingButtonDesktop"
+                      onClick={() => this.props.functionToUseToKeepHelping()}
+                      variant="contained"
+                    >
+                      Share with friends!
+                    </Button>
+                  </ButtonPanel>
+                ) : (
+                  <ButtonPanel>
+                    <Button
+                      classes={{ root: supportButtonClasses }}
+                      color="primary"
+                      id="keepHelpingButtonDesktop"
+                      onClick={() => this.props.functionToUseToKeepHelping()}
+                      variant="contained"
+                    >
+                      I&apos;d like to keep helping!
+                    </Button>
+                  </ButtonPanel>
+                )}
+              </>
             )}
           </KeepHelpingWrapper>
         ) : (
           <section>
             <MostRecentCampaignSupport campaignXWeVoteId={campaignXWeVoteId} />
-            {finalElectionDateInPast ? (
-              <ButtonPanel>
-                <Button
-                  classes={{ root: supportButtonClasses }}
-                  color="primary"
-                  id="keepHelpingButtonDesktop"
-                  onClick={() => this.props.functionToUseToKeepHelping()}
-                  variant="contained"
-                >
-                  Share with friends!
-                </Button>
-              </ButtonPanel>
-            ) : (
+            {!inDraftMode && (
               <>
-                {voterProfileIsComplete ? (
-                  <ProfileAlreadyComplete>
-                    <Suspense fallback={<span>&nbsp;</span>}>
-                      <VisibleToPublicCheckbox campaignXWeVoteId={campaignXWeVoteId} />
-                    </Suspense>
-                    <SupportButton
-                      campaignXWeVoteId={campaignXWeVoteId}
-                      functionToUseWhenProfileComplete={this.props.functionToUseWhenProfileComplete}
-                    />
-                  </ProfileAlreadyComplete>
+                {finalElectionDateInPast ? (
+                  <ButtonPanel>
+                    <Button
+                      classes={{ root: supportButtonClasses }}
+                      color="primary"
+                      id="keepHelpingButtonDesktop"
+                      onClick={() => this.props.functionToUseToKeepHelping()}
+                      variant="contained"
+                    >
+                      Share with friends!
+                    </Button>
+                  </ButtonPanel>
                 ) : (
-                  <CompleteYourProfileWrapper>
-                    <Suspense fallback={<span>&nbsp;</span>}>
-                      <CompleteYourProfile
-                        campaignXWeVoteId={campaignXWeVoteId}
-                        functionToUseWhenProfileComplete={this.props.functionToUseWhenProfileComplete}
-                        supportCampaignOnCampaignHome
-                      />
-                    </Suspense>
-                  </CompleteYourProfileWrapper>
+                  <>
+                    {voterProfileIsComplete ? (
+                      <ProfileAlreadyComplete>
+                        <Suspense fallback={<span>&nbsp;</span>}>
+                          <VisibleToPublicCheckbox campaignXWeVoteId={campaignXWeVoteId} />
+                        </Suspense>
+                        <SupportButton
+                          campaignXWeVoteId={campaignXWeVoteId}
+                          functionToUseWhenProfileComplete={this.props.functionToUseWhenProfileComplete}
+                        />
+                      </ProfileAlreadyComplete>
+                    ) : (
+                      <CompleteYourProfileWrapper>
+                        <Suspense fallback={<span>&nbsp;</span>}>
+                          <CompleteYourProfile
+                            campaignXWeVoteId={campaignXWeVoteId}
+                            functionToUseWhenProfileComplete={this.props.functionToUseWhenProfileComplete}
+                            supportCampaignOnCampaignHome
+                          />
+                        </Suspense>
+                      </CompleteYourProfileWrapper>
+                    )}
+                  </>
                 )}
               </>
             )}
@@ -282,6 +290,7 @@ CampaignDetailsActionSideBox.propTypes = {
   classes: PropTypes.object,
   functionToUseToKeepHelping: PropTypes.func.isRequired,
   functionToUseWhenProfileComplete: PropTypes.func.isRequired,
+  inDraftMode: PropTypes.bool,
 };
 
 const styles = (theme) => ({

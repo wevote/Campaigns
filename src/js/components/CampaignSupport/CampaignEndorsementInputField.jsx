@@ -120,7 +120,7 @@ class CampaignEndorsementInputField extends Component {
                   name="supporterEndorsement"
                   margin="dense"
                   multiline
-                  rows={8}
+                  rows={6}
                   variant="outlined"
                   placeholder={placeholderText}
                   value={supporterEndorsement || ''}

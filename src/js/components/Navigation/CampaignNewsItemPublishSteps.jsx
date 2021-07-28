@@ -68,11 +68,15 @@ class CampaignNewsItemPublishSteps extends Component {
   }
 
   onCampaignStoreChange () {
-    const { campaignXNewsItemWeVoteId } = this.props;
-    // atStepNumber1, atStepNumber1, atStepNumber2, atStepNumber3,
+    const { atStepNumber3, atStepNumber4, campaignXNewsItemWeVoteId } = this.props;
+    const campaignXNewsItem = CampaignStore.getCampaignXNewsItemByWeVoteId(campaignXNewsItemWeVoteId);
+    const {
+      in_draft_mode: inDraftMode,
+    } = campaignXNewsItem;
+    // atStepNumber1, atStepNumber2, atStepNumber3, atStepNumber4
     const step1Completed = CampaignStore.campaignNewsItemTextExists(campaignXNewsItemWeVoteId);
-    const step2Completed = false;
-    const step3Completed = false;
+    const step2Completed = atStepNumber3 || atStepNumber4;
+    const step3Completed = !inDraftMode;
     const step4Completed = false;
     this.setState({
       step1Completed,
@@ -135,7 +139,7 @@ class CampaignNewsItemPublishSteps extends Component {
                   <StepCircle
                     className="u-cursor--pointer"
                     inverseColor={atStepNumber2}
-                    onClick={() => historyPush(`${campaignBasePath}/add-update/${campaignXNewsItemWeVoteId}`)}
+                    onClick={() => historyPush(`${campaignBasePath}/u/${campaignXNewsItemWeVoteId}`)}
                   >
                     <StepNumber inverseColor={atStepNumber2}>
                       <Done classes={{ root: classes.doneIcon }} />
@@ -145,7 +149,7 @@ class CampaignNewsItemPublishSteps extends Component {
                   <StepCircle
                     className="u-cursor--pointer"
                     inverseColor={atStepNumber2}
-                    onClick={() => historyPush(`${campaignBasePath}/add-update/${campaignXNewsItemWeVoteId}`)}
+                    onClick={() => historyPush(`${campaignBasePath}/u/${campaignXNewsItemWeVoteId}`)}
                   >
                     <StepNumber inverseColor={atStepNumber2}>2</StepNumber>
                   </StepCircle>
@@ -156,7 +160,7 @@ class CampaignNewsItemPublishSteps extends Component {
                   <StepCircle
                     className="u-cursor--pointer"
                     inverseColor={atStepNumber3}
-                    onClick={() => historyPush(`${campaignBasePath}/add-update/${campaignXNewsItemWeVoteId}`)}
+                    onClick={() => historyPush(`${campaignBasePath}/send/${campaignXNewsItemWeVoteId}`)}
                   >
                     <StepNumber inverseColor={atStepNumber3}>
                       <Done classes={{ root: classes.doneIcon }} />
@@ -166,7 +170,7 @@ class CampaignNewsItemPublishSteps extends Component {
                   <StepCircle
                     className="u-cursor--pointer"
                     inverseColor={atStepNumber3}
-                    onClick={() => historyPush(`${campaignBasePath}/add-update/${campaignXNewsItemWeVoteId}`)}
+                    onClick={() => historyPush(`${campaignBasePath}/send/${campaignXNewsItemWeVoteId}`)}
                   >
                     <StepNumber inverseColor={atStepNumber3}>3</StepNumber>
                   </StepCircle>
@@ -177,7 +181,7 @@ class CampaignNewsItemPublishSteps extends Component {
                   <StepCircle
                     className="u-cursor--pointer"
                     inverseColor={atStepNumber4}
-                    onClick={() => historyPush(`${campaignBasePath}/add-update/${campaignXNewsItemWeVoteId}`)}
+                    onClick={() => historyPush(`${campaignBasePath}/share/${campaignXNewsItemWeVoteId}`)}
                   >
                     <StepNumber inverseColor={atStepNumber4}>
                       <Done classes={{ root: classes.doneIcon }} />
@@ -187,7 +191,7 @@ class CampaignNewsItemPublishSteps extends Component {
                   <StepCircle
                     className="u-cursor--pointer"
                     inverseColor={atStepNumber4}
-                    onClick={() => historyPush(`${campaignBasePath}/add-update/${campaignXNewsItemWeVoteId}`)}
+                    onClick={() => historyPush(`${campaignBasePath}/share/${campaignXNewsItemWeVoteId}`)}
                   >
                     <StepNumber inverseColor={atStepNumber4}>4</StepNumber>
                   </StepCircle>
