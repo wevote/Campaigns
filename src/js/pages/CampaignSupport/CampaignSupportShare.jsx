@@ -350,7 +350,7 @@ class CampaignSupportShare extends Component {
               <CampaignSupportSectionWrapper>
                 <CampaignSupportSection>
                   <SkipForNowButtonWrapper>
-                    <SkipForNowButtonPanel>
+                    <SkipForNowButtonPanel show>
                       <Button
                         classes={{ root: classes.buttonSimpleLink }}
                         color="primary"

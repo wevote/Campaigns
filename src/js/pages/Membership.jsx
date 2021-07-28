@@ -7,7 +7,6 @@ import { loadStripe } from '@stripe/stripe-js';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
-import DonateActions from '../common/actions/DonateActions';
 import DonationListForm from '../common/components/Donation/DonationListForm';
 import LoadingWheel from '../components/LoadingWheel';
 import InjectedCheckoutForm from '../common/components/Donation/InjectedCheckoutForm';
@@ -25,12 +24,11 @@ class Membership extends Component {
     super(props);
 
     this.state = {
-      monthlyDonationValue: '5.00',
-      monthlyDonationOtherValue: '',
       joining: false,
       loaded: false,
-      subscriptionCount: -1,
-      waitingForDonationWithStripe: false,
+      monthlyDonationOtherValue: '',
+      monthlyDonationValue: '5.00',
+      preDonation: true,
       showWaiting: false,
     };
     this.onOtherAmountFieldChange = this.onOtherAmountFieldChange.bind(this);
@@ -60,21 +58,12 @@ class Membership extends Component {
 
   onDonateStoreChange () {
     console.log('onDonateStore DonateStore:', DonateStore.getAll());
-    if (DonateStore.donationSuccess()) {
-      if (this.state.waitingForDonationWithStripe) {
-        this.pollForWebhookCompletion(60);
-        this.setState({
-          waitingForDonationWithStripe: false,
-          joining: false,
-        });
-      }
-    } else if (this.state.waitingForDonationWithStripe) {
-      console.log('onDonateStoreChange donation unsuccessful at this point');
-    } else {
-      console.log('onDonateStoreChange unsuccessful donation');
-      this.setState({ showWaiting: false });
+    if (DonateStore.donationSuccess()  && DonateStore.donationResponseReceived()) {
+      console.log('onDonateStoreChange successful donation detected');
+      this.setState({
+        preDonation: false,
+      });
     }
-    this.forceUpdate();
   }
 
   static getProps () {
@@ -95,10 +84,7 @@ class Membership extends Component {
     console.log('onBecomeAMember in Membership ------------------------------');
     console.log('Donation store changed in Membership, Checkout form removed');
     this.setState({
-      // joining: false,
-      waitingForDonationWithStripe: true,
       showWaiting: true,
-      subscriptionCount: DonateStore.getVoterSubscriptionHistory().length,
     });
   }
 
@@ -106,25 +92,6 @@ class Membership extends Component {
     this.setState({
       showWaiting: false,
     });
-  }
-
-  pollForWebhookCompletion (pollCount) {
-    // console.log(`pollForWebhookCompletion polling -- start: ${this.state.donationPaymentHistory ? this.state.donationPaymentHistory.length : -1}`);
-    // console.log(`pollForWebhookCompletion polling -- start pollCount: ${pollCount}`);
-    this.timer = setTimeout(() => {
-      const latestCount = DonateStore.getVoterSubscriptionHistory().length;
-      if (pollCount === 0 || (this.state.subscriptionCount < latestCount)) {
-        console.log(`pollForWebhookCompletion polling -- clearTimeout: ${latestCount}`);
-        console.log(`pollForWebhookCompletion polling -- pollCount: ${pollCount}`);
-        clearTimeout(this.timer);
-        this.timer = null;
-        this.setState({ subscriptionCount: -1 });
-        return;
-      }
-      console.log(`pollForWebhookCompletion polling ----- ${pollCount}`);
-      DonateActions.donationRefreshDonationList();
-      this.pollForWebhookCompletion(pollCount - 1);  // recursive
-    }, 500);
   }
 
   changeValueFromButton (newValue) {
@@ -151,7 +118,7 @@ class Membership extends Component {
   render () {
     renderLog('Membership');  // Set LOG_RENDER_EVENTS to log all renders
     const { classes } = this.props;
-    const { joining, monthlyDonationValue, monthlyDonationOtherValue, loaded, showWaiting } = this.state;
+    const { joining, monthlyDonationValue, monthlyDonationOtherValue, loaded, showWaiting, preDonation } = this.state;
     const isMonthly = true;
     if (!loaded) {
       return LoadingWheel;
@@ -164,99 +131,103 @@ class Membership extends Component {
           <OuterWrapper>
             <InnerWrapper>
               <IntroductionMessageSection>
-                <ContentTitle>Become a WeVote.US member</ContentTitle>
-                <PageSubStatement joining={joining}>
+                <ContentTitle>
+                  { preDonation ? 'Become a WeVote.US member' : 'Thank you for joining We Vote!' }
+                </ContentTitle>
+                <PageSubStatement show={preDonation}>
                   Voters come to WeVote.US to start and sign campaigns that encourage more people to vote.
                   {' '}
                   Become a member today and fuel our mission to motivate EVERY American to vote.
                 </PageSubStatement>
               </IntroductionMessageSection>
-              <ContributeGridWrapper>
-                <ContributeMonthlyText>
-                  Contribute Monthly:
-                </ContributeMonthlyText>
-                <ContributeGridSection>
-                  <ContributeGridItem>
-                    <Button
-                      classes={(monthlyDonationValue === '3' || monthlyDonationValue === '3.00') ? { root: classes.buttonRootSelected } : { root: classes.buttonRoot }}
-                      variant="contained"
-                      onClick={() => this.changeValueFromButton('3.00')}
-                    >
-                      $3
-                    </Button>
-                  </ContributeGridItem>
-                  <ContributeGridItem>
-                    <Button
-                      classes={(monthlyDonationValue === '5' || monthlyDonationValue === '5.00') ? { root: classes.buttonRootSelected } : { root: classes.buttonRoot }}
-                      variant="contained"
-                      onClick={() => this.changeValueFromButton('5.00')}
-                    >
-                      $5
-                    </Button>
-                  </ContributeGridItem>
-                  <ContributeGridItem>
-                    <Button
-                      classes={(monthlyDonationValue === '10' || monthlyDonationValue === '10.00') ? { root: classes.buttonRootSelected } : { root: classes.buttonRoot }}
-                      variant="contained"
-                      onClick={() => this.changeValueFromButton('10.00')}
-                    >
-                      $10
-                    </Button>
-                  </ContributeGridItem>
-                  <ContributeGridItem>
-                    <Button
-                      classes={(monthlyDonationValue === '20' || monthlyDonationValue === '20.00') ? { root: classes.buttonRootSelected } : { root: classes.buttonRoot }}
-                      variant="contained"
-                      onClick={() => this.changeValueFromButton('20.00')}
-                    >
-                      $20
-                    </Button>
-                  </ContributeGridItem>
-                  <ContributeGridItemJoin joining={joining}>
-                    { !joining ? (
+              { preDonation && (
+                <ContributeGridWrapper>
+                  <ContributeMonthlyText>
+                    Contribute Monthly:
+                  </ContributeMonthlyText>
+                  <ContributeGridSection>
+                    <ContributeGridItem>
                       <Button
-                        classes={{ root: classes.buttonRoot }}
-                        color="primary"
+                        classes={(monthlyDonationValue === '3' || monthlyDonationValue === '3.00') ? { root: classes.buttonRootSelected } : { root: classes.buttonRoot }}
                         variant="contained"
-                        style={{
-                          width: '100%',
-                          backgroundColor: 'darkblue',
-                          color: 'white',
-                        }}
-                        onClick={() => this.openPaymentForm()}
+                        onClick={() => this.changeValueFromButton('3.00')}
                       >
-                        Join
+                        $3
                       </Button>
-                    ) : (
-                      <TextField
-                        id="currency-input"
-                        label="Other Amount"
-                        variant="outlined"
-                        value={monthlyDonationOtherValue}
-                        onChange={this.onOtherAmountFieldChange}
-                        InputLabelProps={{
-                          classes: {
-                            root: classes.textFieldInputRoot,
-                            focused: classes.textFieldInputRoot,
-                          },
-                          shrink: true,
-                        }}
-                        InputProps={{
-                          classes: {
-                            root: classes.textFieldInputRoot,
-                            focused: classes.textFieldInputRoot,
-                          },
-                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        }}
-                        style={{ marginTop: 6, textAlign: 'center', width: 100 }}
-                      />
-                    )}
-                  </ContributeGridItemJoin>
-                </ContributeGridSection>
-              </ContributeGridWrapper>
+                    </ContributeGridItem>
+                    <ContributeGridItem>
+                      <Button
+                        classes={(monthlyDonationValue === '5' || monthlyDonationValue === '5.00') ? { root: classes.buttonRootSelected } : { root: classes.buttonRoot }}
+                        variant="contained"
+                        onClick={() => this.changeValueFromButton('5.00')}
+                      >
+                        $5
+                      </Button>
+                    </ContributeGridItem>
+                    <ContributeGridItem>
+                      <Button
+                        classes={(monthlyDonationValue === '10' || monthlyDonationValue === '10.00') ? { root: classes.buttonRootSelected } : { root: classes.buttonRoot }}
+                        variant="contained"
+                        onClick={() => this.changeValueFromButton('10.00')}
+                      >
+                        $10
+                      </Button>
+                    </ContributeGridItem>
+                    <ContributeGridItem>
+                      <Button
+                        classes={(monthlyDonationValue === '20' || monthlyDonationValue === '20.00') ? { root: classes.buttonRootSelected } : { root: classes.buttonRoot }}
+                        variant="contained"
+                        onClick={() => this.changeValueFromButton('20.00')}
+                      >
+                        $20
+                      </Button>
+                    </ContributeGridItem>
+                    <ContributeGridItemJoin joining={joining}>
+                      { !joining ? (
+                        <Button
+                          classes={{ root: classes.buttonRoot }}
+                          color="primary"
+                          variant="contained"
+                          style={{
+                            width: '100%',
+                            backgroundColor: 'darkblue',
+                            color: 'white',
+                          }}
+                          onClick={() => this.openPaymentForm()}
+                        >
+                          Join
+                        </Button>
+                      ) : (
+                        <TextField
+                          id="currency-input"
+                          label="Other Amount"
+                          variant="outlined"
+                          value={monthlyDonationOtherValue}
+                          onChange={this.onOtherAmountFieldChange}
+                          InputLabelProps={{
+                            classes: {
+                              root: classes.textFieldInputRoot,
+                              focused: classes.textFieldInputRoot,
+                            },
+                            shrink: true,
+                          }}
+                          InputProps={{
+                            classes: {
+                              root: classes.textFieldInputRoot,
+                              focused: classes.textFieldInputRoot,
+                            },
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                          }}
+                          style={{ marginTop: 6, textAlign: 'center', width: 100 }}
+                        />
+                      )}
+                    </ContributeGridItemJoin>
+                  </ContributeGridSection>
+                </ContributeGridWrapper>
+              )}
             </InnerWrapper>
           </OuterWrapper>
-          <PaymentWrapper joining={joining}>
+          <PaymentWrapper show={preDonation}>
             <PaymentCenteredWrapper>
               <Elements stripe={stripePromise}>
                 <InjectedCheckoutForm
@@ -347,7 +318,8 @@ const InnerWrapper = styled.div`
 `;
 
 const PaymentWrapper  = styled.div`
-  display: ${({ joining }) => ((joining) ? '' : 'none')};
+  visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
+  height: ${(props) => (props.show ? 'inherit' : '0')};
   text-align: center;
 `;
 
@@ -386,6 +358,7 @@ const PageSubStatement = styled.div`
   margin: 0 0 1em;
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
   }
+  visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
 `;
 
 const PageWrapper = styled.div`
@@ -405,6 +378,7 @@ const ContributeGridWrapper = styled.div`
   width: 500px;
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
     width: 300px;
+  }
 `;
 
 const ContributeGridSection = styled.div`

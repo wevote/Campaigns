@@ -53,6 +53,7 @@ const CampaignSupportSectionWrapper = styled.div`
 `;
 
 const SkipForNowButtonPanel = styled.div`
+  visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   background-color: #fff;
   margin-top: 40px;
 `;

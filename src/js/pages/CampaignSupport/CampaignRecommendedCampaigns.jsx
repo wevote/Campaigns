@@ -350,7 +350,7 @@ class CampaignRecommendedCampaigns extends Component {
                 <CampaignSupportSectionWrapper>
                   <CampaignSupportSection>
                     <SkipForNowButtonWrapper>
-                      <SkipForNowButtonPanel>
+                      <SkipForNowButtonPanel show>
                         <Button
                           classes={{ root: classes.buttonSimpleLink }}
                           color="primary"
@@ -475,7 +475,7 @@ class CampaignRecommendedCampaigns extends Component {
               <CampaignSupportSectionWrapper>
                 <CampaignSupportSection>
                   <SkipForNowButtonWrapper>
-                    <SkipForNowButtonPanel>
+                    <SkipForNowButtonPanel show>
                       <Button
                         classes={{ root: classes.buttonSimpleLink }}
                         color="primary"

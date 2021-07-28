@@ -339,7 +339,7 @@ class CampaignSupportEndorsement extends Component {
                     </AdviceBox>
                   </AdviceBoxWrapper>
                   <SkipForNowButtonWrapper>
-                    <SkipForNowButtonPanel>
+                    <SkipForNowButtonPanel show>
                       <Button
                         classes={{ root: classes.buttonSimpleLink }}
                         color="primary"

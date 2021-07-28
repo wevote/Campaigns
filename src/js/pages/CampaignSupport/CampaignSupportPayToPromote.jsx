@@ -150,7 +150,7 @@ class CampaignSupportPayToPromote extends Component {
   }
 
   goToIWillChipIn = () => {
-    const pathForNextStep = `${this.getCampaignBasePath()}/pay-to-promote-process`;
+    const pathForNextStep = `${this.getCampaignBasePath()}/pay-to-promote-process?returnPath=${this.getCampaignBasePath()}`;
     historyPush(pathForNextStep);
   }
 
@@ -289,7 +289,7 @@ class CampaignSupportPayToPromote extends Component {
                     </CampaignSupportMobileButtonPanel>
                   </CampaignSupportMobileButtonWrapper>
                   <SkipForNowButtonWrapper>
-                    <SkipForNowButtonPanel>
+                    <SkipForNowButtonPanel show>
                       <Button
                         classes={{ root: classes.buttonSimpleLink }}
                         color="primary"

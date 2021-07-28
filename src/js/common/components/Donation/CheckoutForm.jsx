@@ -123,9 +123,9 @@ class CheckoutForm extends React.Component {
     };
   }
 
-  submitStripePayment = async (emailFromVoter) => {
+  submitStripePayment = async (emailForStripe) => {
     const { stripe, value, elements, isMonthly, isChipIn, campaignXWeVoteId } = this.props;
-    const { emailFieldError, emailFieldText } = this.state;
+    const { emailFieldError } = this.state;
     console.log('submitStripePayment was called ==================');
 
     if (emailFieldError) {
@@ -134,7 +134,7 @@ class CheckoutForm extends React.Component {
         emailFieldError: false,
       });
     } else {
-      const email = (emailFromVoter && emailFromVoter.length > 0) ? emailFromVoter : emailFieldText;
+      const email = emailForStripe;
 
       let paymentMethodId;
       let createPaymentError;
@@ -162,7 +162,9 @@ class CheckoutForm extends React.Component {
 
         this.setPreDonationCounts();
         DonateActions.clearStripeErrorState();
-        DonateActions.donationWithStripe(token.id, email, donationPennies, isChipIn, isMonthlyDonation, isPremiumPlan, token.client_ip, campaignXWeVoteId, paymentMethodId, couponCode, premiumPlanType);
+        DonateActions.donationWithStripe(token.id, email, donationPennies,
+          isChipIn, isMonthlyDonation, isPremiumPlan, token.client_ip, campaignXWeVoteId,
+          paymentMethodId, couponCode, premiumPlanType);
 
         this.pollForWebhookCompletionAtList(20);
 
@@ -241,11 +243,12 @@ class CheckoutForm extends React.Component {
   render () {
     renderLog('CheckoutForm');  // Set LOG_RENDER_EVENTS to log all renders
     const { campaignXWeVoteId, classes, isMonthly } = this.props;
-    const { donationWithStripeSubmitted, emailValidationErrorText, emailFieldError,
+    const { donationWithStripeSubmitted, emailValidationErrorText, emailFieldError, emailFieldText,
       stripePaymentError, stripeErrorMessageForVoter } = this.state;
     const voter = VoterStore.getVoter();
-    const emailFromVoter = (voter && voter.email) || '';
-    console.log('render emailFieldError:', emailFieldError);
+    const haveEmailFromVoter = (voter.email && voter.email.length > 0) || false;
+    const emailForStripe = haveEmailFromVoter ? voter.email : emailFieldText;
+    // console.log('render haveEmailFromVoter:', haveEmailFromVoter, ',  emailFieldText:', emailFieldText);
     const paymentErrorText = stripeErrorMessageForVoter  || 'Please verify your information.';
     const error = emailFieldError || stripePaymentError;
     const errorText = emailFieldError ? emailValidationErrorText : paymentErrorText;
@@ -261,7 +264,7 @@ class CheckoutForm extends React.Component {
         ) : (
           <div style={{ height: 41 }} />
         )}
-        {emailFromVoter.length === 0 ? (
+        {!haveEmailFromVoter ? (
           <TextFieldContainer>
             <TextField
               id="outlined-basic-email"
@@ -308,7 +311,7 @@ class CheckoutForm extends React.Component {
               externalUniqueId="becomeAMember"
               icon={donationWithStripeSubmitted ? <ProgressStyled /> : <LockStyled />}
               id="stripeCheckOutForm"
-              onClick={() => this.submitStripePayment(emailFromVoter)}
+              onClick={() => this.submitStripePayment(emailForStripe)}
             />
           </ButtonContainer>
           <StripeTagLine>
