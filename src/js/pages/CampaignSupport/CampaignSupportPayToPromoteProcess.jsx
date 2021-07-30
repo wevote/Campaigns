@@ -9,7 +9,6 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import CampaignActions from '../../actions/CampaignActions';
 import AppStore from '../../stores/AppStore';
-import DonateActions from '../../common/actions/DonateActions';
 import DonationListForm from '../../common/components/Donation/DonationListForm';
 import LoadingWheelComp from '../../components/LoadingWheelComp';
 import InjectedCheckoutForm from '../../common/components/Donation/InjectedCheckoutForm';
@@ -41,10 +40,9 @@ class CampaignSupportPayToPromoteProcess extends Component {
       loaded: false,
       chipInPaymentValue: '3.00',
       chipInPaymentOtherValue: '',
-      subscriptionCount: -1,
+      preDonation: true,
       showWaiting: false,
       voterFirstName: '',
-      waitingForDonationWithStripe: false,
     };
     this.onOtherAmountFieldChange = this.onOtherAmountFieldChange.bind(this);
     this.onChipIn = this.onChipIn.bind(this);
@@ -99,6 +97,7 @@ class CampaignSupportPayToPromoteProcess extends Component {
         }
         // Take the "calculated" identifiers and retrieve if missing
         retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
+        DonateStore.noDispatchClearStripeErrorState();
       }
     });
   }
@@ -155,20 +154,12 @@ class CampaignSupportPayToPromoteProcess extends Component {
 
   onDonateStoreChange () {
     // console.log('onDonateStore DonateStore:', DonateStore.getAll());
-    if (DonateStore.donationSuccess()) {
-      if (this.state.waitingForDonationWithStripe) {
-        this.pollForWebhookCompletion(60);
-        this.setState({
-          waitingForDonationWithStripe: false,
-        });
-      }
-    } else if (this.state.waitingForDonationWithStripe) {
-      console.log('onDonateStoreChange donation unsuccessful at this point');
-    } else {
-      console.log('onDonateStoreChange unsuccessful donation');
-      this.setState({ showWaiting: false });
+    if (DonateStore.donationSuccess()  && DonateStore.donationResponseReceived()) {
+      console.log('onDonateStoreChange successful donation detected');
+      this.setState({
+        preDonation: false,
+      });
     }
-    this.forceUpdate();
   }
 
   static getProps () {
@@ -196,9 +187,7 @@ class CampaignSupportPayToPromoteProcess extends Component {
     console.log('onChipIn in CampaignSupportPayToPromoteProcess ------------------------------');
     console.log('Donation store changed in CampaignSupportPayToPromoteProcess, Checkout form removed');
     this.setState({
-      waitingForDonationWithStripe: true,
       showWaiting: true,
-      subscriptionCount: DonateStore.getVoterSubscriptionHistory().length,
     });
   }
 
@@ -216,25 +205,6 @@ class CampaignSupportPayToPromoteProcess extends Component {
       campaignBasePath = `/id/${campaignXWeVoteId}`;
     }
     return campaignBasePath;
-  }
-
-  pollForWebhookCompletion (pollCount) {
-    // console.log(`pollForWebhookCompletion polling -- start: ${this.state.donationPaymentHistory ? this.state.donationPaymentHistory.length : -1}`);
-    // console.log(`pollForWebhookCompletion polling -- start pollCount: ${pollCount}`);
-    this.timer = setTimeout(() => {
-      const latestCount = DonateStore.getVoterSubscriptionHistory().length;
-      if (pollCount === 0 || (this.state.subscriptionCount < latestCount)) {
-        console.log(`pollForWebhookCompletion polling -- clearTimeout: ${latestCount}`);
-        console.log(`pollForWebhookCompletion polling -- pollCount: ${pollCount}`);
-        clearTimeout(this.timer);
-        this.timer = null;
-        this.setState({ subscriptionCount: -1 });
-        return;
-      }
-      console.log(`pollForWebhookCompletion polling ----- ${pollCount}`);
-      DonateActions.donationRefreshDonationList();
-      this.pollForWebhookCompletion(pollCount - 1);  // recursive
-    }, 500);
   }
 
   changeValueFromButton (newValue) {
@@ -255,7 +225,7 @@ class CampaignSupportPayToPromoteProcess extends Component {
     const { classes } = this.props;
     const {
       campaignTitle, chipInPaymentValue, chipInPaymentOtherValue, chosenWebsiteName,
-      loaded, showWaiting, voterFirstName, campaignXWeVoteId,
+      loaded, showWaiting, voterFirstName, campaignXWeVoteId, preDonation,
     } = this.state;
     const htmlTitle = `Payment to support ${campaignTitle} - ${chosenWebsiteName}`;
     if (campaignXWeVoteId === undefined || campaignXWeVoteId === '') {
@@ -269,6 +239,14 @@ class CampaignSupportPayToPromoteProcess extends Component {
         <LoadingWheelComp message="Waiting..." />
       );
     }
+    let thankYouText = preDonation ?
+      'Thank you for helping this campaign reach more voters' :
+      `Your Chip In donation to "${campaignTitle}" is on its way!  Thank you`;
+    thankYouText += voterFirstName ? `, ${voterFirstName}.` : '.';
+
+    const { location: { pathname } } = window;
+    const pieces = pathname.split('/');
+    const returnPath = pieces && pieces.length > 3 ? `/${pieces[1]}/${pieces[2]}` : '/start-a-campaign';
 
     return (
       <div>
@@ -278,12 +256,10 @@ class CampaignSupportPayToPromoteProcess extends Component {
             <InnerWrapper>
               <IntroductionMessageSection>
                 <ContentTitle>
-                  Thank you for helping this campaign reach more voters
-                  {voterFirstName ? `, ${voterFirstName}` : ''}
-                  !
+                  {thankYouText}
                 </ContentTitle>
               </IntroductionMessageSection>
-              <ContributeGridWrapper>
+              <ContributeGridWrapper show={preDonation}>
                 <ContributeMonthlyText>
                   Please chip in what you can with a one-time contribution:
                 </ContributeMonthlyText>
@@ -385,23 +361,35 @@ class CampaignSupportPayToPromoteProcess extends Component {
             </InnerWrapper>
           </OuterWrapper>
           <PaymentWrapper>
-            <PaymentCenteredWrapper>
-              <Elements stripe={stripePromise}>
-                <InjectedCheckoutForm
-                  value={chipInPaymentOtherValue || chipInPaymentValue}
-                  classes={{}}
-                  stopShowWaiting={this.stopShowWaiting}
-                  onDonation={this.onChipIn}
-                  showWaiting={showWaiting}
-                  isChipIn
-                  campaignXWeVoteId={campaignXWeVoteId}
-                />
-              </Elements>
+            <PaymentCenteredWrapper show={preDonation}>
+              {preDonation ? (
+                <Elements stripe={stripePromise}>
+                  <InjectedCheckoutForm
+                    value={chipInPaymentOtherValue || chipInPaymentValue}
+                    classes={{}}
+                    stopShowWaiting={this.stopShowWaiting}
+                    onDonation={this.onChipIn}
+                    showWaiting={showWaiting}
+                    isChipIn
+                    campaignXWeVoteId={campaignXWeVoteId}
+                  />
+                </Elements>
+              ) : (
+                <Button
+                  id="buttonReturn"
+                  classes={{ root: classes.buttonDefault }}
+                  color="primary"
+                  variant="contained"
+                  onClick={() => historyPush(returnPath)}
+                >
+                  {`Return to the "${campaignTitle}" Campaign`}
+                </Button>
+              )}
             </PaymentCenteredWrapper>
           </PaymentWrapper>
           <DonationListForm isCampaign leftTabIsMembership={false} />
           <SkipForNowButtonWrapper>
-            <SkipForNowButtonPanel>
+            <SkipForNowButtonPanel show={preDonation}>
               <Button
                 classes={{ root: classes.buttonSimpleLink }}
                 color="primary"
@@ -427,6 +415,14 @@ CampaignSupportPayToPromoteProcess.propTypes = {
 };
 
 const styles = () => ({
+  buttonDefault: {
+    boxShadow: 'none !important',
+    fontSize: '14px',
+    height: '45px !important',
+    padding: '0 12px',
+    textTransform: 'none',
+    width: '100%',
+  },
   buttonRoot: {
     border: '1px solid #2e3c5d',
     fontSize: 18,
@@ -511,6 +507,8 @@ const ContributeGridWrapper = styled.div`
   padding: 10px;
   border: 1px solid darkgrey;
   margin: auto auto 20px auto;
+  visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
+  height: ${(props) => (props.show ? 'inherit' : '5px')};
   width: 500px;
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
     width: 300px;
@@ -575,15 +573,16 @@ const PaymentAmount = styled.div`
   font-size: 1.1rem;
 `;
 
-const PaymentCenteredWrapper  = styled.div`
+const PaymentCenteredWrapper = styled.div`
   width: 500px;
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
     width: 300px;
   }
   display: inline-block;
-  background-color: rgb(246, 244,246);
-  box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0px rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
-  border: 2px solid darkgrey;
+  background-color: ${(props) => (props.show ? 'rgb(246, 244,246)' : 'inherit')};
+  box-shadow: ${(props) => (props.show ?
+    '0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0px rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%)' : 'none')};
+  border: ${(props) => (props.show ? '2px solid darkgrey' : 'none')};
   border-radius: 3px;
   padding: 8px;
 `;

@@ -387,7 +387,7 @@ class CampaignNewsItemShare extends Component {
               <CampaignSupportSectionWrapper>
                 <CampaignSupportSection>
                   <SkipForNowButtonWrapper>
-                    <SkipForNowButtonPanel>
+                    <SkipForNowButtonPanel show>
                       {shareButtonClicked ? (
                         <Button
                           classes={{ root: classes.buttonSimpleLink }}
