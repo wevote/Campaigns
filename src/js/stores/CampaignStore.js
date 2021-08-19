@@ -26,8 +26,16 @@ class CampaignStore extends ReduceStore {
     };
   }
 
-  resetState () {
-    return this.getInitialState();
+  resetVoterSpecificData () {
+    return {
+      allCachedCampaignXWeVoteIdsBySEOFriendlyPath: {}, // key == campaignSEOFriendlyPath, value = campaignXWeVoteId
+      promotedCampaignXWeVoteIds: [], // These are the campaignx_we_vote_id's of the campaigns this voter started
+      voterCanVoteForPoliticianWeVoteIds: [], // These are the politician_we_vote_id's this voter can vote for
+      voterOwnedCampaignXWeVoteIds: [], // These are the campaignx_we_vote_id's of the campaigns this voter can edit
+      voterStartedCampaignXWeVoteIds: [], // These are the campaignx_we_vote_id's of the campaigns this voter started
+      voterSupportedCampaignXWeVoteIds: [], // These are the campaignx_we_vote_id's of the campaigns this voter supports
+      voterWeVoteId: '',
+    };
   }
 
   campaignNewsItemTextExists (campaignXNewsItemWeVoteId) {
@@ -219,11 +227,14 @@ class CampaignStore extends ReduceStore {
   }
 
   getCampaignXListFromListOfWeVoteIds (listOfCampaignXWeVoteIds) {
-    const { allCachedCampaignXDicts } = this.getState();
+    let { allCachedCampaignXDicts } = this.getState();
     // console.log('getCampaignXListFromListOfWeVoteIds listOfCampaignXWeVoteIds: ', listOfCampaignXWeVoteIds);
     // make sure that listOfCampaignXWeVoteIds has unique values
     const uniqListOfCampaignXWeVoteIds = listOfCampaignXWeVoteIds.filter((value, index, self) => self.indexOf(value) === index);
 
+    if (allCachedCampaignXDicts === undefined) {
+      allCachedCampaignXDicts = {};
+    }
     const campaignXList = [];
     let campaignX;
     uniqListOfCampaignXWeVoteIds.forEach((campaignXWeVoteId) => {
@@ -278,12 +289,12 @@ class CampaignStore extends ReduceStore {
 
   reduce (state, action) {
     const {
-      allCachedCampaignXDicts, allCachedCampaignXNewsItems,
+      allCachedCampaignXNewsItems,
       allCachedCampaignXWeVoteIdsBySEOFriendlyPath, allCachedNewsItemWeVoteIdsByCampaignX,
       allCachedRecommendedCampaignXWeVoteIdLists, voterSupportedCampaignXWeVoteIds,
     } = state;
     let {
-      allCachedCampaignXOwners, allCachedCampaignXPoliticianLists, allCachedCampaignXOwnerPhotos,
+      allCachedCampaignXDicts, allCachedCampaignXOwners, allCachedCampaignXPoliticianLists, allCachedCampaignXOwnerPhotos,
       allCachedPoliticianWeVoteIdsByCampaignX,
       promotedCampaignXWeVoteIds, voterCanVoteForPoliticianWeVoteIds, voterOwnedCampaignXWeVoteIds,
       voterStartedCampaignXWeVoteIds,
@@ -294,6 +305,7 @@ class CampaignStore extends ReduceStore {
     let campaignXNewsItemWeVoteIds;
     let recommendedCampaignsCampaignXWeVoteId;
     let revisedState;
+    let voterSpecificData;
     switch (action.type) {
       case 'campaignListRetrieve':
         // See CampaignSupporterStore for code to take in the following campaignX values:
@@ -353,6 +365,9 @@ class CampaignStore extends ReduceStore {
           if (!(recommendedCampaignsCampaignXWeVoteId in allCachedRecommendedCampaignXWeVoteIdLists)) {
             allCachedRecommendedCampaignXWeVoteIdLists[recommendedCampaignsCampaignXWeVoteId] = [];
           }
+        }
+        if (allCachedCampaignXDicts === undefined) {
+          allCachedCampaignXDicts = {};
         }
         campaignXList.forEach((oneCampaignX) => {
           allCachedCampaignXDicts[oneCampaignX.campaignx_we_vote_id] = oneCampaignX;
@@ -425,6 +440,9 @@ class CampaignStore extends ReduceStore {
         revisedState = state;
         campaignX = action.res;
         // console.log('CampaignStore campaignRetrieve, campaignX:', campaignX);
+        if (allCachedCampaignXDicts === undefined) {
+          allCachedCampaignXDicts = {};
+        }
         allCachedCampaignXDicts[campaignX.campaignx_we_vote_id] = campaignX;
         if ('campaignx_news_item_list' in campaignX) {
           campaignXNewsItemWeVoteIds = [];
@@ -491,10 +509,11 @@ class CampaignStore extends ReduceStore {
         return revisedState;
 
       case 'voterSignOut':
-        // TODO: We will need to call resetVoterSpecificData in this store
-        console.log('CampaignStore voterSignOut, state:', state);
-        // return this.resetState();
-        return state;
+        // console.log('CampaignStore voterSignOut, state:', state);
+        revisedState = state;
+        voterSpecificData = this.resetVoterSpecificData();
+        revisedState = { ...revisedState, voterSpecificData };
+        return revisedState;
 
       default:
         return state;

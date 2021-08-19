@@ -367,7 +367,7 @@ export default class SettingsAccount extends Component {
     //   ', hideTwitterSignInButton:', hideTwitterSignInButton,
     //   ', hideFacebookSignInButton:', hideFacebookSignInButton, ', hideDialogForCordova:', hideDialogForCordova,
     //   '\nisOnFacebookSupportedDomainUrl:', isOnFacebookSupportedDomainUrl, ', isOnWeVoteRootUrl:', isOnWeVoteRootUrl);
-    console.log('hideTwitterSignInButton && !voterIsSignedInTwitter && (isOnWeVoteRootUrl || isOnWeVoteSubdomainUrl:', hideTwitterSignInButton, voterIsSignedInTwitter, isOnWeVoteRootUrl, isOnWeVoteSubdomainUrl);
+
     return (
       <>
         <Helmet title={pageTitle} />

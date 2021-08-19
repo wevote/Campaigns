@@ -27,7 +27,7 @@ class CampaignSupporterStore extends ReduceStore {
       const campaignXSupporterVoterEntry = this.getCampaignXSupporterVoterEntry(campaignXWeVoteId);
       // console.log('voterSupporterEndorsementExists, campaignXSupporterVoterEntry:', campaignXSupporterVoterEntry);
       if ('chip_in_total' in campaignXSupporterVoterEntry && campaignXSupporterVoterEntry.chip_in_total) {
-        console.log('CampaignSupporterStore chip_in_total: ', campaignXSupporterVoterEntry.chip_in_total, ', voterChipInExists:', Boolean(campaignXSupporterVoterEntry.chip_in_total !== 'none'));
+        // console.log('CampaignSupporterStore chip_in_total: ', campaignXSupporterVoterEntry.chip_in_total, ', voterChipInExists:', Boolean(campaignXSupporterVoterEntry.chip_in_total !== 'none'));
         return Boolean(campaignXSupporterVoterEntry.chip_in_total !== 'none');
       }
     }
