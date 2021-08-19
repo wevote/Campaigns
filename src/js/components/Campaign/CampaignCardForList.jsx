@@ -277,6 +277,7 @@ class CampaignCardForList extends Component {
       final_election_date_in_past: finalElectionDateInPast,
       in_draft_mode: inDraftMode,
       is_blocked_by_we_vote: isBlockedByWeVote,
+      is_in_team_review_mode: isInTeamReviewMode,
       is_supporters_count_minimum_exceeded: isSupportersCountMinimumExceeded,
       seo_friendly_path: campaignSEOFriendlyPath,
       supporters_count: supportersCount,
@@ -383,6 +384,18 @@ class CampaignCardForList extends Component {
                       </span>
                       <span className="u-show-desktop-tablet">
                         Not Visible On This Site
+                      </span>
+                    </DraftModeIndicator>
+                  </IndicatorButtonWrapper>
+                )}
+                {isInTeamReviewMode && (
+                  <IndicatorButtonWrapper>
+                    <DraftModeIndicator>
+                      <span className="u-show-mobile">
+                        Team Reviewing
+                      </span>
+                      <span className="u-show-desktop-tablet">
+                        Team Still Reviewing
                       </span>
                     </DraftModeIndicator>
                   </IndicatorButtonWrapper>

@@ -134,31 +134,32 @@ class AppStore extends ReduceStore {
   }
 
   isOnWeVoteRootUrl () {
-    console.log('AppStore onWeVoteRootUrl before:', this.getState().onWeVoteRootUrl);
     let { onWeVoteRootUrl } = this.getState();
     if (onWeVoteRootUrl === undefined) {
       // onChosenFullDomainUrl, onFacebookSupportedDomainUrl, onWeVoteSubdomainUrl,
       const { hostname } = window.location;
       ({ onWeVoteRootUrl } = this.calculateUrlSettings(hostname));
-      console.log('AppStore onWeVoteRootUrl was undefined:', onWeVoteRootUrl);
     }
     return onWeVoteRootUrl || isCordova() || stringContains('localhost:', window.location.href);
   }
 
   isOnWeVoteSubdomainUrl () {
-    console.log('AppStore onWeVoteSubdomainUrl before:', this.getState().onWeVoteSubdomainUrl);
     let { onWeVoteSubdomainUrl } = this.getState();
     if (onWeVoteSubdomainUrl === undefined) {
       // onChosenFullDomainUrl, onFacebookSupportedDomainUrl, onWeVoteSubdomainUrl,
       const { hostname } = window.location;
       ({ onWeVoteSubdomainUrl } = this.calculateUrlSettings(hostname));
-      console.log('AppStore onWeVoteSubdomainUrl was undefined:', onWeVoteSubdomainUrl);
     }
     return onWeVoteSubdomainUrl;
   }
 
   isOnPartnerUrl () {
     return this.getState().onWeVoteSubdomainUrl || this.getState().onChosenFullDomainUrl;
+  }
+
+  voterCanStartCampaignXForThisPrivateLabelSite () {
+    const canEditCampaignXOwnedByOrganizationList = VoterStore.getCanEditCampaignXOwnedByOrganizationList();
+    return canEditCampaignXOwnedByOrganizationList.includes(this.getState().siteOwnerOrganizationWeVoteId);
   }
 
   voterIsAdminForThisUrl () {
@@ -318,7 +319,7 @@ class AppStore extends ReduceStore {
       hostname = webAppConfig.WE_VOTE_HOSTNAME;
     }
 
-    console.log('calculateUrlSettings hostname:', hostname);
+    // console.log('calculateUrlSettings hostname:', hostname);
     if (hostname === 'wevote.us' || hostname === 'campaigns.wevote.us' || hostname === 'quality.wevote.us' || hostname === 'localhost') {
       onWeVoteRootUrl = true;
     } else if (stringContains('wevote.us', hostname)) {

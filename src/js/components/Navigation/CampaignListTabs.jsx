@@ -34,8 +34,8 @@ export default function CampaignListTabs () {  // incomingVariables
         >
           <Toolbar disableGutters>
             <Tabs value={value} onChange={handleChange} aria-label="Tab menu">
-              <Tab id="weTarget-0" label="Started" onClick={() => history.push('/profile/started')} />
-              <Tab id="weTarget-1" label="Campaigns Supported" onClick={() => history.push('/profile/supported')} />
+              <Tab id="weTarget-0" label="Your Campaigns" onClick={() => history.push('/profile/started')} />
+              <Tab id="weTarget-1" label="Supported Campaigns" onClick={() => history.push('/profile/supported')} />
             </Tabs>
           </Toolbar>
         </AppBar>

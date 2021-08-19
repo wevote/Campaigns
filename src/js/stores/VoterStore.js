@@ -13,6 +13,7 @@ class VoterStore extends ReduceStore {
         needsVoterRetrieve: false,
       },
       address: {},
+      canEditCampaignXOwnedByOrganizationList: [],
       emailAddressStatus: {},
       emailSignInStatus: {},
       emailAddressList: [],
@@ -248,6 +249,10 @@ class VoterStore extends ReduceStore {
     return this.getState().twitterSignInStatus || {};
   }
 
+  getCanEditCampaignXOwnedByOrganizationList () {
+    return this.getState().canEditCampaignXOwnedByOrganizationList || [];
+  }
+
   getVoterEmailQueuedToSave () {
     return this.getState().voterEmailQueuedToSave;
   }
@@ -401,6 +406,7 @@ class VoterStore extends ReduceStore {
   reduce (state, action) {
     let facebookPhotoRetrieveLoopCount;
     let address;
+    let canEditCampaignXOwnedByOrganizationList;
     let currentVoterDeviceId;
     // const delayBeforeApiCall = 3000;
     // let externalVoterId;
@@ -809,7 +815,10 @@ class VoterStore extends ReduceStore {
         // Preserve address within voter
         incomingVoter = action.res;
         incomingVoter.needsVoterRetrieve = false;
-        ({ facebookPhotoRetrieveLoopCount, voterFirstRetrieveCompleted } = state);
+        ({ canEditCampaignXOwnedByOrganizationList, facebookPhotoRetrieveLoopCount, voterFirstRetrieveCompleted } = state);
+        if ('can_edit_campaignx_owned_by_organization_list' in action.res) {
+          canEditCampaignXOwnedByOrganizationList = action.res.can_edit_campaignx_owned_by_organization_list;
+        }
         if (!voterFirstRetrieveCompleted) {
           voterFirstRetrieveCompleted = Boolean(action.res.success);
         }
@@ -850,6 +859,7 @@ class VoterStore extends ReduceStore {
         // console.log('voterRetrieve incoming voter_id: ', incomingVoter.we_vote_id);
         return {
           ...state,
+          canEditCampaignXOwnedByOrganizationList,
           facebookPhotoRetrieveLoopCount: facebookPhotoRetrieveLoopCount + 1,
           voter: incomingVoter,
           voterFirstRetrieveCompleted,
