@@ -47,13 +47,28 @@ class SettingsCampaignList extends Component {
   }
 
   onCampaignStoreChange () {
-    const voterOwnedCampaignList = CampaignStore.getVoterOwnedCampaignXDicts();
-    const voterSupportedCampaignList = CampaignStore.getVoterSupportedCampaignXDicts();
+    // Your campaigns tab
+    const voterOwnedCampaignListUnsorted = CampaignStore.getVoterOwnedCampaignXDicts();
+    const voterOwnedCampaignListSortedBySupporters = voterOwnedCampaignListUnsorted.sort(this.orderBySupportersCount);
+    const voterOwnedCampaignList = voterOwnedCampaignListSortedBySupporters.sort(this.orderByElectionInPast);
+    // Your supported campaigns tab
+    const voterSupportedCampaignListUnsorted = CampaignStore.getVoterSupportedCampaignXDicts();
+    const voterSupportedCampaignListSortedBySupporters = voterSupportedCampaignListUnsorted.sort(this.orderBySupportersCount);
+    const voterSupportedCampaignList = voterSupportedCampaignListSortedBySupporters.sort(this.orderByElectionInPast);
     this.setState({
       voterOwnedCampaignList,
       voterSupportedCampaignList,
     });
   }
+
+  orderByElectionInPast = (firstCampaign, secondCampaign) => {
+    // The goal is to have elections in the past be pushed to the bottom of the list
+    const firstCampaignElectionDateInPast = firstCampaign.final_election_date_in_past ? 1 : 0;
+    const secondCampaignElectionDateInPast = secondCampaign.final_election_date_in_past ? 1 : 0;
+    return firstCampaignElectionDateInPast - secondCampaignElectionDateInPast;
+  }
+
+  orderBySupportersCount = (firstCampaign, secondCampaign) => secondCampaign.supporters_count - firstCampaign.supporters_count;
 
   increaseNumberOfCampaignsToDisplay = () => {
     let { numberOfCampaignsToDisplay } = this.state;
