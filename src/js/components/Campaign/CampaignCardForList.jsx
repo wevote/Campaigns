@@ -390,7 +390,7 @@ class CampaignCardForList extends Component {
                 )}
                 {isInTeamReviewMode && (
                   <IndicatorButtonWrapper>
-                    <DraftModeIndicator>
+                    <DraftModeIndicator onClick={this.onCampaignEditClick}>
                       <span className="u-show-mobile">
                         Team Reviewing
                       </span>
