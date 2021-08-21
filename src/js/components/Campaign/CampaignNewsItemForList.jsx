@@ -112,6 +112,12 @@ class CampaignNewsItemForList extends Component {
     return null;
   }
 
+  onCampaignNewsItemShareClick = () => {
+    const { campaignXNewsItemWeVoteId } = this.props;
+    historyPush(`${this.getCampaignBasePath()}/share-it/${campaignXNewsItemWeVoteId}`);
+    return null;
+  }
+
   goToDedicatedPublicNewsItemPage = () => {
     const { campaignXNewsItemWeVoteId } = this.props;
     historyPush(`${this.getCampaignBasePath()}/u/${campaignXNewsItemWeVoteId}`);
@@ -223,6 +229,16 @@ class CampaignNewsItemForList extends Component {
                     </EditIndicator>
                   </IndicatorButtonWrapper>
                 )}
+                <IndicatorButtonWrapper>
+                  <EditIndicator onClick={this.onCampaignNewsItemShareClick}>
+                    <span className="u-show-mobile">
+                      Share
+                    </span>
+                    <span className="u-show-desktop-tablet">
+                      Share This
+                    </span>
+                  </EditIndicator>
+                </IndicatorButtonWrapper>
               </IndicatorRow>
             </NewsItemWrapper>
           </OneCampaignInnerWrapper>

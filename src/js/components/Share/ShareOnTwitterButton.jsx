@@ -8,7 +8,7 @@ import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import { isAndroid, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
-import { androidTwitterClickHandler, generateQuoteForSharing } from './shareButtonCommon';
+import { androidTwitterClickHandler, generateQuoteForSharing, generateSharingLink } from './shareButtonCommon';
 import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
 
 class ShareOnTwitterButton extends Component {
@@ -77,22 +77,9 @@ class ShareOnTwitterButton extends Component {
   }
 
   generateFullCampaignLink = () => {
-    const { hostname } = window.location;
-    const domainAddress = `https://${hostname}`;
+    const { campaignXNewsItemWeVoteId } = this.props;
     const { campaignX } = this.state;
-    // console.log('domainAddress:', domainAddress);
-    if (!campaignX) {
-      return domainAddress;
-    }
-    const {
-      seo_friendly_path: campaignSEOFriendlyPath,
-      campaignx_we_vote_id: campaignXWeVoteId,
-    } = campaignX;
-    if (campaignSEOFriendlyPath) {
-      return `${domainAddress}/c/${campaignSEOFriendlyPath}`;
-    } else {
-      return `${domainAddress}/id/${campaignXWeVoteId}`;
-    }
+    return generateSharingLink(campaignX, campaignXNewsItemWeVoteId);
   }
 
   saveActionShareButton = () => {
@@ -146,6 +133,7 @@ class ShareOnTwitterButton extends Component {
   }
 }
 ShareOnTwitterButton.propTypes = {
+  campaignXNewsItemWeVoteId: PropTypes.string,
   campaignXWeVoteId: PropTypes.string,
   mobileMode: PropTypes.bool,
 };

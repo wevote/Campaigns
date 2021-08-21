@@ -44,6 +44,7 @@ class CampaignDetailsPage extends Component {
       campaignXWeVoteId: '',
       chosenWebsiteName: '',
       finalElectionDateInPast: false,
+      inPrivateLabelMode: false,
       pathToUseWhenProfileComplete: '',
       payToPromoteStepCompleted: false,
       payToPromoteStepTurnedOn: false,
@@ -100,6 +101,7 @@ class CampaignDetailsPage extends Component {
     const payToPromoteStepTurnedOn = !inPrivateLabelMode;
     this.setState({
       chosenWebsiteName,
+      inPrivateLabelMode,
       payToPromoteStepTurnedOn,
     });
   }
@@ -238,7 +240,7 @@ class CampaignDetailsPage extends Component {
     const {
       campaignDescription, campaignDescriptionLimited, campaignPhotoLargeUrl,
       campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId,
-      chosenWebsiteName, isBlockedByWeVote, isBlockedByWeVoteReason,
+      chosenWebsiteName, inPrivateLabelMode, isBlockedByWeVote, isBlockedByWeVoteReason,
       finalElectionDateInPast, isSupportersCountMinimumExceeded,
       voterCanEditThisCampaign,
     } = this.state;
@@ -362,7 +364,7 @@ class CampaignDetailsPage extends Component {
                         </BlockedIndicator>
                       </IndicatorButtonWrapper>
                     )}
-                    {(!isSupportersCountMinimumExceeded) && (
+                    {(!isSupportersCountMinimumExceeded && !inPrivateLabelMode) && (
                       <IndicatorButtonWrapper>
                         <DraftModeIndicator onClick={this.onCampaignGetMinimumSupportersClick}>
                           Needs Five Supporters
@@ -449,7 +451,7 @@ class CampaignDetailsPage extends Component {
                             </BlockedIndicator>
                           </IndicatorButtonWrapper>
                         )}
-                        {(!isSupportersCountMinimumExceeded) && (
+                        {(!isSupportersCountMinimumExceeded && !inPrivateLabelMode) && (
                           <IndicatorButtonWrapper>
                             <DraftModeIndicator onClick={this.onCampaignGetMinimumSupportersClick}>
                               Needs Five Supporters

@@ -133,6 +133,8 @@ class App extends Component {
                   <Route exact path="/c/:campaignSEOFriendlyPath/share-campaign-with-one-friend" render={(props) => <CampaignSupportShare match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} showShareCampaignWithOneFriend />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/share/:campaignXNewsItemWeVoteId" render={(props) => <CampaignNewsItemShare match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/share-with-one-friend/:campaignXNewsItemWeVoteId" render={(props) => <CampaignNewsItemShare match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} showShareCampaignWithOneFriend />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/share-it/:campaignXNewsItemWeVoteId" render={(props) => <CampaignNewsItemShare match={props.match} noNavigation setShowHeaderFooter={this.setShowHeaderFooter} />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/share-it-with-one-friend/:campaignXNewsItemWeVoteId" render={(props) => <CampaignNewsItemShare match={props.match} noNavigation setShowHeaderFooter={this.setShowHeaderFooter} showShareCampaignWithOneFriend />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/i-will-share-campaign" render={(props) => <CampaignSupportShare match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} iWillShare />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/why-do-you-support" render={(props) => <CampaignSupportEndorsement match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/credits"><Credits /></Route>
@@ -155,6 +157,8 @@ class App extends Component {
                   <Route exact path="/id/:campaignXWeVoteId/share-campaign-with-one-friend" render={(props) => <CampaignSupportShare match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} showShareCampaignWithOneFriend />} />
                   <Route exact path="/id/:campaignXWeVoteId/share/:campaignXNewsItemWeVoteId" render={(props) => <CampaignNewsItemShare match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/id/:campaignXWeVoteId/share-with-one-friend/:campaignXNewsItemWeVoteId" render={(props) => <CampaignNewsItemShare match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} showShareCampaignWithOneFriend />} />
+                  <Route exact path="/id/:campaignXWeVoteId/share-it/:campaignXNewsItemWeVoteId" render={(props) => <CampaignNewsItemShare match={props.match} noNavigation setShowHeaderFooter={this.setShowHeaderFooter} />} />
+                  <Route exact path="/id/:campaignXWeVoteId/share-it-with-one-friend/:campaignXNewsItemWeVoteId" render={(props) => <CampaignNewsItemShare match={props.match} noNavigation setShowHeaderFooter={this.setShowHeaderFooter} showShareCampaignWithOneFriend />} />
                   <Route exact path="/id/:campaignXWeVoteId/i-will-share-campaign" render={(props) => <CampaignSupportShare match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} iWillShare />} />
                   <Route exact path="/id/:campaignXWeVoteId/why-do-you-support" render={(props) => <CampaignSupportEndorsement match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/impact"><Impact /></Route>

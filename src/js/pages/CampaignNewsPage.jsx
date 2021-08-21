@@ -86,9 +86,11 @@ class CampaignNewsPage extends Component {
     }
     if (campaignXWeVoteId) {
       const voterCanEditThisCampaign = CampaignStore.getVoterCanEditThisCampaign(campaignXWeVoteId);
+      const voterCanSendUpdatesToThisCampaign = CampaignStore.getVoterCanSendUpdatesToThisCampaign(campaignXWeVoteId);
       this.setState({
         campaignXWeVoteId,
         voterCanEditThisCampaign,
+        voterCanSendUpdatesToThisCampaign,
       });
     }
     this.setState({
@@ -110,6 +112,7 @@ class CampaignNewsPage extends Component {
     const {
       campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId, chosenWebsiteName,
       isBlockedByWeVote, isBlockedByWeVoteReason, voterCanEditThisCampaign,
+      voterCanSendUpdatesToThisCampaign,
     } = this.state;
     // console.log('render campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
     const htmlTitle = `Updates, ${campaignTitle} - ${chosenWebsiteName}`;
@@ -182,7 +185,7 @@ class CampaignNewsPage extends Component {
                 <PageStatement>
                   Recent Updates
                 </PageStatement>
-                {voterCanEditThisCampaign && (
+                {voterCanSendUpdatesToThisCampaign && (
                   <CampaignNewsButtonDesktopWrapper className="u-show-desktop-tablet">
                     <Suspense fallback={<span>&nbsp;</span>}>
                       <CampaignNewsItemCreateButton
@@ -195,13 +198,13 @@ class CampaignNewsPage extends Component {
               </PageStatementWrapper>
               <CommentsListWrapper>
                 <Suspense fallback={<span>&nbsp;</span>}>
-                  <CampaignNewsItemList campaignXWeVoteId={campaignXWeVoteId} />
+                  <CampaignNewsItemList campaignXWeVoteId={campaignXWeVoteId} startingNumberOfNewsItemsToDisplay={3} />
                 </Suspense>
               </CommentsListWrapper>
             </CommentsSectionInnerWrapper>
           </CommentsSectionOuterWrapper>
         </PageWrapper>
-        {voterCanEditThisCampaign && (
+        {voterCanSendUpdatesToThisCampaign && (
           <CampaignNewsButtonFooterWrapper className="u-show-mobile">
             <SupportButtonPanel>
               <Suspense fallback={<span>&nbsp;</span>}>

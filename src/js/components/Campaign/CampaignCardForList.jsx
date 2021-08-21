@@ -25,6 +25,7 @@ class CampaignCardForList extends Component {
     super(props);
     this.state = {
       campaignX: {},
+      inPrivateLabelMode: false,
       payToPromoteStepCompleted: false,
       payToPromoteStepTurnedOn: false,
       sharingStepCompleted: false,
@@ -81,6 +82,7 @@ class CampaignCardForList extends Component {
     // For now, we assume that paid sites with chosenSiteLogoUrl will turn off "Chip in"
     const payToPromoteStepTurnedOn = !inPrivateLabelMode;
     this.setState({
+      inPrivateLabelMode,
       payToPromoteStepTurnedOn,
       // siteConfigurationHasBeenRetrieved,
     });
@@ -266,7 +268,7 @@ class CampaignCardForList extends Component {
     if (isCordova()) {
       console.log(`CampaignCardForList window.location.href: ${window.location.href}`);
     }
-    const { campaignSupported, campaignX, voterCanEditThisCampaign } = this.state;
+    const { campaignSupported, campaignX, inPrivateLabelMode, voterCanEditThisCampaign } = this.state;
     if (!campaignX) {
       return null;
     }
@@ -360,7 +362,7 @@ class CampaignCardForList extends Component {
                     </BlockedIndicator>
                   </IndicatorButtonWrapper>
                 )}
-                {!!(!inDraftMode && !isSupportersCountMinimumExceeded) && (
+                {!!(!inDraftMode && !isSupportersCountMinimumExceeded && !inPrivateLabelMode) && (
                   <IndicatorButtonWrapper onClick={this.onCampaignGetMinimumSupportersClick}>
                     <DraftModeIndicator>
                       Needs Five Supporters

@@ -196,12 +196,12 @@ class CampaignNewsItemShare extends Component {
   }
 
   goToNextStep = () => {
-    const { showShareCampaignWithOneFriend } = this.props;
+    const { noNavigation, showShareCampaignWithOneFriend } = this.props;
     const { campaignXNewsItemWeVoteId, shareButtonClicked } = this.state;
     if (shareButtonClicked || showShareCampaignWithOneFriend) {
       historyPush(`${this.getCampaignBasePath()}/updates`);
     } else {
-      historyPush(`${this.getCampaignBasePath()}/share-with-one-friend/${campaignXNewsItemWeVoteId}`);
+      historyPush(`${this.getCampaignBasePath()}/share${noNavigation && '-it'}-with-one-friend/${campaignXNewsItemWeVoteId}`);
     }
   }
 
@@ -227,18 +227,20 @@ class CampaignNewsItemShare extends Component {
     if (isCordova()) {
       console.log(`CampaignNewsItemShare window.location.href: ${window.location.href}`);
     }
-    const { classes, iWillShare, showShareCampaignWithOneFriend } = this.props;
+    const { classes, iWillShare, noNavigation, showShareCampaignWithOneFriend } = this.props;
     const {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
       campaignXNewsItemWeVoteId, campaignXWeVoteId, chosenWebsiteName,
       recommendedCampaignXListCount, recommendedCampaignXListHasBeenRetrieved,
       shareButtonClicked,
     } = this.state;
-    let campaignProcessStepIntroductionText = 'Voters joined this campaign thanks to the people who shared it. Join them and help this campaign grow!';
-    let campaignProcessStepTitle = 'Sharing leads to way more votes.';
+    let campaignProcessStepIntroductionText = '';
+    let campaignProcessStepTitle = 'Update Published! Now share with even more people.';
     const htmlTitle = `Sharing ${campaignTitle} - ${chosenWebsiteName}`;
     let skipForNowText = 'Skip for now';
-    if (iWillShare) {
+    if (noNavigation) {
+      campaignProcessStepTitle = 'Share this update with your community.';
+    } else if (iWillShare) {
       campaignProcessStepTitle = 'Thank you for sharing! Sharing leads to way more votes.';
     } else if (showShareCampaignWithOneFriend) {
       campaignProcessStepIntroductionText = 'Direct messages are more likely to convince people to support this campaign.';
@@ -264,12 +266,14 @@ class CampaignNewsItemShare extends Component {
         <PageWrapperDefault cordova={isCordova()}>
           <ContentOuterWrapperDefault>
             <ContentInnerWrapperDefault>
-              <CampaignNewsItemPublishSteps
-                atStepNumber4
-                campaignBasePath={this.getCampaignBasePath()}
-                campaignXWeVoteId={campaignXWeVoteId}
-                campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId}
-              />
+              {!noNavigation && (
+                <CampaignNewsItemPublishSteps
+                  atStepNumber4
+                  campaignBasePath={this.getCampaignBasePath()}
+                  campaignXWeVoteId={campaignXWeVoteId}
+                  campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId}
+                />
+              )}
               <CampaignSupportImageWrapper>
                 {campaignPhotoLargeUrl ? (
                   <CampaignImage src={campaignPhotoLargeUrl} alt="Campaign" />
@@ -291,27 +295,27 @@ class CampaignNewsItemShare extends Component {
                   <CampaignSupportSection>
                     <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                       <CampaignSupportDesktopButtonPanel>
-                        <SendFacebookDirectMessageButton campaignXWeVoteId={campaignXWeVoteId} />
+                        <SendFacebookDirectMessageButton campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} />
                       </CampaignSupportDesktopButtonPanel>
                     </CampaignSupportDesktopButtonWrapper>
                     <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                       <CampaignSupportDesktopButtonPanel>
-                        <ShareByEmailButton campaignXWeVoteId={campaignXWeVoteId} />
+                        <ShareByEmailButton campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} />
                       </CampaignSupportDesktopButtonPanel>
                     </CampaignSupportDesktopButtonWrapper>
                     <CampaignSupportMobileButtonWrapper className="u-show-mobile">
                       <CampaignSupportMobileButtonPanel>
-                        <ShareByEmailButton campaignXWeVoteId={campaignXWeVoteId} darkButton mobileMode />
+                        <ShareByEmailButton campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} darkButton mobileMode />
                       </CampaignSupportMobileButtonPanel>
                     </CampaignSupportMobileButtonWrapper>
                     <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                       <CampaignSupportDesktopButtonPanel>
-                        <ShareByCopyLink campaignXWeVoteId={campaignXWeVoteId} />
+                        <ShareByCopyLink campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} />
                       </CampaignSupportDesktopButtonPanel>
                     </CampaignSupportDesktopButtonWrapper>
                     <CampaignSupportMobileButtonWrapper className="u-show-mobile">
                       <CampaignSupportMobileButtonPanel>
-                        <ShareByCopyLink campaignXWeVoteId={campaignXWeVoteId} mobileMode />
+                        <ShareByCopyLink campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} mobileMode />
                       </CampaignSupportMobileButtonPanel>
                     </CampaignSupportMobileButtonWrapper>
                   </CampaignSupportSection>
@@ -330,22 +334,22 @@ class CampaignNewsItemShare extends Component {
                       </CampaignSupportDesktopButtonWrapper>
                       <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                         <CampaignSupportDesktopButtonPanel>
-                          <ShareByEmailButton campaignXWeVoteId={campaignXWeVoteId} darkButton />
+                          <ShareByEmailButton campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} darkButton />
                         </CampaignSupportDesktopButtonPanel>
                       </CampaignSupportDesktopButtonWrapper>
                       <CampaignSupportMobileButtonWrapper className="u-show-mobile">
                         <CampaignSupportMobileButtonPanel>
-                          <ShareByEmailButton campaignXWeVoteId={campaignXWeVoteId} darkButton mobileMode />
+                          <ShareByEmailButton campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} darkButton mobileMode />
                         </CampaignSupportMobileButtonPanel>
                       </CampaignSupportMobileButtonWrapper>
                       <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                         <CampaignSupportDesktopButtonPanel>
-                          <ShareByCopyLink campaignXWeVoteId={campaignXWeVoteId} />
+                          <ShareByCopyLink campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} />
                         </CampaignSupportDesktopButtonPanel>
                       </CampaignSupportDesktopButtonWrapper>
                       <CampaignSupportMobileButtonWrapper className="u-show-mobile">
                         <CampaignSupportMobileButtonPanel>
-                          <ShareByCopyLink campaignXWeVoteId={campaignXWeVoteId} mobileMode />
+                          <ShareByCopyLink campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} mobileMode />
                         </CampaignSupportMobileButtonPanel>
                       </CampaignSupportMobileButtonWrapper>
                     </CampaignSupportSection>
@@ -362,22 +366,22 @@ class CampaignNewsItemShare extends Component {
                       </CampaignSupportDesktopButtonWrapper>
                       <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                         <CampaignSupportDesktopButtonPanel>
-                          <ShareOnFacebookButton campaignXWeVoteId={campaignXWeVoteId} />
+                          <ShareOnFacebookButton campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} />
                         </CampaignSupportDesktopButtonPanel>
                       </CampaignSupportDesktopButtonWrapper>
                       <CampaignSupportMobileButtonWrapper className="u-show-mobile">
                         <CampaignSupportMobileButtonPanel>
-                          <ShareOnFacebookButton campaignXWeVoteId={campaignXWeVoteId} mobileMode />
+                          <ShareOnFacebookButton campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} mobileMode />
                         </CampaignSupportMobileButtonPanel>
                       </CampaignSupportMobileButtonWrapper>
                       <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                         <CampaignSupportDesktopButtonPanel>
-                          <ShareOnTwitterButton campaignXWeVoteId={campaignXWeVoteId} />
+                          <ShareOnTwitterButton campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} />
                         </CampaignSupportDesktopButtonPanel>
                       </CampaignSupportDesktopButtonWrapper>
                       <CampaignSupportMobileButtonWrapper className="u-show-mobile">
                         <CampaignSupportMobileButtonPanel>
-                          <ShareOnTwitterButton campaignXWeVoteId={campaignXWeVoteId} mobileMode />
+                          <ShareOnTwitterButton campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} mobileMode />
                         </CampaignSupportMobileButtonPanel>
                       </CampaignSupportMobileButtonWrapper>
                     </CampaignSupportSection>
@@ -431,6 +435,7 @@ CampaignNewsItemShare.propTypes = {
   classes: PropTypes.object,
   iWillShare: PropTypes.bool,
   match: PropTypes.object,
+  noNavigation: PropTypes.bool,
   setShowHeaderFooter: PropTypes.func,
   showShareCampaignWithOneFriend: PropTypes.bool,
 };

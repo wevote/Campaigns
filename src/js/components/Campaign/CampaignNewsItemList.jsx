@@ -55,11 +55,11 @@ class CampaignNewsItemList extends Component {
 
   onCampaignStoreChange () {
     const { campaignXWeVoteId } = this.props;
-    const voterCanEditThisCampaign = CampaignStore.getVoterCanEditThisCampaign(campaignXWeVoteId);
+    const voterCanSendUpdatesToThisCampaign = CampaignStore.getVoterCanSendUpdatesToThisCampaign(campaignXWeVoteId);
     const campaignXNewsItemList = CampaignStore.getCampaignXNewsItemList(campaignXWeVoteId);
     this.setState({
       campaignXNewsItemList,
-      voterCanEditThisCampaign,
+      voterCanSendUpdatesToThisCampaign,
     });
   }
 
@@ -74,10 +74,10 @@ class CampaignNewsItemList extends Component {
   render () {
     renderLog('CampaignNewsItemList');  // Set LOG_RENDER_EVENTS to log all renders
     const { campaignSEOFriendlyPath, campaignXWeVoteId, hideEncouragementToComment, showAddNewsItemIfNeeded } = this.props;
-    const { campaignXNewsItemList, numberOfNewsItemsToDisplay, voterCanEditThisCampaign } = this.state;
+    const { campaignXNewsItemList, numberOfNewsItemsToDisplay, voterCanSendUpdatesToThisCampaign } = this.state;
 
     if (!campaignXNewsItemList || campaignXNewsItemList.length === 0) {
-      if (voterCanEditThisCampaign && showAddNewsItemIfNeeded) {
+      if (voterCanSendUpdatesToThisCampaign && showAddNewsItemIfNeeded) {
         return (
           <Wrapper>
             <UpdateSupportersWrapper>
