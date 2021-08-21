@@ -5,7 +5,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import avatarGeneric from '../../../img/global/icons/avatar-generic.png';
-import LazyImage from '../../utils/LazyImage';
+import LazyImage from '../../common/components/LazyImage';
 import { renderLog } from '../../utils/logging';
 import { shortenText } from '../../utils/textFormat';
 import VoterStore from '../../stores/VoterStore';

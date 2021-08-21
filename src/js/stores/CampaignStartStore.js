@@ -8,6 +8,8 @@ class CampaignStartStore extends ReduceStore {
       campaignDescriptionQueuedToSave: '',
       campaignDescriptionQueuedToSaveSet: false,
       campaignPhotoLargeUrl: '',
+      campaignPhotoQueuedToDelete: false,
+      campaignPhotoQueuedToDeleteSet: false,
       campaignPhotoQueuedToSave: '',
       campaignPhotoQueuedToSaveSet: false,
       campaignPoliticianDeleteList: [],
@@ -85,6 +87,14 @@ class CampaignStartStore extends ReduceStore {
     return this.getState().campaignPhotoLargeUrl || '';
   }
 
+  getCampaignPhotoQueuedToDelete () {
+    return this.getState().campaignPhotoQueuedToDelete;
+  }
+
+  getCampaignPhotoQueuedToDeleteSet () {
+    return this.getState().campaignPhotoQueuedToDeleteSet;
+  }
+
   getCampaignPhotoQueuedToSave () {
     return this.getState().campaignPhotoQueuedToSave;
   }
@@ -158,6 +168,8 @@ class CampaignStartStore extends ReduceStore {
           ...state,
           campaignDescriptionQueuedToSave: '',
           campaignDescriptionQueuedToSaveSet: false,
+          campaignPhotoQueuedToDelete: false,
+          campaignPhotoQueuedToDeleteSet: false,
           campaignPhotoQueuedToSave: '',
           campaignPhotoQueuedToSaveSet: false,
           campaignPoliticianStarterListQueuedToSave: [],
@@ -165,6 +177,22 @@ class CampaignStartStore extends ReduceStore {
           campaignTitleQueuedToSave: '',
           campaignTitleQueuedToSaveSet: false,
         };
+
+      case 'campaignPhotoQueuedToDelete':
+        console.log('CampaignStartStore campaignPhotoQueuedToDelete: ', action.payload);
+        if (action.payload === undefined) {
+          return {
+            ...state,
+            campaignPhotoQueuedToDelete: false,
+            campaignPhotoQueuedToDeleteSet: false,
+          };
+        } else {
+          return {
+            ...state,
+            campaignPhotoQueuedToDelete: action.payload,
+            campaignPhotoQueuedToDeleteSet: true,
+          };
+        }
 
       case 'campaignPhotoQueuedToSave':
         // console.log('CampaignStartStore campaignPhotoQueuedToSave: ', action.payload);
