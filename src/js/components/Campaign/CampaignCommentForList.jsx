@@ -9,7 +9,7 @@ import anonymous from '../../../img/global/icons/avatar-generic.png';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { isCordova } from '../../utils/cordovaUtils';
-import LazyImage from '../../utils/LazyImage';
+import LazyImage from '../../common/components/LazyImage';
 import { renderLog } from '../../utils/logging';
 import { timeFromDate } from '../../utils/dateFormat';
 import { stringContains } from '../../utils/textFormat';

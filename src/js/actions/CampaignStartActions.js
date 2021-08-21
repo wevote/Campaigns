@@ -22,7 +22,9 @@ export default {
   campaignEditAllSave (
     campaignXWeVoteId,
     campaignDescriptionQueuedToSave, campaignDescriptionQueuedToSaveSet,
-    campaignPhotoQueuedToSave, campaignPhotoQueuedToSaveSet, campaignPoliticianDeleteListJson,
+    campaignPhotoQueuedToDelete, campaignPhotoQueuedToDeleteSet,
+    campaignPhotoQueuedToSave, campaignPhotoQueuedToSaveSet,
+    campaignPoliticianDeleteListJson,
     campaignPoliticianStarterListQueuedToSave, campaignPoliticianStarterListQueuedToSaveSet,
     campaignTitleQueuedToSave, campaignTitleQueuedToSaveSet,
   ) {
@@ -32,6 +34,8 @@ export default {
         campaign_description_changed: campaignDescriptionQueuedToSaveSet,
         campaign_photo_from_file_reader: campaignPhotoQueuedToSave,
         campaign_photo_changed: campaignPhotoQueuedToSaveSet,
+        campaign_photo_delete: campaignPhotoQueuedToDelete,
+        campaign_photo_delete_changed: campaignPhotoQueuedToDeleteSet,
         campaign_title: campaignTitleQueuedToSave,
         campaign_title_changed: campaignTitleQueuedToSaveSet,
         campaignx_we_vote_id: campaignXWeVoteId,
@@ -39,6 +43,10 @@ export default {
         politician_starter_list: campaignPoliticianStarterListQueuedToSave,
         politician_starter_list_changed: campaignPoliticianStarterListQueuedToSaveSet,
       });
+  },
+
+  campaignPhotoQueuedToDelete (deleteCampaignPhoto = true) {
+    Dispatcher.dispatch({ type: 'campaignPhotoQueuedToDelete', payload: deleteCampaignPhoto });
   },
 
   campaignPhotoQueuedToSave (campaignPhotoFromFileReader) {

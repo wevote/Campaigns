@@ -27,7 +27,7 @@ import keepHelpingDestination from '../utils/keepHelpingDestination';
 import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../utils/logging';
 import returnFirstXWords from '../utils/returnFirstXWords';
-import LazyImage from '../utils/LazyImage';
+import LazyImage from '../common/components/LazyImage';
 import anonymous from '../../img/global/icons/avatar-generic.png';
 import { stringContains } from '../utils/textFormat';
 

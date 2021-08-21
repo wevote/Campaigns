@@ -11,7 +11,7 @@ import {
 } from '../Style/CampaignIndicatorStyles';
 import CampaignStore from '../../stores/CampaignStore';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
-import LazyImage from '../../utils/LazyImage';
+import LazyImage from '../../common/components/LazyImage';
 import { renderLog } from '../../utils/logging';
 import { timeFromDate } from '../../utils/dateFormat';
 import { stringContains } from '../../utils/textFormat';

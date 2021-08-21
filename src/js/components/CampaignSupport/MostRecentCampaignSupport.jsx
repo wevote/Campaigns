@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import anonymous from '../../../img/global/icons/avatar-generic.png';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import CampaignStore from '../../stores/CampaignStore';
-import LazyImage from '../../utils/LazyImage';
+import LazyImage from '../../common/components/LazyImage';
 import { renderLog } from '../../utils/logging';
 import returnFirstXWords from '../../utils/returnFirstXWords';
 import { timeFromDate } from '../../utils/dateFormat';

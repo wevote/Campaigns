@@ -155,6 +155,7 @@ class CampaignStartEditAll extends Component {
   cancelEditAll = () => {
     const { editExistingCampaign } = this.props;
     if (editExistingCampaign) {
+      CampaignStartActions.campaignEditAllReset();
       const { campaignXWeVoteId, campaignSEOFriendlyPath } = this.state;
       if (campaignSEOFriendlyPath) {
         historyPush(`/c/${campaignSEOFriendlyPath}`);
@@ -171,6 +172,8 @@ class CampaignStartEditAll extends Component {
     const { campaignXWeVoteId, voterIsCampaignXOwner } = this.state;
     const campaignDescriptionQueuedToSave = CampaignStartStore.getCampaignDescriptionQueuedToSave();
     const campaignDescriptionQueuedToSaveSet = CampaignStartStore.getCampaignDescriptionQueuedToSaveSet();
+    const campaignPhotoQueuedToDelete = CampaignStartStore.getCampaignPhotoQueuedToDelete();
+    const campaignPhotoQueuedToDeleteSet = CampaignStartStore.getCampaignPhotoQueuedToDeleteSet();
     const campaignPhotoQueuedToSave = CampaignStartStore.getCampaignPhotoQueuedToSave();
     const campaignPhotoQueuedToSaveSet = CampaignStartStore.getCampaignPhotoQueuedToSaveSet();
     const campaignPoliticianDeleteList = CampaignStartStore.getCampaignPoliticianDeleteList();
@@ -179,14 +182,16 @@ class CampaignStartEditAll extends Component {
     const campaignTitleQueuedToSave = CampaignStartStore.getCampaignTitleQueuedToSave();
     const campaignTitleQueuedToSaveSet = CampaignStartStore.getCampaignTitleQueuedToSaveSet();
     // console.log('CampaignStartEditAll campaignPoliticianStarterListQueuedToSaveSet:', campaignPoliticianStarterListQueuedToSaveSet);
-    if (voterIsCampaignXOwner && (campaignDescriptionQueuedToSaveSet || campaignPhotoQueuedToSaveSet || campaignPoliticianDeleteList || campaignPoliticianStarterListQueuedToSaveSet || campaignTitleQueuedToSaveSet)) {
+    if (voterIsCampaignXOwner && (campaignDescriptionQueuedToSaveSet || campaignPhotoQueuedToDeleteSet || campaignPhotoQueuedToSaveSet || campaignPoliticianDeleteList || campaignPoliticianStarterListQueuedToSaveSet || campaignTitleQueuedToSaveSet)) {
       const campaignPoliticianDeleteListJson = JSON.stringify(campaignPoliticianDeleteList);
       const campaignPoliticianStarterListQueuedToSaveJson = JSON.stringify(campaignPoliticianStarterListQueuedToSave);
       // console.log('CampaignStartEditAll campaignPoliticianStarterListQueuedToSaveJson:', campaignPoliticianStarterListQueuedToSaveJson);
       CampaignStartActions.campaignEditAllSave(
         campaignXWeVoteId,
         campaignDescriptionQueuedToSave, campaignDescriptionQueuedToSaveSet,
-        campaignPhotoQueuedToSave, campaignPhotoQueuedToSaveSet, campaignPoliticianDeleteListJson,
+        campaignPhotoQueuedToDelete, campaignPhotoQueuedToDeleteSet,
+        campaignPhotoQueuedToSave, campaignPhotoQueuedToSaveSet,
+        campaignPoliticianDeleteListJson,
         campaignPoliticianStarterListQueuedToSaveJson, campaignPoliticianStarterListQueuedToSaveSet,
         campaignTitleQueuedToSave, campaignTitleQueuedToSaveSet,
       );
@@ -291,7 +296,7 @@ class CampaignStartEditAll extends Component {
                       editExistingCampaign={editExistingCampaign}
                     />
                     <PhotoUploadWrapper>
-                      Try to upload a photo that is 1200 x 628 pixels or larger. We can accept one photo up to 5 megabytes in size.
+                      We recommend you use a photo that is 1200 x 628 pixels or larger. We can accept one photo up to 5 megabytes in size.
                       <CampaignPhotoUpload
                         campaignXWeVoteId={campaignXWeVoteId}
                         editExistingCampaign={editExistingCampaign}
@@ -392,18 +397,21 @@ const SaveCancelInnerWrapper = styled.div`
 const SaveCancelOuterWrapper = styled.div`
   background-color: #f6f4f6;
   border-bottom: 1px solid #ddd;
-  // margin: 10px 0;
+  margin-top: 0;
+  position: fixed;
   width: 100%;
+  z-index: 2;
 `;
 
 const InnerWrapper = styled.div`
+  margin-top: 75px;
   width: 100%;
 `;
 
 const OuterWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin: 15px 0;
+  margin: 0;
 `;
 
 const PageWrapper = styled.div`
