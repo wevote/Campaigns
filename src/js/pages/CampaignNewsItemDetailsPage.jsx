@@ -49,6 +49,8 @@ class CampaignNewsItemDetailsPage extends Component {
       chosenWebsiteName: '',
       datePosted: '',
       finalElectionDateInPast: false,
+      inDraftMode: false,
+      inPrivateLabelMode: false,
       pathToUseWhenProfileComplete: '',
       payToPromoteStepCompleted: false,
       payToPromoteStepTurnedOn: false,
@@ -122,6 +124,7 @@ class CampaignNewsItemDetailsPage extends Component {
     const payToPromoteStepTurnedOn = !inPrivateLabelMode;
     this.setState({
       chosenWebsiteName,
+      inPrivateLabelMode,
       payToPromoteStepTurnedOn,
     });
   }
@@ -281,6 +284,13 @@ class CampaignNewsItemDetailsPage extends Component {
     return null;
   }
 
+  onCampaignNewsItemShareClick = () => {
+    const { match: { params } } = this.props;
+    const { campaignXNewsItemWeVoteId } = params;
+    historyPush(`${this.getCampaignBasePath()}/share-it/${campaignXNewsItemWeVoteId}`);
+    return null;
+  }
+
   onCampaignGetMinimumSupportersClick = () => {
     historyPush(`${this.getCampaignBasePath()}/share-campaign`);
     return null;
@@ -297,7 +307,7 @@ class CampaignNewsItemDetailsPage extends Component {
       campaignNewsText, campaignPhotoLargeUrl,
       campaignSEOFriendlyPath, campaignTitle, campaignXNewsItemWeVoteId, campaignXWeVoteId,
       chosenWebsiteName, datePosted, inDraftMode, isBlockedByWeVote, isBlockedByWeVoteReason,
-      finalElectionDateInPast, isSupportersCountMinimumExceeded,
+      inPrivateLabelMode, finalElectionDateInPast, isSupportersCountMinimumExceeded,
       speakerName, speakerProfileImageUrlTiny,
       voterCanEditThisCampaign,
     } = this.state;
@@ -524,7 +534,7 @@ class CampaignNewsItemDetailsPage extends Component {
                         </BlockedIndicator>
                       </IndicatorButtonWrapper>
                     )}
-                    {(!isSupportersCountMinimumExceeded && !inDraftMode) && (
+                    {(!isSupportersCountMinimumExceeded && !inDraftMode && !inPrivateLabelMode) && (
                       <IndicatorButtonWrapper>
                         <DraftModeIndicator onClick={this.onCampaignGetMinimumSupportersClick}>
                           Needs Five Supporters
@@ -534,15 +544,25 @@ class CampaignNewsItemDetailsPage extends Component {
                   </>
                 )}
               </IndicatorRow>
-              {voterCanEditThisCampaign && (
-                <IndicatorRow>
+              <IndicatorRow>
+                {voterCanEditThisCampaign && (
                   <IndicatorButtonWrapper>
                     <EditIndicator onClick={this.onCampaignNewsItemEditClick}>
                       Edit This Update
                     </EditIndicator>
                   </IndicatorButtonWrapper>
-                </IndicatorRow>
-              )}
+                )}
+                <IndicatorButtonWrapper>
+                  <EditIndicator onClick={this.onCampaignNewsItemShareClick}>
+                    <span className="u-show-mobile">
+                      Share
+                    </span>
+                    <span className="u-show-desktop-tablet">
+                      Share This
+                    </span>
+                  </EditIndicator>
+                </IndicatorButtonWrapper>
+              </IndicatorRow>
               <PressReleaseEnd>
                 <>
                   ###
@@ -611,7 +631,7 @@ class CampaignNewsItemDetailsPage extends Component {
                             </BlockedIndicator>
                           </IndicatorButtonWrapper>
                         )}
-                        {(!isSupportersCountMinimumExceeded && !inDraftMode) && (
+                        {(!isSupportersCountMinimumExceeded && !inDraftMode && !inPrivateLabelMode) && (
                           <IndicatorButtonWrapper>
                             <DraftModeIndicator onClick={this.onCampaignGetMinimumSupportersClick}>
                               Needs Five Supporters
@@ -621,15 +641,25 @@ class CampaignNewsItemDetailsPage extends Component {
                       </>
                     )}
                   </IndicatorRow>
-                  {voterCanEditThisCampaign && (
-                    <IndicatorRow>
+                  <IndicatorRow>
+                    {voterCanEditThisCampaign && (
                       <IndicatorButtonWrapper>
                         <EditIndicator onClick={this.onCampaignNewsItemEditClick}>
                           Edit This Update
                         </EditIndicator>
                       </IndicatorButtonWrapper>
-                    </IndicatorRow>
-                  )}
+                    )}
+                    <IndicatorButtonWrapper>
+                      <EditIndicator onClick={this.onCampaignNewsItemShareClick}>
+                        <span className="u-show-mobile">
+                          Share
+                        </span>
+                        <span className="u-show-desktop-tablet">
+                          Share This
+                        </span>
+                      </EditIndicator>
+                    </IndicatorButtonWrapper>
+                  </IndicatorRow>
                   <PressReleaseEnd>
                     <>
                       ###
@@ -735,6 +765,7 @@ const styles = (theme) => ({
 const BackToCampaignTitle = styled.div`
   font-size: 18px;
   font-weight: 600;
+  margin-left: 10px;
   padding: 18px 0;
 `;
 

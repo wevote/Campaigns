@@ -17,6 +17,32 @@ export function androidTwitterClickHandler (linkToBeShared, quoteForSharingEncod
   cordovaOpenSafariView(twitURL, null, 50);
 }
 
+export function generateSharingLink (campaignX, campaignXNewsItemWeVoteId = '') {
+  const { host } = window.location;
+  const domainAddress = `https://${host}`;
+  // console.log('domainAddress:', domainAddress);
+  if (!campaignX) {
+    return domainAddress;
+  }
+  const {
+    seo_friendly_path: campaignSEOFriendlyPath,
+    campaignx_we_vote_id: campaignXWeVoteId,
+  } = campaignX;
+  let urlToShare;
+  if (campaignSEOFriendlyPath) {
+    urlToShare = `${domainAddress}/c/${campaignSEOFriendlyPath}`;
+    if (campaignXNewsItemWeVoteId) {
+      urlToShare += `/u/${campaignXNewsItemWeVoteId}`;
+    }
+  } else {
+    urlToShare = `${domainAddress}/id/${campaignXWeVoteId}`;
+    if (campaignXNewsItemWeVoteId) {
+      urlToShare += `/u/${campaignXNewsItemWeVoteId}`;
+    }
+  }
+  return urlToShare;
+}
+
 export function generateQuoteForSharing (campaignTitle, numberOfPoliticians, politicianListSentenceString, linkToBeShared = '') {
   let quoteForSharing = 'Please join me in voting';
   if (numberOfPoliticians === 1) {

@@ -40,7 +40,7 @@ class AddPoliticianInputField extends Component {
     this.searchAllStoreListener = SearchAllStore.addListener(this.onSearchAllStoreChange.bind(this));
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStartStoreChange.bind(this));
     this.onCampaignStartStoreChange();
-    SearchAllActions.clearSearchResults();
+    // SearchAllActions.clearSearchResults(); // Causes error: "Cannot dispatch in the middle of a dispatch"
     this.setState({
       candidateOptions: candidateOptionsDefault,
     });

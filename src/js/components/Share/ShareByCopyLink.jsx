@@ -8,6 +8,7 @@ import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import { openSnackbar } from '../Widgets/SnackNotifier';
 import { renderLog } from '../../utils/logging';
+import { generateSharingLink } from './shareButtonCommon';
 
 class ShareByCopyLink extends Component {
   constructor (props) {
@@ -80,22 +81,9 @@ class ShareByCopyLink extends Component {
   }
 
   generateFullCampaignLink = () => {
-    const { hostname } = window.location;
-    const domainAddress = `https://${hostname}`;
+    const { campaignXNewsItemWeVoteId } = this.props;
     const { campaignX } = this.state;
-    // console.log('domainAddress:', domainAddress);
-    if (!campaignX) {
-      return domainAddress;
-    }
-    const {
-      seo_friendly_path: campaignSEOFriendlyPath,
-      campaignx_we_vote_id: campaignXWeVoteId,
-    } = campaignX;
-    if (campaignSEOFriendlyPath) {
-      return `${domainAddress}/c/${campaignSEOFriendlyPath}`;
-    } else {
-      return `${domainAddress}/id/${campaignXWeVoteId}`;
-    }
+    return generateSharingLink(campaignX, campaignXNewsItemWeVoteId);
   }
 
   copyLink () {
@@ -131,6 +119,7 @@ class ShareByCopyLink extends Component {
   }
 }
 ShareByCopyLink.propTypes = {
+  campaignXNewsItemWeVoteId: PropTypes.string,
   campaignXWeVoteId: PropTypes.string,
   darkButton: PropTypes.bool,
   mobileMode: PropTypes.bool,
