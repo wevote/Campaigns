@@ -3,6 +3,7 @@
  * @returns {string}
  */
 export default function politicianListToSentenceString (politicianList) {
+  // Parallel to fetch_politician_list_to_sentence_string in WeVoteServer
   let sentenceString = '';
   if (!politicianList || politicianList.length === 0) return sentenceString;
   if (politicianList.length === 1) {

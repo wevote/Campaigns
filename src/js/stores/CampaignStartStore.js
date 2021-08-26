@@ -250,7 +250,7 @@ class CampaignStartStore extends ReduceStore {
 
       // case 'campaignRetrieve':
       case 'campaignRetrieveAsOwner':
-        // console.log('CampaignStartStore campaignRetrieveAsOwner');
+        // console.log('CampaignStartStore campaignRetrieveAsOwner, action.res:', action.res);
         return {
           ...state,
           campaignDescription: action.res.campaign_description,

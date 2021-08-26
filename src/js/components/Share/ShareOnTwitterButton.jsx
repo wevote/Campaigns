@@ -123,7 +123,7 @@ class ShareOnTwitterButton extends Component {
           >
             <div className="material_ui_light_button">
               <div>
-                Tweet to your followers
+                Tweet your followers
               </div>
             </div>
           </TwitterShareButton>

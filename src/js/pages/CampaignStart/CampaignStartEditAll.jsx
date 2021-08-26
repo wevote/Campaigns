@@ -100,6 +100,9 @@ class CampaignStartEditAll extends Component {
     }
     this.appStoreListener.remove();
     this.campaignStoreListener.remove();
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
   }
 
   onAppStoreChange () {
@@ -197,16 +200,19 @@ class CampaignStartEditAll extends Component {
       );
       CampaignStartActions.campaignEditAllReset();
     }
-    if (editExistingCampaign) {
-      const { campaignSEOFriendlyPath } = this.state;
-      if (campaignSEOFriendlyPath) {
-        historyPush(`/c/${campaignSEOFriendlyPath}`);
+    // We want to wait 1 second before redirecting, so the save has a chance to execute
+    this.timer = setTimeout(() => {
+      if (editExistingCampaign) {
+        const { campaignSEOFriendlyPath } = this.state;
+        if (campaignSEOFriendlyPath) {
+          historyPush(`/c/${campaignSEOFriendlyPath}`);
+        } else {
+          historyPush(`/id/${campaignXWeVoteId}`);
+        }
       } else {
-        historyPush(`/id/${campaignXWeVoteId}`);
+        historyPush('/start-a-campaign-preview');
       }
-    } else {
-      historyPush('/start-a-campaign-preview');
-    }
+    }, 750);
   }
 
   render () {

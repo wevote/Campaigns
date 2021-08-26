@@ -132,9 +132,11 @@ class CampaignDetailsPage extends Component {
     }
     if (campaignXWeVoteId) {
       const voterCanEditThisCampaign = CampaignStore.getVoterCanEditThisCampaign(campaignXWeVoteId);
+      const voterSupportsThisCampaign = CampaignStore.getVoterSupportsThisCampaign(campaignXWeVoteId);
       this.setState({
         campaignXWeVoteId,
         voterCanEditThisCampaign,
+        voterSupportsThisCampaign,
       });
     }
     const campaignDescriptionLimited = returnFirstXWords(campaignDescription, 200);
@@ -201,7 +203,7 @@ class CampaignDetailsPage extends Component {
       // If it has changed, use new value
       visibleToPublic = CampaignSupporterStore.getVisibleToPublicQueuedToSave();
     }
-    // console.log('functionToUseWhenProfileComplete, visibleToPublic:', visibleToPublic, ', visibleToPublicChanged:', visibleToPublicChanged, ', blockCampaignXRedirectOnSignIn:', AppStore.blockCampaignXRedirectOnSignIn());
+    console.log('functionToUseWhenProfileComplete, blockCampaignXRedirectOnSignIn:', AppStore.blockCampaignXRedirectOnSignIn());
     const saveVisibleToPublic = true;
     if (!AppStore.blockCampaignXRedirectOnSignIn()) {
       initializejQuery(() => {
@@ -221,7 +223,7 @@ class CampaignDetailsPage extends Component {
     return null;
   }
 
-  onCampaignGetMinimumSupportersClick = () => {
+  onCampaignShareClick = () => {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
     if (campaignSEOFriendlyPath) {
       historyPush(`/c/${campaignSEOFriendlyPath}/share-campaign`);
@@ -242,7 +244,7 @@ class CampaignDetailsPage extends Component {
       campaignSEOFriendlyPath, campaignTitle, campaignXWeVoteId,
       chosenWebsiteName, inPrivateLabelMode, isBlockedByWeVote, isBlockedByWeVoteReason,
       finalElectionDateInPast, isSupportersCountMinimumExceeded,
-      voterCanEditThisCampaign,
+      voterCanEditThisCampaign, voterSupportsThisCampaign,
     } = this.state;
     // console.log('render isSupportersCountMinimumExceeded: ', isSupportersCountMinimumExceeded);
     const htmlTitle = `${campaignTitle} - ${chosenWebsiteName}`;
@@ -366,7 +368,7 @@ class CampaignDetailsPage extends Component {
                     )}
                     {(!isSupportersCountMinimumExceeded && !inPrivateLabelMode) && (
                       <IndicatorButtonWrapper>
-                        <DraftModeIndicator onClick={this.onCampaignGetMinimumSupportersClick}>
+                        <DraftModeIndicator onClick={this.onCampaignShareClick}>
                           Needs Five Supporters
                         </DraftModeIndicator>
                       </IndicatorButtonWrapper>
@@ -374,15 +376,22 @@ class CampaignDetailsPage extends Component {
                   </>
                 )}
               </IndicatorRow>
-              {voterCanEditThisCampaign && (
-                <IndicatorRow>
+              <IndicatorRow>
+                {voterCanEditThisCampaign && (
                   <IndicatorButtonWrapper>
                     <EditIndicator onClick={this.onCampaignEditClick}>
-                      Edit This Campaign
+                      Edit Campaign
                     </EditIndicator>
                   </IndicatorButtonWrapper>
-                </IndicatorRow>
-              )}
+                )}
+                {voterSupportsThisCampaign && (
+                  <IndicatorButtonWrapper>
+                    <EditIndicator onClick={this.onCampaignShareClick}>
+                      Share Campaign
+                    </EditIndicator>
+                  </IndicatorButtonWrapper>
+                )}
+              </IndicatorRow>
             </CampaignDescriptionWrapper>
             <CommentsListWrapper>
               <DelayedLoad waitBeforeShow={1000}>
@@ -453,7 +462,7 @@ class CampaignDetailsPage extends Component {
                         )}
                         {(!isSupportersCountMinimumExceeded && !inPrivateLabelMode) && (
                           <IndicatorButtonWrapper>
-                            <DraftModeIndicator onClick={this.onCampaignGetMinimumSupportersClick}>
+                            <DraftModeIndicator onClick={this.onCampaignShareClick}>
                               Needs Five Supporters
                             </DraftModeIndicator>
                           </IndicatorButtonWrapper>

@@ -109,7 +109,7 @@ class ShareByCopyLink extends Component {
           <div className={mobileMode ? 'material_ui_button_mobile' : ''} id={`shareByCopyLink-${uniqueExternalId}`}>
             <div className={darkButton ? 'material_ui_dark_button' : 'material_ui_light_button'}>
               <div>
-                {copyLinkCopied ? 'Link Copied!' : 'Copy Link'}
+                {copyLinkCopied ? 'Link copied!' : 'Copy link'}
               </div>
             </div>
           </div>

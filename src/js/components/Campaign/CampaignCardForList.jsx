@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import TruncateMarkup from 'react-truncate-markup';
 import { withStyles } from '@material-ui/core/styles';
+import AppActions from '../../actions/AppActions';
 import AppStore from '../../stores/AppStore';
 import {
   BlockedIndicator, DraftModeIndicator, EditIndicator, ElectionInPast,
@@ -38,6 +39,7 @@ class CampaignCardForList extends Component {
     this.onCampaignClick = this.onCampaignClick.bind(this);
     this.onCampaignEditClick = this.onCampaignEditClick.bind(this);
     this.onCampaignGetMinimumSupportersClick = this.onCampaignGetMinimumSupportersClick.bind(this);
+    this.onCampaignShareClick = this.onCampaignShareClick.bind(this);
     this.pullCampaignXSupporterVoterEntry = this.pullCampaignXSupporterVoterEntry.bind(this);
   }
 
@@ -129,6 +131,7 @@ class CampaignCardForList extends Component {
       seo_friendly_path: campaignSEOFriendlyPath,
       campaignx_we_vote_id: campaignXWeVoteId,
     } = campaignX;
+    AppActions.setBlockCampaignXRedirectOnSignIn(true);
     if (inDraftMode) {
       historyPush('/start-a-campaign-preview');
     } else if (campaignSEOFriendlyPath) {
@@ -161,6 +164,24 @@ class CampaignCardForList extends Component {
   }
 
   onCampaignGetMinimumSupportersClick () {
+    const { campaignX } = this.state;
+    // console.log('campaignX:', campaignX);
+    if (!campaignX) {
+      return null;
+    }
+    const {
+      seo_friendly_path: campaignSEOFriendlyPath,
+      campaignx_we_vote_id: campaignXWeVoteId,
+    } = campaignX;
+    if (campaignSEOFriendlyPath) {
+      historyPush(`/c/${campaignSEOFriendlyPath}/share-campaign`);
+    } else {
+      historyPush(`/id/${campaignXWeVoteId}/share-campaign`);
+    }
+    return null;
+  }
+
+  onCampaignShareClick () {
     const { campaignX } = this.state;
     // console.log('campaignX:', campaignX);
     if (!campaignX) {
@@ -239,7 +260,7 @@ class CampaignCardForList extends Component {
 
   functionToUseToKeepHelping () {
     const { payToPromoteStepCompleted, payToPromoteStepTurnedOn, sharingStepCompleted, step2Completed } = this.state;
-    console.log(payToPromoteStepCompleted, payToPromoteStepTurnedOn, sharingStepCompleted, step2Completed);
+    // console.log(payToPromoteStepCompleted, payToPromoteStepTurnedOn, sharingStepCompleted, step2Completed);
     const keepHelpingDestinationString = keepHelpingDestination(step2Completed, payToPromoteStepCompleted, payToPromoteStepTurnedOn, sharingStepCompleted);
     console.log('functionToUseToKeepHelping keepHelpingDestinationString:', keepHelpingDestinationString);
     historyPush(`${this.getCampaignBasePath()}/${keepHelpingDestinationString}`);
@@ -256,7 +277,7 @@ class CampaignCardForList extends Component {
       // If it has changed, use new value
       visibleToPublic = CampaignSupporterStore.getVisibleToPublicQueuedToSave();
     }
-    // console.log('functionToUseWhenProfileComplete, visibleToPublic:', visibleToPublic, ', visibleToPublicChanged:', visibleToPublicChanged);
+    console.log('functionToUseWhenProfileComplete, visibleToPublic:', visibleToPublic, ', visibleToPublicChanged:', visibleToPublicChanged);
     const saveVisibleToPublic = true;
     initializejQuery(() => {
       CampaignSupporterActions.supportCampaignSave(campaignXWeVoteId, campaignSupported, campaignSupportedChanged, visibleToPublic, saveVisibleToPublic);
@@ -410,6 +431,18 @@ class CampaignCardForList extends Component {
                       </span>
                       <span className="u-show-desktop-tablet">
                         Edit Campaign
+                      </span>
+                    </EditIndicator>
+                  </IndicatorButtonWrapper>
+                )}
+                {(campaignSupported && !inDraftMode) && (
+                  <IndicatorButtonWrapper>
+                    <EditIndicator onClick={this.onCampaignShareClick}>
+                      <span className="u-show-mobile">
+                        Share
+                      </span>
+                      <span className="u-show-desktop-tablet">
+                        Share Campaign
                       </span>
                     </EditIndicator>
                   </IndicatorButtonWrapper>

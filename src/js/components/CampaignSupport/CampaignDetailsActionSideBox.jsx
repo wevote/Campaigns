@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Button } from '@material-ui/core';
 import { withStyles, withTheme } from '@material-ui/core/styles';
 import styled from 'styled-components';
+import CampaignShareChunk from '../Campaign/CampaignShareChunk';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { renderLog } from '../../utils/logging';
@@ -231,6 +232,9 @@ class CampaignDetailsActionSideBox extends Component {
                     </Button>
                   </ButtonPanel>
                 )}
+                <CampaignShareChunkWrapper>
+                  <CampaignShareChunk campaignXWeVoteId={campaignXWeVoteId} darkButtonsOff />
+                </CampaignShareChunkWrapper>
               </>
             )}
           </KeepHelpingWrapper>
@@ -318,6 +322,10 @@ const styles = (theme) => ({
 const ButtonPanel = styled.div`
   background-color: #fff;
   padding: 10px 0;
+`;
+
+const CampaignShareChunkWrapper = styled.div`
+  margin-top: 100px;
 `;
 
 const CompleteYourProfileWrapper = styled.div`

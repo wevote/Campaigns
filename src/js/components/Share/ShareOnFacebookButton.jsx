@@ -91,7 +91,7 @@ class ShareOnFacebookButton extends Component {
     if (isCordova()) {
       console.log(`ShareOnFacebookButton window.location.href: ${window.location.href}`);
     }
-    const { mobileMode } = this.props;
+    const { darkButton, mobileMode } = this.props;
     const { campaignX, inPrivateLabelMode, numberOfPoliticians, politicianListSentenceString } = this.state;
     const {
       campaign_title: campaignTitle,
@@ -120,7 +120,7 @@ class ShareOnFacebookButton extends Component {
             disabled={isAndroid()}
             disabledStyle={isAndroid() ? { opacity: 1 } : {}}
           >
-            <div className="material_ui_dark_button">
+            <div className={darkButton ? 'material_ui_dark_button' : 'material_ui_light_button'}>
               <div>
                 Share on Facebook
               </div>
@@ -134,6 +134,7 @@ class ShareOnFacebookButton extends Component {
 ShareOnFacebookButton.propTypes = {
   campaignXNewsItemWeVoteId: PropTypes.string,
   campaignXWeVoteId: PropTypes.string,
+  darkButton: PropTypes.bool,
   mobileMode: PropTypes.bool,
 };
 

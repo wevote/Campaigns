@@ -119,7 +119,7 @@ class CampaignCommentForList extends Component {
                 <Comment>
                   {showFullSupporterEndorsement ? (
                     <div>
-                      {supporterEndorsement}
+                      <CommentTextInnerWrapper>{supporterEndorsement}</CommentTextInnerWrapper>
                       {supporterVoterWeVoteId === voterWeVoteId && (
                         <>
                           &nbsp;
@@ -145,7 +145,7 @@ class CampaignCommentForList extends Component {
                       )}
                     >
                       <div>
-                        {supporterEndorsement}
+                        <CommentTextInnerWrapper>{supporterEndorsement}</CommentTextInnerWrapper>
                         {supporterVoterWeVoteId === voterWeVoteId && (
                           <>
                             &nbsp;
@@ -211,6 +211,10 @@ const CommentName = styled.span`
 const CommentNameWrapper = styled.div`
   color: #999;
   font-size: 12px;
+`;
+
+const CommentTextInnerWrapper = styled.div`
+  white-space: pre-wrap;
 `;
 
 const CommentTextWrapper = styled.div`
