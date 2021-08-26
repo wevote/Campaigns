@@ -306,6 +306,11 @@ class CampaignStore extends ReduceStore {
     return this.getCampaignXListFromListOfWeVoteIds(this.getState().voterSupportedCampaignXWeVoteIds);
   }
 
+  getVoterSupportsThisCampaign (campaignXWeVoteId) {
+    // console.log('this.getState().voterSupportedCampaignXWeVoteIds:', this.getState().voterSupportedCampaignXWeVoteIds);
+    return arrayContains(campaignXWeVoteId, this.getState().voterSupportedCampaignXWeVoteIds);
+  }
+
   reduce (state, action) {
     const {
       allCachedCampaignXNewsItems,
@@ -457,6 +462,7 @@ class CampaignStore extends ReduceStore {
         };
 
       case 'campaignRetrieve':
+      case 'campaignRetrieveAsOwner':
       case 'campaignStartSave':
         // See CampaignSupporterStore for code to take in the following campaignX values:
         // - latest_campaignx_supporter_endorsement_list

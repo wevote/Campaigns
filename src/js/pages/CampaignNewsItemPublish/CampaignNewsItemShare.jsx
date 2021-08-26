@@ -16,6 +16,7 @@ import {
   CampaignSupportSection, CampaignSupportSectionWrapper,
   SkipForNowButtonPanel, SkipForNowButtonWrapper,
 } from '../../components/Style/CampaignSupportStyles';
+import CampaignShareChunk from '../../components/Campaign/CampaignShareChunk';
 import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiers } from '../../utils/campaignUtils';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
@@ -322,70 +323,7 @@ class CampaignNewsItemShare extends Component {
                 </CampaignSupportSectionWrapper>
               ) : (
                 <>
-                  <CampaignSupportSectionWrapper>
-                    <CampaignSupportSection>
-                      <CampaignSupportDesktopButtonWrapper>
-                        <CampaignSupportDesktopButtonPanel>
-                          <PublicOrPrivateSectionHeader>Share privately. </PublicOrPrivateSectionHeader>
-                          <PublicOrPrivateSectionText>
-                            Share 1-on-1 with friends who share your values.
-                          </PublicOrPrivateSectionText>
-                        </CampaignSupportDesktopButtonPanel>
-                      </CampaignSupportDesktopButtonWrapper>
-                      <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
-                        <CampaignSupportDesktopButtonPanel>
-                          <ShareByEmailButton campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} darkButton />
-                        </CampaignSupportDesktopButtonPanel>
-                      </CampaignSupportDesktopButtonWrapper>
-                      <CampaignSupportMobileButtonWrapper className="u-show-mobile">
-                        <CampaignSupportMobileButtonPanel>
-                          <ShareByEmailButton campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} darkButton mobileMode />
-                        </CampaignSupportMobileButtonPanel>
-                      </CampaignSupportMobileButtonWrapper>
-                      <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
-                        <CampaignSupportDesktopButtonPanel>
-                          <ShareByCopyLink campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} />
-                        </CampaignSupportDesktopButtonPanel>
-                      </CampaignSupportDesktopButtonWrapper>
-                      <CampaignSupportMobileButtonWrapper className="u-show-mobile">
-                        <CampaignSupportMobileButtonPanel>
-                          <ShareByCopyLink campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} mobileMode />
-                        </CampaignSupportMobileButtonPanel>
-                      </CampaignSupportMobileButtonWrapper>
-                    </CampaignSupportSection>
-                  </CampaignSupportSectionWrapper>
-                  <CampaignSupportSectionWrapper>
-                    <CampaignSupportSection>
-                      <CampaignSupportDesktopButtonWrapper>
-                        <CampaignSupportDesktopButtonPanel>
-                          <PublicOrPrivateSectionHeader>Share publicly. </PublicOrPrivateSectionHeader>
-                          <PublicOrPrivateSectionText>
-                            Share with everyone and make your voice heard.
-                          </PublicOrPrivateSectionText>
-                        </CampaignSupportDesktopButtonPanel>
-                      </CampaignSupportDesktopButtonWrapper>
-                      <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
-                        <CampaignSupportDesktopButtonPanel>
-                          <ShareOnFacebookButton campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} />
-                        </CampaignSupportDesktopButtonPanel>
-                      </CampaignSupportDesktopButtonWrapper>
-                      <CampaignSupportMobileButtonWrapper className="u-show-mobile">
-                        <CampaignSupportMobileButtonPanel>
-                          <ShareOnFacebookButton campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} mobileMode />
-                        </CampaignSupportMobileButtonPanel>
-                      </CampaignSupportMobileButtonWrapper>
-                      <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
-                        <CampaignSupportDesktopButtonPanel>
-                          <ShareOnTwitterButton campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} />
-                        </CampaignSupportDesktopButtonPanel>
-                      </CampaignSupportDesktopButtonWrapper>
-                      <CampaignSupportMobileButtonWrapper className="u-show-mobile">
-                        <CampaignSupportMobileButtonPanel>
-                          <ShareOnTwitterButton campaignXWeVoteId={campaignXWeVoteId} campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} mobileMode />
-                        </CampaignSupportMobileButtonPanel>
-                      </CampaignSupportMobileButtonWrapper>
-                    </CampaignSupportSection>
-                  </CampaignSupportSectionWrapper>
+                  <CampaignShareChunk campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} campaignXWeVoteId={campaignXWeVoteId} />
                 </>
               )}
               <CampaignSupportSectionWrapper>

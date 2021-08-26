@@ -140,7 +140,7 @@ class SupportButtonBeforeCompletionScreen extends Component {
 
   submitSupportButtonMobile = () => {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.props;
-    // console.log('SupportButtonBeforeCompletionScreen submitSupportButtonMobile');
+    console.log('SupportButtonBeforeCompletionScreen submitSupportButtonMobile');
     const { voterFirstName, voterLastName, voterIsSignedInWithEmail } = this.state;
     if (!voterFirstName || !voterLastName || !voterIsSignedInWithEmail) {
       // Navigate to the mobile complete your profile page

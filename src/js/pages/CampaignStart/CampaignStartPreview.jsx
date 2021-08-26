@@ -193,14 +193,13 @@ class CampaignStartPreview extends Component {
                     <CampaignPoliticianList>
                       {campaignPoliticianList.length === 1 ? (
                         <>
-                          Supporting
+                          Politician this campaign is about:
                           {' '}
                           {campaignPoliticianList[0].politician_name}
-                          .
                         </>
                       ) : (
                         <>
-                          Supporting
+                          Politicians this campaign is about:
                           { campaignPoliticianList.map((campaignPolitician) => {
                             campaignPoliticianNumber += 1;
                             if (campaignPoliticianNumber >= campaignPoliticianList.length) {
@@ -210,7 +209,6 @@ class CampaignStartPreview extends Component {
                                   and
                                   {' '}
                                   {campaignPolitician.politician_name}
-                                  .
                                 </span>
                               );
                             } else {
@@ -294,6 +292,7 @@ const styles = (theme) => ({
 const CampaignDescription = styled.div`
   font-size: 15px;
   margin: 10px 0;
+  white-space: pre-wrap;
 `;
 
 const CampaignDescriptionMissing = styled.div`
