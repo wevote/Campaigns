@@ -139,7 +139,6 @@ const styles = () => ({
 const Wrapper = styled.div`
   cursor: pointer;
   display: block !important;
-  margin-bottom: 12px;
   @media (min-width: 600px) {
     flex: 1 1 0;
   }

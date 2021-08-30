@@ -233,7 +233,11 @@ class CampaignDetailsActionSideBox extends Component {
                   </ButtonPanel>
                 )}
                 <CampaignShareChunkWrapper>
-                  <CampaignShareChunk campaignXWeVoteId={campaignXWeVoteId} darkButtonsOff />
+                  <CampaignShareChunk
+                    campaignXWeVoteId={campaignXWeVoteId}
+                    darkButtonsOff
+                    privatePublicIntroductionsOff
+                  />
                 </CampaignShareChunkWrapper>
               </>
             )}

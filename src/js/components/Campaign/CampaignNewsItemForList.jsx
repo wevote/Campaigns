@@ -156,7 +156,6 @@ class CampaignNewsItemForList extends Component {
               {campaignNewsText && (
                 <NewsItemTextWrapper className="u-cursor--pointer u-link-color-on-hover" onClick={this.goToDedicatedPublicNewsItemPage}>
                   <TruncateMarkup
-                    lines={4}
                     ellipsis={(
                       <span>
                         <span className="u-text-fade-at-end">&nbsp;</span>
@@ -167,6 +166,8 @@ class CampaignNewsItemForList extends Component {
                         </span>
                       </span>
                     )}
+                    lines={4}
+                    tokenize="words"
                   >
                     <div>
                       {campaignNewsText}

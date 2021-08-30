@@ -60,7 +60,8 @@ class CampaignCommentsList extends Component {
   onCampaignSupporterStoreChange () {
     const { campaignXWeVoteId } = this.props;
     // console.log('CampaignCommentsList onCampaignSupporterStoreChange campaignXWeVoteId:', campaignXWeVoteId);
-    const supporterEndorsementsList = CampaignSupporterStore.getCampaignXSupporterEndorsementsList(campaignXWeVoteId);
+    const supporterEndorsementsListUnsorted = CampaignSupporterStore.getCampaignXSupporterEndorsementsList(campaignXWeVoteId);
+    const supporterEndorsementsList = supporterEndorsementsListUnsorted.sort(this.orderByCommentDate);
     this.setState({
       supporterEndorsementsList,
     });
@@ -69,7 +70,8 @@ class CampaignCommentsList extends Component {
   onCampaignStoreChange () {
     const { campaignXWeVoteId } = this.props;
     // console.log('CampaignCommentsList onCampaignStoreChange campaignXWeVoteId:', campaignXWeVoteId);
-    const supporterEndorsementsList = CampaignSupporterStore.getCampaignXSupporterEndorsementsList(campaignXWeVoteId);
+    const supporterEndorsementsListUnsorted = CampaignSupporterStore.getCampaignXSupporterEndorsementsList(campaignXWeVoteId);
+    const supporterEndorsementsList = supporterEndorsementsListUnsorted.sort(this.orderByCommentDate);
     this.setState({
       supporterEndorsementsList,
     });
@@ -82,6 +84,9 @@ class CampaignCommentsList extends Component {
       numberOfCommentsToDisplay,
     });
   }
+
+  // When we have "likes" put comments with most likes at top
+  orderByCommentDate = (firstCampaign, secondCampaign) => secondCampaign.id - firstCampaign.id;
 
   render () {
     renderLog('CampaignCommentsList');  // Set LOG_RENDER_EVENTS to log all renders

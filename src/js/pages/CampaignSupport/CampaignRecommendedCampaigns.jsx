@@ -454,13 +454,14 @@ class CampaignRecommendedCampaigns extends Component {
                       />
                     ) : (
                       <TruncateMarkup
-                        lines={3}
                         ellipsis={(
                           <span id="setDescriptionUnfurled" onClick={this.setDescriptionUnfurled}>
                             <span className="u-text-fade-at-end">&nbsp;</span>
                             <span className="u-link-color u-link-underline">Read more</span>
                           </span>
                         )}
+                        lines={3}
+                        tokenize="words"
                       >
                         <div>
                           {recommendedCampaignDescription}

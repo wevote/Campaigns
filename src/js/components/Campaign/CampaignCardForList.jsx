@@ -351,13 +351,14 @@ class CampaignCardForList extends Component {
                 </SupportersWrapper>
                 <OneCampaignDescription>
                   <TruncateMarkup
-                    lines={4}
                     ellipsis={(
                       <span>
                         <span className="u-text-fade-at-end">&nbsp;</span>
                         <span className="u-link-color u-link-underline">Read more</span>
                       </span>
                     )}
+                    lines={4}
+                    tokenize="words"
                   >
                     <div>
                       {campaignDescription}

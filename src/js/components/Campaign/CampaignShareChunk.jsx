@@ -30,19 +30,21 @@ class CampaignShareChunk extends Component {
     if (isCordova()) {
       console.log(`CampaignShareChunk window.location.href: ${window.location.href}`);
     }
-    const { campaignXNewsItemWeVoteId, campaignXWeVoteId, darkButtonsOff } = this.props;
+    const { campaignXNewsItemWeVoteId, campaignXWeVoteId, darkButtonsOff, privatePublicIntroductionsOff } = this.props;
     return (
       <div>
-        <CampaignSupportSectionWrapper>
-          <CampaignSupportSection>
-            <CampaignSupportDesktopButtonWrapper>
-              <CampaignSupportDesktopButtonPanel>
-                <PublicOrPrivateSectionHeader>Share privately. </PublicOrPrivateSectionHeader>
-                <PublicOrPrivateSectionText>
-                  Share 1-on-1 with friends who share your values.
-                </PublicOrPrivateSectionText>
-              </CampaignSupportDesktopButtonPanel>
-            </CampaignSupportDesktopButtonWrapper>
+        <CampaignSupportSectionWrapper marginTopOff={privatePublicIntroductionsOff}>
+          <CampaignSupportSection marginBottomOff={privatePublicIntroductionsOff}>
+            {!privatePublicIntroductionsOff && (
+              <CampaignSupportDesktopButtonWrapper>
+                <CampaignSupportDesktopButtonPanel>
+                  <PublicOrPrivateSectionHeader>Share privately. </PublicOrPrivateSectionHeader>
+                  <PublicOrPrivateSectionText>
+                    Share 1-on-1 with friends who share your values.
+                  </PublicOrPrivateSectionText>
+                </CampaignSupportDesktopButtonPanel>
+              </CampaignSupportDesktopButtonWrapper>
+            )}
             <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
               <CampaignSupportDesktopButtonPanel>
                 <ShareByEmailButton campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} campaignXWeVoteId={campaignXWeVoteId} darkButton={!darkButtonsOff} />
@@ -65,16 +67,18 @@ class CampaignShareChunk extends Component {
             </CampaignSupportMobileButtonWrapper>
           </CampaignSupportSection>
         </CampaignSupportSectionWrapper>
-        <CampaignSupportSectionWrapper>
-          <CampaignSupportSection>
-            <CampaignSupportDesktopButtonWrapper>
-              <CampaignSupportDesktopButtonPanel>
-                <PublicOrPrivateSectionHeader>Share publicly. </PublicOrPrivateSectionHeader>
-                <PublicOrPrivateSectionText>
-                  Share with everyone and make your voice heard.
-                </PublicOrPrivateSectionText>
-              </CampaignSupportDesktopButtonPanel>
-            </CampaignSupportDesktopButtonWrapper>
+        <CampaignSupportSectionWrapper marginTopOff={privatePublicIntroductionsOff}>
+          <CampaignSupportSection marginBottomOff={privatePublicIntroductionsOff}>
+            {!privatePublicIntroductionsOff && (
+              <CampaignSupportDesktopButtonWrapper>
+                <CampaignSupportDesktopButtonPanel>
+                  <PublicOrPrivateSectionHeader>Share publicly. </PublicOrPrivateSectionHeader>
+                  <PublicOrPrivateSectionText>
+                    Share with everyone and make your voice heard.
+                  </PublicOrPrivateSectionText>
+                </CampaignSupportDesktopButtonPanel>
+              </CampaignSupportDesktopButtonWrapper>
+            )}
             <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
               <CampaignSupportDesktopButtonPanel>
                 <ShareOnFacebookButton campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} campaignXWeVoteId={campaignXWeVoteId} darkButton={!darkButtonsOff} />
@@ -105,6 +109,7 @@ CampaignShareChunk.propTypes = {
   campaignXNewsItemWeVoteId: PropTypes.string,
   campaignXWeVoteId: PropTypes.string,
   darkButtonsOff: PropTypes.bool,
+  privatePublicIntroductionsOff: PropTypes.bool,
 };
 
 const PublicOrPrivateSectionHeader = styled.span`

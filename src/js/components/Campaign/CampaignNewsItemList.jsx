@@ -41,7 +41,8 @@ class CampaignNewsItemList extends Component {
     } = this.props;
     if (campaignXWeVoteId) {
       if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
-        const campaignXNewsItemList = CampaignStore.getCampaignXNewsItemList(campaignXWeVoteId);
+        const campaignXNewsItemListUnsorted = CampaignStore.getCampaignXNewsItemList(campaignXWeVoteId);
+        const campaignXNewsItemList = campaignXNewsItemListUnsorted.sort(this.orderByNewsItemUpdateDate);
         this.setState({
           campaignXNewsItemList,
         });
@@ -56,7 +57,8 @@ class CampaignNewsItemList extends Component {
   onCampaignStoreChange () {
     const { campaignXWeVoteId } = this.props;
     const voterCanSendUpdatesToThisCampaign = CampaignStore.getVoterCanSendUpdatesToThisCampaign(campaignXWeVoteId);
-    const campaignXNewsItemList = CampaignStore.getCampaignXNewsItemList(campaignXWeVoteId);
+    const campaignXNewsItemListUnsorted = CampaignStore.getCampaignXNewsItemList(campaignXWeVoteId);
+    const campaignXNewsItemList = campaignXNewsItemListUnsorted.sort(this.orderByNewsItemUpdateDate);
     this.setState({
       campaignXNewsItemList,
       voterCanSendUpdatesToThisCampaign,
@@ -70,6 +72,8 @@ class CampaignNewsItemList extends Component {
       numberOfNewsItemsToDisplay,
     });
   }
+
+  orderByNewsItemUpdateDate = (firstCampaign, secondCampaign) => new Date(secondCampaign.date_posted) - new Date(firstCampaign.date_posted);
 
   render () {
     renderLog('CampaignNewsItemList');  // Set LOG_RENDER_EVENTS to log all renders

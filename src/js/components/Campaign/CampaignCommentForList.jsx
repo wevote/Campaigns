@@ -71,6 +71,12 @@ class CampaignCommentForList extends Component {
     });
   }
 
+  onHideFullSupporterEndorsement = () => {
+    this.setState({
+      showFullSupporterEndorsement: false,
+    });
+  }
+
   onShowFullSupporterEndorsement = () => {
     this.setState({
       showFullSupporterEndorsement: true,
@@ -120,40 +126,30 @@ class CampaignCommentForList extends Component {
                   {showFullSupporterEndorsement ? (
                     <div>
                       <CommentTextInnerWrapper>{supporterEndorsement}</CommentTextInnerWrapper>
-                      {supporterVoterWeVoteId === voterWeVoteId && (
-                        <>
-                          &nbsp;
-                          <Link to={pathToUseToEditSupporterEndorsement}>
-                            edit
-                          </Link>
-                        </>
-                      )}
+                      <div
+                        className="u-cursor--pointer u-link-underline u-link-color--gray"
+                        onClick={this.onHideFullSupporterEndorsement}
+                      >
+                        Read less
+                      </div>
                     </div>
                   ) : (
                     <TruncateMarkup
-                      lines={4}
                       ellipsis={(
-                        <span>
-                          <span className="u-text-fade-at-end">&nbsp;</span>
+                        <div>
                           <span
                             className="u-cursor--pointer u-link-underline u-link-color--gray"
                             onClick={this.onShowFullSupporterEndorsement}
                           >
                             Read more
                           </span>
-                        </span>
+                        </div>
                       )}
+                      lines={4}
+                      tokenize="words"
                     >
                       <div>
-                        <CommentTextInnerWrapper>{supporterEndorsement}</CommentTextInnerWrapper>
-                        {supporterVoterWeVoteId === voterWeVoteId && (
-                          <>
-                            &nbsp;
-                            <Link to={pathToUseToEditSupporterEndorsement}>
-                              edit
-                            </Link>
-                          </>
-                        )}
+                        {supporterEndorsement}
                       </div>
                     </TruncateMarkup>
                   )}
@@ -168,6 +164,14 @@ class CampaignCommentForList extends Component {
                   supported
                   {' '}
                   {timeFromDate(dateSupported)}
+                  {supporterVoterWeVoteId === voterWeVoteId && (
+                    <>
+                      &nbsp;&nbsp;&nbsp;
+                      <Link to={pathToUseToEditSupporterEndorsement}>
+                        Edit
+                      </Link>
+                    </>
+                  )}
                 </CommentNameWrapper>
               </CommentTextWrapper>
             </CommentWrapper>

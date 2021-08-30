@@ -41,14 +41,14 @@ const CampaignSupportMobileButtonWrapper = styled.div`
 `;
 
 const CampaignSupportSection = styled.div`
-  margin-bottom: 20px !important;
+  ${({ marginBottomOff }) => (marginBottomOff ? '' : 'margin-bottom: 20px !important;')}
   width: 100%;
 `;
 
 const CampaignSupportSectionWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  ${({ marginTopOff }) => (marginTopOff ? '' : 'margin-top: 20px;')}
   max-width: 620px;
 `;
 
