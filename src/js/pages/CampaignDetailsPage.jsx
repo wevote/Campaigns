@@ -203,7 +203,7 @@ class CampaignDetailsPage extends Component {
       // If it has changed, use new value
       visibleToPublic = CampaignSupporterStore.getVisibleToPublicQueuedToSave();
     }
-    console.log('functionToUseWhenProfileComplete, blockCampaignXRedirectOnSignIn:', AppStore.blockCampaignXRedirectOnSignIn());
+    // console.log('functionToUseWhenProfileComplete, blockCampaignXRedirectOnSignIn:', AppStore.blockCampaignXRedirectOnSignIn());
     const saveVisibleToPublic = true;
     if (!AppStore.blockCampaignXRedirectOnSignIn()) {
       initializejQuery(() => {
