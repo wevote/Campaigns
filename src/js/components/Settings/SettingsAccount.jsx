@@ -66,9 +66,7 @@ export default class SettingsAccount extends Component {
   // Set up this component upon first entry
   // componentWillMount is used in WebApp
   componentDidMount () {
-    console.log('SettingsAccount componentDidMount');
-
-    // this.onVoterStoreChange();  This causes cascades of un-needed api calls, if there is a specific need test for it
+    // console.log('SettingsAccount componentDidMount');
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.facebookStoreListener = FacebookStore.addListener(this.onFacebookChange.bind(this));
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
