@@ -2,6 +2,7 @@ import { ReduceStore } from 'flux/utils';
 import Dispatcher from '../dispatcher/Dispatcher';
 import FacebookConstants from '../constants/FacebookConstants';
 import signInModalGlobalState from '../components/Settings/signInModalGlobalState';
+import { oAuthLog } from '../utils/logging';
 
 class FacebookStore extends ReduceStore {
   getInitialState () {
@@ -125,8 +126,6 @@ class FacebookStore extends ReduceStore {
       case FacebookConstants.FACEBOOK_RECEIVED_DATA:
         // Cache the data in the API server
         // console.log("FACEBOOK_RECEIVED_DATA action.data:", action.data);
-        // FacebookActions.voterFacebookSignInData(action.data);  // Steve this calls a save to the server
-        // FacebookActions.getFacebookProfilePicture();
         return {
           ...state,
           emailData: action.data,
@@ -184,6 +183,7 @@ class FacebookStore extends ReduceStore {
 
       case 'voterFacebookSignInRetrieve':
         // console.log("FacebookStore voterFacebookSignInRetrieve, facebook_sign_in_verified: ", action.res.facebook_sign_in_verified);
+        oAuthLog('FacebookSignIn voterFacebookSignInRetrieve received secret key: ', action.res.facebook_secret_key);
         return {
           ...state,
           voter_device_id: action.res.voter_device_id,

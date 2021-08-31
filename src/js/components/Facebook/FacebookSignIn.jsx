@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import FacebookActions from '../../actions/FacebookActions';
 import VoterActions from '../../actions/VoterActions';
@@ -36,40 +36,63 @@ class FacebookSignIn extends Component {
     this.facebookStoreListener.remove();
     this.voterStoreListener.remove();
     this.appStoreListener.remove();
+    if (this.setSavePollTimeout) clearInterval(this.setSavePollTimeout);
+    if (this.setRetrievePollTimeout) clearInterval(this.setRetrievePollTimeout);
   }
 
   onFacebookStoreChange () {
-    // console.log('FacebookSignIn onFacebookStoreChange');
+    // console.log('xxxxxxxxxxx FacebookSignIn onFacebookStoreChange');
     // const fbState = signInModalGlobalState.getAll();  // For debug
     const facebookAuthResponse = FacebookStore.getFacebookAuthResponse();
+    const step = signInModalGlobalState.get('facebookSignInStep');
 
-    if (signInModalGlobalState.get('facebookSignInStep') === 'getVotersFacebookData') {
-      console.log('FacebookSignIn sending getFacebookData after FB.login');
+    if (step === 'getVotersFacebookData') {
+      // console.log('xxxxxxxxxxx FacebookSignIn sending getFacebookData after FB.login');
       signInModalGlobalState.set('facebookSignInStatus', 'Retrieving Facebook additional data...');
       FacebookActions.getVoterInfoFromFacebookAPI();
-      signInModalGlobalState.set('facebookSignInStep', 'saveWhatWeHaveToFB');
-    } else if (signInModalGlobalState.get('facebookSignInStep') === 'saveWhatWeHaveToFB') {
-      FacebookActions.voterFacebookSignInData(FacebookStore.getFacebookAuthData());
+      signInModalGlobalState.set('facebookSignInStep', 'saveFBIdToFBStore');
+    } else if (step === 'saveFBIdToFBStore') {
+      FacebookActions.facebookSaveVoterSignInData(FacebookStore.getFacebookAuthData());
       signInModalGlobalState.set('facebookSignInStep', 'retrieveSecretKey');
-    } else if (signInModalGlobalState.get('facebookSignInStep') === 'retrieveSecretKey') {
+    } else if (step === 'retrieveSecretKey') {
       FacebookActions.voterFacebookSignInRetrieve();  // get the secret key
-      signInModalGlobalState.set('facebookSignInStep', 'checkForNeedToMerge');
-      signInModalGlobalState.set('facebookSignInStatus', 'Retrieving sign in data...');
-    } else if (signInModalGlobalState.get('facebookSignInStep') === 'checkForNeedToMerge') {
-      const { existing_facebook_account_found: existingFBAccountFound } = facebookAuthResponse;
-      if (existingFBAccountFound) {
-        console.log('FacebookSignIn calling voterMergeTwoAccountsByFacebookKey, since the voter is authenticated with facebook');
+      signInModalGlobalState.set('facebookSignInStep', 'waitForSecretKey');
+      signInModalGlobalState.set('facebookSignInStatus', 'Retrieving facebook sign in data...');
+    } else if (step === 'waitForSecretKey') {
+      const { facebook_secret_key: FBSecretKey } = FacebookStore.getFacebookAuthData();
+      if (FBSecretKey === undefined) {
+        this.setRetrievePollTimeout = setTimeout(() => {
+          const { facebook_secret_key: FBSecretKeyInner } = FacebookStore.getFacebookAuthData();
+          if (FBSecretKeyInner === undefined) {   // still undefined 100ms later?
+            // console.log('xxxxxxxxxxx poll For Facebook retrieve, waiting for secret key to arrive');
+            this.onFacebookStoreChange();
+          }
+        }, 100);
+      } else {
+        signInModalGlobalState.set('facebookSignInStep', 'checkForNeedToMerge');
+        signInModalGlobalState.set('facebookSignInStatus', 'Retrieving sign in data...');
+      }
+    } else if (step === 'checkForNeedToMerge') {
+      const { existing_facebook_account_found: existingFBAccountFound } = FacebookStore.getFacebookAuthResponse();
+      if (existingFBAccountFound === undefined) {
+        this.setSavePollTimeout = setInterval(() => {
+          // console.log('xxxxxxxxxxx poll For Facebook save');
+          this.onFacebookStoreChange();
+        }, 100);
+      } else if (existingFBAccountFound) {
+        // console.log('xxxxxxxxxxx FacebookSignIn calling voterMergeTwoAccountsByFacebookKey, since the voter is authenticated with facebook');
         signInModalGlobalState.set('facebookSignInStatus', 'Merging any changes made when not signed in...');
         const { facebook_secret_key: facebookSecretKey } = facebookAuthResponse;
         VoterActions.voterMergeTwoAccountsByFacebookKey(facebookSecretKey);
+        signInModalGlobalState.set('facebookSignInStep', 'voterRefresh');
       } else {
-        console.log('FacebookSignIn calling voterFacebookSaveToCurrentAccount, since this is the first time this voter signed in with facebook');
+        // console.log('xxxxxxxxxxx FacebookSignIn calling voterFacebookSaveToCurrentAccount, since this is the first time this voter signed in with facebook');
         signInModalGlobalState.set('facebookSignInStatus', 'Saving initial Facebook signin...');
         VoterActions.voterFacebookSaveToCurrentAccount();
+        signInModalGlobalState.set('facebookSignInStep', 'voterRefresh');
       }
-      signInModalGlobalState.set('facebookSignInStep', 'voterRefresh');
-    } else if (signInModalGlobalState.get('facebookSignInStep') === 'voterRefresh') {
-      console.log('FacebookSignIn facebookSignInStep === voterRefresh and calling voterRetrieve()');
+    } else if (step === 'voterRefresh') {
+      // console.log('xxxxxxxxxxx FacebookSignIn facebookSignInStep === voterRefresh and calling voterRetrieve()');
       signInModalGlobalState.set('facebookSignInStep', 'waitingForRetrieveVoterResponse');
       VoterActions.voterRetrieve();
     }
@@ -79,7 +102,9 @@ class FacebookSignIn extends Component {
     // const fbState = signInModalGlobalState.getAll();  // For debug
     // const voter = VoterStore.getVoter();  // for debug
     // console.log('FacebookSignIn onVoterStoreChange       voter:', voter);
-    if (signInModalGlobalState.get('facebookSignInStep') === 'waitingForRetrieveVoterResponse') {
+    const step = signInModalGlobalState.get('facebookSignInStep');
+
+    if (step === 'waitingForRetrieveVoterResponse') {
       console.log('onVoterStoreChange ... facebookSignInStep === waitingForRetrieveVoterResponse');
       signInModalGlobalState.set('facebookSignInStep', 'done');
       this.closeSignInModalLocal();
@@ -132,6 +157,7 @@ class FacebookSignIn extends Component {
 
     let showWheel = true;
 
+    const step = signInModalGlobalState.get('facebookSignInStep');
     if (facebookAuthResponse && facebookAuthResponse.facebook_sign_in_failed) {
       oAuthLog('facebookAuthResponse.facebook_sign_in_failed , setting "Facebook sign in process." message.');
       signInModalGlobalState.set('facebookSignInStatus', 'Facebook sign in process.');
@@ -140,14 +166,16 @@ class FacebookSignIn extends Component {
       oAuthLog('facebookAuthResponse.facebook_sign_in_found with no authentication');
       signInModalGlobalState.set('facebookSignInStatus', 'Facebook authentication not found. Please try again.');
       showWheel = false;
-    } else if (signInModalGlobalState.get('facebookSignInStep') === 'voterRefresh' ||
-      signInModalGlobalState.get('facebookSignInStep') === 'waitingForRetrieveVoterResponse') {
+    } else if (step === 'voterRefresh' || step === 'waitingForRetrieveVoterResponse') {
       oAuthLog('FacebookSignin voterRetrieve, which should bring in the merged voter');
     } else if (facebookAuthResponse && facebookAuthResponse.existing_facebook_account_found) {  // Is there a collision of two accounts?
       oAuthLog('FacebookSignIn facebookAuthResponse.existing_facebook_account_found');
-      if (signInModalGlobalState.get('facebookSignInStep') === 'retrieveSecretKey' ||
-        signInModalGlobalState.get('facebookSignInStep') === 'checkForNeedToMerge') {
+      if (step === 'retrieveSecretKey' || step === 'checkForNeedToMerge' || step === 'waitForSecretKey') {
         oAuthLog('FacebookSignIn merging two accounts by facebook key');
+      } else if (step === '') {
+        signInModalGlobalState.set('facebookSignInStatus', 'Loading...');
+      } else if (step === 'done') {
+        signInModalGlobalState.set('facebookSignInStatus', '');
       } else {
         oAuthLog('FacebookSignIn internal error ---------------');
         signInModalGlobalState.set('facebookSignInStatus', 'Internal error...');

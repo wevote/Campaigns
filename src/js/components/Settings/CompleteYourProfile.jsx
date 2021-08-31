@@ -240,8 +240,11 @@ class CompleteYourProfile extends Component {
     } = this.state;
     if (!voterWeVoteId) {
       // console.log('CompleteYourProfile render voter NOT found');
-      return <div className="undefined-props" />;
+      return (
+        <div className="undefined-props">Please sign in</div>
+      );
     }
+
     // console.log('CompleteYourProfile render voter found');
     let buttonText = 'Continue';
     let introductionText = null;

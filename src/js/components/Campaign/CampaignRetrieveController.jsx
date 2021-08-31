@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
-import { retrieveCampaignXFromIdentifiers } from '../../utils/campaignUtils';
+import { retrieveCampaignXFromIdentifiersIfNotAlreadyRetrieved } from '../../utils/campaignUtils';
 import VoterStore from '../../stores/VoterStore';
 
 
@@ -52,7 +52,7 @@ class CampaignRetrieveController extends Component {
         const voterFirstRetrieveCompleted = VoterStore.voterFirstRetrieveCompleted();
         // console.log('CampaignRetrieveController campaignRetrieveInitiated: ', campaignRetrieveInitiated, ', voterFirstRetrieveCompleted: ', voterFirstRetrieveCompleted);
         if (voterFirstRetrieveCompleted && !campaignRetrieveInitiated) {
-          const updatedCampaignRetrieveInitiated = retrieveCampaignXFromIdentifiers(campaignSEOFriendlyPath, campaignXWeVoteId);
+          const updatedCampaignRetrieveInitiated = retrieveCampaignXFromIdentifiersIfNotAlreadyRetrieved(campaignSEOFriendlyPath, campaignXWeVoteId);
           // console.log('campaignRetrieveInitiated:', campaignRetrieveInitiated, 'updatedCampaignRetrieveInitiated:', updatedCampaignRetrieveInitiated);
           this.setState({
             campaignRetrieveInitiated: updatedCampaignRetrieveInitiated,
