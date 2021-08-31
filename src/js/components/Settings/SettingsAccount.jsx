@@ -14,7 +14,6 @@ import FacebookStore from '../../stores/FacebookStore';
 import VoterStore from '../../stores/VoterStore';
 import cookies from '../../utils/cookies';
 import { historyPush, isCordova, isIPhone4in, isIPhone4p7in, restoreStylesAfterCordovaKeyboard } from '../../utils/cordovaUtils';
-import initializejQuery from '../../utils/initializejQuery';
 import { oAuthLog, renderLog } from '../../utils/logging';
 import { stringContains } from '../../utils/textFormat';
 import AppleSignIn from '../Apple/AppleSignIn';
@@ -68,96 +67,90 @@ export default class SettingsAccount extends Component {
   // componentWillMount is used in WebApp
   componentDidMount () {
     // console.log('SettingsAccount componentDidMount');
-    initializejQuery(() => {
-      this.setState({ jqueryLoaded: true });
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.facebookStoreListener = FacebookStore.addListener(this.onFacebookChange.bind(this));
+    this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
+    let signInStartFullUrl = cookies.getItem('sign_in_start_full_url');
+    if (stringContains('/settings/account', signInStartFullUrl)) {
+      cookies.removeItem('sign_in_start_full_url', '/');
+      cookies.removeItem('sign_in_start_full_url', '/', 'wevote.us');
+    }
+    const oneDayExpires = 86400;
+    let pathname = '';
 
-      this.onVoterStoreChange();
-      this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
-      this.facebookStoreListener = FacebookStore.addListener(this.onFacebookChange.bind(this));
-      this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
-      let signInStartFullUrl = cookies.getItem('sign_in_start_full_url');
-      if (stringContains('/settings/account', signInStartFullUrl)) {
-        cookies.removeItem('sign_in_start_full_url', '/');
-        cookies.removeItem('sign_in_start_full_url', '/', 'wevote.us');
-      }
-      const oneDayExpires = 86400;
-      let pathname = '';
+    const getStartedMode = AppStore.getStartedMode();
+    const { origin } = window.location;
 
-      const getStartedMode = AppStore.getStartedMode();
-      AnalyticsActions.saveActionAccountPage(VoterStore.electionId());
-      const { origin } = window.location;
-
-      if (this.props.pleaseSignInTitle || this.props.pleaseSignInSubTitle || this.props.pleaseSignInTextOff) {
-        this.setState({
-          pleaseSignInTitle: this.props.pleaseSignInTitle || '',
-          pleaseSignInSubTitle: this.props.pleaseSignInSubTitle || '',
-        }, () => this.localStoreSignInStartFullUrl());
-      } else if (getStartedMode && getStartedMode === 'getStartedForCampaigns') {
-        pathname = '/settings/profile';
-        signInStartFullUrl = `${origin}${pathname}`;
-        // console.log('SettingsAccount getStartedForCampaigns, new origin: ', origin, ', pathname: ', pathname, ', signInStartFullUrl: ', signInStartFullUrl);
-        if (origin && stringContains('wevote.us', origin)) {
-          cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/', 'wevote.us');
-        } else {
-          cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/');
-        }
-        this.setState({
-          pleaseSignInTitle: 'Please sign in to get started.',
-          pleaseSignInSubTitle: 'Use Twitter to verify your account most quickly.',
-        });
-      } else if (getStartedMode && getStartedMode === 'getStartedForOrganizations') {
-        pathname = '/settings/profile';
-        signInStartFullUrl = `${origin}${pathname}`;
-        // console.log('SettingsAccount getStartedForCampaigns, new origin: ', origin, ', pathname: ', pathname, ', signInStartFullUrl: ', signInStartFullUrl);
-        if (origin && stringContains('wevote.us', origin)) {
-          cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/', 'wevote.us');
-        } else {
-          cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/');
-        }
-        this.setState({
-          pleaseSignInTitle: 'Please sign in to get started.',
-          pleaseSignInSubTitle: 'Use Twitter to verify your account most quickly.',
-        });
-      } else if (getStartedMode && getStartedMode === 'getStartedForVoters') {
-        pathname = '/settings/profile';
-        signInStartFullUrl = `${origin}${pathname}`;
-        // console.log('SettingsAccount getStartedForCampaigns, new origin: ', origin, ', pathname: ', pathname, ', signInStartFullUrl: ', signInStartFullUrl);
-        if (origin && stringContains('wevote.us', origin)) {
-          cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/', 'wevote.us');
-        } else {
-          cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/');
-        }
-        this.setState({
-          pleaseSignInTitle: 'Please sign in to get started.',
-          pleaseSignInSubTitle: 'Don\'t worry, we won\'t post anything automatically.',
-        });
+    if (this.props.pleaseSignInTitle || this.props.pleaseSignInSubTitle || this.props.pleaseSignInTextOff) {
+      this.setState({
+        pleaseSignInTitle: this.props.pleaseSignInTitle || '',
+        pleaseSignInSubTitle: this.props.pleaseSignInSubTitle || '',
+      }, () => this.localStoreSignInStartFullUrl());
+    } else if (getStartedMode && getStartedMode === 'getStartedForCampaigns') {
+      pathname = '/settings/profile';
+      signInStartFullUrl = `${origin}${pathname}`;
+      // console.log('SettingsAccount getStartedForCampaigns, new origin: ', origin, ', pathname: ', pathname, ', signInStartFullUrl: ', signInStartFullUrl);
+      if (origin && stringContains('wevote.us', origin)) {
+        cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/', 'wevote.us');
       } else {
-        const isOnWeVoteRootUrl = AppStore.isOnWeVoteRootUrl();
-        const isOnWeVoteSubdomainUrl = AppStore.isOnWeVoteSubdomainUrl();
-        const isOnFacebookSupportedDomainUrl = AppStore.isOnFacebookSupportedDomainUrl() || window.location.href.includes('ngrok');
-        let pleaseSignInSubTitle = '';
-        if (isOnWeVoteRootUrl || isOnWeVoteSubdomainUrl || isOnFacebookSupportedDomainUrl) {
-          pleaseSignInSubTitle = 'Don\'t worry, we won\'t post anything automatically.';
-        }
-        this.setState({
-          pleaseSignInTitle: '',
-          pleaseSignInSubTitle,
-        }, () => this.localStoreSignInStartFullUrl());
+        cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/');
       }
       this.setState({
-        isOnWeVoteRootUrl: AppStore.isOnWeVoteRootUrl(),
-        isOnWeVoteSubdomainUrl: AppStore.isOnWeVoteSubdomainUrl(),
-        isOnFacebookSupportedDomainUrl: AppStore.isOnFacebookSupportedDomainUrl(),
+        pleaseSignInTitle: 'Please sign in to get started.',
+        pleaseSignInSubTitle: 'Use Twitter to verify your account most quickly.',
       });
-      signInModalGlobalState.set('facebookSignInStep', '');
-      signInModalGlobalState.set('facebookSignInStatus', '');
-
-      const delayBeforeClearingStatus = 500;
-      this.timer = setTimeout(() => {
-        VoterActions.clearEmailAddressStatus();
-        VoterActions.clearSecretCodeVerificationStatus();
-      }, delayBeforeClearingStatus);
+    } else if (getStartedMode && getStartedMode === 'getStartedForOrganizations') {
+      pathname = '/settings/profile';
+      signInStartFullUrl = `${origin}${pathname}`;
+      // console.log('SettingsAccount getStartedForCampaigns, new origin: ', origin, ', pathname: ', pathname, ', signInStartFullUrl: ', signInStartFullUrl);
+      if (origin && stringContains('wevote.us', origin)) {
+        cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/', 'wevote.us');
+      } else {
+        cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/');
+      }
+      this.setState({
+        pleaseSignInTitle: 'Please sign in to get started.',
+        pleaseSignInSubTitle: 'Use Twitter to verify your account most quickly.',
+      });
+    } else if (getStartedMode && getStartedMode === 'getStartedForVoters') {
+      pathname = '/settings/profile';
+      signInStartFullUrl = `${origin}${pathname}`;
+      // console.log('SettingsAccount getStartedForCampaigns, new origin: ', origin, ', pathname: ', pathname, ', signInStartFullUrl: ', signInStartFullUrl);
+      if (origin && stringContains('wevote.us', origin)) {
+        cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/', 'wevote.us');
+      } else {
+        cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/');
+      }
+      this.setState({
+        pleaseSignInTitle: 'Please sign in to get started.',
+        pleaseSignInSubTitle: 'Don\'t worry, we won\'t post anything automatically.',
+      });
+    } else {
+      const isOnWeVoteRootUrl = AppStore.isOnWeVoteRootUrl();
+      const isOnWeVoteSubdomainUrl = AppStore.isOnWeVoteSubdomainUrl();
+      const isOnFacebookSupportedDomainUrl = AppStore.isOnFacebookSupportedDomainUrl() || window.location.href.includes('ngrok');
+      let pleaseSignInSubTitle = '';
+      if (isOnWeVoteRootUrl || isOnWeVoteSubdomainUrl || isOnFacebookSupportedDomainUrl) {
+        pleaseSignInSubTitle = 'Don\'t worry, we won\'t post anything automatically.';
+      }
+      this.setState({
+        pleaseSignInTitle: '',
+        pleaseSignInSubTitle,
+      }, () => this.localStoreSignInStartFullUrl());
+    }
+    this.setState({
+      isOnWeVoteRootUrl: AppStore.isOnWeVoteRootUrl(),
+      isOnWeVoteSubdomainUrl: AppStore.isOnWeVoteSubdomainUrl(),
+      isOnFacebookSupportedDomainUrl: AppStore.isOnFacebookSupportedDomainUrl(),
     });
+    signInModalGlobalState.set('facebookSignInStep', '');
+    signInModalGlobalState.set('facebookSignInStatus', '');
+
+    const delayBeforeClearingStatus = 500;
+    this.timer = setTimeout(() => {
+      VoterActions.clearEmailAddressStatus();
+      VoterActions.clearSecretCodeVerificationStatus();
+    }, delayBeforeClearingStatus);
   }
 
   componentDidUpdate () {
@@ -213,6 +206,11 @@ export default class SettingsAccount extends Component {
   }
 
   onVoterStoreChange () {
+    const { voter } = this.state;
+    if (voter === undefined) {
+      // We only want to call this once, on the first load of the voter
+      AnalyticsActions.saveActionAccountPage(VoterStore.electionId());
+    }
     this.setState({
       voter: VoterStore.getVoter(),
     });
@@ -325,9 +323,9 @@ export default class SettingsAccount extends Component {
       facebookAuthResponse, hideCurrentlySignedInHeader,
       hideAppleSignInButton, hideFacebookSignInButton, hideTwitterSignInButton,
       hideVoterEmailAddressEntry, hideVoterPhoneEntry, isOnWeVoteRootUrl, isOnWeVoteSubdomainUrl,
-      isOnFacebookSupportedDomainUrl, jqueryLoaded, pleaseSignInTitle, pleaseSignInSubTitle, voter, hideDialogForCordova,
+      isOnFacebookSupportedDomainUrl, pleaseSignInTitle, pleaseSignInSubTitle, voter, hideDialogForCordova,
     } = this.state;
-    if (!voter || !jqueryLoaded) {
+    if (!voter) {
       return LoadingWheel;
     }
 

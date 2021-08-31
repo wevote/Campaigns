@@ -25,6 +25,9 @@ module.exports = [
   'Copyright (c) 2014 Call-Em-All\n',
   // Jan 2021, https://github.com/mui-org/material-ui/tree/master/packages/material-ui-icons
   // No license cited
+  // https://github.com/Yuvaleros/material-ui-dropzone/blob/master/LICENSE
+  'Yuvaleros/material-ui-dropzone is licensed under the MIT License\n' +
+  'Copyright (c) 2017 Yuvaleros',
   // Jan 2019, https://github.com/twbs/bootstrap/blob/v4-dev/LICENSE
   'twbs/bootstrap is licensed under the MIT License (MIT)\n' +
   '\n' +
@@ -36,18 +39,6 @@ module.exports = [
   // Jan 20201, https://github.com/lukeed/clsx/blob/master/license
   'lukeed/clsx is licensed under the MIT License (MIT)\n' +
   'Copyright (c) Luke Edwards <luke.edwards05@gmail.com> (lukeed.com)\n',
-  // Jan 2021, https://github.com/d3/d3-geo/blob/master/LICENSE
-  'd3/d3-geo is licensed under the BSD-3-Clause\n' +
-  'Copyright (c) 2008-2012, Charles Karney\n',
-  // Jan 2021, https://github.com/d3/d3-selection/blob/master/LICENSE
-  'd3/d3-selection is licensed under the BSD-3-Clause\n' +
-  'Copyright (c) 2010-2018, Michael Bostock\n',
-  // Jan 2021, https://github.com/d3/d3-zoom/blob/master/LICENSE
-  'd3/d3-zoom is licensed under the BSD-3-Clause\n' +
-  'Copyright (c) 2010-2016, Michael Bostock\n',
-  // Jan 2019,
-  'stefanpenner/es6-promise is licensed under the MIT License (MIT)\n' +
-  'Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors\n',
   // Jan 2019, https://github.com/facebook/flux/blob/master/LICENSE
   'BSD License for Flux software\n' +
   'Copyright (c) 2014-present, Facebook, Inc. All rights reserved.\n' +
@@ -84,21 +75,17 @@ module.exports = [
   'Awesome Free files already contain embedded comments with sufficient ' +
   "attribution, so you shouldn't need to do anything additional when using these " +
   'files normally.',
-  // Jan 2019, https://github.com/davidjbradshaw/iframe-resizer/blob/master/LICENSE
-  'davidjbradshaw/iframe-resizer is licensed under the MIT License (MIT)\n' +
-  '\n' +
-  'Copyright (c) 2013-2018 David J. Bradshaw',
+  // https://github.com/partnerhero/gapi-script/blob/master/LICENSE
+  'partnerhero/gapi-script is licensed under the MIT License (MIT)\n' +
+  'Copyright (c) 2019 Lucas Andrade Oliveira\n',
+  // https://github.com/isaacs/node-glob/blob/master/LICENSE
+  'issacs/node-glob is licenced under the ISC License (ISC)\n' +
+  'https://opensource.org/licenses/ISC \n' +
+  'Copyright (c) Isaac Z. Schlueter and Contributors\n',
   // Jan 2019, https://github.com/jquery/jquery/blob/master/LICENSE.txt
   'jquery/jquery is licensed under the MIT License (MIT)\n' +
   'Copyright JS Foundation and other contributors, https://js.foundation/\n',
   // Jan 2021, keymirror is unlicensed, https://www.npmjs.com/package/keymirror
-  // Jan 2019, https://github.com/lodash/lodash/blob/master/LICENSE
-  'lodash/lodash is licensed under the MIT License (MIT)\n' +
-  '\n' +
-  'Copyright JS Foundation and other contributors <https://js.foundation/>\n' +
-  '\n' +
-  'Based on Underscore.js, copyright Jeremy Ashkenas, ' +
-  'DocumentCloud and Investigative Reporters & Editors <http://underscorejs.org/>\n',
   // Jan 2021, https://github.com/lodash/lodash/blob/master/LICENSE
   'lodash/lodash (and lodash-assign) is licensed under the MIT License (MIT)\n' +
   '\n' +
@@ -123,12 +110,14 @@ module.exports = [
   // Jan 2019, https://github.com/facebook/react/blob/master/LICENSE
   'facebook/react (and facebook/react-dom) is licensed under the MIT License (MIT)\n' +
   'Copyright (c) Facebook, Inc. and its affiliates.\n',
+  // https://github.com/gregberge/loadable-components/blob/main/LICENSE
+  'gregberge/loadable-components is licensed under the MIT License (MIT)\n' +
+  'Copyright 2019 Greg Bergé.\n',
   // Jan 2019, https://github.com/react-bootstrap/react-bootstrap/blob/master/LICENSE
   'react-bootstrap/react-bootstrap is licensed under the MIT License (MIT)\n' +
   'Copyright (c) 2014-present Stephen J. Collings, Matthew Honnibal, Pieter Vanderwerff\n',
   // Jan 2019, https://github.com/nkbt/react-copy-to-clipboard/blob/master/LICENSE
   'nkbt/react-copy-to-clipboard is licensed under the MIT License (MIT)\n' +
-  '\n' +
   'Copyright (c) 2016 Nik Butenko\n',
   // Jan 2019, https://github.com/nfl/react-helmet/blob/master/LICENSE
   'nfl/react-helmet is licensed under the MIT License (MIT)\n' +
@@ -145,39 +134,21 @@ module.exports = [
   // Jan 2021, https://github.com/nygardk/react-share/blob/master/LICENSE
   'nygardk/react-share is licensed under the MIT License (MIT)\n' +
   'Copyright (c) 2015 Klaus Nygård\n',
-  // https://github.com/akiran/react-slick
-  'akiran/react-slick is licensed under the The MIT License (MIT)\n' +
-  'Copyright (c) 2014 Kiran Abburi\n',
-  // https://github.com/stripe/react-stripe-elements/blob/master/LICENSE
-  'stripe/react-stripe-elements is licensed under the MIT License (MIT)\n' +
-  'Copyright (c) 2017 Stripe\n',
+  // https://github.com/stripe/react-stripe-js/blob/master/LICENSE
+  'stripe/stripe-js is licensed under the MIT License  (MIT)\n' +
+  'Copyright (c) 2017 Stripe',
+  // https://github.com/stripe/react-stripe-js/blob/master/LICENSE
+  'stripe/react-stripe-js is licensed under the MIT License  (MIT)\n' +
+  'Copyright (c) 2017 Stripe',
   // Jan 2019, https://github.com/tanem/react-svg/blob/master/LICENSE
   'tanem/react-svg is licensed under the  MIT License (MIT)\n' +
   'Copyright (c) 2014-present Tane Morgan <tane.morgan@gmail.com>\n',
-  // https://github.com/parsable/react-truncate-markup/blob/master/LICENSE.md
-  'Parsable/React-Truncate-Markup is licensed under the Apache License, Version 2.0\n' +
-  'Copyright (c) 2017-present Parsable Inc.\n',
-  // Jan 2019, https://github.com/fkhadra/react-toastify/blob/master/LICENSE
-  'fkhadra/react-toastify is licensed under the MIT License (MIT)\n' +
-  'Copyright (c) 2017 Fadi Khadra\n',
-  // Jan 2019, https://github.com/aaronshaf/react-toggle/blob/master/LICENSE
-  'aaronshaf/react-toggle is licensed under the MIT License (MIT)\n' +
-  'Copyright (c) 2015 instructure-react\n',
   // Jan 2019, https://github.com/styled-components/styled-components/blob/master/LICENSE
   'styled-components/styled-components is licensed under the MIT License (MIT)\n' +
   'Copyright (c) 2016-present Glen Maddern and Maximilian Stoiber\n',
-  // Jan 2019, https://github.com/visionmedia/superagent/blob/master/LICENSE
-  'visionmedia/superagent is licensed under the MIT License (MIT)\n' +
-  'Copyright (c) 2014-2016 TJ Holowaychuk <tj@vision-media.ca>\n',
-  // Jan 2021,
-  'topojson/topojson-client is licensed under the ISC License\n' +
-  'Copyright 2012-2019 Michael Bostock\n',
   // Jan 2019, https://dev.maxmind.com/geoip/geoip2/geolite2/ (In Python server, but requests attribution in app)
   'This product includes GeoLite2 data created by MaxMind\n' +
   'Available from https://www.maxmind.com',
-  // July 2019, https://developer.zendesk.com/embeddables/docs/widget/legal
-  'The Zendesk embeddable contains third-party, open source software and/or libraries. \n' +
-  'To view them and their license terms, go to http://goto.zendesk.com/embeddable-legal-notices',
 
   // Commented out in code
   /*
@@ -187,5 +158,8 @@ module.exports = [
   // Jan 2019, https://github.com/andreypopp/react-textarea-autosize/blob/master/LICENSE
   'andreypopp/react-textarea-autosize is licensed under the  MIT License (MIT)\n' +
   'Copyright (c) 2013 Andrey Popp\n',
+  // July 2019, https://developer.zendesk.com/embeddables/docs/widget/legal
+  'The Zendesk embeddable contains third-party, open source software and/or libraries. \n' +
+  'To view them and their license terms, go to http://goto.zendesk.com/embeddable-legal-notices',
   */
 ];

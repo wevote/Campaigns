@@ -4,7 +4,7 @@ import FacebookConstants from '../constants/FacebookConstants';
 import { oAuthLog } from '../utils/logging';
 import signInModalGlobalState from '../components/Settings/signInModalGlobalState';
 import webAppConfig from '../config';
-import { dumpObjProps } from '../utils/appleSiliconUtils';
+// import { dumpObjProps } from '../utils/appleSiliconUtils';
 
 // Including FacebookStore causes problems in the WebApp, and again in the Native App
 
@@ -71,7 +71,7 @@ export default {
 
   // Save incoming data from Facebook
   // For offsets, see https://developers.facebook.com/docs/graph-api/reference/cover-photo/
-  voterFacebookSignInData (data) {
+  facebookSaveVoterSignInData (data) {
   /**
    * Save incoming data from Facebook
    * For offsets, see https://developers.facebook.com/docs/graph-api/reference/cover-photo/
@@ -79,7 +79,7 @@ export default {
    * @param data.cover.offset_x
    * @param data.cover.offset_y
    */
-    // console.log("FacebookActions voterFacebookSignInData, data:", data);
+    // console.log("FacebookActions facebookSaveVoterSignInData, data:", data);
     let background = false;
     let offsetX = false;
     let offsetY = false;
@@ -101,7 +101,7 @@ export default {
       facebook_middle_name: data.middleName || false,
       facebook_profile_image_url_https: data.url || false,
       facebook_signed_request: data.signedRequest || false,
-      facebook_user_id: data.id || false,
+      facebook_user_id: data.id || data.userID || false,
       save_auth_data: false,
       save_profile_data: true,
     });
@@ -288,7 +288,12 @@ export default {
           } catch (error) {
             oAuthLog('FacebookActions this.facebookApi().getLoginStatus response.authResponse.userID not found  ');
           }
-          dumpObjProps('facebookApi().getLoginStatus()', response);
+          // try {
+          //   dumpObjProps('facebookApi().getLoginStatus()', response);
+          //   dumpObjProps('facebookApi().getLoginStatus()', response.authResponse);
+          // } catch (e) {
+          //   console.log('dumping object props for fbapi:', e);
+          // }
           if (response.status === 'connected') {
             signInModalGlobalState.set('facebookSignInStep', 'processingConnected');
             Dispatcher.dispatch({

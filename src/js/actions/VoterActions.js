@@ -241,7 +241,7 @@ export default {
   },
 
   voterMergeTwoAccountsByFacebookKey (facebookSecretKey) {
-    // console.log("VoterActions, voterMergeTwoAccountsByFacebookKey");
+    // console.log('VoterActions, voterMergeTwoAccountsByFacebookKey', facebookSecretKey);
     Dispatcher.loadEndpoint('voterMergeTwoAccounts',
       {
         email_secret_key: '',

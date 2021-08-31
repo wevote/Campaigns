@@ -731,7 +731,7 @@ class VoterStore extends ReduceStore {
         }
 
       case 'voterMergeTwoAccounts':
-        console.log('VoterStore, voterMergeTwoAccounts');
+        // console.log('VoterStore, voterMergeTwoAccounts');
         return {
           ...state,
           emailSignInStatus: {

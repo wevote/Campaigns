@@ -1,5 +1,6 @@
 import CampaignActions from '../actions/CampaignActions';
 import CampaignStore from '../stores/CampaignStore';
+import VoterStore from '../stores/VoterStore';
 import initializejQuery from './initializejQuery';
 
 export function getCampaignXValuesFromIdentifiers (campaignSEOFriendlyPath, campaignXWeVoteId) {
@@ -78,6 +79,13 @@ export function retrieveCampaignXFromIdentifiersIfNeeded (campaignSEOFriendlyPat
   // console.log('retrieveCampaignXFromIdentifiersIfNeeded campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
   let campaignX = {};
   let mustRetrieveCampaign = false;
+  const voter = VoterStore.getVoter();
+  if (!('we_vote_id' in voter) || voter.we_vote_id.length < 0) {
+    // Calling campaignRetrieve before we have a voter, is useless
+    return false;
+  }
+
+  // console.log('retrieveCampaignXFromIdentifiersIfNeeded voter:', voter);
   if (campaignSEOFriendlyPath) {
     campaignX = CampaignStore.getCampaignXBySEOFriendlyPath(campaignSEOFriendlyPath);
     // console.log('retrieveCampaignXFromIdentifiersIfNeeded campaignX:', campaignX);
@@ -112,3 +120,15 @@ export function retrieveCampaignXFromIdentifiersIfNeeded (campaignSEOFriendlyPat
   }
   return true;
 }
+
+export function retrieveCampaignXFromIdentifiersIfNotAlreadyRetrieved (campaignSEOFriendlyPath, campaignXWeVoteId) {
+  if (
+    (campaignSEOFriendlyPath && CampaignStore.getCampaignXBySEOFriendlyPath() !== {}) &&
+    (campaignXWeVoteId && CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId) !== {})
+  ) {
+    return false;
+  }
+  return retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
+}
+
+

@@ -318,6 +318,7 @@ const styles = (theme) => ({
 const SignInText = styled.span`
   display: block;
   text-align: center;
+  min-width: 200px;
 `;
 
 export default withTheme(withStyles(styles)(SignInModal));
