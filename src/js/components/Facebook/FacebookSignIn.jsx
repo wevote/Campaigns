@@ -105,7 +105,7 @@ class FacebookSignIn extends Component {
     const step = signInModalGlobalState.get('facebookSignInStep');
 
     if (step === 'waitingForRetrieveVoterResponse') {
-      console.log('onVoterStoreChange ... facebookSignInStep === waitingForRetrieveVoterResponse');
+      oAuthLog('onVoterStoreChange ... facebookSignInStep === waitingForRetrieveVoterResponse');
       signInModalGlobalState.set('facebookSignInStep', 'done');
       this.closeSignInModalLocal();
     } else if (signInModalGlobalState.get('facebookSignInStep') === 'voterRefresh') {
