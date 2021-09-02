@@ -69,6 +69,11 @@ class FacebookSignIn extends Component {
           }
         }, 100);
       } else {
+        const { facebook_email: fbEmail, first_name: fbFirst, last_name: fbLast } = VoterStore.getVoter();
+        if (fbEmail === null || fbFirst === null || fbLast === null) {
+          // console.log('xxxxxxxxxxx After secret key to arrives, voter needed to be updated with facebook info');
+          VoterActions.voterFacebookSaveToCurrentAccount();
+        }
         signInModalGlobalState.set('facebookSignInStep', 'checkForNeedToMerge');
         signInModalGlobalState.set('facebookSignInStatus', 'Retrieving sign in data...');
       }
@@ -108,8 +113,8 @@ class FacebookSignIn extends Component {
       oAuthLog('onVoterStoreChange ... facebookSignInStep === waitingForRetrieveVoterResponse');
       signInModalGlobalState.set('facebookSignInStep', 'done');
       this.closeSignInModalLocal();
-    } else if (signInModalGlobalState.get('facebookSignInStep') === 'voterRefresh') {
-      // The FacebookStore was not involved in this step, so need to involve it
+    } else if (step === 'voterRefresh' || step === 'checkForNeedToMerge') {
+      // The FacebookStore was not involved in these steps, so need to involve it
       this.onFacebookStoreChange();
     }
   }

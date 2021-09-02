@@ -2,7 +2,6 @@ import React, { Component, Suspense } from 'react';
 import loadable from '@loadable/component';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import AppStore from '../../stores/AppStore';
@@ -28,8 +27,8 @@ import { renderLog } from '../../utils/logging';
 import SendFacebookDirectMessageButton from '../../components/Share/ShareByFacebookDirectMessageButton';
 import ShareByCopyLink from '../../components/Share/ShareByCopyLink';
 import ShareByEmailButton from '../../components/Share/ShareByEmailButton';
-import ShareOnFacebookButton from '../../components/Share/ShareOnFacebookButton';
-import ShareOnTwitterButton from '../../components/Share/ShareOnTwitterButton';
+// import ShareOnFacebookButton from '../../components/Share/ShareOnFacebookButton';
+// import ShareOnTwitterButton from '../../components/Share/ShareOnTwitterButton';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
 const RecommendedCampaignListRetrieveController = React.lazy(() => import('../../components/Campaign/RecommendedCampaignListRetrieveController'));
@@ -187,7 +186,7 @@ class CampaignNewsItemShare extends Component {
 
   getCampaignBasePath = () => {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
-    let campaignBasePath = '';
+    let campaignBasePath;
     if (campaignSEOFriendlyPath) {
       campaignBasePath = `/c/${campaignSEOFriendlyPath}`;
     } else {
@@ -421,12 +420,12 @@ const styles = () => ({
   },
 });
 
-const PublicOrPrivateSectionHeader = styled.span`
-  font-weight: 600;
-`;
-
-const PublicOrPrivateSectionText = styled.span`
-  color: #999;
-`;
+// const PublicOrPrivateSectionHeader = styled.span`
+//   font-weight: 600;
+// `;
+//
+// const PublicOrPrivateSectionText = styled.span`
+//   color: #999;
+// `;
 
 export default withStyles(styles)(CampaignNewsItemShare);
