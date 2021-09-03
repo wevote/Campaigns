@@ -8,6 +8,7 @@ class CampaignNewsItemStore extends ReduceStore {
       campaignNewsItemSubjectQueuedToSaveSet: false,
       campaignNewsItemTextQueuedToSave: '',
       campaignNewsItemTextQueuedToSaveSet: false,
+      mostRecentlySavedCampaignXNewsItemWeVoteId: '',
     };
   }
 
@@ -31,8 +32,20 @@ class CampaignNewsItemStore extends ReduceStore {
     return this.getState().campaignNewsItemTextQueuedToSaveSet;
   }
 
+  getMostRecentlySavedCampaignXNewsItemWeVoteId () {
+    return this.getState().mostRecentlySavedCampaignXNewsItemWeVoteId;
+  }
+
   reduce (state, action) {
+    let { mostRecentlySavedCampaignXNewsItemWeVoteId } = state;
     switch (action.type) {
+      case 'campaignNewsItemSave':
+        mostRecentlySavedCampaignXNewsItemWeVoteId = action.res.campaignx_news_item_we_vote_id;
+        return {
+          ...state,
+          mostRecentlySavedCampaignXNewsItemWeVoteId,
+        };
+
       case 'campaignNewsItemSubjectQueuedToSave':
         // console.log('CampaignNewsItemStore campaignNewsItemSubjectQueuedToSave: ', action.payload);
         if (action.payload === undefined) {

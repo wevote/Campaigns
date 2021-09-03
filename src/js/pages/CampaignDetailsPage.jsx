@@ -24,7 +24,7 @@ import initializejQuery from '../utils/initializejQuery';
 import keepHelpingDestination from '../utils/keepHelpingDestination';
 import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../utils/logging';
-import returnFirstXWords from '../utils/returnFirstXWords';
+import returnFirstXWords from '../common/utils/returnFirstXWords';
 
 const CampaignCommentsList = React.lazy(() => import('../components/Campaign/CampaignCommentsList'));
 const CampaignDetailsActionSideBox = React.lazy(() => import('../components/CampaignSupport/CampaignDetailsActionSideBox'));

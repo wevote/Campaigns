@@ -5,6 +5,7 @@
  * @returns {string}
  */
 export default function returnFirstXWords (originalString, numberOfWordsToReturn, includeEllipses = false) {
+  // See also return_first_x_words in WeVoteServer
   if (!originalString) return '';
 
   let needForEllipses = false;

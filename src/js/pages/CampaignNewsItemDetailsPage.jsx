@@ -26,7 +26,7 @@ import initializejQuery from '../utils/initializejQuery';
 import keepHelpingDestination from '../utils/keepHelpingDestination';
 import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../utils/logging';
-import returnFirstXWords from '../utils/returnFirstXWords';
+import returnFirstXWords from '../common/utils/returnFirstXWords';
 import LazyImage from '../common/components/LazyImage';
 import anonymous from '../../img/global/icons/avatar-generic.png';
 import { stringContains } from '../utils/textFormat';
@@ -130,7 +130,7 @@ class CampaignNewsItemDetailsPage extends Component {
   }
 
   onCampaignStoreChange () {
-    const { match: { params } } = this.props;
+    const { inPreviewMode, match: { params } } = this.props;
     const {
       campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams,
       campaignXNewsItemWeVoteId,
@@ -186,7 +186,7 @@ class CampaignNewsItemDetailsPage extends Component {
         we_vote_hosted_profile_image_url_tiny: speakerProfileImageUrlTiny,
       } = campaignXNewsItem;
 
-      if (inDraftMode) {
+      if (inDraftMode || inPreviewMode) {
         this.props.setShowHeaderFooter(false);
       } else {
         this.props.setShowHeaderFooter(true);
@@ -301,7 +301,7 @@ class CampaignNewsItemDetailsPage extends Component {
     if (isCordova()) {
       console.log(`CampaignNewsItemDetailsPage window.location.href: ${window.location.href}`);
     }
-    const { classes } = this.props;
+    const { classes, inPreviewMode } = this.props;
     const {
       campaignDescriptionLimited, campaignNewsSubject,
       campaignNewsText, campaignPhotoLargeUrl,
@@ -406,7 +406,7 @@ class CampaignNewsItemDetailsPage extends Component {
             content={campaignDescriptionLimited}
           />
         </Helmet>
-        {inDraftMode && (
+        {(inDraftMode || inPreviewMode) && (
           <UpdateSupportersHeader>
             <CampaignNewsItemPublishSteps
               atStepNumber2
@@ -724,6 +724,7 @@ class CampaignNewsItemDetailsPage extends Component {
 }
 CampaignNewsItemDetailsPage.propTypes = {
   classes: PropTypes.object,
+  inPreviewMode: PropTypes.bool,
   match: PropTypes.object,
   setShowHeaderFooter: PropTypes.func,
 };

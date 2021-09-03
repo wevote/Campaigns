@@ -53,6 +53,7 @@ class CampaignNewsItemText extends Component {
     this.props.setShowHeaderFooter(false);
     this.onAppStoreChange();
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.campaignNewsItemStoreListener = CampaignNewsItemStore.addListener(this.onCampaignNewsItemStoreChange.bind(this));
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.onVoterStoreChange();
@@ -106,6 +107,7 @@ class CampaignNewsItemText extends Component {
   componentWillUnmount () {
     this.props.setShowHeaderFooter(true);
     this.appStoreListener.remove();
+    this.campaignNewsItemStoreListener.remove();
     this.campaignStoreListener.remove();
     this.voterStoreListener.remove();
   }
@@ -158,6 +160,14 @@ class CampaignNewsItemText extends Component {
       this.setState({
         campaignXWeVoteId: campaignXWeVoteIdFromParams,
       });
+    }
+  }
+
+  onCampaignNewsItemStoreChange () {
+    const { campaignXNewsItemWeVoteId } = this.state;
+    const mostRecentlySavedCampaignXNewsItemWeVoteId = CampaignNewsItemStore.getMostRecentlySavedCampaignXNewsItemWeVoteId();
+    if (mostRecentlySavedCampaignXNewsItemWeVoteId && mostRecentlySavedCampaignXNewsItemWeVoteId !== campaignXNewsItemWeVoteId) {
+      historyPush(`${this.getCampaignBasePath()}/u-preview/${mostRecentlySavedCampaignXNewsItemWeVoteId}`);
     }
   }
 
@@ -215,7 +225,6 @@ class CampaignNewsItemText extends Component {
       initializejQuery(() => {
         CampaignNewsItemActions.campaignNewsItemTextQueuedToSave(undefined);
       });
-      historyPush(`${this.getCampaignBasePath()}/u/${campaignXNewsItemWeVoteId}`);
     }
   }
 
@@ -274,9 +283,14 @@ class CampaignNewsItemText extends Component {
                 Send update to campaign supporters
               </CampaignProcessStepTitle>
               <CampaignProcessStepIntroductionText>
-                Supporters of
-                {' '}
-                {politicianListSentenceString}
+                Supporters
+                {numberOfPoliticians > 0 && (
+                  <>
+                    of
+                    {' '}
+                    {politicianListSentenceString}
+                  </>
+                )}
                 {' '}
                 would love to hear good news about
                 {' '}
