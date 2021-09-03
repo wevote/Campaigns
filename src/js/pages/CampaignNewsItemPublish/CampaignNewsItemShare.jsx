@@ -201,7 +201,7 @@ class CampaignNewsItemShare extends Component {
     if (shareButtonClicked || showShareCampaignWithOneFriend) {
       historyPush(`${this.getCampaignBasePath()}/updates`);
     } else {
-      historyPush(`${this.getCampaignBasePath()}/share${noNavigation && '-it'}-with-one-friend/${campaignXNewsItemWeVoteId}`);
+      historyPush(`${this.getCampaignBasePath()}/share${noNavigation ? '-it' : ''}-with-one-friend/${campaignXNewsItemWeVoteId}`);
     }
   }
 
@@ -235,7 +235,7 @@ class CampaignNewsItemShare extends Component {
       shareButtonClicked,
     } = this.state;
     let campaignProcessStepIntroductionText = '';
-    let campaignProcessStepTitle = 'Update Published! Now share with even more people.';
+    let campaignProcessStepTitle = 'Update published! Now share with even more people.';
     const htmlTitle = `Sharing ${campaignTitle} - ${chosenWebsiteName}`;
     let skipForNowText = 'Skip for now';
     if (noNavigation) {

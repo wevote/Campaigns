@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 import CampaignCardForList from '../Campaign/CampaignCardForList';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import DelayedLoad from '../Widgets/DelayedLoad';
 import isMobileScreenSize from '../../utils/isMobileScreenSize';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
 import { renderLog } from '../../utils/logging';
@@ -117,13 +116,13 @@ class HomeCampaignList extends Component {
             />
           )}
         </LoadMoreItemsManuallyWrapper>
-        {!numberOfCampaignsDisplayed && (
-          <DelayedLoad waitBeforeShow={2000}>
-            <CampaignsNotAvailableToShow>
-              We don&apos;t have any upcoming campaigns to show. Please try again later!
-            </CampaignsNotAvailableToShow>
-          </DelayedLoad>
-        )}
+        {/* {!numberOfCampaignsDisplayed && ( */}
+        {/*  <DelayedLoad waitBeforeShow={2000}> */}
+        {/*    <CampaignsNotAvailableToShow> */}
+        {/*      We don&apos;t have any upcoming campaigns to show. Please try again later! */}
+        {/*    </CampaignsNotAvailableToShow> */}
+        {/*  </DelayedLoad> */}
+        {/* )} */}
         <Suspense fallback={<span>&nbsp;</span>}>
           <FirstCampaignListController />
         </Suspense>
@@ -142,16 +141,16 @@ const styles = () => ({
   },
 });
 
-const CampaignsNotAvailableToShow = styled.div`
-  color: #555;
-  font-size: 18px;
-  text-align: center;
-  margin: 0 2em 6em;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    font-size: 16px;
-    margin: 0 1em 5em;
-  }
-`;
+// const CampaignsNotAvailableToShow = styled.div`
+//   color: #555;
+//   font-size: 18px;
+//   text-align: center;
+//   margin: 0 2em 6em;
+//   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+//     font-size: 16px;
+//     margin: 0 1em 5em;
+//   }
+// `;
 
 const LoadMoreItemsManuallyWrapper = styled.div`
   margin-bottom: 0px;

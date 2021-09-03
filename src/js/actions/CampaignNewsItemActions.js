@@ -21,6 +21,8 @@ export default {
         campaignx_news_item_we_vote_id: campaignNewsItemWeVoteId,
         in_draft_mode: false,
         in_draft_mode_changed: true,
+        visible_to_public: sendNow,
+        visible_to_public_changed: sendNow,
         send_now: sendNow,
       });
   },

@@ -90,7 +90,7 @@ class CampaignNewsItemPublishSteps extends Component {
     const { campaignBasePath } = this.props;
     const { campaignXNewsItemWeVoteId } = this.props;
     if (campaignBasePath && campaignXNewsItemWeVoteId) {
-      historyPush(`${campaignBasePath}/u/${campaignXNewsItemWeVoteId}`);
+      historyPush(`${campaignBasePath}/u-preview/${campaignXNewsItemWeVoteId}`);
     }
   }
 

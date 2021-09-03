@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
-import { retrieveCampaignXFromIdentifiersIfNotAlreadyRetrieved } from '../../utils/campaignUtils';
+import { retrieveCampaignXFromIdentifiers } from '../../utils/campaignUtils';
 import VoterStore from '../../stores/VoterStore';
 
 
@@ -52,7 +52,12 @@ class CampaignRetrieveController extends Component {
         const voterFirstRetrieveCompleted = VoterStore.voterFirstRetrieveCompleted();
         // console.log('CampaignRetrieveController campaignRetrieveInitiated: ', campaignRetrieveInitiated, ', voterFirstRetrieveCompleted: ', voterFirstRetrieveCompleted);
         if (voterFirstRetrieveCompleted && !campaignRetrieveInitiated) {
-          const updatedCampaignRetrieveInitiated = retrieveCampaignXFromIdentifiersIfNotAlreadyRetrieved(campaignSEOFriendlyPath, campaignXWeVoteId);
+          // We use retrieveCampaignXFromIdentifiers instead of
+          // retrieveCampaignXFromIdentifiersIfNotAlreadyRetrieved because there are some details
+          // (ex/ campaignx_news_item_list, latest_campaignx_supporter_endorsement_list, latest_campaignx_supporter_list)
+          // that come in with campaignRetrieve which don't come in campaignListRetrieve,
+          // details which are only useful when you look at the full campaign
+          const updatedCampaignRetrieveInitiated = retrieveCampaignXFromIdentifiers(campaignSEOFriendlyPath, campaignXWeVoteId);
           // console.log('campaignRetrieveInitiated:', campaignRetrieveInitiated, 'updatedCampaignRetrieveInitiated:', updatedCampaignRetrieveInitiated);
           this.setState({
             campaignRetrieveInitiated: updatedCampaignRetrieveInitiated,

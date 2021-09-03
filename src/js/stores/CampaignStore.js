@@ -186,6 +186,14 @@ class CampaignStore extends ReduceStore {
     return this.getState().allCachedCampaignXNewsItems[campaignXNewsItemWeVoteId] || {};
   }
 
+  getCampaignXNewsItemDateSentToEmail (campaignXNewsItemWeVoteId) {
+    const newsItem = this.getState().allCachedCampaignXNewsItems[campaignXNewsItemWeVoteId] || {};
+    if (newsItem && newsItem.date_sent_to_email) {
+      return newsItem.date_sent_to_email;
+    }
+    return '';
+  }
+
   getCampaignXNewsItemsExist (campaignXWeVoteId) {
     const newsItemListWeVoteIds = this.getState().allCachedNewsItemWeVoteIdsByCampaignX[campaignXWeVoteId] || [];
     return Boolean(newsItemListWeVoteIds.length);
@@ -404,14 +412,12 @@ class CampaignStore extends ReduceStore {
           if (recommendedCampaignsCampaignXWeVoteId) {
             allCachedRecommendedCampaignXWeVoteIdLists[recommendedCampaignsCampaignXWeVoteId].push(oneCampaignX.campaignx_we_vote_id);
           }
-          // if ('campaignx_owner_list' in oneCampaignX) {
           ({
             allCachedCampaignXOwners,
             allCachedCampaignXOwnerPhotos,
             voterCanSendUpdatesCampaignXWeVoteIds,
             voterOwnedCampaignXWeVoteIds,
           } = this.extractCampaignXOwnerList(oneCampaignX, allCachedCampaignXOwners, allCachedCampaignXOwnerPhotos, voterCanSendUpdatesCampaignXWeVoteIds, voterOwnedCampaignXWeVoteIds));
-          // }
           if ('campaignx_politician_list' in oneCampaignX) {
             ({ allCachedCampaignXPoliticianLists } = this.extractCampaignXPoliticianList(oneCampaignX, allCachedCampaignXPoliticianLists));
             ({ allCachedPoliticianWeVoteIdsByCampaignX } = this.extractPoliticianWeVoteIdListFromCampaign(oneCampaignX, allCachedPoliticianWeVoteIdsByCampaignX));
@@ -434,9 +440,9 @@ class CampaignStore extends ReduceStore {
         });
         // console.log('allCachedCampaignXWeVoteIdsBySEOFriendlyPath:', allCachedCampaignXWeVoteIdsBySEOFriendlyPath);
         revisedState = { ...revisedState, allCachedCampaignXDicts };
+        revisedState = { ...revisedState, allCachedCampaignXOwnerPhotos };
         revisedState = { ...revisedState, allCachedCampaignXOwners };
         revisedState = { ...revisedState, allCachedCampaignXPoliticianLists };
-        revisedState = { ...revisedState, allCachedCampaignXOwnerPhotos };
         revisedState = { ...revisedState, allCachedCampaignXWeVoteIdsBySEOFriendlyPath };
         revisedState = { ...revisedState, allCachedPoliticianWeVoteIdsByCampaignX };
         revisedState = { ...revisedState, allCachedRecommendedCampaignXWeVoteIdLists };
@@ -534,10 +540,12 @@ class CampaignStore extends ReduceStore {
           }
         }
         revisedState = { ...revisedState, allCachedCampaignXDicts };
+        revisedState = { ...revisedState, allCachedCampaignXNewsItems };
         revisedState = { ...revisedState, allCachedCampaignXOwners };
-        revisedState = { ...revisedState, allCachedCampaignXPoliticianLists };
         revisedState = { ...revisedState, allCachedCampaignXOwnerPhotos };
+        revisedState = { ...revisedState, allCachedCampaignXPoliticianLists };
         revisedState = { ...revisedState, allCachedCampaignXWeVoteIdsBySEOFriendlyPath };
+        revisedState = { ...revisedState, allCachedNewsItemWeVoteIdsByCampaignX };
         revisedState = { ...revisedState, allCachedPoliticianWeVoteIdsByCampaignX };
         revisedState = { ...revisedState, voterCanSendUpdatesCampaignXWeVoteIds };
         revisedState = { ...revisedState, voterOwnedCampaignXWeVoteIds };

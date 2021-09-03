@@ -40,6 +40,7 @@ class CampaignNewsItemSend extends Component {
       campaignTitle: '',
       campaignXWeVoteId: '',
       chosenWebsiteName: '',
+      dateSentToEmail: '',
       supportersCount: 0,
     };
   }
@@ -68,6 +69,7 @@ class CampaignNewsItemSend extends Component {
       campaignPhotoLargeUrl,
       campaignXNewsItemWeVoteId,
       campaignXPoliticianList,
+      dateSentToEmail: CampaignStore.getCampaignXNewsItemDateSentToEmail(campaignXNewsItemWeVoteId),
     });
     if (campaignSEOFriendlyPath) {
       this.setState({
@@ -131,6 +133,7 @@ class CampaignNewsItemSend extends Component {
       campaignTitle,
       campaignXNewsItemWeVoteId,
       campaignXPoliticianList,
+      dateSentToEmail: CampaignStore.getCampaignXNewsItemDateSentToEmail(campaignXNewsItemWeVoteId),
     });
     if (campaignSEOFriendlyPath) {
       this.setState({
@@ -176,16 +179,10 @@ class CampaignNewsItemSend extends Component {
   }
 
   clickCancel = () => {
-    const { campaignXNewsItemWeVoteId } = this.state;
     initializejQuery(() => {
       CampaignNewsItemActions.campaignNewsItemTextQueuedToSave(undefined);
     });
-    if (campaignXNewsItemWeVoteId) {
-      // TODO: historyPush(`${this.getCampaignBasePath()}/update/${campaignXNewsItemWeVoteId}`);
-      historyPush(`${this.getCampaignBasePath()}/updates`);
-    } else {
-      historyPush(`${this.getCampaignBasePath()}/updates`);
-    }
+    historyPush(`${this.getCampaignBasePath()}/updates`);
   }
 
   publishCampaignNewsItem = (sendNow = false) => {
@@ -197,6 +194,12 @@ class CampaignNewsItemSend extends Component {
       });
       historyPush(`${this.getCampaignBasePath()}/share/${campaignXNewsItemWeVoteId}`);
     }
+  }
+
+  onCampaignNewsItemEditClick = () => {
+    const { campaignXNewsItemWeVoteId } = this.state;
+    historyPush(`${this.getCampaignBasePath()}/add-update/${campaignXNewsItemWeVoteId}`);
+    return null;
   }
 
   leaveIfNotAllowedToEdit () {
@@ -221,7 +224,7 @@ class CampaignNewsItemSend extends Component {
     const {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
       campaignXNewsItemWeVoteId, campaignXPoliticianList, campaignXWeVoteId,
-      chosenWebsiteName, supportersCount,
+      chosenWebsiteName, dateSentToEmail, supportersCount,
     } = this.state;
     const htmlTitle = `Send update to supporters ${campaignTitle}? - ${chosenWebsiteName}`;
     let numberOfPoliticians = 0;
@@ -250,17 +253,31 @@ class CampaignNewsItemSend extends Component {
                   </CampaignSupportImageWrapperText>
                 )}
               </CampaignSupportImageWrapper>
-              <CampaignProcessStepTitle>
-                Send to
-                {' '}
-                {supportersCount > 0 && (
-                  <>
-                    {numberWithCommas(supportersCount)}
-                    {' '}
-                  </>
-                )}
-                supporters now, or publish without sending
-              </CampaignProcessStepTitle>
+              {dateSentToEmail ? (
+                <CampaignProcessStepTitle>
+                  Publish update for your
+                  {' '}
+                  {supportersCount > 0 && (
+                    <>
+                      {numberWithCommas(supportersCount)}
+                      {' '}
+                    </>
+                  )}
+                  supporters now (without sending email)
+                </CampaignProcessStepTitle>
+              ) : (
+                <CampaignProcessStepTitle>
+                  Send to
+                  {' '}
+                  {supportersCount > 0 && (
+                    <>
+                      {numberWithCommas(supportersCount)}
+                      {' '}
+                    </>
+                  )}
+                  supporters now, or publish without sending
+                </CampaignProcessStepTitle>
+              )}
               <CampaignProcessStepIntroductionText>
                 Update created? Check. Update previewed? Check.
               </CampaignProcessStepIntroductionText>
@@ -271,12 +288,12 @@ class CampaignNewsItemSend extends Component {
                       <Button
                         classes={{ root: classes.buttonDesktop }}
                         color="primary"
-                        disabled
+                        disabled={Boolean(dateSentToEmail)}
                         id="saveCampaignNewsItemSend"
                         onClick={() => this.publishCampaignNewsItem(true)}
                         variant="contained"
                       >
-                        Send now (Coming Soon)
+                        {dateSentToEmail ? `Emailed ${dateSentToEmail}` : 'Send now'}
                       </Button>
                     </CampaignSupportDesktopButtonPanel>
                   </CampaignSupportDesktopButtonWrapper>
@@ -289,7 +306,20 @@ class CampaignNewsItemSend extends Component {
                         onClick={() => this.publishCampaignNewsItem(false)}
                         variant="outlined"
                       >
-                        Publish without sending
+                        {dateSentToEmail ? 'Publish update' : 'Publish without sending'}
+                      </Button>
+                    </CampaignSupportDesktopButtonPanel>
+                  </CampaignSupportDesktopButtonWrapper>
+                  <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
+                    <CampaignSupportDesktopButtonPanel>
+                      <Button
+                        classes={{ root: classes.buttonDesktop }}
+                        color="primary"
+                        id="editNewsItem"
+                        onClick={this.onCampaignNewsItemEditClick}
+                        variant="outlined"
+                      >
+                        Edit
                       </Button>
                     </CampaignSupportDesktopButtonPanel>
                   </CampaignSupportDesktopButtonWrapper>
@@ -298,12 +328,12 @@ class CampaignNewsItemSend extends Component {
                       <Button
                         classes={{ root: classes.buttonDefault }}
                         color="primary"
-                        disabled
+                        disabled={Boolean(dateSentToEmail)}
                         id="saveCampaignNewsItemSendMobile"
                         onClick={() => this.publishCampaignNewsItem(true)}
                         variant="contained"
                       >
-                        Send now (Coming Soon)
+                        {dateSentToEmail ? `Emailed ${dateSentToEmail}` : 'Send now'}
                       </Button>
                     </CampaignSupportMobileButtonPanel>
                     <CampaignSupportMobileButtonPanel>
@@ -314,7 +344,18 @@ class CampaignNewsItemSend extends Component {
                         onClick={() => this.publishCampaignNewsItem(false)}
                         variant="outlined"
                       >
-                        Publish without sending
+                        {dateSentToEmail ? 'Publish update' : 'Publish without sending'}
+                      </Button>
+                    </CampaignSupportMobileButtonPanel>
+                    <CampaignSupportMobileButtonPanel>
+                      <Button
+                        classes={{ root: classes.buttonDefault }}
+                        color="primary"
+                        id="editNewsItemMobile"
+                        onClick={this.onCampaignNewsItemEditClick}
+                        variant="outlined"
+                      >
+                        Edit
                       </Button>
                     </CampaignSupportMobileButtonPanel>
                   </CampaignSupportMobileButtonWrapper>
@@ -340,9 +381,9 @@ class CampaignNewsItemSend extends Component {
                             about
                             {' '}
                             {politicianListSentenceString}
-                            {' '}
                           </>
                         )}
+                        {' '}
                         as you would like on your campaign web page. All updates, whether emailed or not, appear in the updates section.
                       </AdviceBoxText>
                       <AdviceBoxText>
