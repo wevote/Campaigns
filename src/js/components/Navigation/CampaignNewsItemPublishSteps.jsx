@@ -69,10 +69,13 @@ class CampaignNewsItemPublishSteps extends Component {
 
   onCampaignStoreChange () {
     const { atStepNumber3, atStepNumber4, campaignXNewsItemWeVoteId } = this.props;
-    const campaignXNewsItem = CampaignStore.getCampaignXNewsItemByWeVoteId(campaignXNewsItemWeVoteId);
-    const {
-      in_draft_mode: inDraftMode,
-    } = campaignXNewsItem;
+    let inDraftMode = true;
+    if (campaignXNewsItemWeVoteId) {
+      const campaignXNewsItem = CampaignStore.getCampaignXNewsItemByWeVoteId(campaignXNewsItemWeVoteId);
+      ({
+        in_draft_mode: inDraftMode,
+      } = campaignXNewsItem);
+    }
     // atStepNumber1, atStepNumber2, atStepNumber3, atStepNumber4
     const step1Completed = CampaignStore.campaignNewsItemTextExists(campaignXNewsItemWeVoteId);
     const step2Completed = !inDraftMode || atStepNumber3 || atStepNumber4;

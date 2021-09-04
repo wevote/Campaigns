@@ -286,6 +286,7 @@ class CampaignNewsItemText extends Component {
                 Supporters
                 {numberOfPoliticians > 0 && (
                   <>
+                    {' '}
                     of
                     {' '}
                     {politicianListSentenceString}
