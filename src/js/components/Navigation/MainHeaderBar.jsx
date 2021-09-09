@@ -199,6 +199,8 @@ export default function MainHeaderBar (displayHeader) {
                     Our Promise: We&apos;ll never sell your email.
                   </Typography>
                 )}
+                <MenuItem className={classes.menuItem} onClick={() => handleClose('/edit-profile')}>Settings</MenuItem>
+                {showStartACampaign && <MenuItem className={classes.menuItem} onClick={() => handleClose('/start-a-campaign')}>Start a campaign</MenuItem>}
                 <MenuItem className={classes.menuItem} onClick={() => handleClose('/profile/started')}>Your campaigns</MenuItem>
                 <MenuItem className={classes.menuItem}>
                   <OpenExternalWebSite
@@ -211,8 +213,6 @@ export default function MainHeaderBar (displayHeader) {
                     className={classes.ballotLink}
                   />
                 </MenuItem>
-                <MenuItem className={classes.menuItem} onClick={() => handleClose('/edit-profile')}>Settings</MenuItem>
-                {showStartACampaign && <MenuItem className={classes.menuItem} onClick={() => handleClose('/start-a-campaign')}>Start a campaign</MenuItem>}
                 {showMembership && <MenuItem className={classes.menuItemMobileOnly} onClick={() => handleClose('/membership')}>Membership</MenuItem>}
                 {/* <MenuItem className={classes.menuItem} onClick={() => handleClose('/search')}>Search</MenuItem> */}
                 <MenuItem className={classes.menuItem} onClick={() => handleCloseNoDestination()}>

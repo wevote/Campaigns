@@ -42,7 +42,7 @@ class CampaignStartEditAll extends Component {
     // console.log('CampaignStartEditAll, componentDidMount');
     const { editExistingCampaign } = this.props;
     if (this.props.setShowHeaderFooter) {
-      this.props.setShowHeaderFooter(!editExistingCampaign);
+      this.props.setShowHeaderFooter(false);
     }
     this.onAppStoreChange();
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));

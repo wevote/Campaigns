@@ -8,6 +8,7 @@ import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
 import { renderLog } from '../../utils/logging';
 
 const STARTING_NUMBER_OF_NEWS_ITEMS_TO_DISPLAY = 1;
+const NUMBER_OF_NEWS_ITEMS_TO_ADD_WHEN_MORE_CLICKED = 4;
 
 const CampaignNewsItemCreateButton = React.lazy(() => import('../../components/CampaignNewsItemPublish/CampaignNewsItemCreateButton'));
 
@@ -67,7 +68,7 @@ class CampaignNewsItemList extends Component {
 
   increaseNumberOfNewsItemsToDisplay = () => {
     let { numberOfNewsItemsToDisplay } = this.state;
-    numberOfNewsItemsToDisplay += 2;
+    numberOfNewsItemsToDisplay += NUMBER_OF_NEWS_ITEMS_TO_ADD_WHEN_MORE_CLICKED;
     this.setState({
       numberOfNewsItemsToDisplay,
     });
