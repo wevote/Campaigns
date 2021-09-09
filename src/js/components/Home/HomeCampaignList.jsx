@@ -13,6 +13,7 @@ const FirstCampaignListController = React.lazy(() => import('../Campaign/FirstCa
 
 const STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY = 3;
 const STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY_MOBILE = 2;
+const NUMBER_OF_CAMPAIGNS_TO_ADD_WHEN_MORE_CLICKED = 6;
 
 class HomeCampaignList extends Component {
   constructor (props) {
@@ -60,7 +61,7 @@ class HomeCampaignList extends Component {
 
   increaseNumberOfCampaignsToDisplay = () => {
     let { numberOfCampaignsToDisplay } = this.state;
-    numberOfCampaignsToDisplay += 2;
+    numberOfCampaignsToDisplay += NUMBER_OF_CAMPAIGNS_TO_ADD_WHEN_MORE_CLICKED;
     this.setState({
       numberOfCampaignsToDisplay,
     });

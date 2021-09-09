@@ -12,6 +12,7 @@ import startsWith from '../../utils/startsWith';
 
 
 const STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY = 6;
+const NUMBER_OF_CAMPAIGNS_TO_ADD_WHEN_MORE_CLICKED = 6;
 
 class SettingsCampaignList extends Component {
   constructor (props) {
@@ -72,7 +73,7 @@ class SettingsCampaignList extends Component {
 
   increaseNumberOfCampaignsToDisplay = () => {
     let { numberOfCampaignsToDisplay } = this.state;
-    numberOfCampaignsToDisplay += 2;
+    numberOfCampaignsToDisplay += NUMBER_OF_CAMPAIGNS_TO_ADD_WHEN_MORE_CLICKED;
     this.setState({
       numberOfCampaignsToDisplay,
     });

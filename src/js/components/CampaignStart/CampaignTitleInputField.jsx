@@ -101,7 +101,7 @@ class CampaignTitleInputField extends Component {
                   name="campaignTitle"
                   margin="dense"
                   variant="outlined"
-                  placeholder={campaignTitlePlaceholder || 'Candidate name for Office name'}
+                  placeholder={campaignTitlePlaceholder || 'Campaign title - the name voters will see'}
                   value={campaignTitle}
                   onKeyDown={this.handleKeyPress}
                   onChange={this.updateCampaignTitle}

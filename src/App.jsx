@@ -175,7 +175,7 @@ class App extends Component {
                   <Route exact path="/start-a-campaign-add-photo"><CampaignStartAddPhoto /></Route>
                   <Route exact path="/start-a-campaign-add-title"><CampaignStartAddTitle /></Route>
                   <Route exact path="/start-a-campaign-complete-your-profile" render={(props) => <CompleteYourProfileMobile match={props.match} startCampaign setShowHeaderFooter={this.setShowHeaderFooter} />} />
-                  <Route exact path="/start-a-campaign-edit-all"><CampaignStartEditAll /></Route>
+                  <Route exact path="/start-a-campaign-edit-all"><CampaignStartEditAll setShowHeaderFooter={this.setShowHeaderFooter} /></Route>
                   <Route exact path="/start-a-campaign-preview"><CampaignStartPreview /></Route>
                   <Route exact path="/styles"><StyleGuidePage /></Route>
                   <Route exact path="/terms"><TermsOfService /></Route>

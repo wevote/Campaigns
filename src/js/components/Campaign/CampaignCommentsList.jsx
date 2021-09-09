@@ -9,6 +9,7 @@ import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
 import { renderLog } from '../../utils/logging';
 
 const STARTING_NUMBER_OF_COMMENTS_TO_DISPLAY = 10;
+const NUMBER_OF_COMMENTS_TO_ADD_WHEN_MORE_CLICKED = 4;
 
 class CampaignCommentsList extends Component {
   constructor (props) {
@@ -79,7 +80,7 @@ class CampaignCommentsList extends Component {
 
   increaseNumberOfCampaignsToDisplay = () => {
     let { numberOfCommentsToDisplay } = this.state;
-    numberOfCommentsToDisplay += 2;
+    numberOfCommentsToDisplay += NUMBER_OF_COMMENTS_TO_ADD_WHEN_MORE_CLICKED;
     this.setState({
       numberOfCommentsToDisplay,
     });
