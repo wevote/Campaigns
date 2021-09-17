@@ -204,7 +204,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: -12px;
-  width: calc(100% + 24px);
+  width: 100%;
 `;
 
 export default withStyles(styles)(CampaignNewsItemTextInputField);

@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import loadable from '@loadable/component';
 import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core';
+import { Launch } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import AppStore from '../../stores/AppStore';
@@ -34,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
   innerWrapper: {
     margin: '0 auto',
     maxWidth: '980px', // The WeVote icon extends beyond the visible area, and we want to line up the visible
+  },
+  launchIcon: {
+    height: 14,
   },
   logoLinkRoot: {
     height: 0,
@@ -208,7 +212,14 @@ export default function MainHeaderBar (displayHeader) {
                     url="https://wevote.us/ballot"
                     target="_blank"
                     body={(
-                      <span>Your ballot</span>
+                      <div style={{ display: 'flex' }}>
+                        <div>
+                          Your ballot
+                        </div>
+                        <div style={{ marginTop: '2px' }}>
+                          <Launch className={classes.launchIcon} />
+                        </div>
+                      </div>
                     )}
                     className={classes.ballotLink}
                   />
