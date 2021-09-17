@@ -253,31 +253,6 @@ export default {
       });
   },
 
-  voterMergeTwoAccountsByInvitationKey (invitationSecretKey) {
-    Dispatcher.loadEndpoint('voterMergeTwoAccounts',
-      {
-        email_secret_key: '',
-        facebook_secret_key: '',
-        incoming_voter_device_id: '',
-        invitation_secret_key: invitationSecretKey,
-        twitter_secret_key: '',
-        hostname,
-      });
-  },
-
-  voterMergeTwoAccountsByJumpProcess (incomingVoterDeviceId) {
-    // TODO DALE 2018-01-10 voterMergeTwoAccounts doesn't support incomingVoterDeviceId yet
-    Dispatcher.loadEndpoint('voterMergeTwoAccounts',
-      {
-        email_secret_key: '',
-        facebook_secret_key: '',
-        incoming_voter_device_id: incomingVoterDeviceId,
-        invitation_secret_key: '',
-        twitter_secret_key: '',
-        hostname,
-      });
-  },
-
   voterMergeTwoAccountsByTwitterKey (twitterSecretKey) {
     Dispatcher.loadEndpoint('voterMergeTwoAccounts',
       {
@@ -331,26 +306,9 @@ export default {
     });
   },
 
-  voterUpdateInterfaceStatusFlags (flagIntegerToSet) {
-    Dispatcher.loadEndpoint('voterUpdate',
-      {
-        flag_integer_to_set: flagIntegerToSet,
-      });
-  },
-
   voterUpdateNotificationSettingsFlags (flagIntegerToSet, flagIntegerToUnset = '') {
     Dispatcher.loadEndpoint('voterUpdate',
       {
-        notification_flag_integer_to_set: flagIntegerToSet,
-        notification_flag_integer_to_unset: flagIntegerToUnset,
-      });
-  },
-
-  voterNotificationSettingsUpdateFromSecretKey (emailSubscriptionSecretKey = '', smsSubscriptionSecretKey = '', flagIntegerToSet = 0, flagIntegerToUnset = 0) {
-    Dispatcher.loadEndpoint('voterNotificationSettingsUpdate',
-      {
-        email_subscription_secret_key: emailSubscriptionSecretKey,
-        sms_subscription_secret_key: smsSubscriptionSecretKey,
         notification_flag_integer_to_set: flagIntegerToSet,
         notification_flag_integer_to_unset: flagIntegerToUnset,
       });

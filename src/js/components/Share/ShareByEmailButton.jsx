@@ -117,7 +117,7 @@ class ShareByEmailButton extends Component {
           >
             <div className={darkButton ? 'material_ui_dark_button' : 'material_ui_light_button'}>
               <div>
-                Share by email
+                Share from your email
               </div>
             </div>
           </EmailShareButton>

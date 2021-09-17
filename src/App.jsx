@@ -48,6 +48,11 @@ const SettingsEditProfile = React.lazy(() => import('./js/pages/Settings/Setting
 const SettingsYourCampaigns = React.lazy(() => import('./js/pages/Settings/SettingsYourCampaigns'));
 const SiteConfigurationRetrieveController = React.lazy(() => import('./js/components/Settings/SiteConfigurationRetrieveController'));
 const StyleGuidePage = React.lazy(() => import('./js/pages/StyleGuidePage'));
+const SuperSharingAddContacts = React.lazy(() => import('./js/pages/SuperSharing/SuperSharingAddContacts'));
+const SuperSharingChooseRecipients = React.lazy(() => import('./js/pages/SuperSharing/SuperSharingChooseRecipients'));
+const SuperSharingComposeEmailMessage = React.lazy(() => import('./js/pages/SuperSharing/SuperSharingComposeEmailMessage'));
+const SuperSharingSendEmail = React.lazy(() => import('./js/pages/SuperSharing/SuperSharingSendEmail'));
+const SuperSharingIntro = React.lazy(() => import('./js/pages/SuperSharing/SuperSharingIntro'));
 const TermsOfService = React.lazy(() => import('./js/pages/TermsOfService'));
 const TwitterSignInProcess = React.lazy(() => import('./js/pages/TwitterSignInProcess'));
 
@@ -137,6 +142,13 @@ class App extends Component {
                   <Route exact path="/c/:campaignSEOFriendlyPath/share-it/:campaignXNewsItemWeVoteId" render={(props) => <CampaignNewsItemShare match={props.match} noNavigation setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/share-it-with-one-friend/:campaignXNewsItemWeVoteId" render={(props) => <CampaignNewsItemShare match={props.match} noNavigation setShowHeaderFooter={this.setShowHeaderFooter} showShareCampaignWithOneFriend />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/i-will-share-campaign" render={(props) => <CampaignSupportShare match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} iWillShare />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/super-sharing-add-email-contacts" render={(props) => <SuperSharingAddContacts email match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/super-sharing-add-sms-contacts" render={(props) => <SuperSharingAddContacts sms match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/super-sharing-campaign-email" render={(props) => <SuperSharingIntro email match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/super-sharing-campaign-sms" render={(props) => <SuperSharingIntro match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} sms />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/super-sharing-choose-email-recipients" render={(props) => <SuperSharingChooseRecipients match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/super-sharing-compose-email" render={(props) => <SuperSharingComposeEmailMessage match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
+                  <Route exact path="/c/:campaignSEOFriendlyPath/super-sharing-send-email" render={(props) => <SuperSharingSendEmail match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/why-do-you-support" render={(props) => <CampaignSupportEndorsement match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/credits"><Credits /></Route>
                   <Route exact path="/edit-profile"><SettingsEditProfile /></Route>
