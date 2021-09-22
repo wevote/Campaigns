@@ -37,6 +37,7 @@ class CampaignStartAddPhoto extends Component {
     initializejQuery(() => {
       CampaignStartActions.campaignRetrieveAsOwner('');
     });
+    window.scrollTo(0, 0);
   }
 
   componentWillUnmount () {

@@ -100,6 +100,7 @@ class CampaignSupportPayToPromoteProcess extends Component {
         DonateStore.noDispatchClearStripeErrorState();
       }
     });
+    window.scrollTo(0, 0);
   }
 
   componentWillUnmount () {

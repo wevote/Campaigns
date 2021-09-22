@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Button } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import {
   CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper,
   CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper,
   CampaignSupportSection, CampaignSupportSectionWrapper,
 } from '../Style/CampaignSupportStyles';
-import { isCordova } from '../../utils/cordovaUtils';
+import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 import ShareByCopyLink from '../Share/ShareByCopyLink';
 import ShareByEmailButton from '../Share/ShareByEmailButton';
@@ -25,12 +27,34 @@ class CampaignShareChunk extends Component {
     // console.log('CampaignShareChunk componentDidMount');
   }
 
+  getCampaignBasePath = () => {
+    const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.props;
+    let campaignBasePath;
+    if (campaignSEOFriendlyPath) {
+      campaignBasePath = `/c/${campaignSEOFriendlyPath}`;
+    } else {
+      campaignBasePath = `/id/${campaignXWeVoteId}`;
+    }
+    return campaignBasePath;
+  }
+
+  superSharingIntro = (sms = false) => {
+    if (sms) {
+      historyPush(`${this.getCampaignBasePath()}/super-sharing-campaign-sms`);
+    } else {
+      historyPush(`${this.getCampaignBasePath()}/super-sharing-campaign-email`);
+    }
+  }
+
   render () {
     renderLog('CampaignShareChunk');  // Set LOG_RENDER_EVENTS to log all renders
     if (isCordova()) {
       console.log(`CampaignShareChunk window.location.href: ${window.location.href}`);
     }
-    const { campaignXNewsItemWeVoteId, campaignXWeVoteId, darkButtonsOff, privatePublicIntroductionsOff } = this.props;
+    const {
+      campaignXNewsItemWeVoteId, campaignXWeVoteId, classes, darkButtonsOff,
+      privatePublicIntroductionsOff,
+    } = this.props;
     return (
       <div>
         <CampaignSupportSectionWrapper marginTopOff={privatePublicIntroductionsOff}>
@@ -47,12 +71,38 @@ class CampaignShareChunk extends Component {
             )}
             <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
               <CampaignSupportDesktopButtonPanel>
-                <ShareByEmailButton campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} campaignXWeVoteId={campaignXWeVoteId} darkButton={!darkButtonsOff} />
+                <Button
+                  classes={{ root: classes.buttonDesktop }}
+                  color="primary"
+                  id="superSharingIntroDesktop"
+                  onClick={() => this.superSharingIntro(false)}
+                  variant={darkButtonsOff ? 'outlined' : 'contained'}
+                >
+                  Private emails, supercharged
+                </Button>
               </CampaignSupportDesktopButtonPanel>
             </CampaignSupportDesktopButtonWrapper>
             <CampaignSupportMobileButtonWrapper className="u-show-mobile">
               <CampaignSupportMobileButtonPanel>
-                <ShareByEmailButton campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} campaignXWeVoteId={campaignXWeVoteId} darkButton={!darkButtonsOff} mobileMode />
+                <Button
+                  classes={{ root: classes.buttonDesktop }}
+                  color="primary"
+                  id="superSharingIntroMobile"
+                  onClick={() => this.superSharingIntro(false)}
+                  variant={darkButtonsOff ? 'outlined' : 'contained'}
+                >
+                  Private emails, supercharged
+                </Button>
+              </CampaignSupportMobileButtonPanel>
+            </CampaignSupportMobileButtonWrapper>
+            <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
+              <CampaignSupportDesktopButtonPanel>
+                <ShareByEmailButton campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} campaignXWeVoteId={campaignXWeVoteId} />
+              </CampaignSupportDesktopButtonPanel>
+            </CampaignSupportDesktopButtonWrapper>
+            <CampaignSupportMobileButtonWrapper className="u-show-mobile">
+              <CampaignSupportMobileButtonPanel>
+                <ShareByEmailButton campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId} campaignXWeVoteId={campaignXWeVoteId} mobileMode />
               </CampaignSupportMobileButtonPanel>
             </CampaignSupportMobileButtonWrapper>
             <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
@@ -106,11 +156,25 @@ class CampaignShareChunk extends Component {
   }
 }
 CampaignShareChunk.propTypes = {
+  campaignSEOFriendlyPath: PropTypes.string,
   campaignXNewsItemWeVoteId: PropTypes.string,
   campaignXWeVoteId: PropTypes.string,
+  classes: PropTypes.object,
   darkButtonsOff: PropTypes.bool,
   privatePublicIntroductionsOff: PropTypes.bool,
 };
+
+const styles = () => ({
+  buttonDesktop: {
+    boxShadow: 'none !important',
+    fontSize: '18px',
+    height: '45px !important',
+    minWidth: '300px',
+    padding: '0 12px',
+    textTransform: 'none',
+    width: '100%',
+  },
+});
 
 const PublicOrPrivateSectionHeader = styled.span`
   font-weight: 600;
@@ -120,4 +184,4 @@ const PublicOrPrivateSectionText = styled.span`
   color: #999;
 `;
 
-export default CampaignShareChunk;
+export default withStyles(styles)(CampaignShareChunk);

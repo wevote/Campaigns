@@ -2,10 +2,11 @@ import React, { Component, Suspense } from 'react';
 import loadable from '@loadable/component';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-// import styled from 'styled-components';
+import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import AddContactsFromGoogle from '../../components/SuperSharing/AddContactsFromGoogle';
+import AppStore from '../../stores/AppStore';
 import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../components/Style/AdviceBoxStyles';
 import {
   CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
@@ -19,12 +20,16 @@ import {
 } from '../../components/Style/CampaignSupportStyles';
 import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
-// import initializejQuery from '../../utils/initializejQuery';
+import initializejQuery from '../../utils/initializejQuery';
 import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
+import ShareActions from '../../common/actions/ShareActions';
+import ShareStore from '../../common/stores/ShareStore';
+import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
+import { numberWithCommas } from '../../utils/textFormat';
+import VoterActions from '../../actions/VoterActions';
 import VoterStore from '../../stores/VoterStore';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
@@ -47,6 +52,8 @@ class SuperSharingAddContacts extends Component {
   componentDidMount () {
     // console.log('SuperSharingAddContacts componentDidMount');
     this.props.setShowHeaderFooter(false);
+    this.onAppStoreChange();
+    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.onVoterStoreChange();
@@ -89,12 +96,45 @@ class SuperSharingAddContacts extends Component {
     }
     // Take the "calculated" identifiers and retrieve if missing
     retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
+    initializejQuery(() => {
+      VoterActions.voterContactListRetrieve();
+    });
+    window.scrollTo(0, 0);
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    const {
+      campaignXWeVoteId,
+    } = this.state;
+    const {
+      campaignXWeVoteId: campaignXWeVoteIdPrevious,
+    } = prevState;
+    // console.log('componentDidUpdate, campaignXWeVoteId:', campaignXWeVoteId, ', campaignXWeVoteIdPrevious:', campaignXWeVoteIdPrevious);
+    if (campaignXWeVoteId) {
+      if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
+        const superShareItemId = ShareStore.getSuperSharedItemDraftIdByWeVoteId(campaignXWeVoteId);
+        // console.log('superShareItemId:', superShareItemId);
+        if (!superShareItemId || superShareItemId === 0) {
+          initializejQuery(() => {
+            ShareActions.superShareItemRetrieve(campaignXWeVoteId);
+          });
+        }
+      }
+    }
   }
 
   componentWillUnmount () {
     this.props.setShowHeaderFooter(true);
+    this.appStoreListener.remove();
     this.campaignStoreListener.remove();
     this.voterStoreListener.remove();
+  }
+
+  onAppStoreChange () {
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+    this.setState({
+      chosenWebsiteName,
+    });
   }
 
   onCampaignStoreChange () {
@@ -134,11 +174,25 @@ class SuperSharingAddContacts extends Component {
   }
 
   onVoterStoreChange () {
+    const voterContactEmailList = VoterStore.getVoterContactEmailList();
+    const voterContactEmailListCount = voterContactEmailList.length;
+    const voterContactEmailGoogleCount = VoterStore.getVoterContactEmailGoogleCount();
+    this.setState({
+      voterContactEmailGoogleCount,
+      voterContactEmailListCount,
+    });
+  }
+
+  onClickDeleteGoogleContacts () {
+    const deleteFromGooglePeopleApi = true;
+    initializejQuery(() => {
+      VoterActions.voterContactListDelete(deleteFromGooglePeopleApi);
+    });
   }
 
   getCampaignBasePath = () => {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
-    let campaignBasePath = '';
+    let campaignBasePath;
     if (campaignSEOFriendlyPath) {
       campaignBasePath = `/c/${campaignSEOFriendlyPath}`;
     } else {
@@ -175,8 +229,9 @@ class SuperSharingAddContacts extends Component {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
       campaignXNewsItemWeVoteId,
       campaignXPoliticianList, campaignXWeVoteId, chosenWebsiteName,
+      voterContactEmailListCount, voterContactEmailGoogleCount,
     } = this.state;
-    const htmlTitle = `Why do you support ${campaignTitle}? - ${chosenWebsiteName}`;
+    const htmlTitle = `Import your address book - ${chosenWebsiteName}`;
     // let numberOfPoliticians = 0;
     // if (campaignXPoliticianList && campaignXPoliticianList.length) {
     //   numberOfPoliticians = campaignXPoliticianList.length;
@@ -203,28 +258,53 @@ class SuperSharingAddContacts extends Component {
                   </CampaignSupportImageWrapperText>
                 )}
               </CampaignSupportImageWrapper>
-              <CampaignProcessStepTitle>
-                Import your address book
-              </CampaignProcessStepTitle>
+              {(voterContactEmailListCount > 0) ? (
+                <CampaignProcessStepTitle>
+                  You have imported
+                  {' '}
+                  {numberWithCommas(voterContactEmailListCount)}
+                  {' '}
+                  contacts
+                </CampaignProcessStepTitle>
+              ) : (
+                <CampaignProcessStepTitle>
+                  Import your address book
+                </CampaignProcessStepTitle>
+              )}
               <CampaignProcessStepIntroductionText>
                 Help
                 {' '}
                 {politicianListSentenceString}
                 {' '}
-                win by reaching out to your friends and community. The information you import will be kept private and never shared or sold to anyone.
+                win by reaching out to your friends and community.
               </CampaignProcessStepIntroductionText>
               <CampaignSupportSectionWrapper>
                 <CampaignSupportSection>
                   <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                     <CampaignSupportDesktopButtonPanel>
-                      <AddContactsFromGoogle darkButton />
+                      <AddContactsFromGoogle darkButton={voterContactEmailListCount === 0} voterContactEmailGoogleCount={voterContactEmailGoogleCount} />
                     </CampaignSupportDesktopButtonPanel>
                   </CampaignSupportDesktopButtonWrapper>
                   <CampaignSupportMobileButtonWrapper className="u-show-mobile">
                     <CampaignSupportMobileButtonPanel>
-                      <AddContactsFromGoogle darkButton mobileMode />
+                      <AddContactsFromGoogle darkButton={voterContactEmailListCount === 0} mobileMode voterContactEmailGoogleCount={voterContactEmailGoogleCount} />
                     </CampaignSupportMobileButtonPanel>
                   </CampaignSupportMobileButtonWrapper>
+                  {(voterContactEmailListCount > 0) && (
+                    <ContinueButtonDesktopWrapper className="u-show-desktop-tablet">
+                      <CampaignSupportDesktopButtonPanel>
+                        <Button
+                          classes={{ root: classes.buttonDesktop }}
+                          color="primary"
+                          id="goToNextStepDesktop"
+                          onClick={this.goToNextStep}
+                          variant="contained"
+                        >
+                          Continue to recipients
+                        </Button>
+                      </CampaignSupportDesktopButtonPanel>
+                    </ContinueButtonDesktopWrapper>
+                  )}
                   <AdviceBoxWrapper>
                     <AdviceBox>
                       <AdviceBoxTitle>
@@ -250,21 +330,35 @@ class SuperSharingAddContacts extends Component {
                       </AdviceBoxTitle>
                       <AdviceBoxText>
                         You can wipe clean any information you import, any time you would like. We keep the contact info you import in a quarantined data vault, private to you.
+                        {(voterContactEmailGoogleCount > 0) && (
+                          <DeleteLink
+                            className="u-cursor--pointer u-link-color"
+                            onClick={this.onClickDeleteGoogleContacts}
+                          >
+                            Click to delete
+                            {' '}
+                            {voterContactEmailGoogleCount}
+                            {' '}
+                            contacts imported from Google
+                          </DeleteLink>
+                        )}
                       </AdviceBoxText>
                     </AdviceBox>
                   </AdviceBoxWrapper>
-                  <SkipForNowButtonWrapper>
-                    <SkipForNowButtonPanel show>
-                      <Button
-                        classes={{ root: classes.buttonSimpleLink }}
-                        color="primary"
-                        id="skipSupporterEndorsementMobile"
-                        onClick={this.submitSkipForNow}
-                      >
-                        Skip for now
-                      </Button>
-                    </SkipForNowButtonPanel>
-                  </SkipForNowButtonWrapper>
+                  {(voterContactEmailListCount === 0) && (
+                    <SkipForNowButtonWrapper>
+                      <SkipForNowButtonPanel show>
+                        <Button
+                          classes={{ root: classes.buttonSimpleLink }}
+                          color="primary"
+                          id="skipForNow"
+                          onClick={this.submitSkipForNow}
+                        >
+                          Skip for now
+                        </Button>
+                      </SkipForNowButtonPanel>
+                    </SkipForNowButtonWrapper>
+                  )}
                   <SkipForNowButtonWrapper>
                     <SkipForNowButtonPanel show>
                       <Button
@@ -277,11 +371,27 @@ class SuperSharingAddContacts extends Component {
                       </Button>
                     </SkipForNowButtonPanel>
                   </SkipForNowButtonWrapper>
+                  <BottomOfPageSpacer />
                 </CampaignSupportSection>
               </CampaignSupportSectionWrapper>
             </ContentInnerWrapperDefault>
           </ContentOuterWrapperDefault>
         </PageWrapperDefault>
+        {(voterContactEmailListCount > 0) && (
+          <ButtonFooterWrapper className="u-show-mobile">
+            <ButtonPanel>
+              <Button
+                classes={{ root: classes.buttonDefault }}
+                color="primary"
+                id="goToNextStep"
+                onClick={this.goToNextStep}
+                variant="contained"
+              >
+                Continue to recipients
+              </Button>
+            </ButtonPanel>
+          </ButtonFooterWrapper>
+        )}
         <Suspense fallback={<span>&nbsp;</span>}>
           <CampaignRetrieveController campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
         </Suspense>
@@ -340,5 +450,33 @@ const styles = () => ({
     },
   },
 });
+
+const BottomOfPageSpacer = styled.div`
+  margin-bottom: 150px;
+`;
+
+const ButtonFooterWrapper = styled.div`
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  display: block;
+`;
+
+const ButtonPanel = styled.div`
+  background-color: #fff;
+  border-top: 1px solid #ddd;
+  padding: 10px;
+`;
+
+const ContinueButtonDesktopWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  width: 100%;
+`;
+
+const DeleteLink = styled.div`
+  margin-top: 8px;
+`;
 
 export default withStyles(styles)(SuperSharingAddContacts);

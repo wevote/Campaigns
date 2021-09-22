@@ -19,15 +19,16 @@ import {
 } from '../../components/Style/CampaignSupportStyles';
 import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import CampaignNewsItemActions from '../../actions/CampaignNewsItemActions';
 import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
 import CampaignNewsItemStore from '../../stores/CampaignNewsItemStore';
-import CampaignNewsItemTextInputField from '../../components/CampaignNewsItemPublish/CampaignNewsItemTextInputField';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import initializejQuery from '../../utils/initializejQuery';
 import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
+import ShareActions from '../../common/actions/ShareActions';
+import ShareStore from '../../common/stores/ShareStore';
+import SuperShareItemComposeInputField from '../../components/SuperSharing/SuperShareItemComposeInputField';
 import VoterActions from '../../actions/VoterActions';
 import VoterPhotoUpload from '../../components/Settings/VoterPhotoUpload';
 import VoterStore from '../../stores/VoterStore';
@@ -56,6 +57,8 @@ class SuperSharingComposeEmailMessage extends Component {
     this.campaignNewsItemStoreListener = CampaignNewsItemStore.addListener(this.onCampaignNewsItemStoreChange.bind(this));
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
+    this.onShareStoreChange();
+    this.shareStoreListener = ShareStore.addListener(this.onShareStoreChange.bind(this));
     this.onVoterStoreChange();
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
     const { match: { params } } = this.props;
@@ -96,9 +99,28 @@ class SuperSharingComposeEmailMessage extends Component {
     }
     // Take the "calculated" identifiers and retrieve if missing
     retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
+    window.scrollTo(0, 0);
   }
 
-  componentDidUpdate () {
+  componentDidUpdate (prevProps, prevState) {
+    const {
+      campaignXWeVoteId,
+    } = this.state;
+    const {
+      campaignXWeVoteId: campaignXWeVoteIdPrevious,
+    } = prevState;
+    // console.log('SuperSharingComposeEmailMessage componentDidUpdate, campaignXWeVoteId:', campaignXWeVoteId, ', campaignXWeVoteIdPrevious:', campaignXWeVoteIdPrevious);
+    if (campaignXWeVoteId) {
+      if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
+        const superShareItemId = ShareStore.getSuperSharedItemDraftIdByWeVoteId(campaignXWeVoteId);
+        if (!superShareItemId || superShareItemId === 0) {
+          initializejQuery(() => {
+            ShareActions.superShareItemRetrieve(campaignXWeVoteId);
+          });
+        }
+        this.setState({});
+      }
+    }
   }
 
   componentWillUnmount () {
@@ -106,6 +128,7 @@ class SuperSharingComposeEmailMessage extends Component {
     this.appStoreListener.remove();
     this.campaignNewsItemStoreListener.remove();
     this.campaignStoreListener.remove();
+    this.shareStoreListener.remove();
     this.voterStoreListener.remove();
   }
 
@@ -166,6 +189,10 @@ class SuperSharingComposeEmailMessage extends Component {
     }
   }
 
+  onShareStoreChange () {
+    // console.log('SuperSharingComposeEmailMessage onShareStoreChange');
+  }
+
   onVoterStoreChange () {
     const voterPhotoUrlLarge = VoterStore.getVoterPhotoUrlLarge();
     this.setState({
@@ -203,15 +230,16 @@ class SuperSharingComposeEmailMessage extends Component {
 
   submitSuperSharingComposeEmailMessage = () => {
     const { campaignXNewsItemWeVoteId, campaignXWeVoteId } = this.state;
-    if (campaignXWeVoteId) {
-      const campaignNewsItemSubjectQueuedToSave = CampaignNewsItemStore.getCampaignNewsItemSubjectQueuedToSave();
-      const campaignNewsItemSubjectQueuedToSaveSet = CampaignNewsItemStore.getCampaignNewsItemSubjectQueuedToSaveSet();
-      const campaignNewsItemTextQueuedToSave = CampaignNewsItemStore.getCampaignNewsItemTextQueuedToSave();
-      const campaignNewsItemTextQueuedToSaveSet = CampaignNewsItemStore.getCampaignNewsItemTextQueuedToSaveSet();
-      // console.log('SuperSharingComposeEmailMessage, campaignNewsItemTextQueuedToSave:', campaignNewsItemTextQueuedToSave);
+    const superShareItemId = ShareStore.getSuperSharedItemDraftIdByWeVoteId(campaignXWeVoteId);
+    if (superShareItemId) {
+      const personalizedMessageQueuedToSave = ShareStore.getPersonalizedMessageQueuedToSave(superShareItemId);
+      const personalizedMessageQueuedToSaveSet = ShareStore.getPersonalizedMessageQueuedToSaveSet(superShareItemId);
+      const personalizedSubjectQueuedToSave = ShareStore.getPersonalizedSubjectQueuedToSave(superShareItemId);
+      const personalizedSubjectQueuedToSaveSet = ShareStore.getPersonalizedSubjectQueuedToSaveSet(superShareItemId);
+      // console.log('SuperSharingComposeEmailMessage, personalizedMessageQueuedToSave:', personalizedMessageQueuedToSave);
       initializejQuery(() => {
-        CampaignNewsItemActions.campaignNewsItemTextSave(campaignXWeVoteId, campaignXNewsItemWeVoteId, campaignNewsItemSubjectQueuedToSave, campaignNewsItemSubjectQueuedToSaveSet, campaignNewsItemTextQueuedToSave, campaignNewsItemTextQueuedToSaveSet);
-        CampaignNewsItemActions.campaignNewsItemTextQueuedToSave(undefined);
+        ShareActions.superShareItemSave(campaignXWeVoteId, campaignXNewsItemWeVoteId, personalizedSubjectQueuedToSave, personalizedSubjectQueuedToSaveSet, personalizedMessageQueuedToSave, personalizedMessageQueuedToSaveSet);
+        ShareActions.personalizedSubjectQueuedToSave(undefined);
       });
       const voterPhotoQueuedToSave = VoterStore.getVoterPhotoQueuedToSave();
       const voterPhotoQueuedToSaveSet = VoterStore.getVoterPhotoQueuedToSaveSet();
@@ -221,10 +249,12 @@ class SuperSharingComposeEmailMessage extends Component {
           VoterActions.voterPhotoQueuedToSave(undefined);
         });
       }
+      // Moved here to create time separation with personalizedSubjectQueuedToSave
       initializejQuery(() => {
-        CampaignNewsItemActions.campaignNewsItemTextQueuedToSave(undefined);
+        ShareActions.personalizedMessageQueuedToSave(undefined);
       });
     }
+    historyPush(`${this.getCampaignBasePath()}/super-sharing-send-email`);
   }
 
   render () {
@@ -238,7 +268,7 @@ class SuperSharingComposeEmailMessage extends Component {
       campaignXNewsItemWeVoteId, campaignXPoliticianList, campaignXWeVoteId, chosenWebsiteName,
       voterPhotoUrlLarge,
     } = this.state;
-    const htmlTitle = `Send update to supporters ${campaignTitle}? - ${chosenWebsiteName}`;
+    const htmlTitle = `Send personalized message regarding ${campaignTitle}? - ${chosenWebsiteName}`;
     // let numberOfPoliticians = 0;
     // if (campaignXPoliticianList && campaignXPoliticianList.length) {
     //   numberOfPoliticians = campaignXPoliticianList.length;
@@ -273,7 +303,7 @@ class SuperSharingComposeEmailMessage extends Component {
               </CampaignProcessStepIntroductionText>
               <CampaignSupportSectionWrapper>
                 <CampaignSupportSection>
-                  <CampaignNewsItemTextInputField
+                  <SuperShareItemComposeInputField
                     campaignXWeVoteId={campaignXWeVoteId}
                     campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId}
                   />
@@ -283,8 +313,8 @@ class SuperSharingComposeEmailMessage extends Component {
                       <Button
                         classes={{ root: classes.buttonDesktop }}
                         color="primary"
-                        id="saveCampaignNewsItemText"
-                        onClick={this.submitCampaignNewsItemText}
+                        id="saveSuperShareItemMessage"
+                        onClick={this.submitSuperSharingComposeEmailMessage}
                         variant="contained"
                       >
                         Save and review
@@ -296,8 +326,8 @@ class SuperSharingComposeEmailMessage extends Component {
                       <Button
                         classes={{ root: classes.buttonDefault }}
                         color="primary"
-                        id="saveCampaignNewsItemTextMobile"
-                        onClick={this.submitCampaignNewsItemText}
+                        id="saveSuperShareItemMessageMobile"
+                        onClick={this.submitSuperSharingComposeEmailMessage}
                         variant="contained"
                       >
                         Save and review

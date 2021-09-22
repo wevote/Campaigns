@@ -92,6 +92,7 @@ class CampaignStartEditAll extends Component {
         CampaignStartActions.campaignEditAllReset();
       });
     }
+    window.scrollTo(0, 0);
   }
 
   componentWillUnmount () {

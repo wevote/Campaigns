@@ -30,7 +30,9 @@ class AddContactsFromGoogle extends Component {
 
   componentWillUnmount () {
     this.voterStoreListener.remove();
-    this.googleSignInListener.remove();
+    if (this.googleSignInListener) {
+      this.googleSignInListener.remove();
+    }
   }
 
   onGoogleSignIn = (signedIn) => {
@@ -58,7 +60,7 @@ class AddContactsFromGoogle extends Component {
         console.log('onVoterStoreChange googleContactsStored:', googleContactsStored);
         this.setState({ addContactsState: AddContactConsts.savedContacts });
       } else {
-        console.log('onVoterStoreChange voterSendGoogleContacts failed');
+        console.log('onVoterStoreChange voterContactListSave failed');
         this.setState({ addContactsState: AddContactConsts.initializedSignedIn });
       }
     }
@@ -87,7 +89,8 @@ class AddContactsFromGoogle extends Component {
         }
       });
 
-      VoterActions.voterSendGoogleContacts(arrayOfSelectedContacts);
+      const fromGooglePeopleApi = true;
+      VoterActions.voterContactListSave(arrayOfSelectedContacts, fromGooglePeopleApi);
       this.setState({
         addContactsState: AddContactConsts.sendingContacts,
       });
@@ -147,7 +150,8 @@ class AddContactsFromGoogle extends Component {
           }
         });
         // console.log('arrayOfSelectedContacts:', arrayOfSelectedContacts);
-        VoterActions.voterSendGoogleContacts(arrayOfSelectedContacts);
+        const fromGooglePeopleApi = true;
+        VoterActions.voterContactListSave(arrayOfSelectedContacts, fromGooglePeopleApi);
       }
       this.setState({ setOfContacts: contacts });
       this.setState({ addContactsState: AddContactConsts.receivedContacts  });
@@ -178,20 +182,40 @@ class AddContactsFromGoogle extends Component {
 
   render () {
     renderLog('AddContactsFromGoogle');  // Set LOG_RENDER_EVENTS to log all renders
-    const { classes, darkButton, mobileMode } = this.props;
-    // const { addContactsState } = this.state;
+    const { classes, darkButton, mobileMode, voterContactEmailGoogleCount } = this.props;
+    const { addContactsState } = this.state;
     // console.log('render in AddContactsFromGoogle, addContactsState: ', addContactsState);
+    const disableButton = (addContactsState === AddContactConsts.requestingContacts) || (addContactsState === AddContactConsts.sendingContacts);
 
     return (
       <div>
         <Button
           classes={mobileMode ? { root: classes.buttonMobile } : { root: classes.buttonDesktop }}
           color="primary"
+          disabled={disableButton}
           id="addFromGoogleContacts"
           variant={darkButton ? 'contained' : 'outlined'}
           onClick={this.onButtonClick}
         >
-          Add contacts from Google
+          <span>
+            {disableButton ? (
+              <span>
+                Loading contacts...
+              </span>
+            ) : (
+              <span>
+                {voterContactEmailGoogleCount > 0 ? (
+                  <span>
+                    Update contacts from Google
+                  </span>
+                ) : (
+                  <span>
+                    Add contacts from Google
+                  </span>
+                )}
+              </span>
+            )}
+          </span>
         </Button>
       </div>
     );
@@ -201,6 +225,7 @@ AddContactsFromGoogle.propTypes = {
   classes: PropTypes.object,
   darkButton: PropTypes.bool,
   mobileMode: PropTypes.bool,
+  voterContactEmailGoogleCount: PropTypes.number,
 };
 
 const styles = () => ({

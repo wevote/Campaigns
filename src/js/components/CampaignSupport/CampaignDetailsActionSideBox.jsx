@@ -234,6 +234,7 @@ class CampaignDetailsActionSideBox extends Component {
                 )}
                 <CampaignShareChunkWrapper>
                   <CampaignShareChunk
+                    campaignSEOFriendlyPath={campaignSEOFriendlyPath}
                     campaignXWeVoteId={campaignXWeVoteId}
                     darkButtonsOff
                     privatePublicIntroductionsOff

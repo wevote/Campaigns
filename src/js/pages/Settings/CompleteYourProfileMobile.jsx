@@ -49,6 +49,7 @@ class CompleteYourProfileMobile extends Component {
       pathToUseWhenProfileComplete,
     });
     setShowHeaderFooter(false);
+    window.scrollTo(0, 0);
   }
 
   componentWillUnmount () {
