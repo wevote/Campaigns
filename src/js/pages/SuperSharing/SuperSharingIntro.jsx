@@ -4,13 +4,17 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import AppStore from '../../stores/AppStore';
 import {
   CampaignSupportSection, CampaignSupportSectionWrapper,
   SkipForNowButtonPanel, SkipForNowButtonWrapper,
 } from '../../components/Style/CampaignSupportStyles';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
+import ShareActions from '../../common/actions/ShareActions';
+import ShareStore from '../../common/stores/ShareStore';
+import VoterActions from '../../actions/VoterActions';
 
 
 class SuperSharingIntro extends Component {
@@ -22,18 +26,42 @@ class SuperSharingIntro extends Component {
 
   componentDidMount () {
     // console.log('CampaignSupportSteps, componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     const { setShowHeaderFooter } = this.props;
     // const { becomeMember, createNewsItem, startCampaign, supportCampaign } = this.props;
     setShowHeaderFooter(false);
-  }
-
-  componentWillUnmount () {
-    this.appStoreListener.remove();
-  }
-
-  onAppStoreChange () {
+    initializejQuery(() => {
+      VoterActions.voterContactListRetrieve();
+    });
+    // We don't need superShareItemId in this step, but we want to make sure it is stored and retrieved so it is ready for the next step
+    const { match: { params } } = this.props;
+    const {
+      campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams,
+      // campaignXNewsItemWeVoteId,
+      campaignXWeVoteId: campaignXWeVoteIdFromParams,
+    } = params;
+    const {
+      campaignSEOFriendlyPath,
+      campaignXWeVoteId,
+    } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
+    let superShareItemId;
+    if (campaignXWeVoteId) {
+      superShareItemId = ShareStore.getSuperSharedItemDraftIdByWeVoteId(campaignXWeVoteId);
+      if (!superShareItemId || superShareItemId === 0) {
+        initializejQuery(() => {
+          ShareActions.superShareItemRetrieve(campaignXWeVoteId);
+        });
+      }
+    } else if (campaignXWeVoteIdFromParams) {
+      superShareItemId = ShareStore.getSuperSharedItemDraftIdByWeVoteId(campaignXWeVoteIdFromParams);
+      if (!superShareItemId || superShareItemId === 0) {
+        initializejQuery(() => {
+          ShareActions.superShareItemRetrieve(campaignXWeVoteIdFromParams);
+        });
+      }
+    }
+    // Take the "calculated" identifiers and retrieve if missing
+    retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
+    window.scrollTo(0, 0);
   }
 
   getCampaignBasePath = () => {

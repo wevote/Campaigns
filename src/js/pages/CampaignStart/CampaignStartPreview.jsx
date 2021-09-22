@@ -43,6 +43,7 @@ class CampaignStartPreview extends Component {
       CampaignStartActions.campaignRetrieveAsOwner('');
       CampaignStartActions.campaignEditAllReset();
     });
+    window.scrollTo(0, 0);
   }
 
   componentWillUnmount () {

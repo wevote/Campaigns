@@ -16,6 +16,12 @@ export default {
     Dispatcher.dispatch({ type: 'clearSMSPhoneNumberStatus', payload: true });
   },
 
+  deviceStoreFirebaseCloudMessagingToken (firebaseFCMToken) {
+    Dispatcher.loadEndpoint('deviceStoreFirebaseCloudMessagingToken', {
+      firebase_fcm_token: firebaseFCMToken,
+    });
+  },
+
   organizationSuggestionTasks (kindOfSuggestionTask, kindOfFollowTask) {
     Dispatcher.loadEndpoint('organizationSuggestionTasks',
       {
@@ -137,6 +143,40 @@ export default {
         voter_photo_from_file_reader: voterPhotoQueuedToSave,
         voter_photo_changed: voterPhotoQueuedToSaveSet,
       });
+  },
+
+  voterAppleSignInSave (email, givenName, middleName, familyName, user, identityToken) {
+    // eslint-disable-next-line camelcase
+    const { device: { platform: apple_platform, version: apple_os_version, model: apple_model } } = window;
+    Dispatcher.loadEndpoint('appleSignInSave', {
+      email,
+      first_name: givenName,
+      middle_name: middleName,
+      last_name: familyName,
+      user_code: user,
+      apple_platform,
+      apple_os_version,
+      apple_model,
+      identity_token: identityToken,
+    });
+  },
+
+  voterContactListDelete (deleteFromGooglePeopleApi = false) {
+    Dispatcher.loadEndpoint('voterContactListSave', {
+      delete_from_google_people_api: deleteFromGooglePeopleApi,
+    });
+  },
+
+  voterContactListRetrieve () {
+    Dispatcher.loadEndpoint('voterContactListRetrieve', {});
+  },
+
+  voterContactListSave (contacts, fromGooglePeopleApi = false) {
+    const contactsString = JSON.stringify(contacts);
+    Dispatcher.loadEndpoint('voterContactListSave', {
+      contacts: contactsString,
+      from_google_people_api: fromGooglePeopleApi,
+    });
   },
 
   voterPhotoDelete () {
@@ -326,35 +366,6 @@ export default {
     Dispatcher.loadEndpoint('voterVerifySecretCode', {
       secret_code: secretCode,
       code_sent_to_sms_phone_number: codeSentToSMSPhoneNumber,
-    });
-  },
-
-  voterAppleSignInSave (email, givenName, middleName, familyName, user, identityToken) {
-    // eslint-disable-next-line camelcase
-    const { device: { platform: apple_platform, version: apple_os_version, model: apple_model } } = window;
-    Dispatcher.loadEndpoint('appleSignInSave', {
-      email,
-      first_name: givenName,
-      middle_name: middleName,
-      last_name: familyName,
-      user_code: user,
-      apple_platform,
-      apple_os_version,
-      apple_model,
-      identity_token: identityToken,
-    });
-  },
-
-  voterSendGoogleContacts (contacts) {
-    const contactsString = JSON.stringify(contacts);
-    Dispatcher.loadEndpoint('voterSendGoogleContacts', {
-      contacts: contactsString,
-    });
-  },
-
-  deviceStoreFirebaseCloudMessagingToken (firebaseFCMToken) {
-    Dispatcher.loadEndpoint('deviceStoreFirebaseCloudMessagingToken', {
-      firebase_fcm_token: firebaseFCMToken,
     });
   },
 

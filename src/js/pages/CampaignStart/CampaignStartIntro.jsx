@@ -23,6 +23,7 @@ class CampaignStartIntro extends Component {
     // console.log('CampaignSupportSteps, componentDidMount');
     this.onAppStoreChange();
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    window.scrollTo(0, 0);
   }
 
   componentWillUnmount () {

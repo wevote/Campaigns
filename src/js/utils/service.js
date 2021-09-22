@@ -47,7 +47,8 @@ export default function $ajax (options) {
   // console.log('service.js, options.endpoint: ', options.endpoint);
   if (options.endpoint === 'campaignStartSave' ||
       options.endpoint === 'organizationPhotosSave' ||
-      options.endpoint === 'voterSendGoogleContacts' ||
+      options.endpoint === 'superShareItemSave' ||
+      options.endpoint === 'voterContactListSave' ||
       options.endpoint === 'voterUpdate') {
     options.method = 'POST';
     // const csrftoken = cookies.getItem('csrftoken');

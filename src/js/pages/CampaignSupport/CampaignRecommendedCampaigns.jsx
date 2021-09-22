@@ -17,7 +17,7 @@ import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiers } f
 import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSteps';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
-import arrayContains from '../../utils/arrayContains';
+import arrayContains from '../../common/utils/arrayContains';
 import { renderLog } from '../../utils/logging';
 import SupportButtonSingleClick from '../../components/CampaignSupport/SupportButtonSingleClick';
 import VoterStore from '../../stores/VoterStore';
@@ -85,6 +85,7 @@ class CampaignRecommendedCampaigns extends Component {
     }
     // Take the "calculated" identifiers and retrieve so we have the voter's comment
     retrieveCampaignXFromIdentifiers(campaignSEOFriendlyPath, campaignXWeVoteId);
+    window.scrollTo(0, 0);
   }
 
   componentWillUnmount () {

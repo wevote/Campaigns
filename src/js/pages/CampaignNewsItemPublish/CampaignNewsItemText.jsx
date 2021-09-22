@@ -98,6 +98,7 @@ class CampaignNewsItemText extends Component {
     }
     // Take the "calculated" identifiers and retrieve if missing
     retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
+    window.scrollTo(0, 0);
   }
 
   componentDidUpdate () {

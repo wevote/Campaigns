@@ -10,6 +10,7 @@ import VoterActions from '../actions/VoterActions';
 import AddContactConsts from '../constants/AddContactConsts';
 import VoterStore from '../stores/VoterStore';
 import { renderLog } from '../utils/logging';
+import webAppConfig from '../config';
 
 class AddContacts extends Component {
   constructor (props) {
@@ -66,7 +67,7 @@ class AddContacts extends Component {
       if (googleContactsStored && googleContactsStored > 0) {
         this.setState({ addContactsState: AddContactConsts.savedContacts });
       } else {
-        console.log('voterSendGoogleContacts failed');
+        console.log('voterContactListSave failed');
         this.setState({ addContactsState: AddContactConsts.initializedSignedIn });
       }
     }
@@ -82,8 +83,8 @@ class AddContacts extends Component {
           arrayOfSelectedContacts.push(contact);
         }
       });
-
-      VoterActions.voterSendGoogleContacts(arrayOfSelectedContacts);
+      const fromGooglePeopleApi = true;
+      VoterActions.voterContactListSave(arrayOfSelectedContacts, fromGooglePeopleApi);
       this.setState({
         addContactsState: AddContactConsts.sendingContacts,
         arrayOfSelectedContacts,
@@ -154,8 +155,10 @@ class AddContacts extends Component {
 
   initClient () {
     const { gapi } = window;
-    const CLIENT_ID = '901895533456-gnua3m53l8e8t5tv9k1tk3tecui6uqbj.apps.googleusercontent.com';
-    const API_KEY = 'AIzaSyDZAd4b8CjDv_uRt9GVZAuOwD_X-vfCMTs';
+    // const CLIENT_ID = '901895533456-gnua3m53l8e8t5tv9k1tk3tecui6uqbj.apps.googleusercontent.com';
+    // const API_KEY = 'AIzaSyDZAd4b8CjDv_uRt9GVZAuOwD_X-vfCMTs';
+    const CLIENT_ID = webAppConfig.GOOGLE_PEOPLE_API_CLIENT_ID || '';
+    const API_KEY = webAppConfig.GOOGLE_PEOPLE_API_KEY || '';
     const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/people/v1/rest'];
     const SCOPES = 'https://www.googleapis.com/auth/contacts.other.readonly';
 

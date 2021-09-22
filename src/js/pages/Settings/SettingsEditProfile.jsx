@@ -34,6 +34,7 @@ class SettingsEditProfile extends Component {
     if (!voterIsSignedIn) {
       AppActions.setShowSignInModal(true);
     }
+    window.scrollTo(0, 0);
   }
 
   componentWillUnmount () {

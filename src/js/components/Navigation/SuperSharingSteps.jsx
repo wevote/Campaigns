@@ -8,6 +8,7 @@ import CampaignStore from '../../stores/CampaignStore';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
 import { onStep1ClickPath, onStep2ClickPath, onStep3ClickPath, onStep4ClickPath } from '../../utils/superSharingStepPaths';
 import { renderLog } from '../../utils/logging';
+import VoterStore from '../../stores/VoterStore';
 
 
 class SuperSharingSteps extends Component {
@@ -27,6 +28,8 @@ class SuperSharingSteps extends Component {
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
+    this.onVoterStoreChange();
+    this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
   }
 
   componentDidUpdate (prevProps) {
@@ -58,6 +61,7 @@ class SuperSharingSteps extends Component {
   componentWillUnmount () {
     this.appStoreListener.remove();
     this.campaignStoreListener.remove();
+    this.voterStoreListener.remove();
   }
 
   onAppStoreChange () {
@@ -65,6 +69,7 @@ class SuperSharingSteps extends Component {
 
   onCampaignStoreChange () {
     const { campaignXNewsItemWeVoteId } = this.props;
+    const { voterContactEmailListCount } = this.state;
     let inDraftMode = true;
     if (campaignXNewsItemWeVoteId) {
       const campaignXNewsItem = CampaignStore.getCampaignXNewsItemByWeVoteId(campaignXNewsItemWeVoteId);
@@ -73,7 +78,7 @@ class SuperSharingSteps extends Component {
       } = campaignXNewsItem);
     }
     // atStepNumber1, atStepNumber2, atStepNumber3, atStepNumber4
-    const step1Completed = CampaignStore.campaignNewsItemTextExists(campaignXNewsItemWeVoteId);
+    const step1Completed = Boolean(voterContactEmailListCount);
     const step2Completed = false;
     const step3Completed = campaignXNewsItemWeVoteId && !inDraftMode;
     const step4Completed = false;
@@ -82,6 +87,16 @@ class SuperSharingSteps extends Component {
       step2Completed,
       step3Completed,
       step4Completed,
+    });
+  }
+
+  onVoterStoreChange () {
+    const voterContactEmailList = VoterStore.getVoterContactEmailList();
+    const voterContactEmailListCount = voterContactEmailList.length;
+    const step1Completed = Boolean(voterContactEmailListCount);
+    this.setState({
+      step1Completed,
+      voterContactEmailListCount,
     });
   }
 

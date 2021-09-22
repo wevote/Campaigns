@@ -19,10 +19,14 @@ import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
 import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
 import { historyPush, isCordova } from '../../utils/cordovaUtils';
-// import initializejQuery from '../../utils/initializejQuery';
+import initializejQuery from '../../utils/initializejQuery';
 import { onStep1ClickPath, onStep2ClickPath, onStep3ClickPath } from '../../utils/superSharingStepPaths';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
+import { numberWithCommas } from '../../utils/textFormat';
 import { renderLog } from '../../utils/logging';
+import ShareActions from '../../common/actions/ShareActions';
+import ShareStore from '../../common/stores/ShareStore';
+import VoterActions from '../../actions/VoterActions';
 import VoterStore from '../../stores/VoterStore';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
@@ -39,6 +43,7 @@ class SuperSharingSendEmail extends Component {
       campaignXNewsItemWeVoteId: '',
       campaignXWeVoteId: '',
       chosenWebsiteName: '',
+      voterContactEmailListCount: 0,
     };
   }
 
@@ -49,6 +54,8 @@ class SuperSharingSendEmail extends Component {
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
+    this.onShareStoreChange();
+    this.shareStoreListener = ShareStore.addListener(this.onShareStoreChange.bind(this));
     this.onVoterStoreChange();
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
     const { match: { params } } = this.props;
@@ -89,16 +96,46 @@ class SuperSharingSendEmail extends Component {
     }
     // Take the "calculated" identifiers and retrieve if missing
     retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
+    initializejQuery(() => {
+      VoterActions.voterContactListRetrieve();
+    });
+    window.scrollTo(0, 0);
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    const {
+      campaignXWeVoteId: campaignXWeVoteIdPrevious,
+    } = prevState;
+    const {
+      campaignXWeVoteId,
+    } = this.state;
+    if (campaignXWeVoteId) {
+      if (campaignXWeVoteId !== campaignXWeVoteIdPrevious) {
+        const superShareItemId = ShareStore.getSuperSharedItemDraftIdByWeVoteId(campaignXWeVoteId);
+        if (!superShareItemId || superShareItemId === 0) {
+          initializejQuery(() => {
+            ShareActions.superShareItemRetrieve(campaignXWeVoteId);
+          });
+        }
+        this.onCampaignStoreChange();
+        this.onShareStoreChange();
+      }
+    }
   }
 
   componentWillUnmount () {
     this.props.setShowHeaderFooter(true);
     this.appStoreListener.remove();
     this.campaignStoreListener.remove();
+    this.shareStoreListener.remove();
     this.voterStoreListener.remove();
   }
 
   onAppStoreChange () {
+    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+    this.setState({
+      chosenWebsiteName,
+    });
   }
 
   onCampaignStoreChange () {
@@ -137,7 +174,28 @@ class SuperSharingSendEmail extends Component {
     }
   }
 
+  onShareStoreChange () {
+    const { campaignXWeVoteId } = this.state;
+    const superShareItemId = ShareStore.getSuperSharedItemDraftIdByWeVoteId(campaignXWeVoteId);
+    if (superShareItemId) {
+      const superShareItem = ShareStore.getSuperShareItemById(superShareItemId);
+      const {
+        personalized_message: personalizedMessage,
+        personalized_subject: personalizedSubject,
+      } = superShareItem;
+      this.setState({
+        personalizedMessage,
+        personalizedSubject,
+      });
+    }
+  }
+
   onVoterStoreChange () {
+    const voterContactEmailList = VoterStore.getVoterContactEmailList();
+    const voterContactEmailListCount = voterContactEmailList.length;
+    this.setState({
+      voterContactEmailListCount,
+    });
   }
 
   getCampaignBasePath = () => {
@@ -200,8 +258,10 @@ class SuperSharingSendEmail extends Component {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
       campaignXNewsItemWeVoteId,
       campaignXWeVoteId, chosenWebsiteName,
+      personalizedMessage, personalizedSubject,
+      voterContactEmailListCount,
     } = this.state;
-    const htmlTitle = `Why do you support ${campaignTitle}? - ${chosenWebsiteName}`;
+    const htmlTitle = `Review and send email - ${chosenWebsiteName}`;
     // let numberOfPoliticians = 0;
     // if (campaignXPoliticianList && campaignXPoliticianList.length) {
     //   numberOfPoliticians = campaignXPoliticianList.length;
@@ -250,7 +310,9 @@ class SuperSharingSendEmail extends Component {
                             Import your address book
                           </StepNumberTitle>
                           <StepPreviewText>
-                            Contacts Imported: 45
+                            Contacts Imported:
+                            {' '}
+                            {numberWithCommas(voterContactEmailListCount)}
                           </StepPreviewText>
                         </div>
                       </StepRow>
@@ -312,7 +374,19 @@ class SuperSharingSendEmail extends Component {
                             Personalize message
                           </StepNumberTitle>
                           <StepPreviewText>
-                            &quot;Hello, I&apos;m preparing for the next election, and I added my support to this...&quot;
+                            {personalizedSubject && (
+                              <>
+                                Subject:
+                                {' '}
+                                {personalizedSubject}
+                              </>
+                            )}
+                            {personalizedMessage && (
+                              <StepPreviewTextMessage>
+                                {personalizedMessage}
+                              </StepPreviewTextMessage>
+                            )}
+                            <br />
                           </StepPreviewText>
                         </div>
                       </StepRow>
@@ -512,6 +586,10 @@ const StepPreviewText = styled.div`
   font-size: 14px;
   margin-top: 4px;
   padding-right: 6px;
+`;
+
+const StepPreviewTextMessage = styled.div`
+  white-space: pre-wrap;
 `;
 
 const StepRow = styled.div`

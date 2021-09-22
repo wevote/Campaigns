@@ -49,6 +49,7 @@ class CampaignCommentsPage extends Component {
         campaignXWeVoteId,
       });
     }
+    window.scrollTo(0, 0);
   }
 
   componentWillUnmount () {

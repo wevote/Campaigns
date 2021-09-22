@@ -86,6 +86,7 @@ class CampaignSupportShare extends Component {
     }
     // Take the "calculated" identifiers and retrieve so we have the voter's comment
     retrieveCampaignXFromIdentifiers(campaignSEOFriendlyPath, campaignXWeVoteId);
+    window.scrollTo(0, 0);
   }
 
   componentDidUpdate (prevProps) {
@@ -294,7 +295,10 @@ class CampaignSupportShare extends Component {
                 </CampaignSupportSectionWrapper>
               ) : (
                 <>
-                  <CampaignShareChunk campaignXWeVoteId={campaignXWeVoteId} />
+                  <CampaignShareChunk
+                    campaignSEOFriendlyPath={campaignSEOFriendlyPath}
+                    campaignXWeVoteId={campaignXWeVoteId}
+                  />
                 </>
               )}
               <CampaignSupportSectionWrapper>
