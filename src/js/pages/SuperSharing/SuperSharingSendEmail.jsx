@@ -43,6 +43,7 @@ class SuperSharingSendEmail extends Component {
       campaignXNewsItemWeVoteId: '',
       campaignXWeVoteId: '',
       chosenWebsiteName: '',
+      emailRecipientList: [],
       voterContactEmailListCount: 0,
     };
   }
@@ -183,9 +184,12 @@ class SuperSharingSendEmail extends Component {
         personalized_message: personalizedMessage,
         personalized_subject: personalizedSubject,
       } = superShareItem;
+      const emailRecipientList = ShareStore.getEmailRecipientList(superShareItemId);
+      // console.log('SuperSharingSendEmail onShareStoreChange emailRecipientList:', emailRecipientList);
       this.setState({
         personalizedMessage,
         personalizedSubject,
+        emailRecipientList,
       });
     }
   }
@@ -200,7 +204,7 @@ class SuperSharingSendEmail extends Component {
 
   getCampaignBasePath = () => {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
-    let campaignBasePath = '';
+    let campaignBasePath;
     if (campaignSEOFriendlyPath) {
       campaignBasePath = `/c/${campaignSEOFriendlyPath}`;
     } else {
@@ -244,7 +248,13 @@ class SuperSharingSendEmail extends Component {
   submitSendEmail = () => {
     const { campaignXWeVoteId } = this.state;
     if (campaignXWeVoteId) {
-      historyPush(`${this.getCampaignBasePath()}/recommended-campaigns`);
+      const superShareItemId = ShareStore.getSuperSharedItemDraftIdByWeVoteId(campaignXWeVoteId);
+      if (superShareItemId) {
+        initializejQuery(() => {
+          ShareActions.superSharingSendEmail(superShareItemId);
+        });
+        historyPush(`${this.getCampaignBasePath()}/recommended-campaigns`);
+      }
     }
   }
 
@@ -257,10 +267,11 @@ class SuperSharingSendEmail extends Component {
     const {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
       campaignXNewsItemWeVoteId,
-      campaignXWeVoteId, chosenWebsiteName,
+      campaignXWeVoteId, chosenWebsiteName, emailRecipientList,
       personalizedMessage, personalizedSubject,
       voterContactEmailListCount,
     } = this.state;
+    const emailRecipientListCount = emailRecipientList.length;
     const htmlTitle = `Review and send email - ${chosenWebsiteName}`;
     // let numberOfPoliticians = 0;
     // if (campaignXPoliticianList && campaignXPoliticianList.length) {
@@ -343,7 +354,9 @@ class SuperSharingSendEmail extends Component {
                             Choose recipients
                           </StepNumberTitle>
                           <StepPreviewText>
-                            Emails to be sent: 30
+                            Emails to be sent:
+                            {' '}
+                            {emailRecipientListCount}
                           </StepPreviewText>
                         </div>
                       </StepRow>
@@ -553,6 +566,7 @@ const StepCircle = styled.div`
 `;
 
 const StepInnerLeftWrapper = styled.div`
+  padding-right: 4px;
   width: 100%;
 `;
 

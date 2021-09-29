@@ -25,14 +25,15 @@ import initializejQuery from '../../utils/initializejQuery';
 import LoadMoreItemsManually from '../../components/Widgets/LoadMoreItemsManually';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
-import { removeValueFromArray, shortenText } from '../../utils/textFormat';
+import { shortenText } from '../../utils/textFormat';
+import removeValueFromArray from '../../common/utils/removeValueFromArray';
 import ShareActions from '../../common/actions/ShareActions';
 import ShareStore from '../../common/stores/ShareStore';
 import VoterActions from '../../actions/VoterActions';
 import VoterStore from '../../stores/VoterStore';
 
 const NUMBER_OF_RECIPIENTS_TO_ADD_WHEN_MORE_CLICKED = 25;
-const STARTING_NUMBER_OF_RECIPIENTS_TO_DISPLAY = 25;
+const STARTING_NUMBER_OF_RECIPIENTS_TO_DISPLAY = 15;
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
 const VoterFirstRetrieveController = loadable(() => import('../../components/Settings/VoterFirstRetrieveController'));
@@ -60,6 +61,8 @@ class SuperSharingChooseRecipients extends Component {
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
+    this.onShareStoreChange();
+    this.shareStoreListener = ShareStore.addListener(this.onShareStoreChange.bind(this));
     this.onVoterStoreChange();
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
     const { match: { params } } = this.props;
@@ -121,6 +124,8 @@ class SuperSharingChooseRecipients extends Component {
           initializejQuery(() => {
             ShareActions.superShareItemRetrieve(campaignXWeVoteId);
           });
+        } else {
+          this.onShareStoreChange();
         }
       }
     }
@@ -130,6 +135,7 @@ class SuperSharingChooseRecipients extends Component {
     this.props.setShowHeaderFooter(true);
     this.appStoreListener.remove();
     this.campaignStoreListener.remove();
+    this.shareStoreListener.remove();
     this.voterStoreListener.remove();
   }
 
@@ -172,6 +178,25 @@ class SuperSharingChooseRecipients extends Component {
     } else if (campaignXWeVoteIdFromParams) {
       this.setState({
         campaignXWeVoteId: campaignXWeVoteIdFromParams,
+      });
+    }
+  }
+
+  onShareStoreChange () {
+    // console.log('SuperSharingChooseRecipients onShareStoreChange');
+    const { campaignXWeVoteId } = this.state;
+    const superShareItemId = ShareStore.getSuperSharedItemDraftIdByWeVoteId(campaignXWeVoteId);
+    if (superShareItemId) {
+      const emailRecipientList = ShareStore.getEmailRecipientList(superShareItemId);
+      // console.log('SuperSharingChooseRecipients onShareStoreChange emailRecipientList:', emailRecipientList);
+      const emailRecipientListQueuedToSave = ShareStore.getEmailRecipientListQueuedToSave(superShareItemId);
+      const emailRecipientListQueuedToSaveSet = ShareStore.getEmailRecipientListQueuedToSaveSet(superShareItemId);
+      let emailRecipientListAdjusted = emailRecipientList;
+      if (emailRecipientListQueuedToSaveSet) {
+        emailRecipientListAdjusted = emailRecipientListQueuedToSave;
+      }
+      this.setState({
+        recipientEmailsChosen: emailRecipientListAdjusted,
       });
     }
   }
@@ -228,13 +253,17 @@ class SuperSharingChooseRecipients extends Component {
   onClickSelectContact = (recipientEmail) => {
     if (!recipientEmail) return false;
     const recipientEmailLowerCase = recipientEmail.toLowerCase();
+    const { campaignXWeVoteId } = this.state;
     let { recipientEmailsChosen } = this.state;
+    const superShareItemId = ShareStore.getSuperSharedItemDraftIdByWeVoteId(campaignXWeVoteId);
     if (arrayContains(recipientEmailLowerCase, recipientEmailsChosen)) {
       // Remove
       recipientEmailsChosen = removeValueFromArray(recipientEmailLowerCase, recipientEmailsChosen);
+      ShareActions.emailRecipientListQueuedToSave(superShareItemId, '', recipientEmailLowerCase, false);
     } else {
       // Add
       recipientEmailsChosen.push(recipientEmailLowerCase);
+      ShareActions.emailRecipientListQueuedToSave(superShareItemId, recipientEmailLowerCase, '', false);
     }
     this.setState({
       recipientEmailsChosen,
@@ -259,6 +288,17 @@ class SuperSharingChooseRecipients extends Component {
 
   submitChooseRecipients = () => {
     const { campaignXWeVoteId } = this.state;
+    const superShareItemId = ShareStore.getSuperSharedItemDraftIdByWeVoteId(campaignXWeVoteId);
+    if (superShareItemId) {
+      const emailRecipientListQueuedToSave = ShareStore.getEmailRecipientListQueuedToSave(superShareItemId);
+      const emailRecipientListQueuedToSaveSet = ShareStore.getEmailRecipientListQueuedToSaveSet(superShareItemId);
+      // console.log('SuperSharingChooseRecipients, emailRecipientListQueuedToSave:', emailRecipientListQueuedToSave);
+      initializejQuery(() => {
+        const emailRecipientListQueuedToSaveSerialized = JSON.stringify(emailRecipientListQueuedToSave);
+        ShareActions.superShareItemEmailRecipientListSave(campaignXWeVoteId, '', emailRecipientListQueuedToSaveSerialized, emailRecipientListQueuedToSaveSet);
+        ShareActions.emailRecipientListQueuedToSave(superShareItemId, '', '', true);
+      });
+    }
     if (campaignXWeVoteId) {
       this.goToNextStep();
     }
