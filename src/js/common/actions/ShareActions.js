@@ -1,6 +1,16 @@
 import Dispatcher from '../../dispatcher/Dispatcher';
 
 export default {
+  emailRecipientListQueuedToSave (superShareItemId, emailToAdd, emailToRemove, resetEmailRecipientList) {
+    Dispatcher.dispatch({
+      emailToAdd,
+      emailToRemove,
+      resetEmailRecipientList,
+      superShareItemId,
+      type: 'emailRecipientListQueuedToSave',
+    });
+  },
+
   personalizedMessageQueuedToSave (superShareItemId, personalizedMessage) {
     Dispatcher.dispatch({
       personalizedMessage,
@@ -92,18 +102,31 @@ export default {
       });
   },
 
-  superShareItemSend (
+  superShareItemEmailRecipientListSave (
     campaignXWeVoteId,
-    sendNow,
+    campaignXNewsItemWeVoteId,
+    emailRecipientListSerialized,
+    emailRecipientListSet,
+    superShareItemId,
+  ) {
+    // console.log('superShareItemEmailRecipientListSave: ', emailRecipientListSerialized);
+    Dispatcher.loadEndpoint('superShareItemSave',
+      {
+        campaignx_we_vote_id: campaignXWeVoteId,
+        campaignx_news_item_we_vote_id: campaignXNewsItemWeVoteId,
+        email_recipient_list: emailRecipientListSerialized,
+        email_recipient_list_changed: emailRecipientListSet,
+        super_share_item_id: superShareItemId,
+      });
+  },
+
+  superSharingSendEmail (
     superShareItemId,
   ) {
     // console.log('superShareItemSend');
     Dispatcher.loadEndpoint('superShareItemSave',
       {
-        campaignx_we_vote_id: campaignXWeVoteId,
-        in_draft_mode: false,
-        in_draft_mode_changed: true,
-        send_now: sendNow,
+        send_now: true,
         super_share_item_id: superShareItemId,
       });
   },

@@ -46,6 +46,7 @@ class SuperSharingComposeEmailMessage extends Component {
       campaignTitle: '',
       campaignXWeVoteId: '',
       chosenWebsiteName: '',
+      emailRecipientList: [],
     };
   }
 
@@ -191,6 +192,12 @@ class SuperSharingComposeEmailMessage extends Component {
 
   onShareStoreChange () {
     // console.log('SuperSharingComposeEmailMessage onShareStoreChange');
+    const { campaignXWeVoteId } = this.state;
+    const superShareItemId = ShareStore.getSuperSharedItemDraftIdByWeVoteId(campaignXWeVoteId);
+    const emailRecipientList = ShareStore.getEmailRecipientList(superShareItemId);
+    this.setState({
+      emailRecipientList,
+    });
   }
 
   onVoterStoreChange () {
@@ -266,8 +273,9 @@ class SuperSharingComposeEmailMessage extends Component {
     const {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
       campaignXNewsItemWeVoteId, campaignXPoliticianList, campaignXWeVoteId, chosenWebsiteName,
-      voterPhotoUrlLarge,
+      emailRecipientList, voterPhotoUrlLarge,
     } = this.state;
+    const emailRecipientListCount = emailRecipientList.length;
     const htmlTitle = `Send personalized message regarding ${campaignTitle}? - ${chosenWebsiteName}`;
     // let numberOfPoliticians = 0;
     // if (campaignXPoliticianList && campaignXPoliticianList.length) {
@@ -299,7 +307,18 @@ class SuperSharingComposeEmailMessage extends Component {
                 Personalize message
               </CampaignProcessStepTitle>
               <CampaignProcessStepIntroductionText>
-                This subject and text will be emailed to everyone you&apos;ve chosen.
+                {emailRecipientListCount > 0 && (
+                  <>
+                    You have chosen to email
+                    {' '}
+                    {emailRecipientListCount}
+                    {' '}
+                    {emailRecipientListCount === 1 ? 'friend' : 'friends'}
+                    .
+                    {' '}
+                  </>
+                )}
+                Feel free to make edits to the default subject and message text.
               </CampaignProcessStepIntroductionText>
               <CampaignSupportSectionWrapper>
                 <CampaignSupportSection>

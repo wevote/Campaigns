@@ -239,16 +239,6 @@ export function removeTwitterNameFromDescription (displayName, twitterDescriptio
   return twitterDescriptionMinusName;
 }
 
-export function removeValueFromArray (valueToRemove, listArray) {
-  if (listArray && listArray.constructor === Array) {
-    const index = listArray.indexOf(valueToRemove);
-    if (index !== -1) {
-      listArray.splice(index, 1);
-    }
-  }
-  return listArray;
-}
-
 export function sentenceCaseString (incomingString) {
   if (!incomingString || incomingString === '') {
     return '';

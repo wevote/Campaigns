@@ -166,7 +166,8 @@ CampaignShareChunk.propTypes = {
 
 const styles = () => ({
   buttonDesktop: {
-    boxShadow: 'none !important',
+    border: '1px solid #2e3c5d',
+    boxShadow: '0 4px 6px rgb(50 50 93 / 11%)',
     fontSize: '18px',
     height: '45px !important',
     minWidth: '300px',

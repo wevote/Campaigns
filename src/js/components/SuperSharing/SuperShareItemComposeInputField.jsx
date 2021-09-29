@@ -13,6 +13,7 @@ class SuperShareItemComposeInputField extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      campaignTitle: '',
       campaignXPoliticianList: [],
       personalizedMessage: '',
       personalizedSubject: '',
@@ -29,6 +30,7 @@ class SuperShareItemComposeInputField extends Component {
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.onShareStoreChange();
     this.shareStoreListener = ShareStore.addListener(this.onShareStoreChange.bind(this));
+    this.setPersonalizedTextIfBlank();
   }
 
   componentDidUpdate (prevProps) {
@@ -53,6 +55,9 @@ class SuperShareItemComposeInputField extends Component {
   componentWillUnmount () {
     this.campaignStoreListener.remove();
     this.shareStoreListener.remove();
+    if (this.setPersonalizedTextTimer) {
+      clearTimeout(this.setPersonalizedTextTimer);
+    }
   }
 
   handleKeyPress () {
@@ -61,8 +66,13 @@ class SuperShareItemComposeInputField extends Component {
 
   onCampaignStoreChange () {
     const { campaignXWeVoteId } = this.props;
+    const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
+    const {
+      campaign_title: campaignTitle,
+    } = campaignX;
     const campaignXPoliticianList = CampaignStore.getCampaignXPoliticianList(campaignXWeVoteId);
     this.setState({
+      campaignTitle,
       campaignXPoliticianList,
     });
   }
@@ -94,6 +104,80 @@ class SuperShareItemComposeInputField extends Component {
         personalizedMessage: personalizedMessageAdjusted,
         personalizedSubject: personalizedSubjectAdjusted,
       });
+      const delayBeforeSettingPersonalizedText = 200;
+      this.setPersonalizedTextTimer = setTimeout(() => {
+        this.setPersonalizedTextIfBlank();
+      }, delayBeforeSettingPersonalizedText);
+    }
+  }
+
+  setPersonalizedTextIfBlank = (resetDefaultText = false) => {
+    const { campaignXWeVoteId } = this.props;
+    const { campaignTitle, campaignXPoliticianList } = this.state;
+    const politicianListSentenceString = politicianListToSentenceString(campaignXPoliticianList);
+    const superShareItemId = ShareStore.getSuperSharedItemDraftIdByWeVoteId(campaignXWeVoteId);
+    let superShareItem;
+    let superShareItemExists = false;
+    if (superShareItemId) {
+      superShareItem = ShareStore.getSuperShareItemById(superShareItemId);
+    }
+    if (superShareItem) {
+      if (superShareItem.super_share_item_id) {
+        superShareItemExists = true;
+      }
+    }
+    // console.log('setPersonalizedTextIfBlank superShareItem: ', superShareItem, ', superShareItemExists:', superShareItemExists);
+    // Only proceed if we know a superShareItem has been returned by API server
+    if (superShareItemExists) {
+      const {
+        personalized_message: personalizedMessage,
+        personalized_subject: personalizedSubject,
+      } = superShareItem;
+      const personalizedMessageQueuedToSaveSet = ShareStore.getPersonalizedMessageQueuedToSaveSet(superShareItemId);
+      const savedPersonalizedMessageExists = personalizedMessage.trim() !== '';
+      const setPersonalizedMessageToDefault = resetDefaultText || (!savedPersonalizedMessageExists && !personalizedMessageQueuedToSaveSet);
+      // console.log('setPersonalizedMessageToDefault:', setPersonalizedMessageToDefault);
+      if (setPersonalizedMessageToDefault) {
+        // We require a message
+        let personalizedMessageAdjusted;
+        if (campaignTitle) {
+          personalizedMessageAdjusted = `Hello friends, I'm supporting ${campaignTitle}. Join me! `;
+        } else {
+          personalizedMessageAdjusted = 'Hello friends, join me in supporting this campaign! ';
+        }
+        if (politicianListSentenceString) {
+          personalizedMessageAdjusted += `This campaign isn't asking us for money, only asking us to plan to vote for${politicianListSentenceString}. `;
+        } else {
+          personalizedMessageAdjusted += "This campaign isn't asking for money, only asking us to plan to vote for the candidate(s). ";
+        }
+        personalizedMessageAdjusted += "Our email addresses are kept private, and you don't have to share your support publicly. ";
+        personalizedMessageAdjusted += "\n\nClick 'View Now' to see the campaign, and see if you want to support it. Thank you!";
+        // Now set it locally
+        ShareActions.personalizedMessageQueuedToSave(superShareItemId, personalizedMessageAdjusted);
+        this.setState({
+          personalizedMessage: personalizedMessageAdjusted,
+        });
+      }
+      const personalizedSubjectQueuedToSaveSet = ShareStore.getPersonalizedSubjectQueuedToSaveSet(superShareItemId);
+      const savedPersonalizedSubjectExists = personalizedSubject.trim() !== '';
+      const setPersonalizedSubjectToDefault = resetDefaultText || (!savedPersonalizedSubjectExists && !personalizedSubjectQueuedToSaveSet);
+      // console.log('setPersonalizedSubjectToDefault:', setPersonalizedSubjectToDefault);
+      if (setPersonalizedSubjectToDefault) {
+        // We require a subject
+        let personalizedSubjectAdjusted;
+        if (politicianListSentenceString) {
+          personalizedSubjectAdjusted = `I'm supporting${politicianListSentenceString}`;
+        } else if (campaignTitle) {
+          personalizedSubjectAdjusted = `I'm supporting ${campaignTitle}`;
+        } else {
+          personalizedSubjectAdjusted = "I'm supporting this campaign";
+        }
+        // Now set it locally
+        ShareActions.personalizedSubjectQueuedToSave(superShareItemId, personalizedSubjectAdjusted);
+        this.setState({
+          personalizedSubject: personalizedSubjectAdjusted,
+        });
+      }
     }
   }
 
@@ -123,7 +207,7 @@ class SuperShareItemComposeInputField extends Component {
     renderLog('SuperShareItemComposeInputField');  // Set LOG_RENDER_EVENTS to log all renders
 
     const { classes, externalUniqueId } = this.props;
-    const { campaignXPoliticianList, personalizedSubject, personalizedMessage } = this.state;
+    const { campaignTitle, campaignXPoliticianList, personalizedSubject, personalizedMessage } = this.state;
     let numberOfPoliticians = 0;
     if (campaignXPoliticianList && campaignXPoliticianList.length > 0) {
       numberOfPoliticians = campaignXPoliticianList.length;
@@ -132,11 +216,11 @@ class SuperShareItemComposeInputField extends Component {
     let placeholderText = '';
     if (numberOfPoliticians > 0) {
       const politicianListSentenceString = politicianListToSentenceString(campaignXPoliticianList);
-      placeholderSubject += `Update about${politicianListSentenceString}`;
+      placeholderSubject += `I'm supporting ${politicianListSentenceString}`;
       placeholderText += `Thank you for supporting${politicianListSentenceString}.`;
       placeholderText += ' I wanted to share some news that...';
     } else {
-      placeholderSubject += 'Campaign update';
+      placeholderSubject += `I'm supporting ${campaignTitle}`;
       placeholderText += 'Thank you for supporting this campaign! I wanted to share some news that...';
     }
     return (
