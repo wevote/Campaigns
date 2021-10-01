@@ -1,5 +1,5 @@
 import { ReduceStore } from 'flux/utils';
-import Dispatcher from '../dispatcher/Dispatcher';
+import Dispatcher from '../common/dispatcher/Dispatcher';
 import anonymous from '../../img/global/icons/avatar-generic.png';
 import arrayContains from '../common/utils/arrayContains';
 import VoterStore from './VoterStore'; // eslint-disable-line import/no-cycle

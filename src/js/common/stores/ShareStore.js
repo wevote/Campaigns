@@ -1,5 +1,5 @@
 import { ReduceStore } from 'flux/utils';
-import Dispatcher from '../../dispatcher/Dispatcher';
+import Dispatcher from '../dispatcher/Dispatcher';
 import arrayContains from '../utils/arrayContains';
 import removeValueFromArray from '../utils/removeValueFromArray';
 

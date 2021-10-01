@@ -1,5 +1,5 @@
 import { ReduceStore } from 'flux/utils';
-import Dispatcher from '../dispatcher/Dispatcher';
+import Dispatcher from '../common/dispatcher/Dispatcher';
 import FacebookConstants from '../constants/FacebookConstants';
 import signInModalGlobalState from '../components/Settings/signInModalGlobalState';
 import { oAuthLog } from '../utils/logging';

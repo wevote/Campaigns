@@ -1,5 +1,5 @@
 import Dispatcher from '../dispatcher/AppDispatcher';
-import DispatcherLoadEndpoint from '../dispatcher/Dispatcher';
+import DispatcherLoadEndpoint from '../common/dispatcher/Dispatcher';
 
 
 export default {

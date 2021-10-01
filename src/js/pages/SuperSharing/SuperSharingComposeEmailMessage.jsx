@@ -45,9 +45,14 @@ class SuperSharingComposeEmailMessage extends Component {
       campaignPhotoLargeUrl: '',
       campaignSEOFriendlyPath: '',
       campaignTitle: '',
+      campaignXNewsItemWeVoteId: '',
+      campaignXPoliticianList: [],
       campaignXWeVoteId: '',
       chosenWebsiteName: '',
       emailRecipientList: [],
+      suggestedMessage: '',
+      suggestedSubject: '',
+      voterPhotoUrlLarge: '',
     };
   }
 
