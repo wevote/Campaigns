@@ -29,6 +29,7 @@ import { renderLog } from '../../utils/logging';
 import ShareActions from '../../common/actions/ShareActions';
 import ShareStore from '../../common/stores/ShareStore';
 import SuperShareItemComposeInputField from '../../components/SuperSharing/SuperShareItemComposeInputField';
+import superSharingSuggestedEmailText from '../../utils/superSharingSuggestedEmailText';
 import VoterActions from '../../actions/VoterActions';
 import VoterPhotoUpload from '../../components/Settings/VoterPhotoUpload';
 import VoterStore from '../../stores/VoterStore';
@@ -100,6 +101,10 @@ class SuperSharingComposeEmailMessage extends Component {
     }
     // Take the "calculated" identifiers and retrieve if missing
     retrieveCampaignXFromIdentifiersIfNeeded(campaignSEOFriendlyPath, campaignXWeVoteId);
+    const delayBeforeCreatingSuggestedEmailText = 200;
+    this.suggestedEmailTextTimer = setTimeout(() => {
+      this.createSuggestedEmailText();
+    }, delayBeforeCreatingSuggestedEmailText);
     window.scrollTo(0, 0);
   }
 
@@ -131,6 +136,9 @@ class SuperSharingComposeEmailMessage extends Component {
     this.campaignStoreListener.remove();
     this.shareStoreListener.remove();
     this.voterStoreListener.remove();
+    if (this.suggestedEmailTextTimer) {
+      clearTimeout(this.suggestedEmailTextTimer);
+    }
   }
 
   onAppStoreChange () {
@@ -180,6 +188,10 @@ class SuperSharingComposeEmailMessage extends Component {
         campaignXWeVoteId: campaignXWeVoteIdFromParams,
       });
     }
+    const delayBeforeCreatingSuggestedEmailText = 200;
+    this.suggestedEmailTextTimer = setTimeout(() => {
+      this.createSuggestedEmailText();
+    }, delayBeforeCreatingSuggestedEmailText);
   }
 
   onCampaignNewsItemStoreChange () {
@@ -216,6 +228,19 @@ class SuperSharingComposeEmailMessage extends Component {
       campaignBasePath = `/id/${campaignXWeVoteId}`;
     }
     return campaignBasePath;
+  }
+
+  createSuggestedEmailText = () => {
+    const { campaignTitle, campaignXPoliticianList } = this.state;
+    const politicianListSentenceString = politicianListToSentenceString(campaignXPoliticianList);
+    const {
+      suggestedMessage,
+      suggestedSubject,
+    } = superSharingSuggestedEmailText(campaignTitle, politicianListSentenceString);
+    this.setState({
+      suggestedMessage,
+      suggestedSubject,
+    });
   }
 
   goToNextStep = () => {
@@ -273,7 +298,7 @@ class SuperSharingComposeEmailMessage extends Component {
     const {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
       campaignXNewsItemWeVoteId, campaignXPoliticianList, campaignXWeVoteId, chosenWebsiteName,
-      emailRecipientList, voterPhotoUrlLarge,
+      emailRecipientList, suggestedMessage, suggestedSubject, voterPhotoUrlLarge,
     } = this.state;
     const emailRecipientListCount = emailRecipientList.length;
     const htmlTitle = `Send personalized message regarding ${campaignTitle}? - ${chosenWebsiteName}`;
@@ -392,6 +417,21 @@ class SuperSharingComposeEmailMessage extends Component {
                       <AdviceBoxText>
                         Don’t bully, use hate speech, threaten violence or make things up.
                       </AdviceBoxText>
+                      {(suggestedMessage && suggestedSubject) && (
+                        <>
+                          <AdviceBoxText>
+                            &nbsp;
+                          </AdviceBoxText>
+                          <AdviceBoxTitle>
+                            Suggested email subject and message
+                          </AdviceBoxTitle>
+                          <AdviceBoxText>
+                            {suggestedSubject}
+                            <br />
+                            {suggestedMessage}
+                          </AdviceBoxText>
+                        </>
+                      )}
                     </AdviceBox>
                   </AdviceBoxWrapper>
                   <SkipForNowButtonWrapper>
