@@ -8,6 +8,7 @@ import { renderLog } from '../../utils/logging';
 import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
 import ShareActions from '../../common/actions/ShareActions';
 import ShareStore from '../../common/stores/ShareStore';
+import superSharingSuggestedEmailText from '../../utils/superSharingSuggestedEmailText';
 
 class SuperShareItemComposeInputField extends Component {
   constructor (props) {
@@ -17,6 +18,8 @@ class SuperShareItemComposeInputField extends Component {
       campaignXPoliticianList: [],
       personalizedMessage: '',
       personalizedSubject: '',
+      placeholderMessage: '',
+      placeholderSubject: '',
     };
 
     this.handleKeyPress = this.handleKeyPress.bind(this);
@@ -130,6 +133,10 @@ class SuperShareItemComposeInputField extends Component {
     // Only proceed if we know a superShareItem has been returned by API server
     if (superShareItemExists) {
       const {
+        suggestedMessage,
+        suggestedSubject,
+      } = superSharingSuggestedEmailText(campaignTitle, politicianListSentenceString);
+      const {
         personalized_message: personalizedMessage,
         personalized_subject: personalizedSubject,
       } = superShareItem;
@@ -138,24 +145,11 @@ class SuperShareItemComposeInputField extends Component {
       const setPersonalizedMessageToDefault = resetDefaultText || (!savedPersonalizedMessageExists && !personalizedMessageQueuedToSaveSet);
       // console.log('setPersonalizedMessageToDefault:', setPersonalizedMessageToDefault);
       if (setPersonalizedMessageToDefault) {
-        // We require a message
-        let personalizedMessageAdjusted;
-        if (campaignTitle) {
-          personalizedMessageAdjusted = `Hello friends, I'm supporting ${campaignTitle}. Join me! `;
-        } else {
-          personalizedMessageAdjusted = 'Hello friends, join me in supporting this campaign! ';
-        }
-        if (politicianListSentenceString) {
-          personalizedMessageAdjusted += `This campaign isn't asking us for money, only asking us to plan to vote for${politicianListSentenceString}. `;
-        } else {
-          personalizedMessageAdjusted += "This campaign isn't asking for money, only asking us to plan to vote for the candidate(s). ";
-        }
-        personalizedMessageAdjusted += "Our email addresses are kept private, and you don't have to share your support publicly. ";
-        personalizedMessageAdjusted += "\n\nClick 'View Now' to see the campaign, and see if you want to support it. Thank you!";
         // Now set it locally
-        ShareActions.personalizedMessageQueuedToSave(superShareItemId, personalizedMessageAdjusted);
+        ShareActions.personalizedMessageQueuedToSave(superShareItemId, suggestedMessage);
         this.setState({
-          personalizedMessage: personalizedMessageAdjusted,
+          personalizedMessage: suggestedMessage,
+          placeholderMessage: suggestedMessage,
         });
       }
       const personalizedSubjectQueuedToSaveSet = ShareStore.getPersonalizedSubjectQueuedToSaveSet(superShareItemId);
@@ -163,19 +157,11 @@ class SuperShareItemComposeInputField extends Component {
       const setPersonalizedSubjectToDefault = resetDefaultText || (!savedPersonalizedSubjectExists && !personalizedSubjectQueuedToSaveSet);
       // console.log('setPersonalizedSubjectToDefault:', setPersonalizedSubjectToDefault);
       if (setPersonalizedSubjectToDefault) {
-        // We require a subject
-        let personalizedSubjectAdjusted;
-        if (politicianListSentenceString) {
-          personalizedSubjectAdjusted = `I'm supporting${politicianListSentenceString}`;
-        } else if (campaignTitle) {
-          personalizedSubjectAdjusted = `I'm supporting ${campaignTitle}`;
-        } else {
-          personalizedSubjectAdjusted = "I'm supporting this campaign";
-        }
         // Now set it locally
-        ShareActions.personalizedSubjectQueuedToSave(superShareItemId, personalizedSubjectAdjusted);
+        ShareActions.personalizedSubjectQueuedToSave(superShareItemId, suggestedSubject);
         this.setState({
-          personalizedSubject: personalizedSubjectAdjusted,
+          personalizedSubject: suggestedSubject,
+          placeholderSubject: suggestedSubject,
         });
       }
     }
@@ -207,22 +193,7 @@ class SuperShareItemComposeInputField extends Component {
     renderLog('SuperShareItemComposeInputField');  // Set LOG_RENDER_EVENTS to log all renders
 
     const { classes, externalUniqueId } = this.props;
-    const { campaignTitle, campaignXPoliticianList, personalizedSubject, personalizedMessage } = this.state;
-    let numberOfPoliticians = 0;
-    if (campaignXPoliticianList && campaignXPoliticianList.length > 0) {
-      numberOfPoliticians = campaignXPoliticianList.length;
-    }
-    let placeholderSubject = '';
-    let placeholderText = '';
-    if (numberOfPoliticians > 0) {
-      const politicianListSentenceString = politicianListToSentenceString(campaignXPoliticianList);
-      placeholderSubject += `I'm supporting ${politicianListSentenceString}`;
-      placeholderText += `Thank you for supporting${politicianListSentenceString}.`;
-      placeholderText += ' I wanted to share some news that...';
-    } else {
-      placeholderSubject += `I'm supporting ${campaignTitle}`;
-      placeholderText += 'Thank you for supporting this campaign! I wanted to share some news that...';
-    }
+    const { personalizedSubject, personalizedMessage, placeholderSubject, placeholderMessage } = this.state;
     return (
       <div className="">
         <form onSubmit={(e) => { e.preventDefault(); }}>
@@ -255,8 +226,8 @@ class SuperShareItemComposeInputField extends Component {
                   multiline
                   rows={8}
                   variant="outlined"
-                  placeholder={placeholderText}
-                  value={personalizedMessage || ''}
+                  placeholder={placeholderMessage}
+                  value={personalizedMessage}
                   onKeyDown={this.handleKeyPress}
                   onChange={this.updatePersonalizedMessage}
                 />

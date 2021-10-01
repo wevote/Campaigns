@@ -6,6 +6,10 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { Done } from '@material-ui/icons';
+// import {
+//   AdviceBox, AdviceBoxText, AdviceBoxTitle,
+//   AdviceBoxWrapper,
+// } from '../../components/Style/AdviceBoxStyles';
 import AppStore from '../../stores/AppStore';
 import arrayContains from '../../common/utils/arrayContains';
 import {
@@ -384,7 +388,7 @@ class SuperSharingChooseRecipients extends Component {
                         </ContactNameWrapper>
                         <ContactSelectWrapper>
                           <ContactFilterWrapper>
-                            Virginia
+                            {/* Virginia */}
                           </ContactFilterWrapper>
                           <ContactSelectCheckWrapper>
                             <StepWrapper>
@@ -453,6 +457,16 @@ class SuperSharingChooseRecipients extends Component {
                       </CampaignSupportDesktopButtonPanel>
                     </CampaignSupportDesktopButtonWrapper>
                   )}
+                  {/* <AdviceBoxWrapper> */}
+                  {/*  <AdviceBox> */}
+                  {/*    <AdviceBoxTitle> */}
+                  {/*      Ignore contacts you won&apos;t discuss politics with */}
+                  {/*    </AdviceBoxTitle> */}
+                  {/*    <AdviceBoxText> */}
+                  {/*      By clicking the &quot;ignore&quot; link next to a friend&apos;s name, they will be hidden from this page. */}
+                  {/*    </AdviceBoxText> */}
+                  {/*  </AdviceBox> */}
+                  {/* </AdviceBoxWrapper> */}
                   <SkipForNowButtonWrapper>
                     <SkipForNowButtonPanel show>
                       <Button

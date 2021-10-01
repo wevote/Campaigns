@@ -352,11 +352,22 @@ class SuperSharingSendEmail extends Component {
                         <div>
                           <StepNumberTitle>
                             Choose recipients
+                            {' '}
+                            {emailRecipientListCount === 0 && (
+                              <ActionRequiredSpan>
+                                *
+                              </ActionRequiredSpan>
+                            )}
                           </StepNumberTitle>
                           <StepPreviewText>
                             Emails to be sent:
                             {' '}
                             {emailRecipientListCount}
+                            {emailRecipientListCount === 0 && (
+                              <ActionRequired>
+                                * Please choose 1 or more recipient
+                              </ActionRequired>
+                            )}
                           </StepPreviewText>
                         </div>
                       </StepRow>
@@ -385,19 +396,33 @@ class SuperSharingSendEmail extends Component {
                         <div>
                           <StepNumberTitle>
                             Personalize message
+                            {' '}
+                            {!(personalizedSubject && personalizedMessage) && (
+                              <ActionRequiredSpan>
+                                *
+                              </ActionRequiredSpan>
+                            )}
                           </StepNumberTitle>
                           <StepPreviewText>
-                            {personalizedSubject && (
+                            {personalizedSubject ? (
                               <>
                                 Subject:
                                 {' '}
                                 {personalizedSubject}
                               </>
+                            ) : (
+                              <ActionRequired>
+                                * Please add email subject
+                              </ActionRequired>
                             )}
-                            {personalizedMessage && (
+                            {personalizedMessage ? (
                               <StepPreviewTextMessage>
                                 {personalizedMessage}
                               </StepPreviewTextMessage>
+                            ) : (
+                              <ActionRequired>
+                                * Please add email message
+                              </ActionRequired>
                             )}
                             <br />
                           </StepPreviewText>
@@ -421,6 +446,7 @@ class SuperSharingSendEmail extends Component {
                       <Button
                         classes={{ root: classes.buttonDesktop }}
                         color="primary"
+                        disabled={!personalizedMessage || !personalizedSubject || emailRecipientListCount === 0}
                         id="saveSupporterEndorsement"
                         onClick={this.submitSendEmail}
                         variant="contained"
@@ -452,6 +478,7 @@ class SuperSharingSendEmail extends Component {
             <Button
               classes={{ root: classes.buttonDefault }}
               color="primary"
+              disabled={!personalizedMessage || !personalizedSubject || emailRecipientListCount === 0}
               id="saveSupporterEndorsementMobile"
               onClick={this.submitSendEmail}
               variant="contained"
@@ -533,6 +560,14 @@ const styles = (theme) => ({
     },
   },
 });
+
+const ActionRequired = styled.div`
+  color: red;
+`;
+
+const ActionRequiredSpan = styled.span`
+  color: red;
+`;
 
 const BottomOfPageSpacer = styled.div`
   margin-bottom: 150px;
