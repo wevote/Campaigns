@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
 
 
-class MainFooterWeVote extends Component {
+class FooterMainWeVote extends Component {
   render () {
     const { classes } = this.props;
 
@@ -155,7 +155,7 @@ class MainFooterWeVote extends Component {
     );
   }
 }
-MainFooterWeVote.propTypes = {
+FooterMainWeVote.propTypes = {
   classes: PropTypes.object,
 };
 
@@ -243,4 +243,4 @@ const WeVoteName = styled.span`
 const Wrapper = styled.div`
 `;
 
-export default withStyles(styles)(MainFooterWeVote);
+export default withStyles(styles)(FooterMainWeVote);

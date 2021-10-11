@@ -11,7 +11,7 @@ import styledTheme from './js/components/Widgets/styled-theme';
 import WeVoteRouter from './js/components/Widgets/WeVoteRouter';
 
 // Lazy loaded component(s) on this page
-const MainFooter  = React.lazy(() => import('./js/components/Navigation/MainFooter'));
+const FooterMain  = React.lazy(() => import('./js/components/Navigation/FooterMain'));
 
 // Root URL pages
 const About = React.lazy(() => import('./js/pages/About'));
@@ -197,7 +197,7 @@ class App extends Component {
                 </Switch>
                 <DelayedLoad waitBeforeShow={4000}>
                   <Suspense fallback={<span>&nbsp;</span>}>
-                    <MainFooter displayFooter={doShowFooter} />
+                    <FooterMain displayFooter={doShowFooter} />
                   </Suspense>
                 </DelayedLoad>
               </WeVoteRouter>
