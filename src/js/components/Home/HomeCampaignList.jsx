@@ -51,10 +51,16 @@ class HomeCampaignList extends Component {
 
   onCampaignStoreChange () {
     const promotedCampaignListUnsorted = CampaignStore.getPromotedCampaignXDicts();
-    const promotedCampaignList = promotedCampaignListUnsorted.sort(this.orderBySupportersCount);
+    const promotedCampaignListBySupporters = promotedCampaignListUnsorted.sort(this.orderBySupportersCount);
+    const promotedCampaignList = promotedCampaignListBySupporters.sort(this.orderByOrderInList);
     this.setState({
       promotedCampaignList,
     });
+  }
+
+  orderByOrderInList = (firstCampaign, secondCampaign) => {
+    // Order by 1, 2, 3. Push 0's to the bottom in the same order.
+    return (firstCampaign.order_in_list || Number.MAX_VALUE) - (secondCampaign.order_in_list || Number.MAX_VALUE);
   }
 
   orderBySupportersCount = (firstCampaign, secondCampaign) => secondCampaign.supporters_count - firstCampaign.supporters_count;

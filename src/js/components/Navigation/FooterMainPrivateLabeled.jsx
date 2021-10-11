@@ -7,7 +7,7 @@ import AppStore from '../../stores/AppStore';
 import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
 
 
-class MainFooterPrivateLabeled extends Component {
+class FooterMainPrivateLabeled extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -16,7 +16,7 @@ class MainFooterPrivateLabeled extends Component {
   }
 
   componentDidMount () {
-    // console.log('MainFooterPrivateLabeled componentDidMount');
+    // console.log('FooterMainPrivateLabeled componentDidMount');
     this.onAppStoreChange();
     this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
   }
@@ -74,7 +74,7 @@ class MainFooterPrivateLabeled extends Component {
     );
   }
 }
-MainFooterPrivateLabeled.propTypes = {
+FooterMainPrivateLabeled.propTypes = {
   classes: PropTypes.object,
 };
 
@@ -132,4 +132,4 @@ const TopSectionOuterWrapper = styled.div`
 const Wrapper = styled.div`
 `;
 
-export default withStyles(styles)(MainFooterPrivateLabeled);
+export default withStyles(styles)(FooterMainPrivateLabeled);

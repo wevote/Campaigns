@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import AppStore from '../../stores/AppStore';
-import MainFooterWeVote from './MainFooterWeVote';
-import MainFooterPrivateLabeled from './MainFooterPrivateLabeled';
+import FooterMainWeVote from './FooterMainWeVote';
+import FooterMainPrivateLabeled from './FooterMainPrivateLabeled';
 
 
-class MainFooter extends Component {
+class FooterMain extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -37,8 +37,8 @@ class MainFooter extends Component {
 
   render () {
     const { displayFooter } = this.props;
-    const disp = displayFooter !== undefined ? displayFooter : true;
-    if (!disp) {
+    const displayFooterAdjusted = displayFooter !== undefined ? displayFooter : true;
+    if (!displayFooterAdjusted) {
       return null;
     }
 
@@ -51,16 +51,16 @@ class MainFooter extends Component {
       <OuterWrapper>
         <InnerWrapper>
           {inPrivateLabelMode ? (
-            <MainFooterPrivateLabeled />
+            <FooterMainPrivateLabeled />
           ) : (
-            <MainFooterWeVote />
+            <FooterMainWeVote />
           )}
         </InnerWrapper>
       </OuterWrapper>
     );
   }
 }
-MainFooter.propTypes = {
+FooterMain.propTypes = {
   displayFooter: PropTypes.bool,
 };
 
@@ -88,4 +88,4 @@ const OuterWrapper = styled.div`
   width: 100%;
 `;
 
-export default withStyles(styles)(MainFooter);
+export default withStyles(styles)(FooterMain);
