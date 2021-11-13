@@ -7,7 +7,7 @@ import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import CampaignStore from '../../stores/CampaignStore';
-import isMobileScreenSize from '../../utils/isMobileScreenSize';
+import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
 import { renderLog } from '../../utils/logging';
 
 const muiTheme = createMuiTheme({

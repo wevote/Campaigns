@@ -51,6 +51,7 @@ class VoterStore extends ReduceStore {
       },
       voterPhotoQueuedToSave: '',
       voterPhotoQueuedToSaveSet: false,
+      voterPhotoTooBig: false,
     };
   }
 
@@ -308,7 +309,7 @@ class VoterStore extends ReduceStore {
   }
 
   getVoterPhotoTooBig () {
-    return this.getState().voter_photo_too_big || false;
+    return this.getState().voterPhotoTooBig || false;
   }
 
   // Could be either Facebook photo or Twitter photo
@@ -324,6 +325,10 @@ class VoterStore extends ReduceStore {
   // Could be either Facebook photo or Twitter photo
   getVoterPhotoUrlTiny () {
     return this.getState().voter.voter_photo_url_tiny || '';
+  }
+
+  getVoterProfileUploadedImageUrlLarge () {
+    return this.getState().voter.we_vote_hosted_profile_uploaded_image_url_large || '';
   }
 
   getSecretCodeVerificationStatus () {
@@ -815,7 +820,7 @@ class VoterStore extends ReduceStore {
         // console.log('VoterStore, voterPhotoTooBigReset');
         return {
           ...state,
-          voter_photo_too_big: false,
+          voterPhotoTooBig: false,
         };
 
       case 'voterRetrieve':
@@ -959,12 +964,12 @@ class VoterStore extends ReduceStore {
               voter_photo_url_medium: action.res.we_vote_hosted_profile_image_url_medium,
               voter_photo_url_tiny: action.res.we_vote_hosted_profile_image_url_tiny,
             },
-            voter_photo_too_big: action.res.voter_photo_too_big || false,
+            voterPhotoTooBig: action.res.voter_photo_too_big || false,
           };
         } else {
           return {
             ...state,
-            voter_photo_too_big: action.res.voter_photo_too_big,
+            voterPhotoTooBig: action.res.voter_photo_too_big || false,
           };
         }
 

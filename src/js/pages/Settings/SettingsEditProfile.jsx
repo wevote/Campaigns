@@ -11,7 +11,7 @@ import { renderLog } from '../../utils/logging';
 import VoterActions from '../../actions/VoterActions';
 import VoterFirstNameInputField from '../../components/Settings/VoterFirstNameInputField';
 import VoterLastNameInputField from '../../components/Settings/VoterLastNameInputField';
-import VoterPhotoUpload from '../../components/Settings/VoterPhotoUpload';
+import VoterPhotoUpload from '../../common/components/Settings/VoterPhotoUpload';
 import VoterStore from '../../stores/VoterStore';
 
 

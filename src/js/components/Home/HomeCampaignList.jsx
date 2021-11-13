@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CampaignCardForList from '../Campaign/CampaignCardForList';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import isMobileScreenSize from '../../utils/isMobileScreenSize';
+import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
 import { renderLog } from '../../utils/logging';
 
@@ -58,10 +58,8 @@ class HomeCampaignList extends Component {
     });
   }
 
-  orderByOrderInList = (firstCampaign, secondCampaign) => {
-    // Order by 1, 2, 3. Push 0's to the bottom in the same order.
-    return (firstCampaign.order_in_list || Number.MAX_VALUE) - (secondCampaign.order_in_list || Number.MAX_VALUE);
-  }
+  // Order by 1, 2, 3. Push 0's to the bottom in the same order.
+  orderByOrderInList = (firstCampaign, secondCampaign) => (firstCampaign.order_in_list || Number.MAX_VALUE) - (secondCampaign.order_in_list || Number.MAX_VALUE);
 
   orderBySupportersCount = (firstCampaign, secondCampaign) => secondCampaign.supporters_count - firstCampaign.supporters_count;
 

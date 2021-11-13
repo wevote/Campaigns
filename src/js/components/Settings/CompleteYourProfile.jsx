@@ -17,7 +17,7 @@ import VoterActions from '../../actions/VoterActions';
 import VoterEmailInputField from './VoterEmailInputField';
 import VoterFirstNameInputField from './VoterFirstNameInputField';
 import VoterLastNameInputField from './VoterLastNameInputField';
-import VoterPhotoUpload from './VoterPhotoUpload';
+import VoterPhotoUpload from '../../common/components/Settings/VoterPhotoUpload';
 import VoterStore from '../../stores/VoterStore';
 
 const SignInButton = loadable(() => import('../Navigation/SignInButton'));

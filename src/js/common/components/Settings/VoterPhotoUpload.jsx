@@ -4,15 +4,17 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles';
 import { AccountCircle } from '@material-ui/icons';
-import VoterActions from '../../actions/VoterActions';
-import VoterStore from '../../stores/VoterStore';
+import VoterActions from '../../../actions/VoterActions';
+import VoterStore from '../../../stores/VoterStore';
 import isMobileScreenSize from '../../utils/isMobileScreenSize';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../../utils/logging';
 
 const muiTheme = createMuiTheme({
   overrides: {
     MuiDropzonePreviewList: {
       image: {
+        height: 'auto',
+        maxHeight: '200px',
         maxWidth: 'auto',
       },
     },
@@ -23,7 +25,7 @@ class VoterPhotoUpload extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      voterPhotoUrlLarge: '',
+      voterProfileUploadedImageUrlLarge: '',
     };
 
     this.handleDrop = this.handleDrop.bind(this);
@@ -55,9 +57,9 @@ class VoterPhotoUpload extends Component {
   }
 
   onVoterStoreChange () {
-    const voterPhotoUrlLarge = VoterStore.getVoterPhotoUrlLarge();
+    const voterProfileUploadedImageUrlLarge = VoterStore.getVoterProfileUploadedImageUrlLarge();
     this.setState({
-      voterPhotoUrlLarge,
+      voterProfileUploadedImageUrlLarge,
     });
   }
 
@@ -69,20 +71,20 @@ class VoterPhotoUpload extends Component {
   render () {
     renderLog('VoterPhotoUpload');  // Set LOG_RENDER_EVENTS to log all renders
 
-    const { classes } = this.props;
-    const { voterPhotoUrlLarge } = this.state;
+    const { classes, maxWidth } = this.props;
+    const { voterProfileUploadedImageUrlLarge } = this.state;
     let dropzoneText = isMobileScreenSize() ? 'Upload profile photo' : 'Drag your profile photo here (or click to find file)';
-    if (voterPhotoUrlLarge) {
+    if (voterProfileUploadedImageUrlLarge) {
       dropzoneText = isMobileScreenSize() ? 'Upload new photo' : 'Drag new profile photo here (or click to find file)';
     }
     return (
-      <div className="">
+      <OuterWrapper>
         <form onSubmit={(e) => { e.preventDefault(); }}>
           <Wrapper>
             <ColumnFullWidth>
-              {voterPhotoUrlLarge ? (
+              {voterProfileUploadedImageUrlLarge ? (
                 <VoterPhotoWrapper>
-                  <VoterPhotoImage src={voterPhotoUrlLarge} alt="Profile Photo" />
+                  <VoterPhotoImage maxWidth={maxWidth} src={voterProfileUploadedImageUrlLarge} alt="Profile Photo" />
                   <DeleteLink
                     className="u-link-color u-link-underline u-cursor--pointer"
                     onClick={this.submitDeleteYourPhoto}
@@ -102,7 +104,7 @@ class VoterPhotoUpload extends Component {
                     dropzoneText={dropzoneText}
                     filesLimit={1}
                     Icon={AccountCircle}
-                    initialFiles={voterPhotoUrlLarge ? [voterPhotoUrlLarge] : undefined}
+                    initialFiles={voterProfileUploadedImageUrlLarge ? [voterProfileUploadedImageUrlLarge] : undefined}
                     maxFileSize={6000000}
                     onChange={this.handleDrop}
                   />
@@ -111,12 +113,13 @@ class VoterPhotoUpload extends Component {
             </ColumnFullWidth>
           </Wrapper>
         </form>
-      </div>
+      </OuterWrapper>
     );
   }
 }
 VoterPhotoUpload.propTypes = {
   classes: PropTypes.object,
+  maxWidth: PropTypes.number,
 };
 
 const styles = (theme) => ({
@@ -148,9 +151,14 @@ const ColumnFullWidth = styled.div`
 const DeleteLink = styled.div`
 `;
 
+const OuterWrapper = styled.div`
+  width: 100%;
+`;
+
 const VoterPhotoImage = styled.img`
   border-radius: 100px;
-  max-width: 200px;
+  max-width: 100px;
+  ${(props) => ((props.maxWidth) ? `max-width: ${props.maxWidth}px;` : 'max-width: 200px;')}
 `;
 
 const VoterPhotoWrapper = styled.div`
@@ -158,7 +166,7 @@ const VoterPhotoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-bottom: 15px;
+  margin-bottom: 0;
   width: 100%;
 `;
 
@@ -166,6 +174,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   margin-left: -12px;
+  padding: 0 !important;
   width: calc(100% + 24px);
 `;
 
