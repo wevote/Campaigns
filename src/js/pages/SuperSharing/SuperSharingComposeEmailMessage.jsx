@@ -31,7 +31,7 @@ import ShareStore from '../../common/stores/ShareStore';
 import SuperShareItemComposeInputField from '../../components/SuperSharing/SuperShareItemComposeInputField';
 import superSharingSuggestedEmailText from '../../utils/superSharingSuggestedEmailText';
 import VoterActions from '../../actions/VoterActions';
-import VoterPhotoUpload from '../../components/Settings/VoterPhotoUpload';
+import VoterPhotoUpload from '../../common/components/Settings/VoterPhotoUpload';
 import VoterStore from '../../stores/VoterStore';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));

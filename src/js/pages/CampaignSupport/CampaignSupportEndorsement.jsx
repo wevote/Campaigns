@@ -29,7 +29,7 @@ import politicianListToSentenceString from '../../utils/politicianListToSentence
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
 import VoterActions from '../../actions/VoterActions';
-import VoterPhotoUpload from '../../components/Settings/VoterPhotoUpload';
+import VoterPhotoUpload from '../../common/components/Settings/VoterPhotoUpload';
 import VoterStore from '../../stores/VoterStore';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));

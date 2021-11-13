@@ -7,7 +7,7 @@ import { Delete, Phone } from '@material-ui/icons';
 import { Paper, InputBase, Button } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { isCordova, isWebApp } from '../../utils/cordovaUtils';
-import isMobileScreenSize from '../../utils/isMobileScreenSize';
+import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
 import LoadingWheel from '../LoadingWheel';
 import { renderLog } from '../../utils/logging';
 import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';

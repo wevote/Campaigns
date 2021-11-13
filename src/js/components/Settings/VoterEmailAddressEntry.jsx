@@ -7,7 +7,7 @@ import { Button, Paper, InputBase } from '@material-ui/core';
 import { Delete, Mail } from '@material-ui/icons';
 import LoadingWheel from '../LoadingWheel';
 import { blurTextFieldAndroid, focusTextFieldAndroid, isCordova, isWebApp } from '../../utils/cordovaUtils';
-import isMobileScreenSize from '../../utils/isMobileScreenSize';
+import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
 import { renderLog } from '../../utils/logging';
 import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
 import SettingsVerifySecretCode from './SettingsVerifySecretCode';
