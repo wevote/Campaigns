@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Done } from '@material-ui/icons';
 import CampaignStartStore from '../../stores/CampaignStartStore';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import { renderLog } from '../../utils/logging';
 
 
@@ -54,9 +54,6 @@ class CampaignStartSteps extends Component {
 
   render () {
     renderLog('CampaignStartSteps');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`CampaignStartSteps window.location.href: ${window.location.href}`);
-    }
     const {
       atStepNumber1, atStepNumber2, atStepNumber3, atStepNumber4,
       classes,

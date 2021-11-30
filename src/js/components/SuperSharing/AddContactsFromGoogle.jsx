@@ -103,9 +103,10 @@ class AddContactsFromGoogle extends Component {
     const contacts = new Set();
     gapi.client.people.otherContacts.list({
       pageSize: 1000,
-      readMask: 'metadata,names,emailAddresses',
+      readMask: 'emailAddresses,metadata,names',
     }).then((response) => {
       const others = response.result.otherContacts;
+      // console.log(others);
       for (let i = 0; i < others.length; i++) {
         const other = others[i];
         const person = {

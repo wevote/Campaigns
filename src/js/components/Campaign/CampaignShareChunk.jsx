@@ -8,7 +8,7 @@ import {
   CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper,
   CampaignSupportSection, CampaignSupportSectionWrapper,
 } from '../Style/CampaignSupportStyles';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import { renderLog } from '../../utils/logging';
 import ShareByCopyLink from '../Share/ShareByCopyLink';
 import ShareByEmailButton from '../Share/ShareByEmailButton';
@@ -48,9 +48,6 @@ class CampaignShareChunk extends Component {
 
   render () {
     renderLog('CampaignShareChunk');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`CampaignShareChunk window.location.href: ${window.location.href}`);
-    }
     const {
       campaignXNewsItemWeVoteId, campaignXWeVoteId, classes, darkButtonsOff,
       privatePublicIntroductionsOff,

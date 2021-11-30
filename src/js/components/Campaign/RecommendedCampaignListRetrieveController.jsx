@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import AppActions from '../../actions/AppActions';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CampaignActions from '../../actions/CampaignActions';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
@@ -17,7 +16,7 @@ class RecommendedCampaignListRetrieveController extends Component {
 
   componentDidMount () {
     // console.log('RecommendedCampaignListRetrieveController componentDidMount');
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
     this.recommendedCampaignListFirstRetrieve();
   }
@@ -38,11 +37,11 @@ class RecommendedCampaignListRetrieveController extends Component {
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.voterStoreListener.remove();
   }
 
-  onAppStoreChange () {
+  onAppObservableStoreChange () {
     this.recommendedCampaignListFirstRetrieve();
   }
 
@@ -54,11 +53,11 @@ class RecommendedCampaignListRetrieveController extends Component {
     const { campaignXWeVoteId } = this.props;
     if (campaignXWeVoteId) {
       initializejQuery(() => {
-        const recommendedCampaignListFirstRetrieveInitiated = AppStore.recommendedCampaignListFirstRetrieveInitiated();
+        const recommendedCampaignListFirstRetrieveInitiated = AppObservableStore.recommendedCampaignListFirstRetrieveInitiated();
         const voterFirstRetrieveCompleted = VoterStore.voterFirstRetrieveCompleted();
         // console.log('RecommendedCampaignListRetrieveController recommendedCampaignListFirstRetrieveInitiated: ', recommendedCampaignListFirstRetrieveInitiated, ', voterFirstRetrieveCompleted: ', voterFirstRetrieveCompleted);
         if (voterFirstRetrieveCompleted && !recommendedCampaignListFirstRetrieveInitiated) {
-          AppActions.setRecommendedCampaignListFirstRetrieveInitiated(true);
+          AppObservableStore.setRecommendedCampaignListFirstRetrieveInitiated(true);
           CampaignActions.recommendedCampaignListRetrieve(campaignXWeVoteId);
         }
       });

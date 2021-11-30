@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import AppActions from '../../actions/AppActions';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CompleteYourProfileModal from './CompleteYourProfileModal';
 import { renderLog } from '../../utils/logging';
 
@@ -14,19 +13,19 @@ class CompleteYourProfileModalController extends Component {
 
   componentDidMount () {
     // console.log('CompleteYourProfileModalController, componentDidMount');
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
-    const showCompleteYourProfileModal = AppStore.showCompleteYourProfileModal();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
+    const showCompleteYourProfileModal = AppObservableStore.showCompleteYourProfileModal();
     this.setState({
       showCompleteYourProfileModal,
     });
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
   }
 
-  onAppStoreChange () {
-    const showCompleteYourProfileModal = AppStore.showCompleteYourProfileModal();
+  onAppObservableStoreChange () {
+    const showCompleteYourProfileModal = AppObservableStore.showCompleteYourProfileModal();
     this.setState({
       showCompleteYourProfileModal,
     });
@@ -34,7 +33,7 @@ class CompleteYourProfileModalController extends Component {
 
   closeModal () {
     // console.log('CompleteYourProfileModalController closeModal');
-    AppActions.setShowCompleteYourProfileModal(false);
+    AppObservableStore.setShowCompleteYourProfileModal(false);
   }
 
   render () {

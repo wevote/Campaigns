@@ -317,9 +317,14 @@ export default {
     Dispatcher.dispatch({ type: 'voterPhotoQueuedToSave', payload: voterPhotoFromFileReader });
   },
 
-
   voterRetrieve () {
     Dispatcher.loadEndpoint('voterRetrieve');
+  },
+
+  voterSignOut (signOutAllDevices = false) {
+    Dispatcher.loadEndpoint('voterSignOut', {
+      sign_out_all_devices: signOutAllDevices,
+    });
   },
 
   voterSMSPhoneNumberRetrieve () {

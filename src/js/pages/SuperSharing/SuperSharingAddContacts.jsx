@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import AddContactsFromGoogle from '../../components/SuperSharing/AddContactsFromGoogle';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../components/Style/AdviceBoxStyles';
 import {
   CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
@@ -20,9 +20,9 @@ import {
 } from '../../components/Style/CampaignSupportStyles';
 import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
-import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
+import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
 import ShareActions from '../../common/actions/ShareActions';
@@ -52,8 +52,8 @@ class SuperSharingAddContacts extends Component {
   componentDidMount () {
     // console.log('SuperSharingAddContacts componentDidMount');
     this.props.setShowHeaderFooter(false);
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.onVoterStoreChange();
@@ -125,13 +125,13 @@ class SuperSharingAddContacts extends Component {
 
   componentWillUnmount () {
     this.props.setShowHeaderFooter(true);
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignStoreListener.remove();
     this.voterStoreListener.remove();
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
     this.setState({
       chosenWebsiteName,
     });
@@ -221,9 +221,6 @@ class SuperSharingAddContacts extends Component {
 
   render () {
     renderLog('SuperSharingAddContacts');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`SuperSharingAddContacts window.location.href: ${window.location.href}`);
-    }
     const { classes } = this.props;
     const {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
@@ -240,7 +237,7 @@ class SuperSharingAddContacts extends Component {
     return (
       <div>
         <Helmet title={htmlTitle} />
-        <PageWrapperDefault cordova={isCordova()}>
+        <PageWrapperDefault>
           <ContentOuterWrapperDefault>
             <ContentInnerWrapperDefault>
               <SuperSharingSteps

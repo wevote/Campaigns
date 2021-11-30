@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { cordovaDot } from '../utils/cordovaUtils';
+import cordovaDot from '../utils/cordovaDot';
 import { renderLog } from '../utils/logging';
 import avatarGenericIcon from '../../img/global/svg-icons/avatar-generic.svg';
 import issueGenericIcon from '../../img/global/svg-icons/issue-generic.svg';

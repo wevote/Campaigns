@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import AppActions from '../../actions/AppActions';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CampaignActions from '../../actions/CampaignActions';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
@@ -16,17 +15,17 @@ class FirstCampaignListController extends Component {
 
   componentDidMount () {
     // console.log('FirstCampaignListController componentDidMount');
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
     this.campaignListFirstRetrieve();
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.voterStoreListener.remove();
   }
 
-  onAppStoreChange () {
+  onAppObservableStoreChange () {
     this.campaignListFirstRetrieve();
   }
 
@@ -36,11 +35,11 @@ class FirstCampaignListController extends Component {
 
   campaignListFirstRetrieve = () => {
     initializejQuery(() => {
-      const campaignListFirstRetrieveInitiated = AppStore.campaignListFirstRetrieveInitiated();
+      const campaignListFirstRetrieveInitiated = AppObservableStore.campaignListFirstRetrieveInitiated();
       const voterFirstRetrieveCompleted = VoterStore.voterFirstRetrieveCompleted();
       // console.log('FirstCampaignListController campaignListFirstRetrieveInitiated: ', campaignListFirstRetrieveInitiated, ', voterFirstRetrieveCompleted: ', voterFirstRetrieveCompleted);
       if (voterFirstRetrieveCompleted && !campaignListFirstRetrieveInitiated) {
-        AppActions.setCampaignListFirstRetrieveInitiated(true);
+        AppObservableStore.setCampaignListFirstRetrieveInitiated(true);
         CampaignActions.campaignListRetrieve();
       }
     });

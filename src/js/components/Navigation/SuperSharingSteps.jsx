@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Done } from '@material-ui/icons';
-import AppStore from '../../stores/AppStore';
+import { messageService } from '../../stores/AppObservableStore';
 import CampaignStore from '../../stores/CampaignStore';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import { onStep1ClickPath, onStep2ClickPath, onStep3ClickPath, onStep4ClickPath } from '../../utils/superSharingStepPaths';
 import { renderLog } from '../../utils/logging';
 import VoterStore from '../../stores/VoterStore';
@@ -24,8 +24,8 @@ class SuperSharingSteps extends Component {
 
   componentDidMount () {
     // console.log('SuperSharingSteps, componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.onVoterStoreChange();
@@ -59,12 +59,12 @@ class SuperSharingSteps extends Component {
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignStoreListener.remove();
     this.voterStoreListener.remove();
   }
 
-  onAppStoreChange () {
+  onAppObservableStoreChange () {
   }
 
   onCampaignStoreChange () {
@@ -134,9 +134,6 @@ class SuperSharingSteps extends Component {
 
   render () {
     renderLog('SuperSharingSteps');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`SuperSharingSteps window.location.href: ${window.location.href}`);
-    }
     const {
       atStepNumber1, atStepNumber2, atStepNumber3, atStepNumber4,
       campaignBasePath, classes, sms,

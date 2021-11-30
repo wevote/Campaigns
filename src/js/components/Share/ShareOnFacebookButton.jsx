@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { FacebookShareButton } from 'react-share';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import { isAndroid, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 import { androidFacebookClickHandler, generateQuoteForSharing, generateSharingLink } from './shareButtonCommon';
-import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
+import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
 
 class ShareOnFacebookButton extends Component {
   constructor (props) {
@@ -24,8 +24,8 @@ class ShareOnFacebookButton extends Component {
 
   componentDidMount () {
     // console.log('ShareOnFacebookButton componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
   }
@@ -46,12 +46,12 @@ class ShareOnFacebookButton extends Component {
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignStoreListener.remove();
   }
 
-  onAppStoreChange () {
-    const inPrivateLabelMode = AppStore.inPrivateLabelMode();
+  onAppObservableStoreChange () {
+    const inPrivateLabelMode = AppObservableStore.inPrivateLabelMode();
     this.setState({
       inPrivateLabelMode,
     });

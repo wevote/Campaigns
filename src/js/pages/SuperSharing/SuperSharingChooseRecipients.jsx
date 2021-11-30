@@ -10,7 +10,7 @@ import { Done } from '@material-ui/icons';
 //   AdviceBox, AdviceBoxText, AdviceBoxTitle,
 //   AdviceBoxWrapper,
 // } from '../../components/Style/AdviceBoxStyles';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import arrayContains from '../../common/utils/arrayContains';
 import {
   CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
@@ -24,7 +24,7 @@ import {
 import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
 import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import LoadMoreItemsManually from '../../components/Widgets/LoadMoreItemsManually';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
@@ -61,8 +61,8 @@ class SuperSharingChooseRecipients extends Component {
   componentDidMount () {
     // console.log('SuperSharingChooseRecipients componentDidMount');
     this.props.setShowHeaderFooter(false);
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.onShareStoreChange();
@@ -137,14 +137,14 @@ class SuperSharingChooseRecipients extends Component {
 
   componentWillUnmount () {
     this.props.setShowHeaderFooter(true);
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignStoreListener.remove();
     this.shareStoreListener.remove();
     this.voterStoreListener.remove();
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
     this.setState({
       chosenWebsiteName,
     });
@@ -310,9 +310,6 @@ class SuperSharingChooseRecipients extends Component {
 
   render () {
     renderLog('SuperSharingChooseRecipients');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`SuperSharingChooseRecipients window.location.href: ${window.location.href}`);
-    }
     const { classes } = this.props;
     const {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
@@ -330,7 +327,7 @@ class SuperSharingChooseRecipients extends Component {
     return (
       <div>
         <Helmet title={htmlTitle} />
-        <PageWrapperDefault cordova={isCordova()}>
+        <PageWrapperDefault>
           <ContentOuterWrapperDefault>
             <ContentInnerWrapperDefault>
               <SuperSharingSteps

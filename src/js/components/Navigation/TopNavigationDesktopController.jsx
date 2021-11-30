@@ -2,7 +2,7 @@ import React, { Component, Suspense } from 'react';
 import loadable from '@loadable/component';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 
 const TopNavigationDesktop = loadable(() => import('./TopNavigationDesktop'));
 
@@ -17,16 +17,16 @@ class TopNavigationDesktopController extends Component {
 
   componentDidMount () {
     // console.log('TopNavigationDesktopController componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
   }
 
-  onAppStoreChange () {
-    const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
+  onAppObservableStoreChange () {
+    const siteConfigurationHasBeenRetrieved = AppObservableStore.siteConfigurationHasBeenRetrieved();
     this.setState({
       siteConfigurationHasBeenRetrieved,
     });

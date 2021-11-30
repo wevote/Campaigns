@@ -1,6 +1,6 @@
 import assign from 'object-assign';
 import url from 'url';
-import cookies from './cookies';
+import Cookies from './js-cookie/Cookies';
 import webAppConfig from '../config';
 import { httpLog } from './logging';
 
@@ -16,9 +16,9 @@ const defaults = {
   query: {},
   method: 'GET',
   data () {
-    return cookies.getItem('voter_device_id') ? {
-      // csrfmiddlewaretoken: cookies.getItem('csrftoken'),
-      voter_device_id: cookies.getItem('voter_device_id'),
+    return Cookies.get('voter_device_id') ? {
+      // csrfmiddlewaretoken: Cookies.get('csrftoken'),
+      voter_device_id: Cookies.get('voter_device_id'),
     } : {};
   },
 
@@ -51,7 +51,7 @@ export default function $ajax (options) {
       options.endpoint === 'voterContactListSave' ||
       options.endpoint === 'voterUpdate') {
     options.method = 'POST';
-    // const csrftoken = cookies.getItem('csrftoken');
+    // const csrftoken = Cookies.get('csrftoken');
     // const headers = new Headers();
     // headers.append('X-CSRFToken', csrftoken);
     // headers.append('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
@@ -79,7 +79,7 @@ export default function $ajax (options) {
 
   httpLog(`AJAX URL: ${options.url}`);
   if (options.endpoint === 'voterRetrieve') {
-    httpLog('AJAX voter_device_id: ', cookies.getItem('voter_device_id'));
+    httpLog('AJAX voter_device_id: ', Cookies.get('voter_device_id'));
   }
 
   /* global $ */

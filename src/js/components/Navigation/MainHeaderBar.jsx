@@ -4,8 +4,8 @@ import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from '@materi
 import { Launch } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
-import AppStore from '../../stores/AppStore';
-import { historyPush } from '../../utils/cordovaUtils';
+import AppObservableStore from '../../stores/AppObservableStore';
+import historyPush from '../../utils/historyPush';
 import DelayedLoad from '../Widgets/DelayedLoad';
 import initializeFacebookSDK from '../../utils/initializeFacebookSDK';
 import initializeAppleSDK from '../../utils/initializeAppleSDK';
@@ -133,8 +133,8 @@ export default function MainHeaderBar (displayHeader) {
     initializeAppleSDK();
   }
 
-  const inPrivateLabelMode = AppStore.getHideWeVoteLogo(); // Using this setting temporarily
-  const voterCanStartCampaignXForThisPrivateLabelSite = AppStore.voterCanStartCampaignXForThisPrivateLabelSite();
+  const inPrivateLabelMode = AppObservableStore.getHideWeVoteLogo(); // Using this setting temporarily
+  const voterCanStartCampaignXForThisPrivateLabelSite = AppObservableStore.voterCanStartCampaignXForThisPrivateLabelSite();
   const showStartACampaign = !(inPrivateLabelMode) || voterCanStartCampaignXForThisPrivateLabelSite;
   const showMembership = !(inPrivateLabelMode);
 

@@ -22,7 +22,7 @@ export default class LazyImage extends React.Component {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate (prevProps) {
     const { src } = this.props;
     const { src: srcPrevious } = prevProps;
     if (src !== srcPrevious) {

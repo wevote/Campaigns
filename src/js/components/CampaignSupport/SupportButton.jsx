@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import AppActions from '../../actions/AppActions';
+import AppObservableStore from '../../stores/AppObservableStore';
 import CampaignStore from '../../stores/CampaignStore';
 import { isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
@@ -73,10 +73,10 @@ class SupportButton extends Component {
     // console.log('SupportButton submitSupportButtonDesktop');
     if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
       // Open complete your profile modal
-      AppActions.setShowCompleteYourProfileModal(true);
+      AppObservableStore.setShowCompleteYourProfileModal(true);
     } else {
       // Mark that voter supports this campaign
-      AppActions.setBlockCampaignXRedirectOnSignIn(false);
+      AppObservableStore.setBlockCampaignXRedirectOnSignIn(false);
       this.props.functionToUseWhenProfileComplete();
     }
   }

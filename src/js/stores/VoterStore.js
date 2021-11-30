@@ -1,5 +1,5 @@
 import { ReduceStore } from 'flux/utils';
-import cookies from '../utils/cookies';
+import Cookies from '../utils/js-cookie/Cookies';
 import Dispatcher from '../common/dispatcher/Dispatcher';
 import { stringContains } from '../utils/textFormat';
 
@@ -336,19 +336,19 @@ class VoterStore extends ReduceStore {
   }
 
   voterDeviceId () {
-    return this.getState().voter.voter_device_id || cookies.getItem('voter_device_id');
+    return this.getState().voter.voter_device_id || Cookies.get('voter_device_id');
   }
 
   setVoterDeviceIdCookie (id) { // eslint-disable-line
-    cookies.removeItem('voter_device_id');
-    cookies.removeItem('voter_device_id', '/');
+    Cookies.remove('voter_device_id');
+    Cookies.remove('voter_device_id', { path: '/' });
     let { hostname } = window.location;
     hostname = hostname || '';
     // console.log('setVoterDeviceIdCookie hostname:', hostname);
     if (hostname && stringContains('wevote.us', hostname)) {
-      cookies.setItem('voter_device_id', id, Infinity, '/', 'wevote.us');
+      Cookies.set('voter_device_id', id, Infinity, '/', 'wevote.us');
     } else {
-      cookies.setItem('voter_device_id', id, Infinity, '/');
+      Cookies.set('voter_device_id', id, Infinity, '/');
     }
   }
 
@@ -523,7 +523,7 @@ class VoterStore extends ReduceStore {
 
         // case 'setExternalVoterId':
         //   externalVoterId = action.payload;
-        //   membershipOrganizationWeVoteId = AppStore.getSiteOwnerOrganizationWeVoteId();
+        //   membershipOrganizationWeVoteId = AppObservableStore.getSiteOwnerOrganizationWeVoteId();
         //   ({ voterExternalIdHasBeenSavedOnce } = state);
         //   // console.log('VoterStore externalVoterId:', externalVoterId, ', membershipOrganizationWeVoteId:', membershipOrganizationWeVoteId);
         //   if (externalVoterId && membershipOrganizationWeVoteId) {
@@ -838,15 +838,15 @@ class VoterStore extends ReduceStore {
           voterFirstRetrieveCompleted = Boolean(action.res.success);
         }
 
-        currentVoterDeviceId = cookies.getItem('voter_device_id');
+        currentVoterDeviceId = Cookies.get('voter_device_id');
         if (!action.res.voter_found) {
           console.log(`This voter_device_id is not in the db and is invalid, so delete it: ${
-            cookies.getItem('voter_device_id')}`);
+            Cookies.get('voter_device_id')}`);
 
           // Attempt to delete in a variety of ways
-          cookies.removeItem('voter_device_id');
-          cookies.removeItem('voter_device_id', '/');
-          cookies.removeItem('voter_device_id', '/', 'wevote.us');
+          Cookies.remove('voter_device_id');
+          Cookies.remove('voter_device_id', { path: '/' });
+          Cookies.remove('voter_device_id', { path: '/', domain: 'wevote.us' });
         } else {
           voterDeviceId = action.res.voter_device_id;
           if (voterDeviceId) {

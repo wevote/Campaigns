@@ -4,9 +4,9 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CampaignListTabs from '../../components/Navigation/CampaignListTabs';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import { renderLog } from '../../utils/logging';
 import SettingsCampaignList from '../../components/Settings/SettingsCampaignList';
 import VoterStore from '../../stores/VoterStore';
@@ -28,20 +28,20 @@ class SettingsYourCampaigns extends Component {
 
   componentDidMount () {
     // console.log('VoterFirstNameInputField, componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.onVoterStoreChange();
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
     window.scrollTo(0, 0);
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.voterStoreListener.remove();
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
     this.setState({
       chosenWebsiteName,
     });
@@ -60,15 +60,12 @@ class SettingsYourCampaigns extends Component {
 
   render () {
     renderLog('SettingsYourCampaigns');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`SettingsYourCampaigns window.location.href: ${window.location.href}`);
-    }
     const { classes } = this.props;
     const { chosenWebsiteName, voterFirstPlusLastName, voterPhotoTooBig, voterPhotoUrlLarge } = this.state;
     return (
       <div>
         <Helmet title={`Your Campaigns - ${chosenWebsiteName}`} />
-        <PageWrapper cordova={isCordova()}>
+        <PageWrapper>
           <IntroductionMessageSection>
             {voterPhotoUrlLarge && (
               <VoterPhotoWrapper>

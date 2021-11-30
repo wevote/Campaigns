@@ -3,7 +3,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles, withTheme } from '@material-ui/core/styles';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import { openSnackbar } from '../Widgets/SnackNotifier';
@@ -24,8 +24,8 @@ class ShareByCopyLink extends Component {
 
   componentDidMount () {
     // console.log('ShareByCopyLink componentDidMount');
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
-    this.onAppStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
+    this.onAppObservableStoreChange();
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
   }
@@ -47,13 +47,13 @@ class ShareByCopyLink extends Component {
 
   componentWillUnmount () {
     // console.log('componentWillUnmount');
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignStoreListener.remove();
   }
 
-  onAppStoreChange () {
+  onAppObservableStoreChange () {
     const { shareModalStep } = this.state;
-    const newShareModalStep = AppStore.shareModalStep();
+    const newShareModalStep = AppObservableStore.getShareModalStep();
     if (newShareModalStep !== shareModalStep) {
       // If we change modes, reset the copy link state
       this.setState({

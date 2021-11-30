@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import AppStore from '../../stores/AppStore';
-import { cordovaDot, isCordova } from '../../utils/cordovaUtils';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import cordovaDot from '../../utils/cordovaDot';
 import logoLight from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-200x66.svg';
 import logoDark from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-dark-141x46.svg';
 
@@ -20,17 +20,17 @@ class HeaderBarLogo extends Component {
 
   componentDidMount () {
     // console.log('HeaderBarLogo componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
   }
 
-  onAppStoreChange () {
-    const chosenSiteLogoUrl = AppStore.getChosenSiteLogoUrl();
-    const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
+  onAppObservableStoreChange () {
+    const chosenSiteLogoUrl = AppObservableStore.getChosenSiteLogoUrl();
+    const siteConfigurationHasBeenRetrieved = AppObservableStore.siteConfigurationHasBeenRetrieved();
     this.setState({
       chosenSiteLogoUrl,
       siteConfigurationHasBeenRetrieved,
@@ -40,7 +40,7 @@ class HeaderBarLogo extends Component {
   render () {
     const { classes } = this.props;
     const { chosenSiteLogoUrl, siteConfigurationHasBeenRetrieved } = this.state;
-
+    // console.log('chosenSiteLogoUrl:', chosenSiteLogoUrl, ', siteConfigurationHasBeenRetrieved:', siteConfigurationHasBeenRetrieved)
     const light = false;
     return (
       <HeaderBarWrapper>
@@ -50,7 +50,7 @@ class HeaderBarLogo extends Component {
               <ChosenSiteLogoWrapper>
                 <Link
                   className={classes.logoLinkRoot}
-                  to={`${isCordova() ? '/' : '/'}`}
+                  to="/"
                   id="logoHeaderBar"
                 >
                   <ChosenSiteLogoImage
@@ -63,7 +63,7 @@ class HeaderBarLogo extends Component {
               <WeVoteLogoWrapper>
                 <Link
                   className={classes.logoLinkRoot}
-                  to={`${isCordova() ? '/' : '/'}`}
+                  to="/"
                   id="logoHeaderBar"
                 >
                   <img

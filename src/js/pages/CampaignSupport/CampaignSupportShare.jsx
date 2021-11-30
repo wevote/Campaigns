@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import {
   CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
 } from '../../components/Style/CampaignProcessStyles';
@@ -21,7 +21,7 @@ import CampaignShareChunk from '../../components/Campaign/CampaignShareChunk';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSteps';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
 import SendFacebookDirectMessageButton from '../../components/Share/ShareByFacebookDirectMessageButton';
@@ -49,8 +49,8 @@ class CampaignSupportShare extends Component {
   componentDidMount () {
     // console.log('CampaignSupportShare componentDidMount');
     this.props.setShowHeaderFooter(false);
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.onCampaignSupporterStoreChange();
@@ -105,13 +105,13 @@ class CampaignSupportShare extends Component {
   componentWillUnmount () {
     CampaignSupporterActions.shareButtonClicked(false);
     this.props.setShowHeaderFooter(true);
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignStoreListener.remove();
     this.campaignSupporterStoreListener.remove();
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
     this.setState({
       chosenWebsiteName,
     });
@@ -202,9 +202,6 @@ class CampaignSupportShare extends Component {
 
   render () {
     renderLog('CampaignSupportShare');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`CampaignSupportShare window.location.href: ${window.location.href}`);
-    }
     const { classes, iWillShare, showShareCampaignWithOneFriend } = this.props;
     const {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
@@ -239,7 +236,7 @@ class CampaignSupportShare extends Component {
             content={campaignDescriptionLimited}
           />
         </Helmet>
-        <PageWrapperDefault cordova={isCordova()}>
+        <PageWrapperDefault>
           <ContentOuterWrapperDefault>
             <ContentInnerWrapperDefault>
               <CampaignSupportSteps

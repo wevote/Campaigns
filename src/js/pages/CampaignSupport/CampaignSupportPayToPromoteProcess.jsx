@@ -8,14 +8,14 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import CampaignActions from '../../actions/CampaignActions';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import DonationListForm from '../../common/components/Donation/DonationListForm';
 import LoadingWheelComp from '../../components/LoadingWheelComp';
 import InjectedCheckoutForm from '../../common/components/Donation/InjectedCheckoutForm';
 import webAppConfig from '../../config';
 import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
 import DonateStore from '../../common/stores/DonateStore';
@@ -55,8 +55,8 @@ class CampaignSupportPayToPromoteProcess extends Component {
       const { setShowHeaderFooter } = this.props;
       setShowHeaderFooter(false);
       this.setState({ loaded: true });
-      this.onAppStoreChange();
-      this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+      this.onAppObservableStoreChange();
+      this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
       this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
       this.donateStoreListener = DonateStore.addListener(this.onDonateStoreChange.bind(this));
       // dumpCookies();
@@ -105,7 +105,7 @@ class CampaignSupportPayToPromoteProcess extends Component {
 
   componentWillUnmount () {
     this.props.setShowHeaderFooter(true);
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignStoreListener.remove();
     this.donateStoreListener.remove();
     this.voterStoreListener.remove();
@@ -114,8 +114,8 @@ class CampaignSupportPayToPromoteProcess extends Component {
     }
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
     this.setState({
       chosenWebsiteName,
     });
@@ -252,7 +252,7 @@ class CampaignSupportPayToPromoteProcess extends Component {
     return (
       <div>
         <Helmet title={htmlTitle} />
-        <PageWrapper cordova={isCordova()}>
+        <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>
               <IntroductionMessageSection>

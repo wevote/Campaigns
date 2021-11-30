@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../components/Style/AdviceBoxStyles';
 import {
   CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
@@ -20,9 +20,9 @@ import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
 import CampaignNewsItemActions from '../../actions/CampaignNewsItemActions';
 import CampaignNewsItemPublishSteps from '../../components/Navigation/CampaignNewsItemPublishSteps';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
-import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
+import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
 import { numberWithCommas } from '../../utils/textFormat';
@@ -48,8 +48,8 @@ class CampaignNewsItemSend extends Component {
   componentDidMount () {
     // console.log('CampaignNewsItemSend componentDidMount');
     this.props.setShowHeaderFooter(false);
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     const { match: { params } } = this.props;
@@ -102,12 +102,12 @@ class CampaignNewsItemSend extends Component {
 
   componentWillUnmount () {
     this.props.setShowHeaderFooter(true);
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignStoreListener.remove();
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
     // For now, we assume that paid sites with chosenSiteLogoUrl will turn off "Chip in"
     this.setState({
       chosenWebsiteName,
@@ -218,9 +218,6 @@ class CampaignNewsItemSend extends Component {
 
   render () {
     renderLog('CampaignNewsItemSend');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`CampaignNewsItemSend window.location.href: ${window.location.href}`);
-    }
     const { classes } = this.props;
     const {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
@@ -236,7 +233,7 @@ class CampaignNewsItemSend extends Component {
     return (
       <div>
         <Helmet title={htmlTitle} />
-        <PageWrapperDefault cordova={isCordova()}>
+        <PageWrapperDefault>
           <ContentOuterWrapperDefault>
             <ContentInnerWrapperDefault>
               <CampaignNewsItemPublishSteps

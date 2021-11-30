@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import AppStore from '../stores/AppStore';
+import AppObservableStore, { messageService } from '../stores/AppObservableStore';
 import {
   BlockedIndicator, BlockedReason, DraftModeIndicator, EditIndicator,
   ElectionInPast, IndicatorButtonWrapper, IndicatorRow,
@@ -19,7 +19,7 @@ import {
   getCampaignXValuesFromIdentifiers,
   retrieveCampaignXFromIdentifiersIfNeeded,
 } from '../utils/campaignUtils';
-import { historyPush, isCordova } from '../utils/cordovaUtils';
+import historyPush from '../utils/historyPush';
 import initializejQuery from '../utils/initializejQuery';
 import keepHelpingDestination from '../utils/keepHelpingDestination';
 import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
@@ -59,8 +59,8 @@ class CampaignDetailsPage extends Component {
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.onCampaignSupporterStoreChange();
@@ -90,14 +90,14 @@ class CampaignDetailsPage extends Component {
       clearTimeout(this.timer);
       this.timer = null;
     }
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignStoreListener.remove();
     this.campaignSupporterStoreListener.remove();
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
-    const inPrivateLabelMode = AppStore.inPrivateLabelMode();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
+    const inPrivateLabelMode = AppObservableStore.inPrivateLabelMode();
     // For now, we assume that paid sites with chosenSiteLogoUrl will turn off "Chip in"
     const payToPromoteStepTurnedOn = !inPrivateLabelMode;
     this.setState({
@@ -204,9 +204,9 @@ class CampaignDetailsPage extends Component {
       // If it has changed, use new value
       visibleToPublic = CampaignSupporterStore.getVisibleToPublicQueuedToSave();
     }
-    // console.log('functionToUseWhenProfileComplete, blockCampaignXRedirectOnSignIn:', AppStore.blockCampaignXRedirectOnSignIn());
+    // console.log('functionToUseWhenProfileComplete, blockCampaignXRedirectOnSignIn:', AppObservableStore.blockCampaignXRedirectOnSignIn());
     const saveVisibleToPublic = true;
-    if (!AppStore.blockCampaignXRedirectOnSignIn()) {
+    if (!AppObservableStore.blockCampaignXRedirectOnSignIn()) {
       initializejQuery(() => {
         CampaignSupporterActions.supportCampaignSave(campaignXWeVoteId, campaignSupported, campaignSupportedChanged, visibleToPublic, saveVisibleToPublic);
       }, this.goToNextPage());
@@ -236,9 +236,6 @@ class CampaignDetailsPage extends Component {
 
   render () {
     renderLog('CampaignDetailsPage');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`CampaignDetailsPage window.location.href: ${window.location.href}`);
-    }
     // const { classes } = this.props;
     const {
       campaignDescription, campaignDescriptionLimited, campaignPhotoLargeUrl,
@@ -251,7 +248,7 @@ class CampaignDetailsPage extends Component {
     const htmlTitle = `${campaignTitle} - ${chosenWebsiteName}`;
     if (isBlockedByWeVote && !voterCanEditThisCampaign) {
       return (
-        <PageWrapper cordova={isCordova()}>
+        <PageWrapper>
           <Helmet>
             <title>{htmlTitle}</title>
             <meta
@@ -300,7 +297,7 @@ class CampaignDetailsPage extends Component {
             content={campaignDescriptionLimited}
           />
         </Helmet>
-        <PageWrapper cordova={isCordova()}>
+        <PageWrapper>
           {isBlockedByWeVote && (
             <BlockedReason>
               Your campaign has been blocked by moderators from We Vote. It is only visible campaign owners. Please make any requested modifications so you are in compliance with our terms of service and

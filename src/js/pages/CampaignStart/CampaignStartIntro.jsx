@@ -4,8 +4,8 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import AppStore from '../../stores/AppStore';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import historyPush from '../../utils/historyPush';
 import { renderLog } from '../../utils/logging';
 
 
@@ -21,19 +21,19 @@ class CampaignStartIntro extends Component {
 
   componentDidMount () {
     // console.log('CampaignSupportSteps, componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     window.scrollTo(0, 0);
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
-    const inPrivateLabelMode = AppStore.inPrivateLabelMode();
-    const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
+    const inPrivateLabelMode = AppObservableStore.inPrivateLabelMode();
+    const siteConfigurationHasBeenRetrieved = AppObservableStore.siteConfigurationHasBeenRetrieved();
     this.setState({
       chosenWebsiteName,
       inPrivateLabelMode,
@@ -43,16 +43,13 @@ class CampaignStartIntro extends Component {
 
   render () {
     renderLog('CampaignStartIntro');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`CampaignStartIntro window.location.href: ${window.location.href}`);
-    }
     const { classes } = this.props;
     const { chosenWebsiteName, inPrivateLabelMode, siteConfigurationHasBeenRetrieved } = this.state;
     const mobileButtonClasses = classes.buttonDefault; // isWebApp() ? classes.buttonDefault : classes.buttonDefaultCordova;
     return (
       <div>
         <Helmet title={`Start a Campaign - ${chosenWebsiteName}`} />
-        <PageWrapper cordova={isCordova()}>
+        <PageWrapper>
           <OuterWrapper>
             {siteConfigurationHasBeenRetrieved && (
               <InnerWrapper>

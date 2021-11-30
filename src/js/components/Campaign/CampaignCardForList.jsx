@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import TruncateMarkup from 'react-truncate-markup';
 import { withStyles } from '@material-ui/core/styles';
-import AppActions from '../../actions/AppActions';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import {
   BlockedIndicator, DraftModeIndicator, EditIndicator, ElectionInPast,
   IndicatorButtonWrapper, IndicatorDefaultButtonWrapper, IndicatorRow,
@@ -14,7 +13,7 @@ import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { renderLog } from '../../utils/logging';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import keepHelpingDestination from '../../utils/keepHelpingDestination';
 import { numberWithCommas } from '../../utils/textFormat';
@@ -45,8 +44,8 @@ class CampaignCardForList extends Component {
 
   componentDidMount () {
     // console.log('CampaignCardForList componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.onCampaignSupporterStoreChange();
@@ -70,7 +69,7 @@ class CampaignCardForList extends Component {
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignStoreListener.remove();
     this.campaignSupporterStoreListener.remove();
     if (this.timer) {
@@ -78,9 +77,9 @@ class CampaignCardForList extends Component {
     }
   }
 
-  onAppStoreChange () {
-    const inPrivateLabelMode = AppStore.inPrivateLabelMode();
-    // const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
+  onAppObservableStoreChange () {
+    const inPrivateLabelMode = AppObservableStore.inPrivateLabelMode();
+    // const siteConfigurationHasBeenRetrieved = AppObservableStore.siteConfigurationHasBeenRetrieved();
     // For now, we assume that paid sites with chosenSiteLogoUrl will turn off "Chip in"
     const payToPromoteStepTurnedOn = !inPrivateLabelMode;
     this.setState({
@@ -131,7 +130,7 @@ class CampaignCardForList extends Component {
       seo_friendly_path: campaignSEOFriendlyPath,
       campaignx_we_vote_id: campaignXWeVoteId,
     } = campaignX;
-    AppActions.setBlockCampaignXRedirectOnSignIn(true);
+    AppObservableStore.setBlockCampaignXRedirectOnSignIn(true);
     if (inDraftMode) {
       historyPush('/start-a-campaign-preview');
     } else if (campaignSEOFriendlyPath) {
@@ -286,9 +285,6 @@ class CampaignCardForList extends Component {
 
   render () {
     renderLog('CampaignCardForList');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`CampaignCardForList window.location.href: ${window.location.href}`);
-    }
     const { campaignSupported, campaignX, inPrivateLabelMode, voterCanEditThisCampaign } = this.state;
     if (!campaignX) {
       return null;
@@ -310,7 +306,7 @@ class CampaignCardForList extends Component {
       we_vote_hosted_campaign_photo_medium_url: CampaignPhotoMediumUrl,
     } = campaignX;
     return (
-      <Wrapper cordova={isCordova()}>
+      <Wrapper>
         <OneCampaignOuterWrapper>
           <OneCampaignInnerWrapper>
             <OneCampaignTextColumn>

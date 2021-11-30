@@ -10,7 +10,7 @@ import {
   IndicatorButtonWrapper, IndicatorDefaultButtonWrapper, IndicatorRow,
 } from '../Style/CampaignIndicatorStyles';
 import CampaignStore from '../../stores/CampaignStore';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import LazyImage from '../../common/components/LazyImage';
 import { renderLog } from '../../utils/logging';
 import { timeFromDate } from '../../utils/dateFormat';
@@ -126,9 +126,6 @@ class CampaignNewsItemForList extends Component {
 
   render () {
     renderLog('CampaignNewsItemForList');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`CampaignNewsForList window.location.href: ${window.location.href}`);
-    }
     const { campaignXNewsItemWeVoteId, classes } = this.props;
     const {
       campaignNewsSubject,
@@ -144,7 +141,7 @@ class CampaignNewsItemForList extends Component {
       return null;
     }
     return (
-      <Wrapper cordova={isCordova()}>
+      <Wrapper>
         <OneCampaignOuterWrapper>
           <OneCampaignInnerWrapper>
             <NewsItemWrapper className="comment" key={campaignXNewsItemWeVoteId}>

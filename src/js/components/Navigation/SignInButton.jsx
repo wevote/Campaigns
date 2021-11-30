@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import cookies from '../../utils/cookies';
-import AppActions from '../../actions/AppActions';
+import Cookies from '../../utils/js-cookie/Cookies';
+import AppObservableStore from '../../stores/AppObservableStore';
 import voterSignOut from '../../utils/voterSignOut';
 import VoterStore from '../../stores/VoterStore';
 import { renderLog } from '../../utils/logging';
@@ -38,15 +38,14 @@ class SignInButton extends Component {
     // console.log('SignInButton openSignInModal');
     const { origin, pathname } = window.location;
     const signInStartFullUrl = `${origin}${pathname}`;
-    const oneDayExpires = 86400;
     // console.log('SettingsAccount getStartedForCampaigns, new origin: ', origin, ', pathname: ', pathname, ', signInStartFullUrl: ', signInStartFullUrl);
     if (origin && stringContains('wevote.us', origin)) {
-      cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/', 'wevote.us');
+      Cookies.set('sign_in_start_full_url', signInStartFullUrl, { expires: 1, path: '/', domain: 'wevote.us' });
     } else {
-      cookies.setItem('sign_in_start_full_url', signInStartFullUrl, oneDayExpires, '/');
+      Cookies.set('sign_in_start_full_url', signInStartFullUrl, { expires: 1, path: '/' });
     }
-    AppActions.setShowSignInModal(true);
-    AppActions.setBlockCampaignXRedirectOnSignIn(true);
+    AppObservableStore.setShowSignInModal(true);
+    AppObservableStore.setBlockCampaignXRedirectOnSignIn(true);
   };
 
   signOut = () => {

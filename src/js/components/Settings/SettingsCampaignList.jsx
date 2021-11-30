@@ -8,7 +8,7 @@ import CampaignCardForList from '../Campaign/CampaignCardForList';
 import CampaignStore from '../../stores/CampaignStore';
 import initializejQuery from '../../utils/initializejQuery';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
-import startsWith from '../../utils/startsWith';
+import startsWith from '../../common/utils/startsWith';
 
 
 const STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY = 6;

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Done } from '@material-ui/icons';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CampaignStore from '../../stores/CampaignStore';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import { renderLog } from '../../utils/logging';
 
 
@@ -23,8 +23,8 @@ class CampaignNewsItemPublishSteps extends Component {
 
   componentDidMount () {
     // console.log('CampaignNewsItemPublishSteps, componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
   }
@@ -56,12 +56,12 @@ class CampaignNewsItemPublishSteps extends Component {
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignStoreListener.remove();
   }
 
-  onAppStoreChange () {
-    const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
+  onAppObservableStoreChange () {
+    const siteConfigurationHasBeenRetrieved = AppObservableStore.siteConfigurationHasBeenRetrieved();
     this.setState({
       siteConfigurationHasBeenRetrieved,
     });
@@ -115,9 +115,6 @@ class CampaignNewsItemPublishSteps extends Component {
 
   render () {
     renderLog('CampaignNewsItemPublishSteps');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`CampaignNewsItemPublishSteps window.location.href: ${window.location.href}`);
-    }
     const {
       atStepNumber1, atStepNumber2, atStepNumber3, atStepNumber4,
       campaignBasePath, classes,

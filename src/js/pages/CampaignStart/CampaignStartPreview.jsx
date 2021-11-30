@@ -4,13 +4,12 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import AppActions from '../../actions/AppActions';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import CompleteYourProfileModalController from '../../components/Settings/CompleteYourProfileModalController';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import DelayedLoad from '../../components/Widgets/DelayedLoad';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
 import VoterStore from '../../stores/VoterStore';
@@ -33,8 +32,8 @@ class CampaignStartPreview extends Component {
 
   componentDidMount () {
     // console.log('CampaignStartPreview, componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.onCampaignStartStoreChange();
     this.onVoterStoreChange();
     this.campaignStartStoreListener = CampaignStartStore.addListener(this.onCampaignStartStoreChange.bind(this));
@@ -47,13 +46,13 @@ class CampaignStartPreview extends Component {
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignStartStoreListener.remove();
     this.voterStoreListener.remove();
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
     this.setState({
       chosenWebsiteName,
     });
@@ -98,7 +97,7 @@ class CampaignStartPreview extends Component {
     const { voterFirstName, voterLastName, voterSignedInWithEmail } = this.state;
     if (!voterFirstName || !voterLastName || !voterSignedInWithEmail) {
       // Open complete your profile modal
-      AppActions.setShowCompleteYourProfileModal(true);
+      AppObservableStore.setShowCompleteYourProfileModal(true);
     } else {
       // Mark the campaign as published
       const campaignWeVoteId = '';
@@ -127,9 +126,6 @@ class CampaignStartPreview extends Component {
 
   render () {
     renderLog('CampaignStartPreview');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`CampaignStartPreview window.location.href: ${window.location.href}`);
-    }
     const { classes } = this.props;
     const {
       campaignDescription, campaignPhotoLargeUrl, campaignPoliticianList,
@@ -179,7 +175,7 @@ class CampaignStartPreview extends Component {
             </SaveCancelButtonsWrapper>
           </SaveCancelInnerWrapper>
         </SaveCancelOuterWrapper>
-        <PageWrapper cordova={isCordova()}>
+        <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>
               <CampaignStartSectionWrapper>

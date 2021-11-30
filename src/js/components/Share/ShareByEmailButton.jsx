@@ -8,7 +8,7 @@ import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import { isAndroid, isCordova } from '../../utils/cordovaUtils';
 import { renderLog } from '../../utils/logging';
 import { cordovaSocialSharingByEmail, generateQuoteForSharing, generateSharingLink } from './shareButtonCommon';
-import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
+import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
 
 class ShareByEmailButton extends Component {
   constructor (props) {
