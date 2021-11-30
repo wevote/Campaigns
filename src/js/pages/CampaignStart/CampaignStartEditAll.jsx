@@ -4,7 +4,7 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import {
   BlockedReason,
 } from '../../components/Style/CampaignIndicatorStyles';
@@ -17,7 +17,7 @@ import CampaignStore from '../../stores/CampaignStore';
 import CampaignTitleInputField from '../../components/CampaignStart/CampaignTitleInputField';
 import EditPoliticianList from '../../components/CampaignStart/EditPoliticianList';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import OpenExternalWebSite from '../../components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../../utils/logging';
@@ -44,8 +44,8 @@ class CampaignStartEditAll extends Component {
     if (this.props.setShowHeaderFooter) {
       this.props.setShowHeaderFooter(false);
     }
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     if (editExistingCampaign) {
       const { match: { params } } = this.props;
@@ -99,15 +99,15 @@ class CampaignStartEditAll extends Component {
     if (this.props.setShowHeaderFooter) {
       this.props.setShowHeaderFooter(true);
     }
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignStoreListener.remove();
     if (this.timer) {
       clearTimeout(this.timer);
     }
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
     this.setState({
       chosenWebsiteName,
     });
@@ -218,9 +218,6 @@ class CampaignStartEditAll extends Component {
 
   render () {
     renderLog('CampaignStartEditAll');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`CampaignStartEditAll window.location.href: ${window.location.href}`);
-    }
     const { classes, editExistingCampaign } = this.props;
     const {
       campaignSEOFriendlyPath, campaignXWeVoteId, chosenWebsiteName,
@@ -258,7 +255,7 @@ class CampaignStartEditAll extends Component {
             </SaveCancelButtonsWrapper>
           </SaveCancelInnerWrapper>
         </SaveCancelOuterWrapper>
-        <PageWrapper cordova={isCordova()}>
+        <PageWrapper>
           <OuterWrapper>
             {voterIsCampaignXOwner ? (
               <InnerWrapper>

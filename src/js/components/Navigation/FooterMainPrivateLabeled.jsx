@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
 
 
@@ -17,16 +17,16 @@ class FooterMainPrivateLabeled extends Component {
 
   componentDidMount () {
     // console.log('FooterMainPrivateLabeled componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
   }
 
-  onAppStoreChange () {
-    const chosenAboutOrganizationExternalUrl = AppStore.getChosenAboutOrganizationExternalUrl();
+  onAppObservableStoreChange () {
+    const chosenAboutOrganizationExternalUrl = AppObservableStore.getChosenAboutOrganizationExternalUrl();
     this.setState({
       chosenAboutOrganizationExternalUrl,
     });

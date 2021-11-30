@@ -9,7 +9,7 @@ import {
   SkipForNowButtonPanel, SkipForNowButtonWrapper,
 } from '../../components/Style/CampaignSupportStyles';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
 import ShareActions from '../../common/actions/ShareActions';
@@ -91,15 +91,12 @@ class SuperSharingIntro extends Component {
 
   render () {
     renderLog('SuperSharingIntro');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`SuperSharingIntro window.location.href: ${window.location.href}`);
-    }
     const { classes } = this.props;
     const mobileButtonClasses = classes.buttonDefault; // isWebApp() ? classes.buttonDefault : classes.buttonDefaultCordova;
     return (
       <div>
         <Helmet title="Supercharged Sharing" />
-        <PageWrapper cordova={isCordova()}>
+        <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>
               <ContentTitle>

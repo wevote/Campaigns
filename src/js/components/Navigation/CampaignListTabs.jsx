@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { AppBar, Tab, Tabs, Toolbar } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
-import startsWith from '../../utils/startsWith';
+import startsWith from '../../common/utils/startsWith';
 import { campaignTheme } from '../Style/campaignTheme';
 
 

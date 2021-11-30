@@ -5,9 +5,9 @@ import styled from 'styled-components';
 import { Close } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CompleteYourProfile from '../../components/Settings/CompleteYourProfile';
-import { historyPush } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import { renderLog } from '../../utils/logging';
 
 
@@ -23,8 +23,8 @@ class CompleteYourProfileMobile extends Component {
 
   componentDidMount () {
     // console.log('CampaignDetailsPage componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     const { match: { params }, setShowHeaderFooter } = this.props;
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     const { becomeMember, createNewsItem, startCampaign, supportCampaign } = this.props;
@@ -55,11 +55,11 @@ class CompleteYourProfileMobile extends Component {
   componentWillUnmount () {
     const { setShowHeaderFooter } = this.props;
     setShowHeaderFooter(true);
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
     this.setState({
       chosenWebsiteName,
     });

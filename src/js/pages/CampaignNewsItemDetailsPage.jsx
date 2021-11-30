@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import { AccountCircle, ArrowBack, ArrowBackIos } from '@material-ui/icons';
-import AppStore from '../stores/AppStore';
+import { AccountCircle, ArrowBack } from '@material-ui/icons';
+import AppObservableStore, { messageService } from '../stores/AppObservableStore';
 import {
   BlockedIndicator, BlockedReason, DraftModeIndicator, EditIndicator,
   ElectionInPast, IndicatorButtonWrapper, IndicatorRow,
@@ -21,7 +21,7 @@ import {
   getCampaignXValuesFromIdentifiers,
   retrieveCampaignXFromIdentifiersIfNeeded,
 } from '../utils/campaignUtils';
-import { historyPush, isCordova, isIOS } from '../utils/cordovaUtils';
+import historyPush from '../utils/historyPush';
 import initializejQuery from '../utils/initializejQuery';
 import keepHelpingDestination from '../utils/keepHelpingDestination';
 import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
@@ -65,8 +65,8 @@ class CampaignNewsItemDetailsPage extends Component {
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.onCampaignSupporterStoreChange();
@@ -113,14 +113,14 @@ class CampaignNewsItemDetailsPage extends Component {
     }
     this.timer = null;
     this.props.setShowHeaderFooter(true);
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignStoreListener.remove();
     this.campaignSupporterStoreListener.remove();
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
-    const inPrivateLabelMode = AppStore.inPrivateLabelMode();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
+    const inPrivateLabelMode = AppObservableStore.inPrivateLabelMode();
     // For now, we assume that paid sites with chosenSiteLogoUrl will turn off "Chip in"
     const payToPromoteStepTurnedOn = !inPrivateLabelMode;
     this.setState({
@@ -257,9 +257,9 @@ class CampaignNewsItemDetailsPage extends Component {
       // If it has changed, use new value
       visibleToPublic = CampaignSupporterStore.getVisibleToPublicQueuedToSave();
     }
-    // console.log('functionToUseWhenProfileComplete, visibleToPublic:', visibleToPublic, ', visibleToPublicChanged:', visibleToPublicChanged, ', blockCampaignXRedirectOnSignIn:', AppStore.blockCampaignXRedirectOnSignIn());
+    // console.log('functionToUseWhenProfileComplete, visibleToPublic:', visibleToPublic, ', visibleToPublicChanged:', visibleToPublicChanged, ', blockCampaignXRedirectOnSignIn:', AppObservableStore.blockCampaignXRedirectOnSignIn());
     const saveVisibleToPublic = true;
-    if (!AppStore.blockCampaignXRedirectOnSignIn()) {
+    if (!AppObservableStore.blockCampaignXRedirectOnSignIn()) {
       initializejQuery(() => {
         CampaignSupporterActions.supportCampaignSave(campaignXWeVoteId, campaignSupported, campaignSupportedChanged, visibleToPublic, saveVisibleToPublic);
       }, this.goToNextPage());
@@ -299,9 +299,6 @@ class CampaignNewsItemDetailsPage extends Component {
 
   render () {
     renderLog('CampaignNewsItemDetailsPage');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`CampaignNewsItemDetailsPage window.location.href: ${window.location.href}`);
-    }
     const { classes, inPreviewMode } = this.props;
     const {
       campaignDescriptionLimited, campaignNewsSubject,
@@ -315,7 +312,7 @@ class CampaignNewsItemDetailsPage extends Component {
     const htmlTitle = `${campaignTitle} - ${chosenWebsiteName}`;
     if (isBlockedByWeVote && !voterCanEditThisCampaign) {
       return (
-        <PageWrapper cordova={isCordova()}>
+        <PageWrapper>
           <Helmet>
             <title>{htmlTitle}</title>
             <meta
@@ -444,14 +441,10 @@ class CampaignNewsItemDetailsPage extends Component {
             </EditContinueOuterWrapper>
           </UpdateSupportersHeader>
         )}
-        <PageWrapper cordova={isCordova()}>
+        <PageWrapper>
           {!inDraftMode && (
             <BackToNavigationBar className="u-cursor--pointer u-link-color-on-hover u-link-underline-on-hover" onClick={this.goToCampaignBasePath}>
-              {isIOS() ? (
-                <ArrowBackIos className="button-icon" />
-              ) : (
-                <ArrowBack className="button-icon" />
-              )}
+              <ArrowBack className="button-icon" />
               <BackToCampaignTitle>
                 {campaignTitle}
               </BackToCampaignTitle>

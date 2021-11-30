@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import AppStore from '../stores/AppStore';
+import AppObservableStore, { messageService } from '../stores/AppObservableStore';
 import {
   BlockedReason,
 } from '../components/Style/CampaignIndicatorStyles';
@@ -36,8 +36,8 @@ class CampaignNewsPage extends Component {
     const { match: { params } } = this.props;
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = params;
     // console.log('componentDidMount campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.campaignNewsStoreListener = CampaignNewsStore.addListener(this.onCampaignNewsStoreChange.bind(this));
     if (campaignSEOFriendlyPath) {
@@ -57,13 +57,13 @@ class CampaignNewsPage extends Component {
       clearTimeout(this.timer);
       this.timer = null;
     }
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignStoreListener.remove();
     this.campaignNewsStoreListener.remove();
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
     this.setState({
       chosenWebsiteName,
     });
@@ -119,7 +119,7 @@ class CampaignNewsPage extends Component {
     const htmlTitle = `Updates, ${campaignTitle} - ${chosenWebsiteName}`;
     if (isBlockedByWeVote && !voterCanEditThisCampaign) {
       return (
-        <PageWrapper cordova={isCordova()}>
+        <PageWrapper>
           <Helmet>
             <title>{htmlTitle}</title>
           </Helmet>
@@ -154,7 +154,7 @@ class CampaignNewsPage extends Component {
           <CampaignRetrieveController campaignSEOFriendlyPath={campaignSEOFriendlyPath} campaignXWeVoteId={campaignXWeVoteId} />
         </Suspense>
         <Helmet title={htmlTitle} />
-        <PageWrapper cordova={isCordova()}>
+        <PageWrapper>
           <CampaignTitleWrapper>
             <CampaignTitleText>{campaignTitle}</CampaignTitleText>
           </CampaignTitleWrapper>

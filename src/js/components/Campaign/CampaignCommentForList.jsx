@@ -103,7 +103,7 @@ class CampaignCommentForList extends Component {
     } = campaignXSupporter;
     // console.log('supporterVoterWeVoteId:', supporterVoterWeVoteId);
     return (
-      <Wrapper cordova={isCordova()}>
+      <Wrapper>
         <OneCampaignOuterWrapper>
           <OneCampaignInnerWrapper>
             <CommentWrapper className="comment" key={id}>

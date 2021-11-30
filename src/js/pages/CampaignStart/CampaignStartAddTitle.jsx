@@ -4,7 +4,7 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../components/Style/AdviceBoxStyles';
 import {
   CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
@@ -18,7 +18,7 @@ import CampaignStartActions from '../../actions/CampaignStartActions';
 import CampaignStartSteps from '../../components/Navigation/CampaignStartSteps';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import CampaignTitleInputField from '../../components/CampaignStart/CampaignTitleInputField';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
 
@@ -32,8 +32,8 @@ class CampaignStartAddTitle extends Component {
 
   componentDidMount () {
     // console.log('CampaignStartAddTitle, componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     initializejQuery(() => {
       CampaignStartActions.campaignRetrieveAsOwner('');
     });
@@ -41,11 +41,11 @@ class CampaignStartAddTitle extends Component {
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
     this.setState({
       chosenWebsiteName,
     });
@@ -65,16 +65,13 @@ class CampaignStartAddTitle extends Component {
 
   render () {
     renderLog('CampaignStartAddTitle');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`CampaignStartAddTitle window.location.href: ${window.location.href}`);
-    }
     const { classes } = this.props;
     const { chosenWebsiteName } = this.state;
     const mobileButtonClasses = classes.buttonDefault; // isWebApp() ? classes.buttonDefault : classes.buttonDefaultCordova;
     return (
       <div>
         <Helmet title={`Add Campaign Title - ${chosenWebsiteName}`} />
-        <PageWrapper cordova={isCordova()}>
+        <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>
               <CampaignStartSteps atStepNumber1 />

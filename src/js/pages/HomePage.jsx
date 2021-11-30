@@ -4,9 +4,9 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import AppStore from '../stores/AppStore';
+import AppObservableStore, { messageService } from '../stores/AppObservableStore';
 import { renderLog } from '../utils/logging';
-import { historyPush } from '../utils/cordovaUtils';
+import historyPush from '../utils/historyPush';
 
 const HomeCampaignList = React.lazy(() => import('../components/Home/HomeCampaignList'));
 
@@ -22,18 +22,18 @@ class HomePage extends Component {
 
   componentDidMount () {
     // console.log('HeaderBarLogo componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
-    const inPrivateLabelMode = AppStore.getHideWeVoteLogo(); // Using this setting temporarily
-    const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
+    const inPrivateLabelMode = AppObservableStore.getHideWeVoteLogo(); // Using this setting temporarily
+    const siteConfigurationHasBeenRetrieved = AppObservableStore.siteConfigurationHasBeenRetrieved();
     this.setState({
       chosenWebsiteName,
       inPrivateLabelMode,

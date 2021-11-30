@@ -50,6 +50,8 @@ class Membership extends Component {
   }
 
   componentWillUnmount () {
+    const { showFooter } = this.props;
+    showFooter(true);
     if (this.donateStoreListener) this.donateStoreListener.remove();
     if (this.timer) {
       clearTimeout(this.timer);
@@ -127,7 +129,7 @@ class Membership extends Component {
     return (
       <div>
         <Helmet title="Membership - WeVote.US Campaigns" />
-        <PageWrapper cordova={isCordova()}>
+        <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>
               <IntroductionMessageSection>

@@ -1,6 +1,6 @@
-import cookies from './cookies';
+import Cookies from './js-cookie/Cookies';
 import { isIOSAppOnMac, isCordova, isWebApp } from './cordovaUtils';
-import startsWith from './startsWith';
+import startsWith from '../common/utils/startsWith';
 import { stringContains } from './textFormat';
 
 
@@ -310,14 +310,13 @@ export function weVoteBrandingOff () {
   }
   const { location: { query } } = window;
   const weVoteBrandingOffFromUrl = query ? query.we_vote_branding_off : false;
-  const weVoteBrandingOffFromCookie = cookies.getItem('we_vote_branding_off');
-  const oneDayExpires = 86400;
+  const weVoteBrandingOffFromCookie = Cookies.get('we_vote_branding_off');
   if (weVoteBrandingOffFromUrl && !weVoteBrandingOffFromCookie) {
-    cookies.setItem('we_vote_branding_off', weVoteBrandingOffFromUrl, oneDayExpires, '/');
+    Cookies.set('we_vote_branding_off', weVoteBrandingOffFromUrl, { expires: 1, path: '/' });
   }
 
   if (weVoteBrandingOffFromUrl || weVoteBrandingOffFromCookie) {
-    cookies.setItem('show_full_navigation', '1', Infinity, '/');
+    Cookies.set('show_full_navigation', '1', { expires: 10000, path: '/' });
   }
 
   weVoteBrandingOffGlobal = weVoteBrandingOffFromUrl || weVoteBrandingOffFromCookie;
@@ -330,8 +329,8 @@ export function setVoterDeviceIdCookie (id) {
   console.log('VoterSessionActions setVoterDeviceIdCookie hostname:', hostname);
   if (hostname && stringContains('wevote.us', hostname)) {
     // If hanging off We Vote subdomain, store the cookie with top level domain
-    cookies.setItem('voter_device_id', id, Infinity, '/', 'wevote.us');
+    Cookies.set('voter_device_id', id, { expires: 10000, path: '/', domain: 'wevote.us' });
   } else {
-    cookies.setItem('voter_device_id', id, Infinity, '/');
+    Cookies.set('voter_device_id', { expires: 10000, path: '/' });
   }
 }

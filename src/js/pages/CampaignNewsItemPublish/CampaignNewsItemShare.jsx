@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import {
   CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
 } from '../../components/Style/CampaignProcessStyles';
@@ -21,7 +21,7 @@ import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiers } f
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import CampaignNewsItemPublishSteps from '../../components/Navigation/CampaignNewsItemPublishSteps';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../utils/logging';
 import SendFacebookDirectMessageButton from '../../components/Share/ShareByFacebookDirectMessageButton';
@@ -51,8 +51,8 @@ class CampaignNewsItemShare extends Component {
   componentDidMount () {
     // console.log('CampaignNewsItemShare componentDidMount');
     this.props.setShowHeaderFooter(false);
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.onCampaignSupporterStoreChange();
@@ -83,12 +83,12 @@ class CampaignNewsItemShare extends Component {
       });
     }
     if (campaignXWeVoteId) {
-      this.leaveIfNotAllowedToEdit(campaignXWeVoteId);
+      // this.leaveIfNotAllowedToEdit(campaignXWeVoteId);
       this.setState({
         campaignXWeVoteId,
       });
     } else if (campaignXWeVoteIdFromParams) {
-      this.leaveIfNotAllowedToEdit(campaignXWeVoteIdFromParams);
+      // this.leaveIfNotAllowedToEdit(campaignXWeVoteIdFromParams);
       this.setState({
         campaignXWeVoteId: campaignXWeVoteIdFromParams,
       });
@@ -100,7 +100,7 @@ class CampaignNewsItemShare extends Component {
 
   componentDidUpdate (prevProps) {
     // console.log('CampaignNewsItemShare componentDidUpdate');
-    this.leaveIfNotAllowedToEdit();
+    // this.leaveIfNotAllowedToEdit();
     const {
       showShareCampaignWithOneFriend: showShareCampaignWithOneFriendPrevious,
     } = prevProps;
@@ -115,13 +115,13 @@ class CampaignNewsItemShare extends Component {
   componentWillUnmount () {
     CampaignSupporterActions.shareButtonClicked(false);
     this.props.setShowHeaderFooter(true);
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignStoreListener.remove();
     this.campaignSupporterStoreListener.remove();
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
     this.setState({
       chosenWebsiteName,
     });
@@ -158,7 +158,7 @@ class CampaignNewsItemShare extends Component {
       });
     }
     if (campaignXWeVoteId) {
-      this.leaveIfNotAllowedToEdit(campaignXWeVoteId);
+      // this.leaveIfNotAllowedToEdit(campaignXWeVoteId);
       recommendedCampaignXListCount = CampaignStore.getRecommendedCampaignXListCount(campaignXWeVoteId);
       recommendedCampaignXListHasBeenRetrieved = CampaignStore.getRecommendedCampaignXListHasBeenRetrieved(campaignXWeVoteId);
       this.setState({
@@ -167,7 +167,7 @@ class CampaignNewsItemShare extends Component {
         recommendedCampaignXListHasBeenRetrieved,
       });
     } else if (campaignXWeVoteIdFromParams) {
-      this.leaveIfNotAllowedToEdit(campaignXWeVoteIdFromParams);
+      // this.leaveIfNotAllowedToEdit(campaignXWeVoteIdFromParams);
       recommendedCampaignXListCount = CampaignStore.getRecommendedCampaignXListCount(campaignXWeVoteIdFromParams);
       recommendedCampaignXListHasBeenRetrieved = CampaignStore.getRecommendedCampaignXListHasBeenRetrieved(campaignXWeVoteIdFromParams);
       this.setState({
@@ -225,9 +225,6 @@ class CampaignNewsItemShare extends Component {
 
   render () {
     renderLog('CampaignNewsItemShare');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`CampaignNewsItemShare window.location.href: ${window.location.href}`);
-    }
     const { classes, iWillShare, noNavigation, showShareCampaignWithOneFriend } = this.props;
     const {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
@@ -264,7 +261,7 @@ class CampaignNewsItemShare extends Component {
             content={campaignDescriptionLimited}
           />
         </Helmet>
-        <PageWrapperDefault cordova={isCordova()}>
+        <PageWrapperDefault>
           <ContentOuterWrapperDefault>
             <ContentInnerWrapperDefault>
               {!noNavigation && (

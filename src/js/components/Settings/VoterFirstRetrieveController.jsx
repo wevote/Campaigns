@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import AppActions from '../../actions/AppActions';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore from '../../stores/AppObservableStore';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
 import VoterActions from '../../actions/VoterActions';
@@ -13,10 +12,10 @@ class VoterFirstRetrieveController extends Component {
 
   voterFirstRetrieve = () => {
     initializejQuery(() => {
-      const voterFirstRetrieveInitiated = AppStore.voterFirstRetrieveInitiated();
+      const voterFirstRetrieveInitiated = AppObservableStore.voterFirstRetrieveInitiated();
       // console.log('VoterFirstRetrieveController voterFirstRetrieveInitiated: ', voterFirstRetrieveInitiated);
       if (!voterFirstRetrieveInitiated) {
-        AppActions.setVoterFirstRetrieveInitiated(true);
+        AppObservableStore.setVoterFirstRetrieveInitiated(true);
         VoterActions.voterRetrieve();
       }
     });

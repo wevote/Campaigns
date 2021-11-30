@@ -4,9 +4,8 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import AppActions from '../../actions/AppActions';
-import AppStore from '../../stores/AppStore';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import historyPush from '../../utils/historyPush';
 import { renderLog } from '../../utils/logging';
 import VoterActions from '../../actions/VoterActions';
 import VoterFirstNameInputField from '../../components/Settings/VoterFirstNameInputField';
@@ -28,21 +27,21 @@ class SettingsEditProfile extends Component {
   }
 
   componentDidMount () {
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     const voterIsSignedIn = VoterStore.getVoterIsSignedIn();
     if (!voterIsSignedIn) {
-      AppActions.setShowSignInModal(true);
+      AppObservableStore.setShowSignInModal(true);
     }
     window.scrollTo(0, 0);
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
     this.setState({
       chosenWebsiteName,
     });
@@ -69,9 +68,6 @@ class SettingsEditProfile extends Component {
 
   render () {
     renderLog('SettingsEditProfile');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`SettingsEditProfile window.location.href: ${window.location.href}`);
-    }
     const { classes } = this.props;
     const { chosenWebsiteName } = this.state;
     return (
@@ -101,7 +97,7 @@ class SettingsEditProfile extends Component {
             </SaveCancelButtonsWrapper>
           </SaveCancelInnerWrapper>
         </SaveCancelOuterWrapper>
-        <PageWrapper cordova={isCordova()}>
+        <PageWrapper>
           <IntroductionMessageSection>
             <YourNameWrapper>Edit your profile</YourNameWrapper>
           </IntroductionMessageSection>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import FooterMainWeVote from './FooterMainWeVote';
 import FooterMainPrivateLabeled from './FooterMainPrivateLabeled';
 
@@ -18,17 +18,17 @@ class FooterMain extends Component {
 
   componentDidMount () {
     // console.log('HeaderBarLogo componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
   }
 
-  onAppStoreChange () {
-    const inPrivateLabelMode = AppStore.getHideWeVoteLogo(); // Using this setting temporarily
-    const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
+  onAppObservableStoreChange () {
+    const inPrivateLabelMode = AppObservableStore.getHideWeVoteLogo(); // Using this setting temporarily
+    const siteConfigurationHasBeenRetrieved = AppObservableStore.siteConfigurationHasBeenRetrieved();
     this.setState({
       inPrivateLabelMode,
       siteConfigurationHasBeenRetrieved,

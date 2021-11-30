@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Done } from '@material-ui/icons';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import { renderLog } from '../../utils/logging';
 
 
@@ -24,8 +24,8 @@ class CampaignSupportSteps extends Component {
 
   componentDidMount () {
     // console.log('CampaignSupportSteps, componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.onCampaignSupporterStoreChange();
     this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     const step1Completed = true;
@@ -50,13 +50,13 @@ class CampaignSupportSteps extends Component {
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignSupporterStoreListener.remove();
   }
 
-  onAppStoreChange () {
-    const inPrivateLabelMode = AppStore.inPrivateLabelMode();
-    const siteConfigurationHasBeenRetrieved = AppStore.siteConfigurationHasBeenRetrieved();
+  onAppObservableStoreChange () {
+    const inPrivateLabelMode = AppObservableStore.inPrivateLabelMode();
+    const siteConfigurationHasBeenRetrieved = AppObservableStore.siteConfigurationHasBeenRetrieved();
     // For now, we assume that paid sites with chosenSiteLogoUrl will turn off "Chip in"
     const payToPromoteStepTurnedOn = !inPrivateLabelMode;
     this.setState({
@@ -80,9 +80,6 @@ class CampaignSupportSteps extends Component {
 
   render () {
     renderLog('CampaignSupportSteps');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`CampaignSupportSteps window.location.href: ${window.location.href}`);
-    }
     const {
       atStepNumber1, atStepNumber2, atPayToPromoteStep, atSharingStep,
       campaignBasePath, classes,

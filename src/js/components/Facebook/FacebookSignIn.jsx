@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import FacebookActions from '../../actions/FacebookActions';
 import VoterActions from '../../actions/VoterActions';
-import AppStore from '../../stores/AppStore';
+import { messageService } from '../../stores/AppObservableStore';
 import FacebookStore from '../../stores/FacebookStore';
 import VoterStore from '../../stores/VoterStore';
 import { oAuthLog, renderLog } from '../../utils/logging';
@@ -28,14 +28,14 @@ class FacebookSignIn extends Component {
     // console.log('FacebookSignIn, componentDidMount');
     this.facebookStoreListener = FacebookStore.addListener(this.onFacebookStoreChange.bind(this));
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
-    this.appStoreListener = AppStore.addListener(this.onVoterStoreChange.bind(this));
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onVoterStoreChange());
     signInModalGlobalState.set('facebookSignInStep', '');
   }
 
   componentWillUnmount () {
     this.facebookStoreListener.remove();
     this.voterStoreListener.remove();
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     if (this.setSavePollTimeout) clearInterval(this.setSavePollTimeout);
     if (this.setRetrievePollTimeout) clearInterval(this.setRetrievePollTimeout);
   }

@@ -4,8 +4,7 @@ import loadable from '@loadable/component';
 import { Button } from '@material-ui/core';
 import { withStyles, withTheme } from '@material-ui/core/styles';
 import styled from 'styled-components';
-import AppActions from '../../actions/AppActions';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore from '../../stores/AppObservableStore';
 import CampaignStore from '../../stores/CampaignStore';
 import DelayedLoad from '../Widgets/DelayedLoad';
 import initializejQuery from '../../utils/initializejQuery';
@@ -196,12 +195,12 @@ class CompleteYourProfile extends Component {
       });
     } else if (!voterIsSignedInWithEmail) {
       // All required fields were found
-      AppActions.setBlockCampaignXRedirectOnSignIn(false);
+      AppObservableStore.setBlockCampaignXRedirectOnSignIn(false);
       this.sendSignInCodeEmail(event, voterEmailQueuedToSave);
     } else {
       VoterActions.voterRetrieve();
       this.functionToUseWhenProfileCompleteTimer = setTimeout(() => {
-        AppActions.setBlockCampaignXRedirectOnSignIn(false);
+        AppObservableStore.setBlockCampaignXRedirectOnSignIn(false);
         this.props.functionToUseWhenProfileComplete();
       }, 500);
     }
@@ -217,10 +216,10 @@ class CompleteYourProfile extends Component {
 
   voterFirstRetrieve = () => {
     initializejQuery(() => {
-      const voterFirstRetrieveInitiated = AppStore.voterFirstRetrieveInitiated();
+      const voterFirstRetrieveInitiated = AppObservableStore.voterFirstRetrieveInitiated();
       // console.log('CompleteYourProfile voterFirstRetrieveInitiated: ', voterFirstRetrieveInitiated);
       if (!voterFirstRetrieveInitiated) {
-        AppActions.setVoterFirstRetrieveInitiated(true);
+        AppObservableStore.setVoterFirstRetrieveInitiated(true);
         VoterActions.voterRetrieve();
       }
     });

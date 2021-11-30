@@ -21,7 +21,7 @@ class StyleGuidePage extends Component {
     return (
       <div>
         <Helmet title="Style Guide - WeVote.US Campaigns" />
-        <Wrapper cordova={isCordova()}>
+        <Wrapper>
           <IntroductionMessageSection>
             <PageStatement>Style Guide</PageStatement>
           </IntroductionMessageSection>

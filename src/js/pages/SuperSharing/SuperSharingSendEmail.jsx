@@ -5,7 +5,7 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import {
   CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
 } from '../../components/Style/CampaignProcessStyles';
@@ -18,7 +18,7 @@ import {
 import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
 import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import { onStep1ClickPath, onStep2ClickPath, onStep3ClickPath } from '../../utils/superSharingStepPaths';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
@@ -51,8 +51,8 @@ class SuperSharingSendEmail extends Component {
   componentDidMount () {
     // console.log('SuperSharingSendEmail componentDidMount');
     this.props.setShowHeaderFooter(false);
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.onShareStoreChange();
@@ -126,14 +126,14 @@ class SuperSharingSendEmail extends Component {
 
   componentWillUnmount () {
     this.props.setShowHeaderFooter(true);
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
     this.campaignStoreListener.remove();
     this.shareStoreListener.remove();
     this.voterStoreListener.remove();
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
     this.setState({
       chosenWebsiteName,
     });
@@ -260,9 +260,6 @@ class SuperSharingSendEmail extends Component {
 
   render () {
     renderLog('SuperSharingSendEmail');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`SuperSharingSendEmail window.location.href: ${window.location.href}`);
-    }
     const { classes } = this.props;
     const {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
@@ -281,7 +278,7 @@ class SuperSharingSendEmail extends Component {
     return (
       <div>
         <Helmet title={htmlTitle} />
-        <PageWrapperDefault cordova={isCordova()}>
+        <PageWrapperDefault>
           <ContentOuterWrapperDefault>
             <ContentInnerWrapperDefault>
               <SuperSharingSteps

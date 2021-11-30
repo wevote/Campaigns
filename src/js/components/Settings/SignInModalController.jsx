@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import AppActions from '../../actions/AppActions';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
 import SignInModal from './SignInModal';
@@ -16,35 +15,35 @@ class SignInModalController extends Component {
   }
 
   componentDidMount () {
-    const showSignInModal = AppStore.showSignInModal();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    const showSignInModal = AppObservableStore.showSignInModal();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.voterFirstRetrieve();
     // this.start = window.performance.now();
     this.setState({ showSignInModal });
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
   }
 
-  onAppStoreChange () {
-    const showSignInModal = AppStore.showSignInModal();
-    // console.log('SignInModalController onAppStoreChange, showSignInModal:', showSignInModal);
+  onAppObservableStoreChange () {
+    const showSignInModal = AppObservableStore.showSignInModal();
+    // console.log('SignInModalController onAppObservableStoreChange, showSignInModal:', showSignInModal);
     this.setState({ showSignInModal });
   }
 
   closeSignInModal = () => {
-    AppActions.setShowSignInModal(false);
+    AppObservableStore.setShowSignInModal(false);
     // console.log('closeSignInModal');
     this.setState({ showSignInModal: false });
   };
 
   voterFirstRetrieve = () => {
     initializejQuery(() => {
-      const voterFirstRetrieveInitiated = AppStore.voterFirstRetrieveInitiated();
+      const voterFirstRetrieveInitiated = AppObservableStore.voterFirstRetrieveInitiated();
       // console.log('SignInModalController voterFirstRetrieveInitiated: ', voterFirstRetrieveInitiated);
       if (!voterFirstRetrieveInitiated) {
-        AppActions.setVoterFirstRetrieveInitiated(true);
+        AppObservableStore.setVoterFirstRetrieveInitiated(true);
         VoterActions.voterRetrieve();
       }
     });

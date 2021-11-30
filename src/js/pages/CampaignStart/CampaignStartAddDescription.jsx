@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../components/Style/AdviceBoxStyles';
-import AppStore from '../../stores/AppStore';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import {
   CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
 } from '../../components/Style/CampaignProcessStyles';
@@ -18,7 +18,7 @@ import CampaignStartActions from '../../actions/CampaignStartActions';
 import CampaignStartSteps from '../../components/Navigation/CampaignStartSteps';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import CampaignDescriptionInputField from '../../components/CampaignStart/CampaignDescriptionInputField';
-import { historyPush, isCordova } from '../../utils/cordovaUtils';
+import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../utils/logging';
 
@@ -32,8 +32,8 @@ class CampaignStartAddDescription extends Component {
 
   componentDidMount () {
     // console.log('CampaignStartAddDescription, componentDidMount');
-    this.onAppStoreChange();
-    this.appStoreListener = AppStore.addListener(this.onAppStoreChange.bind(this));
+    this.onAppObservableStoreChange();
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     initializejQuery(() => {
       CampaignStartActions.campaignRetrieveAsOwner('');
     });
@@ -41,11 +41,11 @@ class CampaignStartAddDescription extends Component {
   }
 
   componentWillUnmount () {
-    this.appStoreListener.remove();
+    this.appStateSubscription.unsubscribe();
   }
 
-  onAppStoreChange () {
-    const chosenWebsiteName = AppStore.getChosenWebsiteName();
+  onAppObservableStoreChange () {
+    const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
     this.setState({
       chosenWebsiteName,
     });
@@ -65,16 +65,13 @@ class CampaignStartAddDescription extends Component {
 
   render () {
     renderLog('CampaignStartAddDescription');  // Set LOG_RENDER_EVENTS to log all renders
-    if (isCordova()) {
-      console.log(`CampaignStartAddDescription window.location.href: ${window.location.href}`);
-    }
     const { classes } = this.props;
     const { chosenWebsiteName } = this.state;
     const mobileButtonClasses = classes.buttonDefault; // isWebApp() ? classes.buttonDefault : classes.buttonDefaultCordova;
     return (
       <div>
         <Helmet title={`Add Description - ${chosenWebsiteName}`} />
-        <PageWrapper cordova={isCordova()}>
+        <PageWrapper>
           <OuterWrapper>
             <InnerWrapper>
               <CampaignStartSteps atStepNumber3 />

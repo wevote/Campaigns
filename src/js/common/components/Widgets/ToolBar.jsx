@@ -1,20 +1,24 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { IconButton, Tooltip } from '@material-ui/core';
-import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import { renderLog } from '../../utils/logging';
-import OpenExternalWebSite from './OpenExternalWebSite';
+import { Facebook, GitHub, Instagram, Mail, Twitter } from '@material-ui/icons';
+import { styled as muiStyled } from '@material-ui/styles';
+import React, { Suspense } from 'react';
+import styled from 'styled-components';
+import cordovaDot from '../../../utils/cordovaDot';
+import { renderLog } from '../../../utils/logging';
 
-class ToolBar extends Component {
-  render () {
-    renderLog('ToolBar');  // Set LOG_RENDER_EVENTS to log all renders
-    // const { classes } = this.props;
-    const hideGitHub = this.props.hideGitHub ? this.props.hideGitHub : false;
+const OpenExternalWebSite = React.lazy(() => import(/* webpackChunkName: 'OpenExternalWebSite' */ '../../../components/Widgets/OpenExternalWebSite'));
 
-    return (
-      <div>
-        <ToolBarContainer className="btn-toolbar">
+
+function ToolBar (params) {
+  renderLog('ToolBar');  // Set LOG_RENDER_EVENTS to log all renders
+  // const { classes } = this.params;
+  const hideGitHub = params.hideGitHub ? params.hideGitHub : false;
+
+  return (
+    <div>
+      <ToolBarContainer className="btn-toolbar">
+        <Suspense fallback={<></>}>
           <OpenExternalWebSite
             linkIdAttribute="wevoteTwitter"
             className="u-no-underline"
@@ -23,12 +27,14 @@ class ToolBar extends Component {
             body={(
               <Tooltip title="Twitter">
                 <IconButton>
-                  <Icon className="fab fa-twitter" />
+                  <TwitterStyled />
                 </IconButton>
               </Tooltip>
             )}
           />
+        </Suspense>
 
+        <Suspense fallback={<></>}>
           <OpenExternalWebSite
             linkIdAttribute="wevoteFacebook"
             className="u-no-underline"
@@ -37,12 +43,14 @@ class ToolBar extends Component {
             body={(
               <Tooltip title="Facebook">
                 <IconButton>
-                  <Icon className="fab fa-facebook-square" />
+                  <FacebookStyled />
                 </IconButton>
               </Tooltip>
             )}
           />
+        </Suspense>
 
+        <Suspense fallback={<></>}>
           <OpenExternalWebSite
             linkIdAttribute="wevoteInstagram"
             className="u-no-underline"
@@ -51,12 +59,14 @@ class ToolBar extends Component {
             body={(
               <Tooltip title="Instagram">
                 <IconButton>
-                  <Icon className="fab fa-instagram" />
+                  <InstagramStyled />
                 </IconButton>
               </Tooltip>
             )}
           />
+        </Suspense>
 
+        <Suspense fallback={<></>}>
           <OpenExternalWebSite
             linkIdAttribute="eepurl"
             className="u-no-underline"
@@ -65,13 +75,15 @@ class ToolBar extends Component {
             body={(
               <Tooltip title="Newsletter">
                 <IconButton>
-                  <Icon className="fas fa-envelope" />
+                  <MailStyled />
                 </IconButton>
               </Tooltip>
             )}
           />
+        </Suspense>
 
-          {!hideGitHub && (
+        {!hideGitHub && (
+          <Suspense fallback={<></>}>
             <OpenExternalWebSite
               linkIdAttribute="wevoteGithub"
               className="u-no-underline"
@@ -80,12 +92,14 @@ class ToolBar extends Component {
               body={(
                 <Tooltip title="Github">
                   <IconButton>
-                    <Icon className="fab fa-github" />
+                    <GitHubStyled />
                   </IconButton>
                 </Tooltip>
               )}
             />
-          )}
+          </Suspense>
+        )}
+        <Suspense fallback={<></>}>
           <OpenExternalWebSite
             linkIdAttribute="wevoteBlog"
             className="u-no-underline"
@@ -94,25 +108,21 @@ class ToolBar extends Component {
             body={(
               <Tooltip title="Blog">
                 <IconButton>
-                  <Icon className="fab fa-wordpress" />
+                  <img src={cordovaDot('/img/global/svg-icons/wordpress-logo.svg')}
+                       width={24}
+                       height={24}
+                       color="white"
+                       alt="Wordpress"
+                  />
                 </IconButton>
               </Tooltip>
             )}
           />
-        </ToolBarContainer>
-      </div>
-    );
-  }
+        </Suspense>
+      </ToolBarContainer>
+    </div>
+  );
 }
-ToolBar.propTypes = {
-  // classes: PropTypes.object,
-  hideGitHub: PropTypes.bool,
-};
-
-const Icon = styled.i`
-  color: white;
-  text-decoration: none;
-`;
 
 const ToolBarContainer = styled.div`
   text-align: center;
@@ -135,5 +145,12 @@ const styles = (theme) => ({
     },
   },
 });
+
+const TwitterStyled = muiStyled(Twitter)({ color: 'white' });
+const GitHubStyled = muiStyled(GitHub)({ color: 'white' });
+const FacebookStyled = muiStyled(Facebook)({ color: 'white' });
+const InstagramStyled = muiStyled(Instagram)({ color: 'white' });
+const MailStyled = muiStyled(Mail)({ color: 'white' });
+
 
 export default withStyles(styles)(ToolBar);
