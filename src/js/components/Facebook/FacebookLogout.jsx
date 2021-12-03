@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import FacebookActions from '../../actions/FacebookActions';
 
 class FacebookLogout extends React.Component {

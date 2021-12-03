@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import historyPush from '../../utils/historyPush';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 
 class CampaignStartIntro extends Component {

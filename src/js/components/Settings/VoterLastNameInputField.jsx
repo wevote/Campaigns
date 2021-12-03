@@ -5,7 +5,7 @@ import { TextField, FormControl } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import VoterActions from '../../actions/VoterActions';
 import VoterStore from '../../stores/VoterStore';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 class VoterLastNameInputField extends Component {
   constructor (props) {

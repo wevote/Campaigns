@@ -1,6 +1,6 @@
 import React from 'react';
 import FacebookActions from '../../actions/FacebookActions';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 class FacebookDisconnect extends React.Component {
   didClickDisconnectFromFacebookButton () {

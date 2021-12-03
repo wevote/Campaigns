@@ -7,7 +7,7 @@ import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 const FirstCampaignListController = React.lazy(() => import('../Campaign/FirstCampaignListController'));
 

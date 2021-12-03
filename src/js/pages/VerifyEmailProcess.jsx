@@ -4,7 +4,7 @@ import AppObservableStore from '../stores/AppObservableStore';
 import Cookies from '../utils/js-cookie/Cookies';
 import historyPush from '../utils/historyPush';
 import LoadingWheel from '../components/LoadingWheel';
-import { renderLog } from '../utils/logging';
+import { renderLog } from '../common/utils/logging';
 import VoterActions from '../actions/VoterActions';
 import VoterStore from '../stores/VoterStore';
 

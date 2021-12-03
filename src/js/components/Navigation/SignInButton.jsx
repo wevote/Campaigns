@@ -5,7 +5,7 @@ import Cookies from '../../utils/js-cookie/Cookies';
 import AppObservableStore from '../../stores/AppObservableStore';
 import voterSignOut from '../../utils/voterSignOut';
 import VoterStore from '../../stores/VoterStore';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import { stringContains } from '../../utils/textFormat';
 
 

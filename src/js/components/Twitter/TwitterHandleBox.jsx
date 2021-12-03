@@ -3,7 +3,7 @@ import { Button } from '@material-ui/core';
 import React, { Component } from 'react';
 import VoterStore from '../../stores/VoterStore';
 import historyPush from '../../utils/historyPush';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import { extractTwitterHandleFromTextString } from '../../utils/textFormat';
 import LoadingWheel from '../LoadingWheel';
 

@@ -25,7 +25,7 @@ import historyPush from '../utils/historyPush';
 import initializejQuery from '../utils/initializejQuery';
 import keepHelpingDestination from '../utils/keepHelpingDestination';
 import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
-import { renderLog } from '../utils/logging';
+import { renderLog } from '../common/utils/logging';
 import returnFirstXWords from '../common/utils/returnFirstXWords';
 import LazyImage from '../common/components/LazyImage';
 import anonymous from '../../img/global/icons/avatar-generic.png';

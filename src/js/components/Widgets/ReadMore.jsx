@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line import/no-unresolved
 import TextTruncate from 'react-text-truncate';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 // 2021-02-23 NOTE FROM DALE: I'd like to try to deprecate ReadMore in favor or react-truncate-markup
 // This newer package supports truncating JSX, and isn't limited to text only.

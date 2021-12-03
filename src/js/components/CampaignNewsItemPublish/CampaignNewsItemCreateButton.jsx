@@ -4,7 +4,7 @@ import { Button } from '@material-ui/core';
 import { withStyles, withTheme } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import historyPush from '../../utils/historyPush';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import VoterStore from '../../stores/VoterStore';
 
 

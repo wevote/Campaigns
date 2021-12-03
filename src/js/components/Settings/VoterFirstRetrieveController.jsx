@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import AppObservableStore from '../../stores/AppObservableStore';
 import initializejQuery from '../../utils/initializejQuery';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import VoterActions from '../../actions/VoterActions';
 
 

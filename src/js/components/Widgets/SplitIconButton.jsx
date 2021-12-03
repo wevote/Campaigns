@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { getTextColorFromBackground } from '../../utils/color';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 class SplitIconButton extends PureComponent {
   render () {

@@ -11,7 +11,7 @@ import CampaignStartStore from '../../stores/CampaignStartStore';
 import DelayedLoad from '../../components/Widgets/DelayedLoad';
 import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import VoterStore from '../../stores/VoterStore';
 
 

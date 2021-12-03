@@ -8,7 +8,7 @@ import SplitIconButton from '../Widgets/SplitIconButton';
 import VoterEmailAddressEntry from './VoterEmailAddressEntry';
 import VoterPhoneVerificationEntry from './VoterPhoneVerificationEntry';
 import { isCordova, restoreStylesAfterCordovaKeyboard, isIPhone3p5in, isIPhone4in, isIPhone4p7in } from '../../utils/cordovaUtils';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 
 // Work around for dialog placement in Cordova when virtual keyboard appears

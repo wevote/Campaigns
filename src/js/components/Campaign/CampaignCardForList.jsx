@@ -12,7 +12,7 @@ import CampaignOwnersList from '../CampaignSupport/CampaignOwnersList';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import keepHelpingDestination from '../../utils/keepHelpingDestination';

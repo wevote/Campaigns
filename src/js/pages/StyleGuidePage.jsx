@@ -4,7 +4,7 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 // import { Button, Card } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { renderLog } from '../utils/logging';
+import { renderLog } from '../common/utils/logging';
 import { isCordova } from '../utils/cordovaUtils';
 
 class StyleGuidePage extends Component {

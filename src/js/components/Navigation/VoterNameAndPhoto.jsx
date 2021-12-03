@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import avatarGeneric from '../../../img/global/icons/avatar-generic.png';
 import LazyImage from '../../common/components/LazyImage';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import { shortenText } from '../../utils/textFormat';
 import VoterStore from '../../stores/VoterStore';
 

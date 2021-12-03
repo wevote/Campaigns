@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import anonymous from '../../../img/global/icons/avatar-generic.png';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import CampaignStore from '../../stores/CampaignStore';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import { convertStateCodeToStateText } from '../../utils/addressFunctions';
 import DeletePoliticianCheckbox from './DeletePoliticianCheckbox';
 

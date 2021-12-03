@@ -7,7 +7,7 @@ import { messageService } from '../../stores/AppObservableStore';
 import CampaignStore from '../../stores/CampaignStore';
 import historyPush from '../../utils/historyPush';
 import { onStep1ClickPath, onStep2ClickPath, onStep3ClickPath, onStep4ClickPath } from '../../utils/superSharingStepPaths';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import VoterStore from '../../stores/VoterStore';
 
 

@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import CampaignShareChunk from '../Campaign/CampaignShareChunk';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import SupportButton from './SupportButton';
 import VoterActions from '../../actions/VoterActions';
 import VoterStore from '../../stores/VoterStore';

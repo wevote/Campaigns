@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { oAuthLog, renderLog } from '../../utils/logging';
+import { oAuthLog, renderLog } from '../../common/utils/logging';
 import $ajax from '../../utils/service';
 import Cookies from '../../utils/js-cookie/Cookies';
 import { isWebApp, cordovaOpenSafariView, isIOS, isAndroid } from '../../utils/cordovaUtils';

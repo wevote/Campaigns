@@ -11,7 +11,7 @@ import {
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
 import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import ShareActions from '../../common/actions/ShareActions';
 import ShareStore from '../../common/stores/ShareStore';
 import VoterActions from '../../actions/VoterActions';

@@ -9,7 +9,7 @@ import {
   CampaignSupportSection, CampaignSupportSectionWrapper,
 } from '../Style/CampaignSupportStyles';
 import historyPush from '../../utils/historyPush';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import ShareByCopyLink from '../Share/ShareByCopyLink';
 import ShareByEmailButton from '../Share/ShareByEmailButton';
 import ShareOnFacebookButton from '../Share/ShareOnFacebookButton';

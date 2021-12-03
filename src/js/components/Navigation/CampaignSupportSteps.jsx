@@ -6,7 +6,7 @@ import { Done } from '@material-ui/icons';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import historyPush from '../../utils/historyPush';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 
 class CampaignSupportSteps extends Component {

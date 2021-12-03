@@ -8,7 +8,7 @@ import { Delete, Mail } from '@material-ui/icons';
 import LoadingWheel from '../LoadingWheel';
 import { blurTextFieldAndroid, focusTextFieldAndroid, isCordova, isWebApp } from '../../utils/cordovaUtils';
 import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
 import SettingsVerifySecretCode from './SettingsVerifySecretCode';
 import VoterActions from '../../actions/VoterActions';

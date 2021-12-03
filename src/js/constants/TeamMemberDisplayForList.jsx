@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components';
-import { renderLog } from '../utils/logging';
+import { renderLog } from '../common/utils/logging';
 import ImageHandler from '../components/ImageHandler';
 
 class TeamMemberDisplayForList extends Component {

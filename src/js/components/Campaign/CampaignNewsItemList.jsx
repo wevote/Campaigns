@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CampaignNewsItemForList from './CampaignNewsItemForList';
 import CampaignStore from '../../stores/CampaignStore';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 const STARTING_NUMBER_OF_NEWS_ITEMS_TO_DISPLAY = 1;
 const NUMBER_OF_NEWS_ITEMS_TO_ADD_WHEN_MORE_CLICKED = 4;

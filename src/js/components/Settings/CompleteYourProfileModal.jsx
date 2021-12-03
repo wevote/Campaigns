@@ -11,7 +11,7 @@ import { withStyles, withTheme } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import CompleteYourProfile from './CompleteYourProfile';
 import VoterStore from '../../stores/VoterStore';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 
 class CompleteYourProfileModal extends Component {

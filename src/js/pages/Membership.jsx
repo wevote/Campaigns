@@ -13,7 +13,7 @@ import InjectedCheckoutForm from '../common/components/Donation/InjectedCheckout
 import webAppConfig from '../config';
 import { isCordova } from '../utils/cordovaUtils';
 import initializejQuery from '../utils/initializejQuery';
-import { renderLog } from '../utils/logging';
+import { renderLog } from '../common/utils/logging';
 import DonateStore from '../common/stores/DonateStore';
 
 const stripePromise = loadStripe(webAppConfig.STRIPE_API_KEY);

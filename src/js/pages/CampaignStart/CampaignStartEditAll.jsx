@@ -20,7 +20,7 @@ import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNe
 import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import OpenExternalWebSite from '../../components/Widgets/OpenExternalWebSite';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
 

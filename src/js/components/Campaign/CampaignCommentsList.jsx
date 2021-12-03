@@ -6,7 +6,7 @@ import CampaignCommentForList from './CampaignCommentForList';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 const STARTING_NUMBER_OF_COMMENTS_TO_DISPLAY = 10;
 const NUMBER_OF_COMMENTS_TO_ADD_WHEN_MORE_CLICKED = 4;

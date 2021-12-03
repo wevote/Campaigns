@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import PrivacyBody from '../common/components/PrivacyBody';
-import { renderLog } from '../utils/logging';
+import { renderLog } from '../common/utils/logging';
 
 class Privacy extends Component {
   static getProps () {

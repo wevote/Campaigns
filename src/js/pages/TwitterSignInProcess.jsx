@@ -11,7 +11,7 @@ import Cookies from '../utils/js-cookie/Cookies';
 import { isWebApp } from '../utils/cordovaUtils';
 import historyPush from '../utils/historyPush';
 import initializejQuery from '../utils/initializejQuery';
-import { oAuthLog, renderLog } from '../utils/logging';
+import { oAuthLog, renderLog } from '../common/utils/logging';
 import { stringContains } from '../utils/textFormat';
 
 

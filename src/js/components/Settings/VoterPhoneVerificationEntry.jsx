@@ -9,7 +9,7 @@ import Alert from '@material-ui/lab/Alert';
 import { isCordova, isWebApp } from '../../utils/cordovaUtils';
 import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
 import LoadingWheel from '../LoadingWheel';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
 import SettingsVerifySecretCode from './SettingsVerifySecretCode';
 import signInModalGlobalState from './signInModalGlobalState';
