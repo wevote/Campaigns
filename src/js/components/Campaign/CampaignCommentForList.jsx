@@ -11,7 +11,7 @@ import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { isCordova } from '../../utils/cordovaUtils';
 import LazyImage from '../../common/components/LazyImage';
 import { renderLog } from '../../common/utils/logging';
-import { timeFromDate } from '../../utils/dateFormat';
+import { timeFromDate } from '../../common/utils/dateFormat';
 import { stringContains } from '../../utils/textFormat';
 import VoterStore from '../../stores/VoterStore';
 

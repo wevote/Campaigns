@@ -7,7 +7,7 @@ import SpinnerPage from '../components/Widgets/SpinnerPage';
 import AppObservableStore, { messageService } from '../stores/AppObservableStore';
 import TwitterStore from '../stores/TwitterStore';
 import VoterStore from '../stores/VoterStore';
-import Cookies from '../utils/js-cookie/Cookies';
+import Cookies from '../common/utils/js-cookie/Cookies';
 import { isWebApp } from '../utils/cordovaUtils';
 import historyPush from '../utils/historyPush';
 import initializejQuery from '../utils/initializejQuery';

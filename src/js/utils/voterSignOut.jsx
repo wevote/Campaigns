@@ -1,7 +1,7 @@
 import VoterActions from '../actions/VoterActions';
 import AppObservableStore from '../stores/AppObservableStore';
 import CampaignActions from '../actions/CampaignActions';
-import Cookies from './js-cookie/Cookies';
+import Cookies from '../common/utils/js-cookie/Cookies';
 
 export default function voterSignOut () { // To discuss - having Store/Actions vs. voterSignOut as a function
   AppObservableStore.setShowSignInModal(false);

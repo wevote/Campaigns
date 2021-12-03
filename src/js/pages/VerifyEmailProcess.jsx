@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import AppObservableStore from '../stores/AppObservableStore';
-import Cookies from '../utils/js-cookie/Cookies';
+import Cookies from '../common/utils/js-cookie/Cookies';
 import historyPush from '../utils/historyPush';
 import LoadingWheel from '../components/LoadingWheel';
 import { renderLog } from '../common/utils/logging';

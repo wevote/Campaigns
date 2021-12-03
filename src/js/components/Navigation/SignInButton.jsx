@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import Cookies from '../../utils/js-cookie/Cookies';
+import Cookies from '../../common/utils/js-cookie/Cookies';
 import AppObservableStore from '../../stores/AppObservableStore';
 import voterSignOut from '../../utils/voterSignOut';
 import VoterStore from '../../stores/VoterStore';

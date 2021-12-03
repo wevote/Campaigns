@@ -1,6 +1,6 @@
 // Misc utilities to help with Apple Silicon debugging, where the Safari Web Inspector is not available.
 // eslint-disable-next-line import/no-cycle
-import Cookies from './js-cookie/Cookies';
+import Cookies from '../common/utils/js-cookie/Cookies';
 
 export function dumpCssFromId (id) {
   try {
@@ -24,6 +24,7 @@ export function dumpCookies () {
   });
 }
 
+// Copy of this function moved into cordovaUtils to avoid Dependency cycle problem
 export function dumpObjProps (name, obj) {
   // eslint-disable-next-line guard-for-in
   Object.keys(obj).forEach((key) => console.log(`Dump Object ${name} ${key}: ${obj[key]}`));

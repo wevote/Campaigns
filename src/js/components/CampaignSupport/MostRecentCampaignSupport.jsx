@@ -9,7 +9,7 @@ import CampaignStore from '../../stores/CampaignStore';
 import LazyImage from '../../common/components/LazyImage';
 import { renderLog } from '../../common/utils/logging';
 import returnFirstXWords from '../../common/utils/returnFirstXWords';
-import { timeFromDate } from '../../utils/dateFormat';
+import { timeFromDate } from '../../common/utils/dateFormat';
 import { stringContains } from '../../utils/textFormat';
 
 class MostRecentCampaignSupport extends React.Component {
