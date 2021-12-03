@@ -13,7 +13,7 @@ import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { renderLog } from '../../common/utils/logging';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import keepHelpingDestination from '../../utils/keepHelpingDestination';
 import { numberWithCommas } from '../../utils/textFormat';

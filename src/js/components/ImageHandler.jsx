@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import cordovaDot from '../utils/cordovaDot';
+import normalizedImagePath from '../common/utils/normalizedImagePath';
 import { renderLog } from '../common/utils/logging';
 import avatarGenericIcon from '../../img/global/svg-icons/avatar-generic.svg';
 import issueGenericIcon from '../../img/global/svg-icons/issue-generic.svg';
@@ -34,22 +34,22 @@ export default class ImageHandler extends Component {
     switch (kindOfImage) {
       case 'CANDIDATE':
         replacementClass = 'icon-main image-person-placeholder card-main__avatar-border';
-        placeHolderImageUrl = cordovaDot(avatarGenericIcon);
+        placeHolderImageUrl = normalizedImagePath(avatarGenericIcon);
         break;
       case 'MEASURE' || 'OFFICE':
         // TODO: Refactor to remove font icons
         return <i className="search-image__filler" />;
       case 'ISSUE':
         replacementClass = 'icon-main image-issue-placeholder';
-        placeHolderImageUrl = cordovaDot(issueGenericIcon);
+        placeHolderImageUrl = normalizedImagePath(issueGenericIcon);
         break;
       case 'ISSUE-PHOTO':
         replacementClass = 'image-issue-photo-placeholder';
-        placeHolderImageUrl = cordovaDot(issuePhotoGenericIcon);
+        placeHolderImageUrl = normalizedImagePath(issuePhotoGenericIcon);
         break;
       default:
         replacementClass = 'icon-main image-organization-placeholder';
-        placeHolderImageUrl = cordovaDot(organizationIcon);
+        placeHolderImageUrl = normalizedImagePath(organizationIcon);
         break;
     }
 

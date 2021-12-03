@@ -15,7 +15,7 @@ import InjectedCheckoutForm from '../../common/components/Donation/InjectedCheck
 import webAppConfig from '../../config';
 import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../common/utils/logging';
 import DonateStore from '../../common/stores/DonateStore';

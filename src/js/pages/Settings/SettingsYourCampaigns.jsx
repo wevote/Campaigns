@@ -6,7 +6,7 @@ import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CampaignListTabs from '../../components/Navigation/CampaignListTabs';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 import SettingsCampaignList from '../../components/Settings/SettingsCampaignList';
 import VoterStore from '../../stores/VoterStore';

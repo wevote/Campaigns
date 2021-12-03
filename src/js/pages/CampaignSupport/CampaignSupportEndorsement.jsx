@@ -23,7 +23,7 @@ import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSteps';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import CampaignEndorsementInputField from '../../components/CampaignSupport/CampaignEndorsementInputField';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';

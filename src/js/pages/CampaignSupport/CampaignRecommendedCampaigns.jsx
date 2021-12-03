@@ -15,7 +15,7 @@ import {
 import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiers } from '../../utils/campaignUtils';
 import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSteps';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import arrayContains from '../../common/utils/arrayContains';
 import { renderLog } from '../../common/utils/logging';

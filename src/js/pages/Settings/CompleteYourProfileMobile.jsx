@@ -7,7 +7,7 @@ import { IconButton } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CompleteYourProfile from '../../components/Settings/CompleteYourProfile';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 
 

@@ -10,7 +10,7 @@ import {
   IndicatorButtonWrapper, IndicatorDefaultButtonWrapper, IndicatorRow,
 } from '../Style/CampaignIndicatorStyles';
 import CampaignStore from '../../stores/CampaignStore';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import LazyImage from '../../common/components/LazyImage';
 import { renderLog } from '../../common/utils/logging';
 import { timeFromDate } from '../../common/utils/dateFormat';

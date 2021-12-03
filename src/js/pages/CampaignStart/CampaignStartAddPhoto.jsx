@@ -18,7 +18,7 @@ import CampaignStartActions from '../../actions/CampaignStartActions';
 import CampaignStartSteps from '../../components/Navigation/CampaignStartSteps';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import CampaignPhotoUpload from '../../components/CampaignStart/CampaignPhotoUpload';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../common/utils/logging';
 

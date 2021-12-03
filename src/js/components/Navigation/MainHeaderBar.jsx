@@ -5,7 +5,7 @@ import { Launch } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import AppObservableStore from '../../stores/AppObservableStore';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import DelayedLoad from '../../common/components/Widgets/DelayedLoad';
 import initializeFacebookSDK from '../../utils/initializeFacebookSDK';
 import initializeAppleSDK from '../../utils/initializeAppleSDK';

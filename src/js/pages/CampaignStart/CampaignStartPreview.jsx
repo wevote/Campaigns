@@ -9,7 +9,7 @@ import CampaignStartActions from '../../actions/CampaignStartActions';
 import CompleteYourProfileModalController from '../../components/Settings/CompleteYourProfileModalController';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import DelayedLoad from '../../common/components/Widgets/DelayedLoad';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../common/utils/logging';
 import VoterStore from '../../stores/VoterStore';

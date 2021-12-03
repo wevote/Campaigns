@@ -9,7 +9,7 @@ import {
   SkipForNowButtonPanel, SkipForNowButtonWrapper,
 } from '../../components/Style/CampaignSupportStyles';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../common/utils/logging';
 import ShareActions from '../../common/actions/ShareActions';

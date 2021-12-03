@@ -6,7 +6,7 @@ import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AppObservableStore, { messageService } from '../stores/AppObservableStore';
 import { renderLog } from '../common/utils/logging';
-import historyPush from '../utils/historyPush';
+import historyPush from '../common/utils/historyPush';
 
 const HomeCampaignList = React.lazy(() => import('../components/Home/HomeCampaignList'));
 

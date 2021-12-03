@@ -19,7 +19,7 @@ import {
   getCampaignXValuesFromIdentifiers,
   retrieveCampaignXFromIdentifiersIfNeeded,
 } from '../utils/campaignUtils';
-import historyPush from '../utils/historyPush';
+import historyPush from '../common/utils/historyPush';
 import initializejQuery from '../utils/initializejQuery';
 import keepHelpingDestination from '../utils/keepHelpingDestination';
 import OpenExternalWebSite from '../common/components/Widgets/OpenExternalWebSite';
