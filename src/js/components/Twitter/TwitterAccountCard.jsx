@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ParsedTwitterDescription from './ParsedTwitterDescription';
 import ImageHandler from '../ImageHandler';
 import { renderLog } from '../../common/utils/logging';
-import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
+import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
 import { abbreviateNumber, numberWithCommas, removeTwitterNameFromDescription } from '../../utils/textFormat';
 
 export default class TwitterAccountCard extends Component {

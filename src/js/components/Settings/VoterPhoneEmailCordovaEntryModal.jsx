@@ -4,7 +4,7 @@ import { Dialog, DialogContent } from '@material-ui/core';
 import { MailOutline, Message } from '@material-ui/icons';
 import clsx from 'clsx';
 import { withStyles, withTheme } from '@material-ui/core/styles';
-import SplitIconButton from '../Widgets/SplitIconButton';
+import SplitIconButton from '../../common/components/Widgets/SplitIconButton';
 import VoterEmailAddressEntry from './VoterEmailAddressEntry';
 import VoterPhoneVerificationEntry from './VoterPhoneVerificationEntry';
 import { isCordova, restoreStylesAfterCordovaKeyboard, isIPhone3p5in, isIPhone4in, isIPhone4p7in } from '../../utils/cordovaUtils';

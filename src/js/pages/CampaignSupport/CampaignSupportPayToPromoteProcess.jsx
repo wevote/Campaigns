@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import CampaignActions from '../../actions/CampaignActions';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import DonationListForm from '../../common/components/Donation/DonationListForm';
-import LoadingWheelComp from '../../components/LoadingWheelComp';
+import LoadingWheelComp from '../../common/components/Widgets/LoadingWheelComp';
 import InjectedCheckoutForm from '../../common/components/Donation/InjectedCheckoutForm';
 import webAppConfig from '../../config';
 import CampaignStore from '../../stores/CampaignStore';

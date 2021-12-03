@@ -16,7 +16,7 @@ import CampaignSupporterActions from '../actions/CampaignSupporterActions';
 import CampaignSupporterStore from '../stores/CampaignSupporterStore';
 import CompleteYourProfileModalController from '../components/Settings/CompleteYourProfileModalController';
 import { formatDateToMonthDayYear } from '../common/utils/dateFormat';
-import DelayedLoad from '../components/Widgets/DelayedLoad';
+import DelayedLoad from '../common/components/Widgets/DelayedLoad';
 import {
   getCampaignXValuesFromIdentifiers,
   retrieveCampaignXFromIdentifiersIfNeeded,
@@ -24,7 +24,7 @@ import {
 import historyPush from '../utils/historyPush';
 import initializejQuery from '../utils/initializejQuery';
 import keepHelpingDestination from '../utils/keepHelpingDestination';
-import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
+import OpenExternalWebSite from '../common/components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../common/utils/logging';
 import returnFirstXWords from '../common/utils/returnFirstXWords';
 import LazyImage from '../common/components/LazyImage';

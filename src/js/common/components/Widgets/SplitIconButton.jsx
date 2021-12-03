@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { getTextColorFromBackground } from '../../common/utils/color';
-import { renderLog } from '../../common/utils/logging';
+import { getTextColorFromBackground } from '../../utils/color';
+import { renderLog } from '../../utils/logging';
 
 class SplitIconButton extends PureComponent {
   render () {

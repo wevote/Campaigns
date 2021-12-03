@@ -14,7 +14,7 @@ import CampaignStore from '../stores/CampaignStore';
 import CampaignSupporterActions from '../actions/CampaignSupporterActions';
 import CampaignSupporterStore from '../stores/CampaignSupporterStore';
 import CompleteYourProfileModalController from '../components/Settings/CompleteYourProfileModalController';
-import DelayedLoad from '../components/Widgets/DelayedLoad';
+import DelayedLoad from '../common/components/Widgets/DelayedLoad';
 import {
   getCampaignXValuesFromIdentifiers,
   retrieveCampaignXFromIdentifiersIfNeeded,
@@ -22,7 +22,7 @@ import {
 import historyPush from '../utils/historyPush';
 import initializejQuery from '../utils/initializejQuery';
 import keepHelpingDestination from '../utils/keepHelpingDestination';
-import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
+import OpenExternalWebSite from '../common/components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../common/utils/logging';
 import returnFirstXWords from '../common/utils/returnFirstXWords';
 
