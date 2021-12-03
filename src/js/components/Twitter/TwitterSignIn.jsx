@@ -5,7 +5,7 @@ import $ajax from '../../utils/service';
 import Cookies from '../../common/utils/js-cookie/Cookies';
 import { isWebApp, cordovaOpenSafariView, isIOS, isAndroid } from '../../utils/cordovaUtils';
 import historyPush from '../../utils/historyPush';
-import SplitIconButton from '../Widgets/SplitIconButton';
+import SplitIconButton from '../../common/components/Widgets/SplitIconButton';
 import startsWith from '../../common/utils/startsWith';
 import { shortenText } from '../../utils/textFormat';
 import TwitterActions from '../../actions/TwitterActions';

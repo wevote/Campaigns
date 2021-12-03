@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
+import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
 
 
 class FooterMainWeVote extends Component {

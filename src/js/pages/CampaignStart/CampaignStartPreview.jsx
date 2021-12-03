@@ -8,7 +8,7 @@ import AppObservableStore, { messageService } from '../../stores/AppObservableSt
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import CompleteYourProfileModalController from '../../components/Settings/CompleteYourProfileModalController';
 import CampaignStartStore from '../../stores/CampaignStartStore';
-import DelayedLoad from '../../components/Widgets/DelayedLoad';
+import DelayedLoad from '../../common/components/Widgets/DelayedLoad';
 import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../common/utils/logging';

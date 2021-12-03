@@ -12,7 +12,7 @@ import CampaignStore from '../stores/CampaignStore';
 import CampaignSupporterStore from '../stores/CampaignSupporterStore';
 import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
 import { isCordova } from '../utils/cordovaUtils';
-import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
+import OpenExternalWebSite from '../common/components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../common/utils/logging';
 
 const CampaignCommentsList = React.lazy(() => import('../components/Campaign/CampaignCommentsList'));

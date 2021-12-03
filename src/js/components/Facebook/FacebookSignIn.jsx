@@ -9,7 +9,7 @@ import FacebookStore from '../../stores/FacebookStore';
 import VoterStore from '../../stores/VoterStore';
 import { oAuthLog, renderLog } from '../../common/utils/logging';
 import signInModalGlobalState from '../Settings/signInModalGlobalState';
-import SplitIconButton from '../Widgets/SplitIconButton';
+import SplitIconButton from '../../common/components/Widgets/SplitIconButton';
 
 
 class FacebookSignIn extends Component {

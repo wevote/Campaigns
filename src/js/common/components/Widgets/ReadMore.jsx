@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// eslint-disable-next-line import/no-unresolved
-import TextTruncate from 'react-text-truncate';
-import { renderLog } from '../../common/utils/logging';
+import React, { Component } from 'react';
+import TextTruncate from 'react-text-truncate'; // TODO APRIL 2021:  This doesn't support the latest React libs, can't we do the same with css? (See note below)
+import { renderLog } from '../../utils/logging';
 
-// 2021-02-23 NOTE FROM DALE: I'd like to try to deprecate ReadMore in favor or react-truncate-markup
-// This newer package supports truncating JSX, and isn't limited to text only.
+// 2021-02-23 NOTE FROM DALE: I'd like to try to upgrade ReadMore to use react-truncate-markup
+// This newer package supports truncating JSX, and isn't limited to text only:
+// import TruncateMarkup from 'react-truncate-markup';
+
 export default class ReadMore extends Component {
   constructor (...args) {
     super(...args);
@@ -39,7 +40,7 @@ export default class ReadMore extends Component {
     let {
       textToDisplay, linkText, numberOfLines, collapseText,
     } = this.props;
-    // default prop valuess
+    // default prop values
     if (numberOfLines === undefined) {
       numberOfLines = 3;
     }

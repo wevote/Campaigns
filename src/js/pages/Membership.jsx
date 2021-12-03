@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import DonationListForm from '../common/components/Donation/DonationListForm';
-import LoadingWheel from '../components/LoadingWheel';
+import LoadingWheel from '../common/components/Widgets/LoadingWheel';
 import InjectedCheckoutForm from '../common/components/Donation/InjectedCheckoutForm';
 import webAppConfig from '../config';
 import initializejQuery from '../utils/initializejQuery';

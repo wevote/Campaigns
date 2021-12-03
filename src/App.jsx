@@ -2,13 +2,13 @@ import React, { Component, Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { ThemeProvider } from 'styled-components';
-import DelayedLoad from './js/components/Widgets/DelayedLoad';
+import DelayedLoad from './js/common/components/Widgets/DelayedLoad';
 import MainHeaderBar from './js/components/Navigation/MainHeaderBar';
 import muiTheme from './js/components/Widgets/mui-theme';
-import ErrorBoundary from './js/components/Widgets/ErrorBoundary';
+import ErrorBoundary from './js/common/components/Widgets/ErrorBoundary';
 import { renderLog } from './js/common/utils/logging';
 import styledTheme from './js/components/Widgets/styled-theme';
-import WeVoteRouter from './js/components/Widgets/WeVoteRouter';
+import WeVoteRouter from './js/common/components/Widgets/WeVoteRouter';
 
 // Lazy loaded component(s) on this page
 const FooterMain  = React.lazy(() => import('./js/components/Navigation/FooterMain'));

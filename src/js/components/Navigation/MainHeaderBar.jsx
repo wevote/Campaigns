@@ -6,10 +6,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import AppObservableStore from '../../stores/AppObservableStore';
 import historyPush from '../../utils/historyPush';
-import DelayedLoad from '../Widgets/DelayedLoad';
+import DelayedLoad from '../../common/components/Widgets/DelayedLoad';
 import initializeFacebookSDK from '../../utils/initializeFacebookSDK';
 import initializeAppleSDK from '../../utils/initializeAppleSDK';
-import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
+import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../../common/utils/logging';
 
 const HeaderBarLogo = loadable(() => import('./HeaderBarLogo'));
