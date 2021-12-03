@@ -19,7 +19,7 @@ import AddCandidateInputField from '../../components/CampaignStart/AddPolitician
 import CampaignStartSteps from '../../components/Navigation/CampaignStartSteps';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import EditPoliticianList from '../../components/CampaignStart/EditPoliticianList';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../common/utils/logging';
 

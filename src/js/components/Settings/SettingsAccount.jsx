@@ -12,7 +12,7 @@ import AppObservableStore, { messageService } from '../../stores/AppObservableSt
 import FacebookStore from '../../stores/FacebookStore';
 import VoterStore from '../../stores/VoterStore';
 import { isCordova, isIPhone4in, isIPhone4p7in, restoreStylesAfterCordovaKeyboard } from '../../utils/cordovaUtils';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import { oAuthLog, renderLog } from '../../common/utils/logging';
 import { stringContains } from '../../utils/textFormat';
 import AppleSignIn from '../Apple/AppleSignIn';

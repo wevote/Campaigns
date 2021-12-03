@@ -8,7 +8,7 @@ import {
   CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper,
   CampaignSupportSection, CampaignSupportSectionWrapper,
 } from '../Style/CampaignSupportStyles';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 import ShareByCopyLink from '../Share/ShareByCopyLink';
 import ShareByEmailButton from '../Share/ShareByEmailButton';

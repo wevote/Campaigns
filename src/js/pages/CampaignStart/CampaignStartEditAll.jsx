@@ -17,7 +17,7 @@ import CampaignStore from '../../stores/CampaignStore';
 import CampaignTitleInputField from '../../components/CampaignStart/CampaignTitleInputField';
 import EditPoliticianList from '../../components/CampaignStart/EditPoliticianList';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../../common/utils/logging';

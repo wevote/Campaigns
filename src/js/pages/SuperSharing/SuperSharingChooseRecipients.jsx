@@ -24,7 +24,7 @@ import {
 import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
 import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import LoadMoreItemsManually from '../../components/Widgets/LoadMoreItemsManually';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';

@@ -23,7 +23,7 @@ import CampaignNewsItemActions from '../../actions/CampaignNewsItemActions';
 import CampaignNewsItemPublishSteps from '../../components/Navigation/CampaignNewsItemPublishSteps';
 import CampaignNewsItemStore from '../../stores/CampaignNewsItemStore';
 import CampaignNewsItemTextInputField from '../../components/CampaignNewsItemPublish/CampaignNewsItemTextInputField';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';

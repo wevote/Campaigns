@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import AppObservableStore from '../stores/AppObservableStore';
 import Cookies from '../common/utils/js-cookie/Cookies';
-import historyPush from '../utils/historyPush';
+import historyPush from '../common/utils/historyPush';
 import LoadingWheel from '../common/components/Widgets/LoadingWheel';
 import { renderLog } from '../common/utils/logging';
 import VoterActions from '../actions/VoterActions';

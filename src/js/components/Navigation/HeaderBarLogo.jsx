@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import cordovaDot from '../../utils/cordovaDot';
+import normalizedImagePath from '../../common/utils/normalizedImagePath';
 import logoLight from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-200x66.svg';
 import logoDark from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-dark-141x46.svg';
 
@@ -70,7 +70,7 @@ class HeaderBarLogo extends Component {
                     width="141"
                     height="44"
                     alt="We Vote logo"
-                    src={light ? cordovaDot(logoLight) : cordovaDot(logoDark)}
+                    src={light ? normalizedImagePath(logoLight) : normalizedImagePath(logoDark)}
                   />
                   <CampaignsSubtitleOuter>
                     <CampaignsSubtitleInner>

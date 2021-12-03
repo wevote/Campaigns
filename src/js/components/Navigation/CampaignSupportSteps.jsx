@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Done } from '@material-ui/icons';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import historyPush from '../../utils/historyPush';
+import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 
 

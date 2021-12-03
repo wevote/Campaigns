@@ -9,7 +9,7 @@ import TwitterStore from '../stores/TwitterStore';
 import VoterStore from '../stores/VoterStore';
 import Cookies from '../common/utils/js-cookie/Cookies';
 import { isWebApp } from '../utils/cordovaUtils';
-import historyPush from '../utils/historyPush';
+import historyPush from '../common/utils/historyPush';
 import initializejQuery from '../utils/initializejQuery';
 import { oAuthLog, renderLog } from '../common/utils/logging';
 import { stringContains } from '../utils/textFormat';
