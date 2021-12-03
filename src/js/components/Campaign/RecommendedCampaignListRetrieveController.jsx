@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CampaignActions from '../../actions/CampaignActions';
 import initializejQuery from '../../utils/initializejQuery';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import VoterStore from '../../stores/VoterStore';
 
 

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import FacebookConstants from '../../constants/FacebookConstants';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 export default class FacebookPicture extends React.Component {
   get facebookStatus () {

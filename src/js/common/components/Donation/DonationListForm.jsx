@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DonateActions from '../../actions/DonateActions';
 import DonateStore from '../../stores/DonateStore';
-import { renderLog } from '../../../utils/logging';
+import { renderLog } from '../../utils/logging';
 import { stringContains } from '../../../utils/textFormat';
 import { campaignTheme } from '../../../components/Style/campaignTheme';
 import TabPanel from '../../../components/Widgets/TabPanel';

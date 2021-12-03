@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Done } from '@material-ui/icons';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import historyPush from '../../utils/historyPush';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 
 class CampaignStartSteps extends Component {

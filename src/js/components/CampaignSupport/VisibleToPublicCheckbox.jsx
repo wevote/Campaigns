@@ -5,7 +5,7 @@ import { Checkbox, FormControl, FormControlLabel } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 class VisibleToPublicCheckbox extends Component {
   constructor (props) {

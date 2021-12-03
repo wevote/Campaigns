@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import FAQBody from '../common/components/FAQBody';
 import { lazyLoader, libraryNeedsLoading } from '../utils/lazyLoader';
-import { renderLog } from '../utils/logging';
+import { renderLog } from '../common/utils/logging';
 
 class FAQ extends Component {
   static getProps () {

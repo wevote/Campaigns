@@ -7,7 +7,7 @@ import AppObservableStore, { messageService } from '../../stores/AppObservableSt
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import { isAndroid, isCordova } from '../../utils/cordovaUtils';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import { androidTwitterClickHandler, generateQuoteForSharing, generateSharingLink } from './shareButtonCommon';
 import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
 

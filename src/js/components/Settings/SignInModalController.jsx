@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import initializejQuery from '../../utils/initializejQuery';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import SignInModal from './SignInModal';
 import VoterActions from '../../actions/VoterActions';
 

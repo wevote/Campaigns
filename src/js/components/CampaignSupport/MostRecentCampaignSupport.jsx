@@ -7,7 +7,7 @@ import anonymous from '../../../img/global/icons/avatar-generic.png';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import CampaignStore from '../../stores/CampaignStore';
 import LazyImage from '../../common/components/LazyImage';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import returnFirstXWords from '../../common/utils/returnFirstXWords';
 import { timeFromDate } from '../../utils/dateFormat';
 import { stringContains } from '../../utils/textFormat';

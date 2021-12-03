@@ -13,7 +13,7 @@ import CampaignSupporterStore from '../stores/CampaignSupporterStore';
 import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
 import { isCordova } from '../utils/cordovaUtils';
 import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
-import { renderLog } from '../utils/logging';
+import { renderLog } from '../common/utils/logging';
 
 const CampaignCommentsList = React.lazy(() => import('../components/Campaign/CampaignCommentsList'));
 const CampaignRetrieveController = React.lazy(() => import('../components/Campaign/CampaignRetrieveController'));

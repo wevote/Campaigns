@@ -24,7 +24,7 @@ import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
 import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import ShareActions from '../../common/actions/ShareActions';
 import ShareStore from '../../common/stores/ShareStore';
 import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';

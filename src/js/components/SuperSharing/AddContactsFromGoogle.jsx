@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import VoterActions from '../../actions/VoterActions';
 import AddContactConsts from '../../constants/AddContactConsts';
 import VoterStore from '../../stores/VoterStore';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import webAppConfig from '../../config'; // eslint-disable-line import/no-cycle
 
 

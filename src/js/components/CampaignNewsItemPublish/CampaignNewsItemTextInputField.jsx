@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignNewsItemActions from '../../actions/CampaignNewsItemActions';
 import CampaignNewsItemStore from '../../stores/CampaignNewsItemStore';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
 
 class CampaignNewsItemTextInputField extends Component {

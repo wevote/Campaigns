@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Checkbox, FormControl, FormControlLabel } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import CampaignStartActions from '../../actions/CampaignStartActions';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 class DeletePoliticianCheckbox extends Component {
   constructor (props) {

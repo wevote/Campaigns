@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import { renderLog } from '../utils/logging';
+import { renderLog } from '../common/utils/logging';
 import attributionText from '../constants/attributionText';
 import compileDate from '../compiledDate';
 

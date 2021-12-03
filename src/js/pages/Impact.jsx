@@ -3,7 +3,7 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { lazyLoader, libraryNeedsLoading } from '../utils/lazyLoader';
-import { renderLog } from '../utils/logging';
+import { renderLog } from '../common/utils/logging';
 
 class Impact extends Component {
   static getProps () {

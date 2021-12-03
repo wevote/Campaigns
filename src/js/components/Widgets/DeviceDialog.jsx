@@ -4,7 +4,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, Ta
 import { withStyles, withTheme } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import { hasIPhoneNotch } from '../../utils/cordovaUtils';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import startsWith from '../../common/utils/startsWith';
 import VoterStore from '../../stores/VoterStore';
 

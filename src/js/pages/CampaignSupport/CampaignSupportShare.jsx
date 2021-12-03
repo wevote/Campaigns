@@ -23,7 +23,7 @@ import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSteps';
 import historyPush from '../../utils/historyPush';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import SendFacebookDirectMessageButton from '../../components/Share/ShareByFacebookDirectMessageButton';
 import ShareByCopyLink from '../../components/Share/ShareByCopyLink';
 import ShareByEmailButton from '../../components/Share/ShareByEmailButton';

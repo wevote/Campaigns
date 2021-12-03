@@ -1,5 +1,5 @@
 import CordovaPageConstants from '../constants/CordovaPageConstants';
-import { cordovaOffsetLog } from './logging';
+import { cordovaOffsetLog } from '../common/utils/logging';
 import { pageEnumeration } from './cordovaUtilsPageEnumeration';
 import {
   getAndroidSize, hasIPhoneNotch,

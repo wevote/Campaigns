@@ -2,7 +2,7 @@ import React from 'react';
 // import { createBrowserHistory, createHashHistory } from 'history';
 // import { useHistory } from "react-router-dom";
 import webAppConfig from '../config';
-import { cordovaOffsetLog, oAuthLog } from './logging';
+import { cordovaOffsetLog, oAuthLog } from '../common/utils/logging';
 import { dumpObjProps } from './appleSiliconUtils';
 
 /* global $  */

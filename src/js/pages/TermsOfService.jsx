@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import TermsOfServiceBody from '../common/components/TermsOfServiceBody';
-import { renderLog } from '../utils/logging';
+import { renderLog } from '../common/utils/logging';
 
 class TermsOfService extends Component {
   static getProps () {

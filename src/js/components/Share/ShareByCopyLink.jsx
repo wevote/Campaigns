@@ -7,7 +7,7 @@ import AppObservableStore, { messageService } from '../../stores/AppObservableSt
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import { openSnackbar } from '../Widgets/SnackNotifier';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import { generateSharingLink } from './shareButtonCommon';
 
 class ShareByCopyLink extends Component {

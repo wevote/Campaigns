@@ -21,7 +21,7 @@ import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNe
 import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSteps';
 import historyPush from '../../utils/historyPush';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import VoterStore from '../../stores/VoterStore';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));

@@ -7,7 +7,7 @@ import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AppObservableStore, { messageService } from '../stores/AppObservableStore';
 import historyPush from '../utils/historyPush';
-import { renderLog } from '../utils/logging';
+import { renderLog } from '../common/utils/logging';
 
 class PageNotFound extends Component {
   constructor (props) {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cordovaDot from '../utils/cordovaDot';
-import { renderLog } from '../utils/logging';
+import { renderLog } from '../common/utils/logging';
 import avatarGenericIcon from '../../img/global/svg-icons/avatar-generic.svg';
 import issueGenericIcon from '../../img/global/svg-icons/issue-generic.svg';
 import issuePhotoGenericIcon from '../../img/global/svg-icons/issue-photo-generic.svg';

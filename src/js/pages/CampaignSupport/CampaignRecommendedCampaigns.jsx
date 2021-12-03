@@ -18,7 +18,7 @@ import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSte
 import historyPush from '../../utils/historyPush';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import arrayContains from '../../common/utils/arrayContains';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import SupportButtonSingleClick from '../../components/CampaignSupport/SupportButtonSingleClick';
 import VoterStore from '../../stores/VoterStore';
 

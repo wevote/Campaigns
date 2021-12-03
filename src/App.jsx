@@ -6,7 +6,7 @@ import DelayedLoad from './js/components/Widgets/DelayedLoad';
 import MainHeaderBar from './js/components/Navigation/MainHeaderBar';
 import muiTheme from './js/components/Widgets/mui-theme';
 import ErrorBoundary from './js/components/Widgets/ErrorBoundary';
-import { renderLog } from './js/utils/logging';
+import { renderLog } from './js/common/utils/logging';
 import styledTheme from './js/components/Widgets/styled-theme';
 import WeVoteRouter from './js/components/Widgets/WeVoteRouter';
 

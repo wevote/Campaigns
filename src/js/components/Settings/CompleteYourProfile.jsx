@@ -9,7 +9,7 @@ import CampaignStore from '../../stores/CampaignStore';
 import DelayedLoad from '../Widgets/DelayedLoad';
 import initializejQuery from '../../utils/initializejQuery';
 import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import SettingsVerifySecretCode from './SettingsVerifySecretCode';
 import VisibleToPublicCheckbox from '../CampaignSupport/VisibleToPublicCheckbox';
 import VoterActions from '../../actions/VoterActions';

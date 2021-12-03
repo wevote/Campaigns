@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import FacebookSignIn from './FacebookSignIn';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 const facebookText = 'By adding Facebook to your We Vote profile, it is easier to invite friends.';
 

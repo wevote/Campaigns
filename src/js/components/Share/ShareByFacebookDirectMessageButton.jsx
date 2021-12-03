@@ -6,7 +6,7 @@ import { FacebookMessengerShareButton } from 'react-share';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import { isAndroid, isCordova } from '../../utils/cordovaUtils';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import { androidFacebookClickHandler, generateQuoteForSharing, generateSharingLink } from './shareButtonCommon';
 import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
 import webAppConfig from '../../config';

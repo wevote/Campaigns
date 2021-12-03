@@ -20,7 +20,7 @@ import CampaignStartStore from '../../stores/CampaignStartStore';
 import CampaignPhotoUpload from '../../components/CampaignStart/CampaignPhotoUpload';
 import historyPush from '../../utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 
 class CampaignStartAddPhoto extends Component {

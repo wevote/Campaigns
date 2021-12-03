@@ -13,7 +13,7 @@ import CampaignNewsStore from '../stores/CampaignNewsItemStore';
 import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
 import { isCordova } from '../utils/cordovaUtils';
 import OpenExternalWebSite from '../components/Widgets/OpenExternalWebSite';
-import { renderLog } from '../utils/logging';
+import { renderLog } from '../common/utils/logging';
 
 const CampaignNewsItemList = React.lazy(() => import('../components/Campaign/CampaignNewsItemList'));
 const CampaignRetrieveController = React.lazy(() => import('../components/Campaign/CampaignRetrieveController'));

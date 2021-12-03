@@ -1,6 +1,6 @@
 import CordovaPageConstants from '../constants/CordovaPageConstants';
 import VoterStore from '../stores/VoterStore';
-import { cordovaOffsetLog } from './logging';
+import { cordovaOffsetLog } from '../common/utils/logging';
 import { pageEnumeration } from './cordovaUtilsPageEnumeration';
 import { getAndroidSize, hasAndroidNotch, hasIPhoneNotch,
   isAndroid, isAndroidSimulator, isIOSAppOnMac, isIOS, isIPad,

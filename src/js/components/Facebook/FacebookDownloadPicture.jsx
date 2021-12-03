@@ -1,7 +1,7 @@
 import React from 'react';
 
 import FacebookActions from '../../actions/FacebookActions';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 class FacebookDownloadPicture extends React.Component {
   // See https://reactjs.org/docs/error-boundaries.html

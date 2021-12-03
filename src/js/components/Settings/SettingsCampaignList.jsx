@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import CampaignActions from '../../actions/CampaignActions';
 import CampaignCardForList from '../Campaign/CampaignCardForList';
 import CampaignStore from '../../stores/CampaignStore';

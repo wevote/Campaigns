@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import TwitterSignIn from './TwitterSignIn';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 
 const twitterText = 'Signing into Twitter is the fastest way to find voter guides related to your values. We Vote will find the voter guides of everyone you are following on Twitter.';
 

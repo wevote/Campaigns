@@ -1,7 +1,7 @@
 import { isWebApp } from '../utils/cordovaUtils'; // eslint-disable-line import/no-cycle
 import Dispatcher from '../common/dispatcher/Dispatcher';
 import FacebookConstants from '../constants/FacebookConstants';
-import { oAuthLog } from '../utils/logging';
+import { oAuthLog } from '../common/utils/logging';
 import signInModalGlobalState from '../components/Settings/signInModalGlobalState';
 import webAppConfig from '../config';
 // import { dumpObjProps } from '../utils/appleSiliconUtils';

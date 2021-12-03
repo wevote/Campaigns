@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ParsedTwitterDescription from './ParsedTwitterDescription';
 import ImageHandler from '../ImageHandler';
-import { renderLog } from '../../utils/logging';
+import { renderLog } from '../../common/utils/logging';
 import OpenExternalWebSite from '../Widgets/OpenExternalWebSite';
 import { abbreviateNumber, numberWithCommas, removeTwitterNameFromDescription } from '../../utils/textFormat';
 

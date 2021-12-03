@@ -3,7 +3,7 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import CreditsBody from '../common/components/CreditsBody';
-import { renderLog } from '../utils/logging';
+import { renderLog } from '../common/utils/logging';
 
 class Credits extends Component {
   static getProps () {
