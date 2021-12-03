@@ -1,6 +1,6 @@
 import assign from 'object-assign';
 import url from 'url';
-import Cookies from './js-cookie/Cookies';
+import Cookies from '../common/utils/js-cookie/Cookies';
 import webAppConfig from '../config';
 import { httpLog } from '../common/utils/logging';
 

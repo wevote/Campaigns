@@ -15,7 +15,7 @@ import CampaignStore from '../stores/CampaignStore';
 import CampaignSupporterActions from '../actions/CampaignSupporterActions';
 import CampaignSupporterStore from '../stores/CampaignSupporterStore';
 import CompleteYourProfileModalController from '../components/Settings/CompleteYourProfileModalController';
-import { formatDateToMonthDayYear } from '../utils/dateFormat';
+import { formatDateToMonthDayYear } from '../common/utils/dateFormat';
 import DelayedLoad from '../components/Widgets/DelayedLoad';
 import {
   getCampaignXValuesFromIdentifiers,

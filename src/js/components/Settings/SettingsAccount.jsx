@@ -24,7 +24,7 @@ import signInModalGlobalState from './signInModalGlobalState';
 import VoterEmailAddressEntry from './VoterEmailAddressEntry';
 import VoterPhoneEmailCordovaEntryModal from './VoterPhoneEmailCordovaEntryModal';
 import VoterPhoneVerificationEntry from './VoterPhoneVerificationEntry';
-import Cookies from '../../utils/js-cookie/Cookies';
+import Cookies from '../../common/utils/js-cookie/Cookies';
 
 /* global $ */
 

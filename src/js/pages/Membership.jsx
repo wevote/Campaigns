@@ -11,7 +11,6 @@ import DonationListForm from '../common/components/Donation/DonationListForm';
 import LoadingWheel from '../components/LoadingWheel';
 import InjectedCheckoutForm from '../common/components/Donation/InjectedCheckoutForm';
 import webAppConfig from '../config';
-import { isCordova } from '../utils/cordovaUtils';
 import initializejQuery from '../utils/initializejQuery';
 import { renderLog } from '../common/utils/logging';
 import DonateStore from '../common/stores/DonateStore';

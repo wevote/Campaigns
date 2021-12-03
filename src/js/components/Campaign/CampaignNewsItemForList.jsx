@@ -13,7 +13,7 @@ import CampaignStore from '../../stores/CampaignStore';
 import historyPush from '../../utils/historyPush';
 import LazyImage from '../../common/components/LazyImage';
 import { renderLog } from '../../common/utils/logging';
-import { timeFromDate } from '../../utils/dateFormat';
+import { timeFromDate } from '../../common/utils/dateFormat';
 import { stringContains } from '../../utils/textFormat';
 
 class CampaignNewsItemForList extends Component {

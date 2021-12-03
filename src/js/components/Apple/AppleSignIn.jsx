@@ -5,7 +5,7 @@ import VoterActions from '../../actions/VoterActions';
 import webAppConfig from '../../config';
 import { isAndroid, isIOS, isWebApp } from '../../utils/cordovaUtils';
 import { openSnackbar } from '../Widgets/SnackNotifier';
-import Cookies from '../../utils/js-cookie/Cookies';
+import Cookies from '../../common/utils/js-cookie/Cookies';
 import { oAuthLog, renderLog } from '../../common/utils/logging';
 
 class AppleSignIn extends Component {

@@ -1,5 +1,5 @@
 import { ReduceStore } from 'flux/utils';
-import Cookies from '../utils/js-cookie/Cookies';
+import Cookies from '../common/utils/js-cookie/Cookies';
 import Dispatcher from '../common/dispatcher/Dispatcher';
 import { stringContains } from '../utils/textFormat';
 
