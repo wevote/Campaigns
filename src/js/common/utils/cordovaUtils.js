@@ -1,8 +1,7 @@
 import React from 'react';
-// import { createBrowserHistory, createHashHistory } from 'history';
-// import { useHistory } from "react-router-dom";
-import webAppConfig from '../config';
-import { cordovaOffsetLog, oAuthLog } from '../common/utils/logging';
+import webAppConfig from '../../config';
+import { cordovaOffsetLog, oAuthLog } from './logging';
+import { isCordova, isWebApp } from './isCordovaOrWebApp';
 
 /* global $  */
 
@@ -16,35 +15,38 @@ function dumpObjProps (name, obj) {
   Object.keys(obj).forEach((key) => console.log(`Dump Object ${name} ${key}: ${obj[key]}`));
 }
 
-export function isCordova () {
-  const { isCordovaGlobal } = window;
-  return isCordovaGlobal === true;
-}
-
-export function isWebApp () {
-  return !isCordova();
-}
-
 // export const history = isWebApp() ? createBrowserHistory() : createHashHistory();
 
 export function isIOS () {
   if (isWebApp()) return false;
   // console.log("<><><><> uuid:  " + window.device.uuid);
   const { platform } = window.device || '';
+  if (window.cordova && window.isCordovaGlobal === undefined) {
+    webAppConfig.IS_CORDOVA = true;
+    window.isCordovaGlobal = true;
+  }
+
   return isCordova() && platform === 'iOS';  // Ignore the "Condition is always false" warning.  This line works correctly.
 }
 
 export function isIOSAppOnMac () {
   if (isWebApp()) return false;
-  const { isiOSAppOnMac } = window.device;
-  // Our fork of cordova-plugin-device exposes the underlying native code variable isiOSAppOnMac
-  return isiOSAppOnMac;
+  if (window.device) {
+    const { device } = window;
+    // eslint-disable-next-line no-prototype-builtins
+    if (Object.prototype.hasOwnProperty(device, 'isiOSAppOnMac')) {
+      // Our fork of cordova-plugin-device exposes the underlying native code variable isiOSAppOnMac
+      const { isiOSAppOnMac } = window.device;
+      return isiOSAppOnMac;
+    }
+  }
+  return false;
 }
 
 export function getProcessorArchitecture () {
   const { diagnostic: { getArchitecture } } = window.cordova.plugins;
   getArchitecture((arch) => {
-    console.log(`Processor Architecture: ${arch}`);
+    console.log(`Cordova:  Processor Architecture: ${arch}`);
     return arch;
   }, (error) => {
     console.error('cordova.plugins.diagnostic.getArchitecture threw: ', error);
@@ -71,20 +73,6 @@ export function historyPush (route) {
     console.log(`historyPush ******** ${route} *******`);
   }
   global.weVoteGlobalHistory.push(route);
-}
-
-// Webapp image paths are "absolute" relative to the running webapp cwd,
-// for Cordova, we need them to include the http path to the server.
-// Note: You can point WE_VOTE_IMAGE_PATH_FOR_CORDOVA to your local webapp if you need
-// images that are not yet on the production servers
-export function cordovaDot (path) {
-  if (isCordova()) {
-    const { WE_VOTE_IMAGE_PATH_FOR_CORDOVA: imgPath } = webAppConfig;
-    const adjustedPath = path.replace(/(?:.*?\.us)(.*?)(?:\/img.*?$)/gi, '');
-    return `${imgPath}${adjustedPath}`;
-  } else {
-    return path;
-  }
 }
 
 export function cordovaOpenSafariViewSub (requestURL, onExit) {
@@ -158,6 +146,7 @@ export function logMatch (device, byModel) {
 // https://www.theiphonewiki.com/wiki/Models
 // https://gist.github.com/adamawolf/3048717
 // http://socialcompare.com/en/comparison/apple-iphone-product-line-comparison
+// https://www.ios-resolution.com/
 
 export function getIOSSizeString () {
   //    iPhone:               iPhone       3G           3GS          4            4            4            4S
@@ -167,21 +156,25 @@ export function getIOSSizeString () {
   //    iPhone:               6            6S           7            7            8             8             SE 2nd Gen
   const iPhone4p7inPhones = ['iPhone7,2', 'iPhone8,1', 'iPhone9,1', 'iPhone9,3', 'iPhone10,1', 'iPhone10,4', 'iPhone12,8'];
   //    iPhone:                 6 Plus       6S Plus      7 Plus       7Plus        8 Plus        8 Plus
-  const isIPhone5p5inPhones = ['iPhone7,1', 'iPhone8,2', 'iPhone9,2', 'iPhone9,4', 'iPhone10,2', 'iPhone10,5'];
+  const isIPhone5p5inEarlyPhones = ['iPhone7,1', 'iPhone8,2', 'iPhone9,2', 'iPhone9,4', 'iPhone10,2', 'iPhone10,5'];
+  //    iPhone:                      12 Mini       13 mini
+  const isIPhone5p5inMiniPhones = ['iPhone13,1', 'iPhone14,4'];
   //    iPhone:               X             X             XS            11 Pro
   const iPhone5p8inPhones = ['iPhone10,3', 'iPhone10,6', 'iPhone11,2', 'iPhone12,3'];
-  //    iPhone:               XR            11
-  const iPhone6p1inPhones = ['iPhone11,8', 'iPhone12,1'];
-  //    iPhone:               XS Max        XS Max        11 Pro Max
-  const iPhone6p5inPhones = ['iPhone11,4', 'iPhone11,6', 'iPhone12,5'];
+  //    iPhone:               XR            11            12 Pro         12             13 Pro           13
+  const iPhone6p1inPhones = ['iPhone11,8', 'iPhone12,1', 'iPhone13,3', 'iPhone13,2', 'iPhone14,2', 'iPhone14,5'];
+  //    iPhone:               XS Max        XS Max        11 Pro Max   12ProMax(6.7) 13ProMax(6.7)
+  const iPhone6p5inPhones = ['iPhone11,4', 'iPhone11,6', 'iPhone12,5', 'iPhone13,4', 'iPhone14,3'];
   if (iPhone3p5inPhones.includes(window.device.model)) {
     return 'isIPhone3p5in';
   } else if (iPhone4inPhones.includes(window.device.model)) {
     return 'isIPhone4in';
   } else if (iPhone4p7inPhones.includes(window.device.model)) {
     return 'isIPhone4p7in';
-  } else if (isIPhone5p5inPhones.includes(window.device.model)) {
-    return 'isIPhone5p5in';
+  } else if (isIPhone5p5inEarlyPhones.includes(window.device.model)) {
+    return 'isIPhone5p5inEarly';
+  } else if (isIPhone5p5inMiniPhones.includes(window.device.model)) {
+    return 'isIPhone5p5inMini';
   } else if (iPhone5p8inPhones.includes(window.device.model)) {
     return 'isIPhone5p8in';
   } else if (iPhone6p1inPhones.includes(window.device.model)) {
@@ -200,18 +193,51 @@ export function getIOSSizeString () {
   } else if (size.height === '1334' && size.width === '750') {  // iPhone 6, 6s, 7, 8, SE (2nd Gen)
     return 'isIPhone4p7in';
   } else if ((size.height === '1920' && size.width === '1080') ||  // iPhone 6 Plus, 6s Plus, 7 Plus, 8 Plus
-            (size.height === '2208' && size.width === '1242')) {   // iPhone 8 Plus in simulator
-    return 'isIPhone5p5in';
+             (size.height === '2208' && size.width === '1242')) {   // iPhone 8 Plus in simulator
+    return 'isIPhone5p5inEarly';
   } else if (size.height === '2436' && size.width === '1125') {  // iPhone X, XS, 11 Pro
     return 'isIPhone5p8in';
   } else if ((size.height === '1792' && size.width === '828') ||  // iPhone XR, 11 (11 as described on apple.com)
     (size.height === '1624' && size.width === '750')) {   // iPhone 11 in Simulator
     return 'isIPhone6p1in';
-  } else if (size.height === '2688' && size.width === '1242') {  // iPhone XS Max, 11 Pro Max
+  } else if (size.height === '2688' && size.width === '1242') {  // iPhone XS Max, 11/12 Pro Max
     return 'isIPhone6p5in';
   }
   return '';
 }
+
+function detectIsZoomed (properWidth) {
+  const isZoomed = window.innerWidth !== properWidth;
+  cordovaOffsetLog(`isDevice zoomed == ${isZoomed}, for ${window.device.model}, innerWidth ${window.innerWidth}`);
+  return isZoomed;
+}
+
+export function isDeviceZoomed () {
+  //    iPhone       3G           3GS          4            4            4            4S
+  if (['iPhone1,1', 'iPhone1,2', 'iPhone2,1', 'iPhone3,1', 'iPhone3,2', 'iPhone3,3', 'iPhone4,1'].includes(window.device.model)) return detectIsZoomed(320);
+  //        5            5            5C           5C           5S           5S           SE
+  if (['iPhone5,1', 'iPhone5,2', 'iPhone5,3', 'iPhone5,4', 'iPhone6,1', 'iPhone6,2', 'iPhone8,4'].includes(window.device.model)) return detectIsZoomed(320);
+  //        6            6S           7            7            8             8          SE 2nd Gen
+  if (['iPhone7,2', 'iPhone8,1', 'iPhone9,1', 'iPhone9,3', 'iPhone10,1', 'iPhone10,4', 'iPhone12,8'].includes(window.device.model)) return detectIsZoomed(375);
+  //      6 Plus       6S Plus      7 Plus       7Plus
+  if (['iPhone7,1', 'iPhone8,2', 'iPhone9,2', 'iPhone9,4'].includes(window.device.model)) return detectIsZoomed(476);
+  //      8 Plus        8 Plus
+  if (['iPhone10,2', 'iPhone10,5'].includes(window.device.model)) return detectIsZoomed(414);
+  //      12 Mini       13 mini
+  if (['iPhone13,1', 'iPhone14,4'].includes(window.device.model)) return detectIsZoomed(375);
+  //      X             X             XS            11 Pro
+  if (['iPhone10,3', 'iPhone10,6', 'iPhone11,2', 'iPhone12,3'].includes(window.device.model)) return detectIsZoomed(375);
+  //      XR            11
+  if (['iPhone11,8', 'iPhone12,1'].includes(window.device.model)) return detectIsZoomed(414);
+  //      12 Pro         12             13 Pro           13
+  if (['iPhone13,3', 'iPhone13,2', 'iPhone14,2', 'iPhone14,5'].includes(window.device.model)) return detectIsZoomed(390);
+  //    XS Max        XS Max        11 Pro Max
+  if (['iPhone11,4', 'iPhone11,6', 'iPhone12,5'].includes(window.device.model)) return detectIsZoomed(414);
+  //    12ProMax(6.7) 13ProMax(6.7)
+  if (['iPhone13,4', 'iPhone14,3'].includes(window.device.model)) return detectIsZoomed(428);
+  return false;
+}
+
 
 // 3.5" screen iPhones
 export function isIPhone3p5in () {
@@ -247,10 +273,21 @@ export function isIPhone4p7in () {
 }
 
 // 5.5" screen iPhones, 401 ppi pixel density
-export function isIPhone5p5in () {
+export function isIPhone5p5inEarly () {
   if (isIOS()) {
-    if (getIOSSizeString() === 'isIPhone5p5in') {
-      logMatch('isIPhone5p5in: iPhone 678 Plus (5.5")', true);
+    if (getIOSSizeString() === 'isIPhone5p5inEarly') {
+      logMatch('isIPhone5p5inEarly: iPhone 678 Plus (5.5")', true);
+      return true;
+    }
+  }
+  return false;
+}
+
+// iPhone 12+ Mini 5.5" screen iPhones, 401 ppi pixel density
+export function isIPhone5p5inMini () {
+  if (isIOS()) {
+    if (getIOSSizeString() === 'isIPhone5p5inMini') {
+      logMatch('isIPhone5p5inMini: iPhone 12,13 Mini (5.5")', true);
       return true;
     }
   }
@@ -272,7 +309,7 @@ export function isIPhone5p8in () {
 export function isIPhone6p1in () {
   if (isIOS()) {
     if (getIOSSizeString() === 'isIPhone6p1in') {
-      logMatch('isIPhone6p1in: iPhone XR or 11 (6.1")', true);
+      logMatch('isIPhone6p1in: XR, 11, 12 Pro, 12, 13 Pro, or 13 (6.1")', true);
       return true;
     }
   }
@@ -283,7 +320,7 @@ export function isIPhone6p1in () {
 export function isIPhone6p5in () {
   if (isIOS()) {
     if (getIOSSizeString() === 'isIPhone6p5in') {
-      logMatch('isIPhone6p5in: iPhone XsMax or 11 Pro Max (6.5")', true);
+      logMatch('isIPhone6p5in: iPhone XsMax or 11/12 Pro Max (6.5")', true);
       return true;
     }
   }
@@ -315,6 +352,26 @@ export function isIPad () {
   return false;
 }
 
+export function isIPad11in () {
+  if (isIOS() && !isIOSAppOnMac() &&
+    ['iPad8,1',    // iPad Pro 11 inch 3rd Gen (WiFi)
+      'iPad8,2',   // iPad Pro 11 inch 3rd Gen (1TB, WiFi)
+      'iPad8,3',   // iPad Pro 11 inch 3rd Gen (WiFi+Cellular)
+      'iPad8,4',   // iPad Pro 11 inch 3rd Gen (1TB, WiFi+Cellular)
+      'iPad8,9',   // iPad Pro 11 inch 4th Gen (WiFi)
+      'iPad8,10',  // iPad Pro 11 inch 4th Gen (WiFi+Cellular)
+      'iPad13,4',  // iPad Pro 11 inch 5th Gen
+      'iPad13,5',  // iPad Pro 11 inch 5th Gen
+      'iPad13,6',  // iPad Pro 11 inch 5th Gen
+      'iPad13,7',  // iPad Pro 11 inch 5th Gen
+    ].includes(window.device.model)) {
+    logMatch('iPad11in', true);
+    return true;
+  }
+  return false;
+}
+
+
 export function isIPadGiantSize () {
   if (!isIPad()) {
     return false;
@@ -333,11 +390,15 @@ export function isIPadGiantSize () {
 
 
 export function hasIPhoneNotch () {
-  return isIPhone5p8in() || isIPhone6p1in() || isIPhone6p5in();
+  return isIPhone5p5inMini() || isIPhone5p8in() || isIPhone6p1in() || isIPhone6p5in();
 }
 
 export function isIOsSmallerThanPlus () {
   return isIPhone3p5in() || isIPhone4in() || isIPhone4p7in();
+}
+
+export function isIPhoneMiniOrSmaller () {
+  return isIPhone3p5in() || isIPhone4in() || isIPhone4p7in() || isIPhone5p5inMini() || isIPhone5p5inEarly();
 }
 
 export function getAndroidSize () {
@@ -353,26 +414,27 @@ export function getAndroidSize () {
 
   androidPixels = screen.width * screen.height;
   androidSizeString = 'default';
-  const ratioString = parseFloat(ratio).toFixed(2);
+  // const ratioString = parseFloat(ratio).toFixed(2);
 
   /* sm   = 480*800   =   384,000     Nexus One
      md   = 1080*1920 = 2,073,600     PixelXL, Nexus5X, Moto G5
      lg   = 1440*2560 = 3,686,400     Nexus6P
-     xl   = 2560*1600 = 4,096,000     Nexus10 Tablet
+     xl   = 2560*1600 = 4,240,000     Nexus10 Tablet ratio = 1.656
      xl   = 1200*1920 = 2,306,705     Galaxy Tab A 10.1", ratio = 1.3312500715255737
      xl with AndroidNotch                 (for camera)
           = 1440*3201 = 4,609,440,    Samsung Galaxy S20 Ultra, ratio = 3
      fold = 1536*2152 = 3,305,372     Galaxy Fold 7.3", ratio = 2, aspectRatio ~= 1.401
+         && 1170*2208 = 3,908,160     'Galaxy Z Fold 3' 7.6" ratioString = '3.00' aspectRatio ~= 1.247
      June 2019: detecting the Galaxy Tab A by ratio, is a bit of a hack, and could bite us someday if there was an android phone with a 1.33 ratio
   */
 
   if (window.device.model === 'Moto G (5) Plus') {
     logMatch('Moto G (5) Plus', true);
     androidSizeString = '--md';
-  } else if (androidPixels < 3.4E6 && ratioString === '2.00' && aspectRatio > 1.4) {
-    androidSizeString = '--fold';
-  } else if (androidPixels > 3.7E6 || ratioString === '1.33') {
+  } else if (androidPixels > 3.7E6 && aspectRatio < 1.0) {
     androidSizeString = '--xl';
+  } else if (androidPixels > 3.3E6 && aspectRatio < 1.4 && aspectRatio > 1.2) {
+    androidSizeString = '--fold';
   } else if (androidPixels > 3E6) {
     androidSizeString = '--lg';
   } else if (androidPixels > 1E6) {
@@ -429,7 +491,7 @@ export function isAndroidSizeLG () {
 export function isAndroidSizeXL () {
   if (isAndroid()) {
     if (getAndroidSize() === '--xl') {
-      logMatch('isAndroidSizeXL: xl = 2560*1600 = 4,096,000  Nexus10 Tablet', true);
+      logMatch('isAndroidSizeXL: xl = 2560*1600 = 4,420,000  Nexus10 Tablet', true);
       return true;
     }
   }
@@ -439,7 +501,7 @@ export function isAndroidSizeXL () {
 export function isAndroidSizeFold () {
   if (isAndroid()) {
     if (getAndroidSize() === '--fold') {
-      logMatch('isAndroidSizeSM: based on aspect ratio, probably a Galaxy Fold 7.3"', true);
+      logMatch('isAndroidSizeFold: based on aspect ratio, probably a Galaxy Fold 7.3"', true);
       return true;
     }
   }
@@ -542,7 +604,11 @@ export function getCordovaScreenHeight () {
 
 export function prepareForCordovaKeyboard (callerString) {
   if (callerString && isCordova() && !isIOSAppOnMac()) {
-    const fileName = callerString.substr(callerString.lastIndexOf('/') + 1);
+    let fileName = '';
+    try {
+      fileName = callerString.substr(callerString.lastIndexOf('/') + 1);
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
     console.log(`prepareForCordovaKeyboard ^^^^^^^^^^ ${fileName}`);
     cordovaOffsetLog(`prepareForCordovaKeyboard ^^^^^^^^^^ ${fileName}`);
     $('#app').removeClass('app-wrapper').addClass('app-wrapper__cordova');
@@ -553,7 +619,11 @@ export function prepareForCordovaKeyboard (callerString) {
 
 export function restoreStylesAfterCordovaKeyboard (callerString) {
   if (callerString && isCordova() && !isIOSAppOnMac()) {
-    const fileName = callerString.substr(callerString.lastIndexOf('/') + 1);
+    let fileName = '';
+    try {
+      fileName = callerString.substr(callerString.lastIndexOf('/') + 1);
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
     cordovaOffsetLog(`restoreStylesAfterCordovaKeyboard vvvvvvvvvv ${fileName}`);
     $('#app').removeClass('app-wrapper__cordova').addClass('app-wrapper');
     $('body').css('height', getCordovaScreenHeight());
@@ -591,13 +661,11 @@ export function chipLabelText (fullLabel) {
     } else if (fullLabel === 'Local') {
       return 'Loc';
     }
-  } else if (isWebApp() && window.innerWidth < 400) { // iPhone 6/7/8 in Web Browser
+  } else if (window.innerWidth < 400) { // iPhone 6/7/8 in Web Browser AND  iPhone SE/SE2/5 and 12/13 mini in Cordova
     if (fullLabel === 'Federal') {
       return 'Fed';
-    }
-  } else if (isCordova() && window.innerWidth < 400) { // iPhone SE/SE2/5 in Cordova
-    if (fullLabel === 'Federal') {
-      return 'Fed';
+    } else if (fullLabel === 'Measure') {
+      return 'Meas.';
     }
   }
   return fullLabel;
@@ -616,7 +684,7 @@ export function snackOffset () {
 
 export function setIconBadgeMessageCount (count) {
   // Count can be a string or an integer
-  if (isCordova()) {
+  if (isCordova() && !isSimulator()) {
     const { cordova: { plugins: { firebase: { messaging: { setBadge } } } } } = window;
     // Not sure if this would do anything in Android
     setBadge(count);
@@ -624,7 +692,7 @@ export function setIconBadgeMessageCount (count) {
 }
 
 export function getIconBadgeMessageCount () {
-  if (isCordova()) {
+  if (isCordova() && !isSimulator()) {
     const { cordova: { plugins: { firebase: { messaging: { getBadge } } } } } = window;
     return getBadge();
   }
@@ -636,10 +704,7 @@ export function polyfillFixes (file) {
     return;   // Only load them once
   }
   polyfillsLoaded = true;
-  const printConsole = false;
-  if (printConsole) {
-    console.log(`Polyfills have been installed from "${file}"`);
-  }
+  console.log(`Polyfills have been installed from "${file}"`);
   // November 2, 2018:  Polyfill for "Object.entries"
   //   react-bootstrap 1.0 (bootstrap 4) relies on Object.entries in splitComponentProps.js
   //   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries#Polyfill
@@ -688,6 +753,16 @@ export function polyfillFixes (file) {
       },
     });
   }
+}
+
+export function cordovaLinkToBeSharedFixes (link) {
+  let linkToBeShared = link;
+  linkToBeShared = linkToBeShared.replace('https://file:/', 'https://wevote.us/');  // Cordova
+  linkToBeShared = linkToBeShared.replace('https://file:/', 'https://wevote.us/');    // Cordova
+  linkToBeShared = linkToBeShared.replace('https://app:/', 'https://wevote.us/');     // Cordova iOS Nov 2021
+  linkToBeShared = linkToBeShared.replace('file:///android_asset/www/index.html#/', 'https://wevote.us/');     // Cordova Android Nov 2021
+  linkToBeShared = linkToBeShared.replace('app://localhost/index.html#/', 'https://wevote.us/');  // Cordova iOS Nov 2021
+  return linkToBeShared;
 }
 
 // In-line

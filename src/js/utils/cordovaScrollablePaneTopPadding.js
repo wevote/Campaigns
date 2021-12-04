@@ -2,10 +2,11 @@ import CordovaPageConstants from '../constants/CordovaPageConstants';
 import VoterStore from '../stores/VoterStore';
 import { cordovaOffsetLog } from '../common/utils/logging';
 import { pageEnumeration } from './cordovaUtilsPageEnumeration';
-import { getAndroidSize, hasAndroidNotch, hasIPhoneNotch,
+import {
+  getAndroidSize, hasAndroidNotch, hasIPhoneNotch,
   isAndroid, isAndroidSimulator, isIOSAppOnMac, isIOS, isIPad,
-  isIPhone4in, isIPhone4p7in, isIPhone5p5in, isIPhone6p1in, isIPhone6p5in, isSimulator,
-} from './cordovaUtils';
+  isIPhone4in, isIPhone4p7in, isIPhone6p1in, isIPhone6p5in, isSimulator,
+} from '../common/utils/cordovaUtils';
 
 
 // <Wrapper padTop={cordovaScrollablePaneTopPadding()}>
@@ -74,32 +75,6 @@ export default function cordovaScrollablePaneTopPadding () {
         case CordovaPageConstants.voterGuideCreatorWild: return '10px'; // $headroom-wrapper-webapp__voter-guide
         case CordovaPageConstants.voterGuideWild:        return '55px';
         case CordovaPageConstants.welcomeWild:           return '10px';
-        case CordovaPageConstants.wevoteintroWild:       return '18px';
-        default:                                         return '0px';
-      }
-    } else if (isIPhone5p5in()) {
-      cordovaOffsetLog(`cordovaScrollablePaneTopPadding: isIPhone5p5in, page: ${page}`);
-      switch (page) {
-        case CordovaPageConstants.ballotLgHdrWild:       return '19px';
-        case CordovaPageConstants.ballotSmHdrWild:       return '148px';
-        case CordovaPageConstants.ballotVote:            return '157px';
-        case CordovaPageConstants.candidate:             return '40px';
-        case CordovaPageConstants.candidateWild:         return '59px';
-        case CordovaPageConstants.measureWild:           return '58px';
-        case CordovaPageConstants.moreAbout:             return '22px';
-        case CordovaPageConstants.moreTerms:             return '44px';
-        case CordovaPageConstants.moreTools:             return '44px';
-        case CordovaPageConstants.officeWild:            return '84px';
-        case CordovaPageConstants.ready:                 return '53px';
-        case CordovaPageConstants.settingsAccount:       return '76px';
-        case CordovaPageConstants.settingsHamburger:     return '60px';
-        case CordovaPageConstants.settingsNotifications: return '62px';
-        case CordovaPageConstants.settingsVoterGuideLst: return '75px';
-        case CordovaPageConstants.settingsWild:          return '51px';
-        case CordovaPageConstants.twitterSignIn:         return '20px';
-        case CordovaPageConstants.voterGuideCreatorWild: return '10px'; // $headroom-wrapper-webapp__voter-guide
-        case CordovaPageConstants.voterGuideWild:        return '51px';
-        case CordovaPageConstants.welcomeWild:           return '22px';
         case CordovaPageConstants.wevoteintroWild:       return '18px';
         default:                                         return '0px';
       }

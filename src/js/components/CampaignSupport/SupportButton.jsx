@@ -5,7 +5,7 @@ import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AppObservableStore from '../../stores/AppObservableStore';
 import CampaignStore from '../../stores/CampaignStore';
-import { isCordova } from '../../utils/cordovaUtils';
+import { isCordova } from '../../common/utils/isCordovaOrWebApp';
 import { renderLog } from '../../common/utils/logging';
 import VoterStore from '../../stores/VoterStore';
 

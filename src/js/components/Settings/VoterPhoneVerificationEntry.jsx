@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Delete, Phone } from '@material-ui/icons';
 import { Paper, InputBase, Button } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { isCordova, isWebApp } from '../../utils/cordovaUtils';
+import { isCordova, isWebApp } from '../../common/utils/isCordovaOrWebApp';
 import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
 import LoadingWheel from '../../common/components/Widgets/LoadingWheel';
 import { renderLog } from '../../common/utils/logging';

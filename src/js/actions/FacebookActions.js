@@ -1,4 +1,4 @@
-import { isWebApp } from '../utils/cordovaUtils'; // eslint-disable-line import/no-cycle
+import { isWebApp } from '../common/utils/isCordovaOrWebApp'; // eslint-disable-line import/no-cycle
 import Dispatcher from '../common/dispatcher/Dispatcher';
 import FacebookConstants from '../constants/FacebookConstants';
 import { oAuthLog } from '../common/utils/logging';

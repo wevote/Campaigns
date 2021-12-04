@@ -8,7 +8,7 @@ import AppObservableStore, { messageService } from '../stores/AppObservableStore
 import TwitterStore from '../stores/TwitterStore';
 import VoterStore from '../stores/VoterStore';
 import Cookies from '../common/utils/js-cookie/Cookies';
-import { isWebApp } from '../utils/cordovaUtils';
+import { isWebApp } from '../common/utils/isCordovaOrWebApp';
 import historyPush from '../common/utils/historyPush';
 import initializejQuery from '../utils/initializejQuery';
 import { oAuthLog, renderLog } from '../common/utils/logging';

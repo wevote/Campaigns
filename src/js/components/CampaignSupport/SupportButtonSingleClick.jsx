@@ -7,7 +7,7 @@ import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import initializejQuery from '../../utils/initializejQuery';
-import { isCordova } from '../../utils/cordovaUtils';
+import { isCordova } from '../../common/utils/isCordovaOrWebApp';
 import { renderLog } from '../../common/utils/logging';
 
 class SupportButtonSingleClick extends Component {

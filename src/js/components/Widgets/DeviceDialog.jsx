@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableHead, TableRow, Button } from '@material-ui/core';
 import { withStyles, withTheme } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
-import { hasIPhoneNotch } from '../../utils/cordovaUtils';
+import { hasIPhoneNotch } from '../../common/utils/cordovaUtils';
 import { renderLog } from '../../common/utils/logging';
 import startsWith from '../../common/utils/startsWith';
 import VoterStore from '../../stores/VoterStore';
