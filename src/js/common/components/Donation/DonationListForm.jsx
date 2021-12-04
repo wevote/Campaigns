@@ -2,12 +2,13 @@ import { AppBar, Tab, Tabs } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import DonateActions from '../../actions/DonateActions';
-import DonateStore from '../../stores/DonateStore';
+import { donationTheme } from '../Style/donationTheme';
+import TabPanel from '../Widgets/TabPanel';
+import { normalizedHref } from '../../utils/hrefUtils';
 import { renderLog } from '../../utils/logging';
 import { stringContains } from '../../../utils/textFormat';
-import { campaignTheme } from '../../../components/Style/campaignTheme';
-import TabPanel from '../../../components/Widgets/TabPanel';
+import DonateActions from '../../actions/DonateActions';
+import DonateStore from '../../stores/DonateStore';
 import DonationList from './DonationList';
 
 /*
@@ -46,7 +47,7 @@ class DonationListForm extends Component {
     const { leftTabIsMembership } = this.props;
     const { value } = this.state;
     // console.log('this.value =========', value);
-    const { pathname } = window.location;
+    const pathname = normalizedHref();
     const isMembership = pathname.startsWith('/membership');
     const isPayToPromote = (stringContains('/pay-to-promote', pathname));
     const isCampaign = isMembership || isPayToPromote;
@@ -74,7 +75,7 @@ class DonationListForm extends Component {
         <div style={{ padding: '32px  0' }}>
           <h4>{h4Txt}</h4>
           <input type="hidden" value={this.state.activeKey} />
-          <ThemeProvider theme={campaignTheme(false, 40)}>
+          <ThemeProvider theme={donationTheme(false, 40)}>
             <AppBar position="relative" color="default" elevation={0}>
               <Tabs
                 value={this.state.value}

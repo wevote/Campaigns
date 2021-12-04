@@ -5,7 +5,7 @@ import styled from 'styled-components';
 // import { Button, Card } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { renderLog } from '../common/utils/logging';
-import { isCordova } from '../utils/cordovaUtils';
+import { isCordova } from '../common/utils/isCordovaOrWebApp';
 
 class StyleGuidePage extends Component {
   // static getProps () {

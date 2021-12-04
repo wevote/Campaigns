@@ -8,7 +8,7 @@ import { AccountCircle } from '@material-ui/icons';
 import anonymous from '../../../img/global/icons/avatar-generic.png';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import { isCordova } from '../../utils/cordovaUtils';
+import { isCordova } from '../../common/utils/isCordovaOrWebApp';
 import LazyImage from '../../common/components/LazyImage';
 import { renderLog } from '../../common/utils/logging';
 import { timeFromDate } from '../../common/utils/dateFormat';

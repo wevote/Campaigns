@@ -3,7 +3,7 @@ import VoterActions from '../actions/VoterActions';   // eslint-disable-line imp
 import webAppConfig from '../config';
 import $ajax from '../utils/service';
 import { stringContains } from '../utils/textFormat';
-import { isCordova } from '../utils/cordovaUtils';
+import { isCordova } from '../common/utils/isCordovaOrWebApp';
 import VoterStore from './VoterStore';
 
 const subject = new Subject();

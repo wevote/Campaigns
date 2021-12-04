@@ -7,7 +7,8 @@ import { withStyles, withTheme } from '@material-ui/core/styles';
 import SplitIconButton from '../../common/components/Widgets/SplitIconButton';
 import VoterEmailAddressEntry from './VoterEmailAddressEntry';
 import VoterPhoneVerificationEntry from './VoterPhoneVerificationEntry';
-import { isCordova, restoreStylesAfterCordovaKeyboard, isIPhone3p5in, isIPhone4in, isIPhone4p7in } from '../../utils/cordovaUtils';
+import { restoreStylesAfterCordovaKeyboard, isIPhone3p5in, isIPhone4in, isIPhone4p7in } from '../../common/utils/cordovaUtils';
+import { isCordova } from '../../common/utils/isCordovaOrWebApp';
 import { renderLog } from '../../common/utils/logging';
 
 

@@ -11,7 +11,7 @@ import CampaignTopNavigation from '../components/Navigation/CampaignTopNavigatio
 import CampaignStore from '../stores/CampaignStore';
 import CampaignSupporterStore from '../stores/CampaignSupporterStore';
 import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
-import { isCordova } from '../utils/cordovaUtils';
+import { isCordova } from '../common/utils/isCordovaOrWebApp';
 import OpenExternalWebSite from '../common/components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../common/utils/logging';
 

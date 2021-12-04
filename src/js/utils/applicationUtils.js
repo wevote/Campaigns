@@ -1,5 +1,6 @@
 import Cookies from '../common/utils/js-cookie/Cookies';
-import { isIOSAppOnMac, isCordova, isWebApp } from './cordovaUtils';
+import { isIOSAppOnMac } from '../common/utils/cordovaUtils';
+import { isCordova, isWebApp } from '../common/utils/isCordovaOrWebApp';
 import startsWith from '../common/utils/startsWith';
 import { stringContains } from './textFormat';
 

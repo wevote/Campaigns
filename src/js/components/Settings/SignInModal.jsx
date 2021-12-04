@@ -7,11 +7,12 @@ import { withStyles, withTheme } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import { lazyLoader, libraryNeedsLoading } from '../../utils/lazyLoader';
 import { renderLog } from '../../common/utils/logging';
-import { isCordova, isAndroid, isIOS,
-  isIPhone3p5in, isIPhone4in, isIPhone4p7in, isIPhone5p5in, isIPhone5p8in, isIPhone6p1in, isIPhone6p5in,
+import { isAndroid, isIOS,
+  isIPhone3p5in, isIPhone4in, isIPhone4p7in, isIPhone5p8in, isIPhone6p1in, isIPhone6p5in,
   isWebAppHeight0to568, isWebAppHeight569to667, isWebAppHeight668to736, isWebAppHeight737to896,
-  isWebApp, restoreStylesAfterCordovaKeyboard,
-} from '../../utils/cordovaUtils';
+  restoreStylesAfterCordovaKeyboard,
+} from '../../common/utils/cordovaUtils';
+import { isCordova, isWebApp } from '../../common/utils/isCordovaOrWebApp';
 import historyPush from '../../common/utils/historyPush';
 import SettingsAccount from './SettingsAccount';
 import VoterStore from '../../stores/VoterStore';
@@ -161,7 +162,7 @@ class SignInModal extends Component {
             // iPhoneX/iPhone11 Pro Max
             [classes.emailInputWebApp737to896]: isWebAppHeight737to896() && focusedOnSingleInputToggle && focusedInputName === 'email',
             [classes.phoneInputWebApp737to896]: isWebAppHeight737to896() && focusedOnSingleInputToggle && focusedInputName === 'phone',
-            [classes.signInModalDialogLarger]: (isIPhone5p5in() || isIPhone5p8in() || isIPhone6p1in() || isIPhone6p5in()) && isCordova(),
+            [classes.signInModalDialogLarger]: (isIPhone5p8in() || isIPhone6p1in() || isIPhone6p5in()) && isCordova(),
             [classes.signInModalDialogAndroid]: isAndroid(),
           }),
           root: classes.dialogRoot,

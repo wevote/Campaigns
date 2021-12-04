@@ -3,7 +3,7 @@ import Dispatcher from '../src/js/dispatcher/AppDispatcher';
 import VoterActions from '../src/js/actions/VoterActions'; // eslint-disable-line import/no-cycle
 import VoterStore from '../src/js/stores/VoterStore'; // eslint-disable-line import/no-cycle
 import webAppConfig from '../src/js/config'; // eslint-disable-line import/no-cycle
-import { isCordova } from '../src/js/utils/cordovaUtils'; // eslint-disable-line import/no-cycle
+import { isCordova } from '../src/js/common/utils/isCordovaOrWebApp'; // eslint-disable-line import/no-cycle
 import { stringContains } from '../src/js/utils/textFormat';
 
 /**
