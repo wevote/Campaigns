@@ -1,36 +1,29 @@
-import React, { Component, Suspense } from 'react';
 import loadable from '@loadable/component';
+import { Button } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
+import VoterActions from '../../actions/VoterActions';
+import ShareActions from '../../common/actions/ShareActions';
+import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
+import ShareStore from '../../common/stores/ShareStore';
+import historyPush from '../../common/utils/historyPush';
+import { renderLog } from '../../common/utils/logging';
+import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
+import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
+import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../common/components/Style/adviceBoxStyles';
+import { CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
+import { CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper, CampaignSupportImageWrapper, CampaignSupportImageWrapperText, CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper, CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
+import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import AddContactsFromGoogle from '../../components/SuperSharing/AddContactsFromGoogle';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../components/Style/AdviceBoxStyles';
-import {
-  CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
-} from '../../components/Style/CampaignProcessStyles';
-import {
-  CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper,
-  CampaignSupportImageWrapper, CampaignSupportImageWrapperText,
-  CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper,
-  CampaignSupportSection, CampaignSupportSectionWrapper,
-  SkipForNowButtonPanel, SkipForNowButtonWrapper,
-} from '../../components/Style/CampaignSupportStyles';
 import CampaignStore from '../../stores/CampaignStore';
-import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import historyPush from '../../common/utils/historyPush';
-import initializejQuery from '../../utils/initializejQuery';
-import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
-import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
-import { renderLog } from '../../common/utils/logging';
-import ShareActions from '../../common/actions/ShareActions';
-import ShareStore from '../../common/stores/ShareStore';
-import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
-import { numberWithCommas } from '../../utils/textFormat';
-import VoterActions from '../../actions/VoterActions';
 import VoterStore from '../../stores/VoterStore';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
+import initializejQuery from '../../utils/initializejQuery';
+import { numberWithCommas } from '../../utils/textFormat';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
 const VoterFirstRetrieveController = loadable(() => import('../../components/Settings/VoterFirstRetrieveController'));
@@ -405,49 +398,6 @@ SuperSharingAddContacts.propTypes = {
   setShowHeaderFooter: PropTypes.func,
 };
 
-const styles = () => ({
-  buttonDefault: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonDefaultCordova: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '35px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonDesktop: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    minWidth: 300,
-  },
-  buttonRoot: {
-    width: 250,
-  },
-  buttonSimpleLink: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textDecoration: 'underline',
-    textTransform: 'none',
-    minWidth: 250,
-    '&:hover': {
-      color: '#4371cc',
-      textDecoration: 'underline',
-    },
-  },
-});
-
 const BottomOfPageSpacer = styled.div`
   margin-bottom: 150px;
 `;
@@ -476,4 +426,4 @@ const DeleteLink = styled.div`
   margin-top: 8px;
 `;
 
-export default withStyles(styles)(SuperSharingAddContacts);
+export default withStyles(commonMuiStyles)(SuperSharingAddContacts);

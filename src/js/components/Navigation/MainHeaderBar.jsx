@@ -142,7 +142,7 @@ export default function MainHeaderBar (displayHeader) {
 
   // console.log('MainHeaderBar displayHeader: ', displayHeader);
   return (
-    <OuterWrapper displayHeader={displayThis}>
+    <OuterWrapperHeaderBar displayHeader={displayThis}>
       <div className={classes.innerWrapper}>
         <AppBar className={classes.appBarRoot} position="static" color="default">
           <Toolbar className={classes.toolbarRoot} disableGutters>
@@ -240,11 +240,11 @@ export default function MainHeaderBar (displayHeader) {
           </Toolbar>
         </AppBar>
       </div>
-    </OuterWrapper>
+    </OuterWrapperHeaderBar>
   );
 }
 
-const OuterWrapper = styled.div`
+const OuterWrapperHeaderBar = styled.div`
   border-bottom: 1px solid #ddd;
   flex-grow: 1;
   min-height: 36px;

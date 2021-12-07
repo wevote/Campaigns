@@ -14,6 +14,7 @@ import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
 import { isCordova } from '../common/utils/isCordovaOrWebApp';
 import OpenExternalWebSite from '../common/components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../common/utils/logging';
+import { PageWrapper } from '../common/components/Style/stepDisplayStyles';
 
 const CampaignCommentsList = React.lazy(() => import('../components/Campaign/CampaignCommentsList'));
 const CampaignRetrieveController = React.lazy(() => import('../components/Campaign/CampaignRetrieveController'));
@@ -257,11 +258,6 @@ const PageStatement = styled.h2`
   font-size: 22px;
   margin-top: 30px;
   text-align: left;
-`;
-
-const PageWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
 `;
 
 export default withStyles(styles)(CampaignCommentsPage);

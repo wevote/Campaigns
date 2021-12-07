@@ -24,8 +24,16 @@ const overrides = {
       backgroundColor: '#fff',
       color: '#333',
     },
+    root: {
+      padding: 0,
+      flexDirection: 'unset',
+    },
   },
   MuiToolbar: {
+    root: {
+      padding: 0,
+      flexDirection: 'unset',
+    },
     regular: {
       minHeight: '48px !important',
     },

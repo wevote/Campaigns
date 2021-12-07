@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import Helmet from 'react-helmet';
+import styled from 'styled-components';
+import VoterActions from '../../actions/VoterActions';
+import VoterPhotoUpload from '../../common/components/Settings/VoterPhotoUpload';
+import { PageWrapper } from '../../common/components/Style/stepDisplayStyles';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
-import VoterActions from '../../actions/VoterActions';
 import VoterFirstNameInputField from '../../components/Settings/VoterFirstNameInputField';
 import VoterLastNameInputField from '../../components/Settings/VoterLastNameInputField';
-import VoterPhotoUpload from '../../common/components/Settings/VoterPhotoUpload';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import VoterStore from '../../stores/VoterStore';
-
 
 class SettingsEditProfile extends Component {
   static getProps () {
@@ -175,15 +175,6 @@ const IntroductionMessageSection = styled.div`
 
 const OneInputFieldWrapper = styled.div`
   margin-bottom: 25px;
-`;
-
-const PageWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 640px;
-  @media (max-width: 670px) {
-    // Switch to 15px left/right margin when auto is too small
-    margin: 0 15px;
-  }
 `;
 
 const SaveCancelButtonsWrapper = styled.div`

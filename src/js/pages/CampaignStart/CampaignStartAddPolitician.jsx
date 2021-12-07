@@ -1,27 +1,24 @@
-import React, { Component } from 'react';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../components/Style/AdviceBoxStyles';
-import {
-  CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
-} from '../../components/Style/CampaignProcessStyles';
-import {
-  CampaignStartDesktopButtonPanel, CampaignStartDesktopButtonWrapper,
-  CampaignStartMobileButtonPanel, CampaignStartMobileButtonWrapper,
-  CampaignStartSection, CampaignStartSectionWrapper,
-} from '../../components/Style/CampaignStartStyles';
 import CampaignStartActions from '../../actions/CampaignStartActions';
-import AddCandidateInputField from '../../components/CampaignStart/AddPoliticianInputField';
-import CampaignStartSteps from '../../components/Navigation/CampaignStartSteps';
-import CampaignStartStore from '../../stores/CampaignStartStore';
-import EditPoliticianList from '../../components/CampaignStart/EditPoliticianList';
+import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
+import { OuterWrapper, PageWrapper } from '../../common/components/Style/stepDisplayStyles';
 import historyPush from '../../common/utils/historyPush';
-import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../common/utils/logging';
+import AddCandidateInputField from '../../components/CampaignStart/AddPoliticianInputField';
+import EditPoliticianList from '../../components/CampaignStart/EditPoliticianList';
+import CampaignStartSteps from '../../components/Navigation/CampaignStartSteps';
+import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../common/components/Style/adviceBoxStyles';
+import { CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
+import { CampaignStartDesktopButtonPanel, CampaignStartDesktopButtonWrapper, CampaignStartMobileButtonPanel, CampaignStartMobileButtonWrapper, CampaignStartSection, CampaignStartSectionWrapper } from '../../components/Style/CampaignStartStyles';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import CampaignStartStore from '../../stores/CampaignStartStore';
+import initializejQuery from '../../utils/initializejQuery';
+
 
 class CampaignStartAddPolitician extends Component {
   constructor (props) {
@@ -158,52 +155,7 @@ CampaignStartAddPolitician.propTypes = {
   classes: PropTypes.object,
 };
 
-const styles = () => ({
-  buttonDefault: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonDefaultCordova: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '35px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonDesktop: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonRoot: {
-    width: 250,
-  },
-});
-
 const InnerWrapper = styled.div`
 `;
 
-const OuterWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 15px 0;
-`;
-
-const PageWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
-  @media (max-width: 1005px) {
-    // Switch to 15px left/right margin when auto is too small
-    margin: 0 15px;
-  }
-`;
-
-export default withStyles(styles)(CampaignStartAddPolitician);
+export default withStyles(commonMuiStyles)(CampaignStartAddPolitician);

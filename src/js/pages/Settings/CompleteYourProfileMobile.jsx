@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
-import Helmet from 'react-helmet';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Close } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import CompleteYourProfile from '../../components/Settings/CompleteYourProfile';
+import { Close } from '@material-ui/icons';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import Helmet from 'react-helmet';
+import styled from 'styled-components';
+import { OuterWrapper } from '../../common/components/Style/stepDisplayStyles';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
+import CompleteYourProfile from '../../components/Settings/CompleteYourProfile';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 
 
 class CompleteYourProfileMobile extends Component {
@@ -108,7 +109,7 @@ class CompleteYourProfileMobile extends Component {
     return (
       <div>
         <Helmet title={htmlPageTitle} />
-        <PageWrapper>
+        <PageWrapperComplete>
           <OuterWrapper>
             <InnerWrapper>
               <ContentTitle>
@@ -132,7 +133,7 @@ class CompleteYourProfileMobile extends Component {
               />
             </InnerWrapper>
           </OuterWrapper>
-        </PageWrapper>
+        </PageWrapperComplete>
       </div>
     );
   }
@@ -170,13 +171,7 @@ const ContentTitle = styled.h1`
 const InnerWrapper = styled.div`
 `;
 
-const OuterWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 15px 0;
-`;
-
-const PageWrapper = styled.div`
+const PageWrapperComplete = styled.div`
   margin: 0 auto;
   max-width: 480px;
 `;

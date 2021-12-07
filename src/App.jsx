@@ -4,10 +4,10 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import { ThemeProvider } from 'styled-components';
 import DelayedLoad from './js/common/components/Widgets/DelayedLoad';
 import MainHeaderBar from './js/components/Navigation/MainHeaderBar';
-import muiTheme from './js/components/Widgets/mui-theme';
+import muiTheme from './js/common/components/Style/mui-theme';
 import ErrorBoundary from './js/common/components/Widgets/ErrorBoundary';
 import { renderLog } from './js/common/utils/logging';
-import styledTheme from './js/components/Widgets/styled-theme';
+import styledTheme from './js/common/components/Style/styled-theme';
 import WeVoteRouter from './js/common/components/Widgets/WeVoteRouter';
 
 // Lazy loaded component(s) on this page

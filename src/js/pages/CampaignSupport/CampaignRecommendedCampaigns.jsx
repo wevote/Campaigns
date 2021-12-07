@@ -1,26 +1,23 @@
-import React, { Component, Suspense } from 'react';
 import loadable from '@loadable/component';
+import { Button, TextField } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
 import TruncateMarkup from 'react-truncate-markup';
 import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import { Button, TextField } from '@material-ui/core';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import {
-  CampaignSupportImageWrapper, CampaignSupportImageWrapperText,
-  CampaignSupportSection, CampaignSupportSectionWrapper,
-  SkipForNowButtonPanel, SkipForNowButtonWrapper,
-} from '../../components/Style/CampaignSupportStyles';
-import CampaignStore from '../../stores/CampaignStore';
-import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiers } from '../../utils/campaignUtils';
-import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSteps';
-import historyPush from '../../common/utils/historyPush';
-import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
+import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
 import arrayContains from '../../common/utils/arrayContains';
+import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 import SupportButtonSingleClick from '../../components/CampaignSupport/SupportButtonSingleClick';
+import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSteps';
+import { CampaignSupportImageWrapper, CampaignSupportImageWrapperText, CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
+import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import CampaignStore from '../../stores/CampaignStore';
 import VoterStore from '../../stores/VoterStore';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiers } from '../../utils/campaignUtils';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
 const CampaignSupportThermometer = React.lazy(() => import('../../components/CampaignSupport/CampaignSupportThermometer'));
@@ -538,56 +535,6 @@ CampaignRecommendedCampaigns.propTypes = {
   setShowHeaderFooter: PropTypes.func,
 };
 
-const styles = () => ({
-  buttonDefault: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonDefaultCordova: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '35px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonDesktop: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    minWidth: 300,
-  },
-  buttonRoot: {
-    width: 250,
-  },
-  buttonSimpleLink: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textDecoration: 'underline',
-    textTransform: 'none',
-    minWidth: 250,
-    '&:hover': {
-      color: '#4371cc',
-      textDecoration: 'underline',
-    },
-  },
-  textField: {
-    border: 0,
-    color: '#fff',
-    margin: '0 !important',
-    padding: '0 !important',
-    width: '100%',
-  },
-});
-
 const CampaignDescription = styled.div`
   font-size: 17px;
   margin: 4px 0;
@@ -656,4 +603,4 @@ const SkipOrSupportFooter = styled.div`
   }
 `;
 
-export default withStyles(styles)(CampaignRecommendedCampaigns);
+export default withStyles(commonMuiStyles)(CampaignRecommendedCampaigns);

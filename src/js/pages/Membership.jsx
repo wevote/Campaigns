@@ -14,6 +14,8 @@ import webAppConfig from '../config';
 import initializejQuery from '../utils/initializejQuery';
 import { renderLog } from '../common/utils/logging';
 import DonateStore from '../common/stores/DonateStore';
+import { OuterWrapper, PageWrapper } from '../common/components/Style/stepDisplayStyles';
+
 
 const stripePromise = loadStripe(webAppConfig.STRIPE_API_KEY);
 const VoterFirstRetrieveController = loadable(() => import('../components/Settings/VoterFirstRetrieveController'));
@@ -337,12 +339,6 @@ const PaymentCenteredWrapper  = styled.div`
   padding: 8px;
 `;
 
-const OuterWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 0 0 5px 0;
-`;
-
 const IntroductionMessageSection = styled.div`
   padding: 1em 2em;
   display: flex;
@@ -360,15 +356,6 @@ const PageSubStatement = styled.div`
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
   }
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
-`;
-
-const PageWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
-  @media (max-width: 1005px) {
-    // Switch to 15px left/right margin when auto is too small
-    margin: 0 15px;
-  }
 `;
 
 const ContributeGridWrapper = styled.div`

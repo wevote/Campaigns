@@ -1,33 +1,28 @@
-import React, { Component, Suspense } from 'react';
 import loadable from '@loadable/component';
+import { Button } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import {
-  CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
-} from '../../components/Style/CampaignProcessStyles';
-import {
-  CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper,
-  CampaignSupportImageWrapper, CampaignSupportImageWrapperText,
-  CampaignSupportSection, CampaignSupportSectionWrapper,
-  SkipForNowButtonPanel, SkipForNowButtonWrapper,
-} from '../../components/Style/CampaignSupportStyles';
-import CampaignStore from '../../stores/CampaignStore';
-import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
+import VoterActions from '../../actions/VoterActions';
+import ShareActions from '../../common/actions/ShareActions';
+import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
+import { StepCircle, StepNumber } from '../../common/components/Style/stepDisplayStyles';
+import ShareStore from '../../common/stores/ShareStore';
 import historyPush from '../../common/utils/historyPush';
+import { renderLog } from '../../common/utils/logging';
+import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
+import { CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
+import { CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper, CampaignSupportImageWrapper, CampaignSupportImageWrapperText, CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
+import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import CampaignStore from '../../stores/CampaignStore';
+import VoterStore from '../../stores/VoterStore';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
 import initializejQuery from '../../utils/initializejQuery';
 import { onStep1ClickPath, onStep2ClickPath, onStep3ClickPath } from '../../utils/superSharingStepPaths';
-import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { numberWithCommas } from '../../utils/textFormat';
-import { renderLog } from '../../common/utils/logging';
-import ShareActions from '../../common/actions/ShareActions';
-import ShareStore from '../../common/stores/ShareStore';
-import VoterActions from '../../actions/VoterActions';
-import VoterStore from '../../stores/VoterStore';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
 const VoterFirstRetrieveController = loadable(() => import('../../components/Settings/VoterFirstRetrieveController'));
@@ -310,7 +305,7 @@ class SuperSharingSendEmail extends Component {
                       onClick={this.onStep1Click}
                     >
                       <StepRow>
-                        <StepCircle>
+                        <StepCircle style={{ marginRight: '12px', minWidth: '30px' }}>
                           <StepNumber>1</StepNumber>
                         </StepCircle>
                         <div>
@@ -499,32 +494,7 @@ SuperSharingSendEmail.propTypes = {
   match: PropTypes.object,
   setShowHeaderFooter: PropTypes.func,
 };
-
-const styles = (theme) => ({
-  buttonDefault: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonDefaultCordova: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '35px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonDesktop: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    minWidth: 300,
-  },
+const buttonMini = (theme) => ({
   buttonMini: {
     boxShadow: 'none !important',
     fontSize: '18px',
@@ -540,23 +510,9 @@ const styles = (theme) => ({
       padding: '0 12px',
     },
   },
-  buttonRoot: {
-    width: 250,
-  },
-  buttonSimpleLink: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textDecoration: 'underline',
-    textTransform: 'none',
-    minWidth: 250,
-    '&:hover': {
-      color: '#4371cc',
-      textDecoration: 'underline',
-    },
-  },
 });
+
+const combinedStyles = Object.assign(buttonMini, commonMuiStyles);
 
 const ActionRequired = styled.div`
   color: red;
@@ -583,36 +539,12 @@ const ButtonPanel = styled.div`
   padding: 10px;
 `;
 
-const StepCircle = styled.div`
-  align-items: center;
-  background: ${(props) => (props.inverseColor ? props.theme.colors.brandBlue : 'white')};
-  border: 2px solid ${(props) => props.theme.colors.brandBlue};
-  border-radius: 18px;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  margin-right: 12px;
-  min-width: 30px;
-  width: 30px;
-  height: 30px;
-`;
-
 const StepInnerLeftWrapper = styled.div`
   padding-right: 4px;
   width: 100%;
 `;
 
 const StepInnerRightWrapper = styled.div`
-`;
-
-const StepNumber = styled.div`
-  color: ${(props) => (props.inverseColor ? 'white' : props.theme.colors.brandBlue)};
-  font-size: 16px;
-  font-weight: 600;
-  margin-top: -2px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    font-size: 14px;
-  }
 `;
 
 const StepNumberTitle = styled.div`
@@ -645,4 +577,4 @@ const StepRow = styled.div`
   justify-content: flex-start;
 `;
 
-export default withStyles(styles)(SuperSharingSendEmail);
+export default withStyles(combinedStyles)(SuperSharingSendEmail);

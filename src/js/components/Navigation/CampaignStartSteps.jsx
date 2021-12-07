@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { Done } from '@material-ui/icons';
-import CampaignStartStore from '../../stores/CampaignStartStore';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
+import { InnerWrapper, OuterWrapper, StepCircle, StepNumber, StepWrapper } from '../../common/components/Style/stepDisplayStyles';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
+import CampaignStartStore from '../../stores/CampaignStartStore';
 
 
 class CampaignStartSteps extends Component {
@@ -131,59 +132,4 @@ CampaignStartSteps.propTypes = {
   atStepNumber4: PropTypes.bool,
 };
 
-const styles = (theme) => ({
-  doneIcon: {
-    fontSize: 28,
-    [theme.breakpoints.down('lg')]: {
-      fontSize: 28,
-    },
-    paddingTop: '5px',
-  },
-});
-
-const InnerWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-`;
-
-const OuterWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 15px 0 35px;
-`;
-
-const StepCircle = styled.div`
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  background: ${(props) => (props.inverseColor ? props.theme.colors.brandBlue : 'white')};
-  border: 2px solid ${(props) => props.theme.colors.brandBlue};
-  border-radius: 18px;
-  width: 30px;
-  height: 30px;
-`;
-
-const StepNumber = styled.div`
-  color: ${(props) => (props.inverseColor ? 'white' : props.theme.colors.brandBlue)};
-  font-size: 16px;
-  font-weight: 600;
-  margin-top: -2px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    font-size: 14px;
-  }
-`;
-
-const StepWrapper = styled.div`
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  width: 90px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    width: 70px;
-  }
-`;
-
-export default withStyles(styles)(CampaignStartSteps);
+export default withStyles(commonMuiStyles)(CampaignStartSteps);

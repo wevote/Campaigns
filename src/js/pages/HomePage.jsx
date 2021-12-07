@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AppObservableStore, { messageService } from '../stores/AppObservableStore';
 import { renderLog } from '../common/utils/logging';
 import historyPush from '../common/utils/historyPush';
+import { PageWrapper } from '../common/components/Style/stepDisplayStyles';
 
 const HomeCampaignList = React.lazy(() => import('../components/Home/HomeCampaignList'));
 
@@ -146,15 +147,6 @@ const PageSubStatement = styled.div`
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     font-size: 16px;
     margin: 0 1em 1em;
-  }
-`;
-
-const PageWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
-  @media (max-width: 1005px) {
-    // Switch to 15px left/right margin when auto is too small
-    margin: 0 15px;
   }
 `;
 

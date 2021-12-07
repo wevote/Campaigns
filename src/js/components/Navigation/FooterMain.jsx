@@ -48,7 +48,7 @@ class FooterMain extends Component {
     }
 
     return (
-      <OuterWrapper>
+      <OuterWrapperFooter>
         <InnerWrapper>
           {inPrivateLabelMode ? (
             <FooterMainPrivateLabeled />
@@ -56,7 +56,7 @@ class FooterMain extends Component {
             <FooterMainWeVote />
           )}
         </InnerWrapper>
-      </OuterWrapper>
+      </OuterWrapperFooter>
     );
   }
 }
@@ -81,7 +81,7 @@ const InnerWrapper = styled.div`
   }
 `;
 
-const OuterWrapper = styled.div`
+const OuterWrapperFooter = styled.div`
   background-color: #f6f4f6;
   border-top: 1px solid #ddd;
   margin-top: 90px;

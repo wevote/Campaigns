@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
+import { Button } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import { OuterWrapper, PageWrapper, StepNumberBordered, StepNumberPlaceholder } from '../../common/components/Style/stepDisplayStyles';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 
 
 class CampaignStartIntro extends Component {
@@ -62,7 +63,7 @@ class CampaignStartIntro extends Component {
                 <CampaignStartSectionWrapper>
                   <CampaignStartSection>
                     <TitleRow>
-                      <Dot><StepNumber>1</StepNumber></Dot>
+                      <Dot><StepNumberBordered>1</StepNumberBordered></Dot>
                       <StepTitle>Create your campaign</StepTitle>
                     </TitleRow>
                     <ContentRow>
@@ -73,7 +74,7 @@ class CampaignStartIntro extends Component {
                     </ContentRow>
 
                     <TitleRow>
-                      <Dot><StepNumber>2</StepNumber></Dot>
+                      <Dot><StepNumberBordered>2</StepNumberBordered></Dot>
                       <StepTitle>Community support can lead to victory</StepTitle>
                     </TitleRow>
                     <ContentRow>
@@ -90,7 +91,7 @@ class CampaignStartIntro extends Component {
                     </ContentRow>
 
                     <TitleRow>
-                      <Dot><StepNumber>3</StepNumber></Dot>
+                      <Dot><StepNumberBordered>3</StepNumberBordered></Dot>
                       <StepTitle>Person-to-person persuasion is effective</StepTitle>
                     </TitleRow>
                     <ContentRow>
@@ -103,7 +104,7 @@ class CampaignStartIntro extends Component {
                     {inPrivateLabelMode && (
                       <>
                         <TitleRow>
-                          <Dot><StepNumber>4</StepNumber></Dot>
+                          <Dot><StepNumberBordered>4</StepNumberBordered></Dot>
                           <StepTitle>Our Approval Process</StepTitle>
                         </TitleRow>
                         <ContentRow>
@@ -252,49 +253,6 @@ const MobileButtonWrapper = styled.div`
   width: 100%;
   bottom: 0;
   display: block;
-`;
-
-const OuterWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 15px 0;
-`;
-
-const PageWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
-  @media (max-width: 1005px) {
-    // Switch to 15px left/right margin when auto is too small
-    margin: 0 15px;
-  }
-`;
-
-const StepNumber = styled.div`
-  background: white;
-  border: 2px solid ${(props) => props.theme.colors.brandBlue};
-  border-radius: 4px;
-  color: ${(props) => props.theme.colors.brandBlue};
-  font-size: 16px;
-  font-weight: 600;
-  width: 22px;
-  height: 22px;
-  padding-top: 1px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    font-size: 14px;
-    min-width: 20px;
-    width: 20px;
-    height: 20px;
-  }
-`;
-
-const StepNumberPlaceholder = styled.div`
-  width: 27px;
-  height: 22px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    width: 20px;
-    height: 20px;
-    min-width: 20px;
-  }
 `;
 
 const StepText = styled.div`

@@ -5,6 +5,8 @@ import { withStyles } from '@material-ui/core/styles';
 import FAQBody from '../common/components/FAQBody';
 import { lazyLoader, libraryNeedsLoading } from '../utils/lazyLoader';
 import { renderLog } from '../common/utils/logging';
+import { OuterWrapper, PageWrapper } from '../common/components/Style/stepDisplayStyles';
+
 
 class FAQ extends Component {
   static getProps () {
@@ -47,21 +49,6 @@ const styles = () => ({
 });
 
 const InnerWrapper = styled.div`
-`;
-
-const OuterWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 15px 0;
-`;
-
-const PageWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
-  @media (max-width: 1005px) {
-    // Switch to 15px left/right margin when auto is too small
-    margin: 0 15px;
-  }
 `;
 
 export default withStyles(styles)(FAQ);

@@ -50,7 +50,7 @@ const Step = styled.div`
   }
 `;
 
-const StepNumber = styled.div`
+const StepNumberNotUsed = styled.div`
   width: 24px;
   height: 24px;
   background: ${(props) => props.theme.colors.brandBlue};
@@ -198,7 +198,7 @@ export {
   SectionTitle,
   SectionTitleBold,
   Step,
-  StepNumber,
+  StepNumberNotUsed,
   StepLabel,
   GetStarted,
   ButtonContainer,

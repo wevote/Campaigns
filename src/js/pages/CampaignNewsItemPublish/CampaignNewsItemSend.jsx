@@ -1,30 +1,23 @@
-import React, { Component, Suspense } from 'react';
 import loadable from '@loadable/component';
-import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
-import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+import React, { Component, Suspense } from 'react';
+import Helmet from 'react-helmet';
+import CampaignNewsItemActions from '../../actions/CampaignNewsItemActions';
+import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
+import historyPush from '../../common/utils/historyPush';
+import { renderLog } from '../../common/utils/logging';
+import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
+import CampaignNewsItemPublishSteps from '../../components/Navigation/CampaignNewsItemPublishSteps';
+import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../common/components/Style/adviceBoxStyles';
+import { CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
+import { CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper, CampaignSupportImageWrapper, CampaignSupportImageWrapperText, CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper, CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
+import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../components/Style/AdviceBoxStyles';
-import {
-  CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
-} from '../../components/Style/CampaignProcessStyles';
-import {
-  CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper,
-  CampaignSupportImageWrapper, CampaignSupportImageWrapperText,
-  CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper,
-  CampaignSupportSection, CampaignSupportSectionWrapper,
-  SkipForNowButtonPanel, SkipForNowButtonWrapper,
-} from '../../components/Style/CampaignSupportStyles';
 import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import CampaignNewsItemActions from '../../actions/CampaignNewsItemActions';
-import CampaignNewsItemPublishSteps from '../../components/Navigation/CampaignNewsItemPublishSteps';
-import historyPush from '../../common/utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
-import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
-import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
-import { renderLog } from '../../common/utils/logging';
 import { numberWithCommas } from '../../utils/textFormat';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
@@ -437,47 +430,5 @@ CampaignNewsItemSend.propTypes = {
   setShowHeaderFooter: PropTypes.func,
 };
 
-const styles = () => ({
-  buttonDefault: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonDefaultCordova: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '35px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonDesktop: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    minWidth: 300,
-  },
-  buttonRoot: {
-    width: 250,
-  },
-  buttonSimpleLink: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textDecoration: 'underline',
-    textTransform: 'none',
-    minWidth: 250,
-    '&:hover': {
-      color: '#4371cc',
-      textDecoration: 'underline',
-    },
-  },
-});
 
-export default withStyles(styles)(CampaignNewsItemSend);
+export default withStyles(commonMuiStyles)(CampaignNewsItemSend);
