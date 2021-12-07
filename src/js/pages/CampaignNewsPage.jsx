@@ -14,6 +14,7 @@ import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
 import { isCordova } from '../common/utils/isCordovaOrWebApp';
 import OpenExternalWebSite from '../common/components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../common/utils/logging';
+import { PageWrapper } from '../common/components/Style/stepDisplayStyles';
 
 const CampaignNewsItemList = React.lazy(() => import('../components/Campaign/CampaignNewsItemList'));
 const CampaignRetrieveController = React.lazy(() => import('../components/Campaign/CampaignRetrieveController'));
@@ -302,11 +303,6 @@ const PageStatementWrapper = styled.div`
   @media (min-width: 576px) {
     min-width: 500px;
   }
-`;
-
-const PageWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
 `;
 
 export default withStyles(styles)(CampaignNewsPage);

@@ -1,29 +1,28 @@
-import React, { Component, Suspense } from 'react';
 import loadable from '@loadable/component';
 import { Button, InputAdornment, TextField } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import PropTypes from 'prop-types';
+import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import CampaignActions from '../../actions/CampaignActions';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import DonationListForm from '../../common/components/Donation/DonationListForm';
-import LoadingWheelComp from '../../common/components/Widgets/LoadingWheelComp';
 import InjectedCheckoutForm from '../../common/components/Donation/InjectedCheckoutForm';
-import webAppConfig from '../../config';
-import CampaignStore from '../../stores/CampaignStore';
-import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import historyPush from '../../common/utils/historyPush';
-import initializejQuery from '../../utils/initializejQuery';
-import { renderLog } from '../../common/utils/logging';
+import { OuterWrapper, PageWrapper } from '../../common/components/Style/stepDisplayStyles';
+import LoadingWheelComp from '../../common/components/Widgets/LoadingWheelComp';
 import DonateStore from '../../common/stores/DonateStore';
+import historyPush from '../../common/utils/historyPush';
+import { renderLog } from '../../common/utils/logging';
+import { SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
+import webAppConfig from '../../config';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import CampaignStore from '../../stores/CampaignStore';
 import VoterStore from '../../stores/VoterStore';
-import {
-  SkipForNowButtonPanel,
-  SkipForNowButtonWrapper,
-} from '../../components/Style/CampaignSupportStyles';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
+import initializejQuery from '../../utils/initializejQuery';
+
 
 const stripePromise = loadStripe(webAppConfig.STRIPE_API_KEY);
 const VoterFirstRetrieveController = loadable(() => import('../../components/Settings/VoterFirstRetrieveController'));
@@ -553,21 +552,6 @@ const IntroductionMessageSection = styled.div`
 `;
 
 const InnerWrapper = styled.div`
-`;
-
-const OuterWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 0 0 5px 0;
-`;
-
-const PageWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
-  @media (max-width: 1005px) {
-    // Switch to 15px left/right margin when auto is too small
-    margin: 0 15px;
-  }
 `;
 
 const PaymentAmount = styled.div`

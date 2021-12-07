@@ -1,18 +1,19 @@
-import React, { Component } from 'react';
+import { Button } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CampaignStartActions from '../../actions/CampaignStartActions';
-import CompleteYourProfileModalController from '../../components/Settings/CompleteYourProfileModalController';
-import CampaignStartStore from '../../stores/CampaignStartStore';
+import { OuterWrapper, PageWrapper } from '../../common/components/Style/stepDisplayStyles';
 import DelayedLoad from '../../common/components/Widgets/DelayedLoad';
 import historyPush from '../../common/utils/historyPush';
-import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../common/utils/logging';
+import CompleteYourProfileModalController from '../../components/Settings/CompleteYourProfileModalController';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import CampaignStartStore from '../../stores/CampaignStartStore';
 import VoterStore from '../../stores/VoterStore';
+import initializejQuery from '../../utils/initializejQuery';
 
 
 class CampaignStartPreview extends Component {
@@ -362,21 +363,6 @@ const InnerWrapper = styled.div`
 `;
 
 const MobileDisplayWrapper = styled.div`
-`;
-
-const OuterWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 15px 0;
-`;
-
-const PageWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
-  @media (max-width: 1005px) {
-    // Switch to 15px left/right margin when auto is too small
-    margin: 0 15px;
-  }
 `;
 
 const SaveCancelButtonsWrapper = styled.div`

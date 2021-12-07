@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import CampaignListTabs from '../../components/Navigation/CampaignListTabs';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import Helmet from 'react-helmet';
+import styled from 'styled-components';
+import { PageWrapper } from '../../common/components/Style/stepDisplayStyles';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
+import CampaignListTabs from '../../components/Navigation/CampaignListTabs';
 import SettingsCampaignList from '../../components/Settings/SettingsCampaignList';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import VoterStore from '../../stores/VoterStore';
 
 
@@ -115,15 +116,6 @@ const IntroductionMessageSection = styled.div`
   align-items: center;
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     padding: 1em 0 .5em 0;
-  }
-`;
-
-const PageWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
-  @media (max-width: 1005px) {
-    // Switch to 15px left/right margin when auto is too small
-    margin: 0 15px;
   }
 `;
 

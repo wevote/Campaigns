@@ -25,6 +25,7 @@ import keepHelpingDestination from '../utils/keepHelpingDestination';
 import OpenExternalWebSite from '../common/components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../common/utils/logging';
 import returnFirstXWords from '../common/utils/returnFirstXWords';
+import { PageWrapper } from '../common/components/Style/stepDisplayStyles';
 
 const CampaignCommentsList = React.lazy(() => import('../components/Campaign/CampaignCommentsList'));
 const CampaignDetailsActionSideBox = React.lazy(() => import('../components/CampaignSupport/CampaignDetailsActionSideBox'));
@@ -718,11 +719,6 @@ const DetailsSectionDesktopTablet = styled.div`
 const DetailsSectionMobile = styled.div`
   display: flex;
   flex-flow: column;
-`;
-
-const PageWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
 `;
 
 const SupportButtonFooterWrapper = styled.div`

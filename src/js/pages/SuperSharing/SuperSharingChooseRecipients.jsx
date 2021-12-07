@@ -1,40 +1,32 @@
-import React, { Component, Suspense } from 'react';
 import loadable from '@loadable/component';
+import { Button } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import { Done } from '@material-ui/icons';
 import PropTypes from 'prop-types';
+import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
-import { Done } from '@material-ui/icons';
-// import {
-//   AdviceBox, AdviceBoxText, AdviceBoxTitle,
-//   AdviceBoxWrapper,
-// } from '../../components/Style/AdviceBoxStyles';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import arrayContains from '../../common/utils/arrayContains';
-import {
-  CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
-} from '../../components/Style/CampaignProcessStyles';
-import {
-  CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper,
-  CampaignSupportImageWrapper, CampaignSupportImageWrapperText,
-  CampaignSupportSection, CampaignSupportSectionWrapper,
-  SkipForNowButtonPanel, SkipForNowButtonWrapper,
-} from '../../components/Style/CampaignSupportStyles';
-import CampaignStore from '../../stores/CampaignStore';
-import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
-import historyPush from '../../common/utils/historyPush';
-import initializejQuery from '../../utils/initializejQuery';
-import LoadMoreItemsManually from '../../components/Widgets/LoadMoreItemsManually';
-import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
-import { renderLog } from '../../common/utils/logging';
-import { shortenText } from '../../utils/textFormat';
-import removeValueFromArray from '../../common/utils/removeValueFromArray';
-import ShareActions from '../../common/actions/ShareActions';
-import ShareStore from '../../common/stores/ShareStore';
 import VoterActions from '../../actions/VoterActions';
+import ShareActions from '../../common/actions/ShareActions';
+import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
+import { StepCircleGray } from '../../common/components/Style/stepDisplayStyles';
+import ShareStore from '../../common/stores/ShareStore';
+import arrayContains from '../../common/utils/arrayContains';
+import historyPush from '../../common/utils/historyPush';
+import { renderLog } from '../../common/utils/logging';
+import removeValueFromArray from '../../common/utils/removeValueFromArray';
+import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
+import { CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
+import { CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper, CampaignSupportImageWrapper, CampaignSupportImageWrapperText, CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
+import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
+import LoadMoreItemsManually from '../../components/Widgets/LoadMoreItemsManually';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import CampaignStore from '../../stores/CampaignStore';
 import VoterStore from '../../stores/VoterStore';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
+import initializejQuery from '../../utils/initializejQuery';
+import { shortenText } from '../../utils/textFormat';
+
 
 const NUMBER_OF_RECIPIENTS_TO_ADD_WHEN_MORE_CLICKED = 25;
 const STARTING_NUMBER_OF_RECIPIENTS_TO_DISPLAY = 15;
@@ -388,8 +380,8 @@ class SuperSharingChooseRecipients extends Component {
                             {/* Virginia */}
                           </ContactFilterWrapper>
                           <ContactSelectCheckWrapper>
-                            <StepWrapper>
-                              <StepCircle
+                            <StepWrapperThin>
+                              <StepCircleGray
                                 className="u-cursor--pointer"
                                 inverseColor={this.recipientEmailHasBeenChosen(voterContactEmail.email_address_text)}
                               >
@@ -402,8 +394,8 @@ class SuperSharingChooseRecipients extends Component {
                                     <Done classes={{ root: classes.doneIcon }} />
                                   </CheckmarkWrapper>
                                 )}
-                              </StepCircle>
-                            </StepWrapper>
+                              </StepCircleGray>
+                            </StepWrapperThin>
                           </ContactSelectCheckWrapper>
                         </ContactSelectWrapper>
                       </ContactOuterWrapper>
@@ -535,56 +527,6 @@ SuperSharingChooseRecipients.propTypes = {
   setShowHeaderFooter: PropTypes.func,
 };
 
-const styles = (theme) => ({
-  buttonDefault: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonDefaultCordova: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '35px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonDesktop: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 24px',
-    textTransform: 'none',
-    minWidth: 300,
-  },
-  buttonRoot: {
-    width: 250,
-  },
-  buttonSimpleLink: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textDecoration: 'underline',
-    textTransform: 'none',
-    minWidth: 250,
-    '&:hover': {
-      color: '#4371cc',
-      textDecoration: 'underline',
-    },
-  },
-  doneIcon: {
-    fontSize: 28,
-    [theme.breakpoints.down('lg')]: {
-      fontSize: 28,
-    },
-    paddingTop: '5px',
-  },
-});
-
 const BottomOfPageSpacer = styled.div`
   margin-bottom: 150px;
 `;
@@ -647,18 +589,6 @@ const LoadMoreItemsManuallyWrapper = styled.div`
   }
 `;
 
-const StepCircle = styled.div`
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  background: ${(props) => (props.inverseColor ? props.theme.colors.brandBlue : 'white')};
-  border: 1px solid ${(props) => (props.inverseColor ? props.theme.colors.brandBlue : '#BEBEBE')};
-  border-radius: 18px;
-  width: 30px;
-  height: 30px;
-`;
-
 const CheckmarkWrapper = styled.div`
   color: ${(props) => (props.inverseColor ? 'white' : '#E8E8E8')};
   font-size: 16px;
@@ -669,7 +599,7 @@ const CheckmarkWrapper = styled.div`
   }
 `;
 
-const StepWrapper = styled.div`
+const StepWrapperThin = styled.div`
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-end;
@@ -679,4 +609,4 @@ const StepWrapper = styled.div`
   }
 `;
 
-export default withStyles(styles)(SuperSharingChooseRecipients);
+export default withStyles(commonMuiStyles)(SuperSharingChooseRecipients);

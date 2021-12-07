@@ -1,26 +1,27 @@
-import React, { Component, Suspense } from 'react';
+import { Button } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import {
-  BlockedReason,
-} from '../../components/Style/CampaignIndicatorStyles';
+import CampaignStartActions from '../../actions/CampaignStartActions';
+import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
+import { OuterWrapper, PageWrapper } from '../../common/components/Style/stepDisplayStyles';
+import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
+import historyPush from '../../common/utils/historyPush';
+import { renderLog } from '../../common/utils/logging';
 import AddCandidateInputField from '../../components/CampaignStart/AddPoliticianInputField';
 import CampaignDescriptionInputField from '../../components/CampaignStart/CampaignDescriptionInputField';
 import CampaignPhotoUpload from '../../components/CampaignStart/CampaignPhotoUpload';
-import CampaignStartActions from '../../actions/CampaignStartActions';
-import CampaignStartStore from '../../stores/CampaignStartStore';
-import CampaignStore from '../../stores/CampaignStore';
 import CampaignTitleInputField from '../../components/CampaignStart/CampaignTitleInputField';
 import EditPoliticianList from '../../components/CampaignStart/EditPoliticianList';
+import { BlockedReason } from '../../components/Style/CampaignIndicatorStyles';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import CampaignStartStore from '../../stores/CampaignStartStore';
+import CampaignStore from '../../stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import historyPush from '../../common/utils/historyPush';
 import initializejQuery from '../../utils/initializejQuery';
-import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
-import { renderLog } from '../../common/utils/logging';
+
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
 
@@ -337,38 +338,6 @@ CampaignStartEditAll.propTypes = {
   setShowHeaderFooter: PropTypes.func,
 };
 
-const styles = () => ({
-  buttonCancel: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 30px',
-    textTransform: 'none',
-    width: 100,
-  },
-  buttonSave: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    marginLeft: 10,
-    padding: '0 30px',
-    textTransform: 'none',
-    width: 150,
-  },
-  buttonRoot: {
-    width: 250,
-  },
-});
-
-// const BlockedReason = styled.div`
-//   background-color: #efc2c2;
-//   border-radius: 4px;
-//   color: #2e3c5d;
-//   font-size: 18px;
-//   margin-right: 10px;
-//   margin-top: 10px;
-//   padding: 5px 12px;
-// `;
 
 const CampaignStartSection = styled.div`
   margin-bottom: 60px !important;
@@ -412,23 +381,8 @@ const InnerWrapper = styled.div`
   width: 100%;
 `;
 
-const OuterWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 0;
-`;
-
-const PageWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
-  @media (max-width: 1005px) {
-    // Switch to 15px left/right margin when auto is too small
-    margin: 0 15px;
-  }
-`;
-
 const PhotoUploadWrapper = styled.div`
   margin-top: 32px;
 `;
 
-export default withStyles(styles)(CampaignStartEditAll);
+export default withStyles(commonMuiStyles)(CampaignStartEditAll);

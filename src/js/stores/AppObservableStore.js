@@ -54,6 +54,11 @@ export default {
   //   return nonFluxState;
   // },
 
+  incrementObservableUpdateCounter () {
+    nonFluxState.observableUpdateCounter += 1;
+    messageService.sendMessage('state incremented ObservableUpdateCounter');
+  },
+
   blockCampaignXRedirectOnSignIn () {
     return nonFluxState.blockCampaignXRedirectOnSignIn;
   },

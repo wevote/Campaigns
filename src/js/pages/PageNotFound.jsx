@@ -41,7 +41,7 @@ class PageNotFound extends Component {
     return (
       <div>
         <Helmet title={`Page Not Found - ${chosenWebsiteName}`} />
-        <PageWrapper>
+        <PageWrapperNotFound>
           <EmptyBallotMessageContainer>
             <EmptyBallotText>Page not found.</EmptyBallotText>
             <Button
@@ -54,7 +54,7 @@ class PageNotFound extends Component {
               Go to Home Page
             </Button>
           </EmptyBallotMessageContainer>
-        </PageWrapper>
+        </PageWrapperNotFound>
       </div>
     );
   }
@@ -92,7 +92,7 @@ const EmptyBallotText = styled.p`
   }
 `;
 
-const PageWrapper = styled.div`
+const PageWrapperNotFound = styled.div`
   margin: 0 15px;
 `;
 

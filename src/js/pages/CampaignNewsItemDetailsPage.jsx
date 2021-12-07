@@ -1,34 +1,29 @@
-import React, { Component, Suspense } from 'react';
 import { Button } from '@material-ui/core';
-import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { AccountCircle, ArrowBack } from '@material-ui/icons';
-import AppObservableStore, { messageService } from '../stores/AppObservableStore';
-import {
-  BlockedIndicator, BlockedReason, DraftModeIndicator, EditIndicator,
-  ElectionInPast, IndicatorButtonWrapper, IndicatorRow,
-} from '../components/Style/CampaignIndicatorStyles';
-import CampaignNewsItemPublishSteps from '../components/Navigation/CampaignNewsItemPublishSteps';
-import CampaignStore from '../stores/CampaignStore';
+import PropTypes from 'prop-types';
+import React, { Component, Suspense } from 'react';
+import Helmet from 'react-helmet';
+import styled from 'styled-components';
+import anonymous from '../../img/global/icons/avatar-generic.png';
 import CampaignSupporterActions from '../actions/CampaignSupporterActions';
-import CampaignSupporterStore from '../stores/CampaignSupporterStore';
-import CompleteYourProfileModalController from '../components/Settings/CompleteYourProfileModalController';
-import { formatDateToMonthDayYear } from '../common/utils/dateFormat';
+import LazyImage from '../common/components/LazyImage';
+import { PageWrapper } from '../common/components/Style/stepDisplayStyles';
 import DelayedLoad from '../common/components/Widgets/DelayedLoad';
-import {
-  getCampaignXValuesFromIdentifiers,
-  retrieveCampaignXFromIdentifiersIfNeeded,
-} from '../utils/campaignUtils';
-import historyPush from '../common/utils/historyPush';
-import initializejQuery from '../utils/initializejQuery';
-import keepHelpingDestination from '../utils/keepHelpingDestination';
 import OpenExternalWebSite from '../common/components/Widgets/OpenExternalWebSite';
+import { formatDateToMonthDayYear } from '../common/utils/dateFormat';
+import historyPush from '../common/utils/historyPush';
 import { renderLog } from '../common/utils/logging';
 import returnFirstXWords from '../common/utils/returnFirstXWords';
-import LazyImage from '../common/components/LazyImage';
-import anonymous from '../../img/global/icons/avatar-generic.png';
+import CampaignNewsItemPublishSteps from '../components/Navigation/CampaignNewsItemPublishSteps';
+import CompleteYourProfileModalController from '../components/Settings/CompleteYourProfileModalController';
+import { BlockedIndicator, BlockedReason, DraftModeIndicator, EditIndicator, ElectionInPast, IndicatorButtonWrapper, IndicatorRow } from '../components/Style/CampaignIndicatorStyles';
+import AppObservableStore, { messageService } from '../stores/AppObservableStore';
+import CampaignStore from '../stores/CampaignStore';
+import CampaignSupporterStore from '../stores/CampaignSupporterStore';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../utils/campaignUtils';
+import initializejQuery from '../utils/initializejQuery';
+import keepHelpingDestination from '../utils/keepHelpingDestination';
 import { stringContains } from '../utils/textFormat';
 
 const CampaignCommentsList = React.lazy(() => import('../components/Campaign/CampaignCommentsList'));
@@ -988,11 +983,6 @@ const NewsItemSubjectMobile = styled.h1`
     font-size: 24px;
     min-height: 29px;
   }
-`;
-
-const PageWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
 `;
 
 const PressReleaseEnd = styled.div`

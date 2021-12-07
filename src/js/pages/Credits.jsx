@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import CreditsBody from '../common/components/CreditsBody';
 import { renderLog } from '../common/utils/logging';
+import { OuterWrapper, PageWrapper } from '../common/components/Style/stepDisplayStyles';
+
 
 class Credits extends Component {
   static getProps () {
@@ -56,21 +58,6 @@ const InnerWrapper = styled.div`
   flex-flow: column nowrap;
   align-items: center;
   background: white;
-`;
-
-const OuterWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 15px 15px;
-`;
-
-const PageWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
-  @media (max-width: 1005px) {
-    // Switch to 15px left/right margin when auto is too small
-    margin: 0 15px;
-  }
 `;
 
 const Section = styled.div`

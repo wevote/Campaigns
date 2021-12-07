@@ -1,32 +1,25 @@
-import React, { Component, Suspense } from 'react';
 import loadable from '@loadable/component';
-import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
-import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import {
-  CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
-} from '../../components/Style/CampaignProcessStyles';
-import {
-  CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper,
-  CampaignSupportImageWrapper, CampaignSupportImageWrapperText,
-  CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper,
-  CampaignSupportSection, CampaignSupportSectionWrapper,
-  SkipForNowButtonPanel, SkipForNowButtonWrapper,
-} from '../../components/Style/CampaignSupportStyles';
-import CampaignShareChunk from '../../components/Campaign/CampaignShareChunk';
-import CampaignStore from '../../stores/CampaignStore';
-import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiers } from '../../utils/campaignUtils';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+import React, { Component, Suspense } from 'react';
+import Helmet from 'react-helmet';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
-import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import CampaignNewsItemPublishSteps from '../../components/Navigation/CampaignNewsItemPublishSteps';
+import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
 import historyPush from '../../common/utils/historyPush';
-import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import { renderLog } from '../../common/utils/logging';
-import SendFacebookDirectMessageButton from '../../components/Share/ShareByFacebookDirectMessageButton';
+import CampaignShareChunk from '../../components/Campaign/CampaignShareChunk';
+import CampaignNewsItemPublishSteps from '../../components/Navigation/CampaignNewsItemPublishSteps';
 import ShareByCopyLink from '../../components/Share/ShareByCopyLink';
 import ShareByEmailButton from '../../components/Share/ShareByEmailButton';
+import SendFacebookDirectMessageButton from '../../components/Share/ShareByFacebookDirectMessageButton';
+import { CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
+import { CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper, CampaignSupportImageWrapper, CampaignSupportImageWrapperText, CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper, CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
+import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import CampaignStore from '../../stores/CampaignStore';
+import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiers } from '../../utils/campaignUtils';
 // import ShareOnFacebookButton from '../../components/Share/ShareOnFacebookButton';
 // import ShareOnTwitterButton from '../../components/Share/ShareOnTwitterButton';
 
@@ -379,55 +372,4 @@ CampaignNewsItemShare.propTypes = {
   showShareCampaignWithOneFriend: PropTypes.bool,
 };
 
-const styles = () => ({
-  buttonDefault: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonDefaultCordova: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '35px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonDesktop: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    minWidth: 300,
-  },
-  buttonRoot: {
-    width: 250,
-  },
-  buttonSimpleLink: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textDecoration: 'underline',
-    textTransform: 'none',
-    minWidth: 250,
-    '&:hover': {
-      color: '#4371cc',
-      textDecoration: 'underline',
-    },
-  },
-});
-
-// const PublicOrPrivateSectionHeader = styled.span`
-//   font-weight: 600;
-// `;
-//
-// const PublicOrPrivateSectionText = styled.span`
-//   color: #999;
-// `;
-
-export default withStyles(styles)(CampaignNewsItemShare);
+export default withStyles(commonMuiStyles)(CampaignNewsItemShare);

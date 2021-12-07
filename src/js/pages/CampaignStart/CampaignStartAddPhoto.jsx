@@ -1,26 +1,22 @@
-import React, { Component } from 'react';
+import { Button } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../components/Style/AdviceBoxStyles';
-import {
-  CampaignProcessStepIntroductionText, CampaignProcessStepTitle,
-} from '../../components/Style/CampaignProcessStyles';
-import {
-  CampaignStartDesktopButtonPanel, CampaignStartDesktopButtonWrapper,
-  CampaignStartMobileButtonPanel, CampaignStartMobileButtonWrapper,
-  CampaignStartSection, CampaignStartSectionWrapper,
-} from '../../components/Style/CampaignStartStyles';
 import CampaignStartActions from '../../actions/CampaignStartActions';
-import CampaignStartSteps from '../../components/Navigation/CampaignStartSteps';
-import CampaignStartStore from '../../stores/CampaignStartStore';
-import CampaignPhotoUpload from '../../components/CampaignStart/CampaignPhotoUpload';
+import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
+import { OuterWrapper, PageWrapper } from '../../common/components/Style/stepDisplayStyles';
 import historyPush from '../../common/utils/historyPush';
-import initializejQuery from '../../utils/initializejQuery';
 import { renderLog } from '../../common/utils/logging';
+import CampaignPhotoUpload from '../../components/CampaignStart/CampaignPhotoUpload';
+import CampaignStartSteps from '../../components/Navigation/CampaignStartSteps';
+import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../common/components/Style/adviceBoxStyles';
+import { CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
+import { CampaignStartDesktopButtonPanel, CampaignStartDesktopButtonWrapper, CampaignStartMobileButtonPanel, CampaignStartMobileButtonWrapper, CampaignStartSection, CampaignStartSectionWrapper } from '../../components/Style/CampaignStartStyles';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import CampaignStartStore from '../../stores/CampaignStartStore';
+import initializejQuery from '../../utils/initializejQuery';
 
 
 class CampaignStartAddPhoto extends Component {
@@ -151,52 +147,8 @@ CampaignStartAddPhoto.propTypes = {
   classes: PropTypes.object,
 };
 
-const styles = () => ({
-  buttonDefault: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonDefaultCordova: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '35px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonDesktop: {
-    boxShadow: 'none !important',
-    fontSize: '18px',
-    height: '45px !important',
-    padding: '0 12px',
-    textTransform: 'none',
-    width: '100%',
-  },
-  buttonRoot: {
-    width: 250,
-  },
-});
 
 const InnerWrapper = styled.div`
 `;
 
-const OuterWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 15px 0;
-`;
-
-const PageWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
-  @media (max-width: 1005px) {
-    // Switch to 15px left/right margin when auto is too small
-    margin: 0 15px;
-  }
-`;
-
-export default withStyles(styles)(CampaignStartAddPhoto);
+export default withStyles(commonMuiStyles)(CampaignStartAddPhoto);
