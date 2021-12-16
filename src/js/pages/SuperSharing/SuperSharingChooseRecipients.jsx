@@ -15,6 +15,7 @@ import arrayContains from '../../common/utils/arrayContains';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 import removeValueFromArray from '../../common/utils/removeValueFromArray';
+import defaultVoterContactEmailSort from '../../common/utils/voterContactEmailSorting';
 import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
 import { CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
 import { CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper, CampaignSupportImageWrapper, CampaignSupportImageWrapperText, CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
@@ -201,7 +202,8 @@ class SuperSharingChooseRecipients extends Component {
     const { numberOfRecipientsToDisplay } = this.state;
     const voterContactEmailList = VoterStore.getVoterContactEmailList();
     const voterContactEmailListCount = voterContactEmailList.length;
-    const voterContactEmailListFiltered = voterContactEmailList.slice(0, numberOfRecipientsToDisplay);
+    const voterContactEmailListFullFiltered = defaultVoterContactEmailSort(voterContactEmailList);
+    const voterContactEmailListFiltered = voterContactEmailListFullFiltered.slice(0, numberOfRecipientsToDisplay);
     this.setState({
       voterContactEmailListCount,
       voterContactEmailListFiltered,
@@ -357,13 +359,18 @@ class SuperSharingChooseRecipients extends Component {
                         key={`contact${voterContactEmail.email_address_text}`}
                         onClick={() => this.onClickSelectContact(voterContactEmail.email_address_text)}
                       >
+                        {voterContactEmail.we_vote_hosted_profile_image_url_medium && (
+                          <ContactPhotoWrapper>
+                            <ContactPhotoImage src={voterContactEmail.we_vote_hosted_profile_image_url_medium} />
+                          </ContactPhotoWrapper>
+                        )}
                         <ContactNameWrapper>
                           <ContactDisplayName>
                             <span className="u-show-mobile">
-                              {shortenText(voterContactEmail.google_display_name, 22)}
+                              {shortenText(voterContactEmail.display_name, 22)}
                             </span>
                             <span className="u-show-desktop-tablet">
-                              {shortenText(voterContactEmail.google_display_name, 40)}
+                              {shortenText(voterContactEmail.display_name, 40)}
                             </span>
                           </ContactDisplayName>
                           <ContactDisplayEmail>
@@ -377,7 +384,18 @@ class SuperSharingChooseRecipients extends Component {
                         </ContactNameWrapper>
                         <ContactSelectWrapper>
                           <ContactFilterWrapper>
-                            {/* Virginia */}
+                            {voterContactEmail.city && (
+                              voterContactEmail.city
+                            )}
+                            {(voterContactEmail.city && voterContactEmail.state_code) && (
+                              <>
+                                ,
+                                {' '}
+                              </>
+                            )}
+                            {voterContactEmail.state_code && (
+                              voterContactEmail.state_code
+                            )}
                           </ContactFilterWrapper>
                           <ContactSelectCheckWrapper>
                             <StepWrapperThin>
@@ -567,6 +585,14 @@ const ContactOuterWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 6px 0;
+`;
+
+const ContactPhotoImage = styled.img`
+  height: 48px;
+  width: 48px;
+`;
+
+const ContactPhotoWrapper = styled.div`
 `;
 
 const ContactSelectCheckWrapper = styled.div`
