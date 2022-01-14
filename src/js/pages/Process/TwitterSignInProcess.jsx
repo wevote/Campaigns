@@ -1,19 +1,18 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { CircularProgress } from '@material-ui/core';
-import TwitterActions from '../actions/TwitterActions';
-import VoterActions from '../actions/VoterActions';
-import SpinnerPage from '../components/Widgets/SpinnerPage';
-import AppObservableStore, { messageService } from '../stores/AppObservableStore';
-import TwitterStore from '../stores/TwitterStore';
-import VoterStore from '../stores/VoterStore';
-import Cookies from '../common/utils/js-cookie/Cookies';
-import { isWebApp } from '../common/utils/isCordovaOrWebApp';
-import historyPush from '../common/utils/historyPush';
-import initializejQuery from '../utils/initializejQuery';
-import { oAuthLog, renderLog } from '../common/utils/logging';
-import { stringContains } from '../utils/textFormat';
-
+import TwitterActions from '../../actions/TwitterActions';
+import VoterActions from '../../actions/VoterActions';
+import SpinnerPage from '../../components/Widgets/SpinnerPage';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import TwitterStore from '../../stores/TwitterStore';
+import VoterStore from '../../stores/VoterStore';
+import { isWebApp } from '../../common/utils/isCordovaOrWebApp';
+import historyPush from '../../common/utils/historyPush';
+import Cookies from '../../common/utils/js-cookie/Cookies';
+import initializejQuery from '../../utils/initializejQuery';
+import { oAuthLog, renderLog } from '../../common/utils/logging';
+import { stringContains } from '../../utils/textFormat';
 
 export default class TwitterSignInProcess extends Component {
   constructor (props) {
@@ -59,8 +58,10 @@ export default class TwitterSignInProcess extends Component {
 
   onTwitterStoreChange () {
     const twitterAuthResponse = TwitterStore.getTwitterAuthResponse();
+    const { twitter_image_load_info: twitterImageLoadInfo } = twitterAuthResponse;
     this.setState({
       twitterAuthResponse,
+      twitterImageLoadInfo,
     });
     // 2/11/21:  This was in TwitterStore.jsx (untangling app code from stores)
     if (twitterAuthResponse.twitter_sign_in_found && twitterAuthResponse.twitter_sign_in_verified) {
@@ -98,7 +99,7 @@ export default class TwitterSignInProcess extends Component {
   }
 
   onVoterStoreChange () {
-    const { redirectInProcess } = this.state;
+    const { redirectInProcess, twitterImageLoadInfo } = this.state;
     // console.log('TwitterSignInProcess onVoterStoreChange, redirectInProcess:', redirectInProcess);
     if (!redirectInProcess) {
       const twitterSignInStatus = VoterStore.getTwitterSignInStatus();
@@ -133,6 +134,11 @@ export default class TwitterSignInProcess extends Component {
               // console.log('newRedirectPathname:', newRedirectPathname);
               this.setState({ redirectInProcess: true });
               oAuthLog(`Twitter sign in (1), onVoterStoreChange - push to ${newRedirectPathname}`);
+              if (twitterImageLoadInfo) {
+                AppObservableStore.setSignInStateChanged(true);
+                TwitterActions.twitterProcessDeferredImages(twitterImageLoadInfo);
+                TwitterStore.clearTwitterImageLoadInfo();
+              }
               const { setShowHeaderFooter } = this.props;
               setShowHeaderFooter(true);
               historyPush({
@@ -143,7 +149,7 @@ export default class TwitterSignInProcess extends Component {
                 },
               });
             } else {
-              console.log('window.location.origin empty');
+              // console.log('window.location.origin empty');
             }
           }
           if (useWindowLocationAssign) {
@@ -155,6 +161,11 @@ export default class TwitterSignInProcess extends Component {
           this.setState({ redirectInProcess: true });
           const redirectPathname = '/';
           oAuthLog(`Twitter sign in (2), onVoterStoreChange - push to ${redirectPathname}`);
+          if (twitterImageLoadInfo) {
+            AppObservableStore.setSignInStateChanged(true);
+            TwitterActions.twitterProcessDeferredImages(twitterImageLoadInfo);
+            TwitterStore.clearTwitterImageLoadInfo();
+          }
           const { setShowHeaderFooter } = this.props;
           setShowHeaderFooter(true);
           historyPush({

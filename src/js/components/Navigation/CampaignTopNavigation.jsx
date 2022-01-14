@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { AppBar, Tab, Tabs, Toolbar } from '@material-ui/core';
-import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import startsWith, { endsWith } from '../../common/utils/startsWith';
 
 
@@ -28,9 +28,9 @@ export default function CampaignTopNavigation (incomingVariables) {
   const classes = useStyles();
   const history = useHistory();
 
-  const defaultTheme = createMuiTheme();
+  const defaultTheme = createTheme();
 
-  const theme = createMuiTheme({
+  const theme = createTheme({
     typography: {
       button: {
         textTransform: 'none',

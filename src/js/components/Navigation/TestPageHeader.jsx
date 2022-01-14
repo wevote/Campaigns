@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { AppBar, Tab, Tabs, Toolbar } from '@material-ui/core';
-import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import startsWith from '../../common/utils/startsWith';
 
 
@@ -31,7 +31,7 @@ export default function TestPageHeader () {
   //   }
   // }
 
-  const theme = createMuiTheme({
+  const theme = createTheme({
     typography: {
       button: {
         textTransform: 'none',

@@ -3,14 +3,14 @@ import { Button } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles';
+import { MuiThemeProvider, createTheme, withStyles } from '@material-ui/core/styles';
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import CampaignStore from '../../stores/CampaignStore';
 import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
 import { renderLog } from '../../common/utils/logging';
 
-const muiTheme = createMuiTheme({
+const muiTheme = createTheme({
   overrides: {
     MuiDropzonePreviewList: {
       image: {
