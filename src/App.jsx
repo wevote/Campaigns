@@ -54,7 +54,7 @@ const SuperSharingComposeEmailMessage = React.lazy(() => import('./js/pages/Supe
 const SuperSharingSendEmail = React.lazy(() => import('./js/pages/SuperSharing/SuperSharingSendEmail'));
 const SuperSharingIntro = React.lazy(() => import('./js/pages/SuperSharing/SuperSharingIntro'));
 const TermsOfService = React.lazy(() => import('./js/pages/TermsOfService'));
-const TwitterSignInProcess = React.lazy(() => import('./js/pages/TwitterSignInProcess'));
+const TwitterSignInProcess = React.lazy(() => import('./js/pages/Process/TwitterSignInProcess'));
 
 
 class App extends Component {

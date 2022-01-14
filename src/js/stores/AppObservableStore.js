@@ -41,6 +41,7 @@ const nonFluxState = {
   showShareModal: false,
   showSharedItemModal: false,
   showSignInModal: false,
+  signInStateChanged: false,
   siteConfigurationHasBeenRetrieved: false,
   siteOwnerOrganizationWeVoteId: '',
   storeSignInStartFullUrl: false,
@@ -185,6 +186,11 @@ export default {
     messageService.sendMessage('state updated showSignInModal');
   },
 
+  setSignInStateChanged (signin) {
+    nonFluxState.signInStateChanged = signin;
+    messageService.sendMessage('state updated signInStateChanged');
+  },
+
   setVoterFirstRetrieveInitiated (voterFirstRetrieveInitiated) {
     nonFluxState.voterFirstRetrieveInitiated = voterFirstRetrieveInitiated;
     messageService.sendMessage('state updated voterFirstRetrieveInitiated');
@@ -257,6 +263,10 @@ export default {
   getShareModalStep () {
     // console.log('AppObservableStore shareModalStep:', nonFluxState.shareModalStep);
     return nonFluxState.shareModalStep;
+  },
+
+  getSignInStateChanged () {
+    return nonFluxState.signInStateChanged;
   },
 
   getSiteOwnerOrganizationWeVoteId () {
