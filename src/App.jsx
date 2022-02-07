@@ -1,14 +1,19 @@
-import React, { Component, Suspense } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
 import { MuiThemeProvider } from '@material-ui/core/styles';
+import React, { Component, Suspense } from 'react';
+import ReactGA from 'react-ga';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import DelayedLoad from './js/common/components/Widgets/DelayedLoad';
-import MainHeaderBar from './js/components/Navigation/MainHeaderBar';
+import { normalizedHrefPage } from './js/common/utils/hrefUtils';
+import webAppConfig from './js/config';
 import muiTheme from './js/common/components/Style/mui-theme';
-import ErrorBoundary from './js/common/components/Widgets/ErrorBoundary';
-import { renderLog } from './js/common/utils/logging';
 import styledTheme from './js/common/components/Style/styled-theme';
+import DelayedLoad from './js/common/components/Widgets/DelayedLoad';
+import ErrorBoundary from './js/common/components/Widgets/ErrorBoundary';
 import WeVoteRouter from './js/common/components/Widgets/WeVoteRouter';
+import { renderLog } from './js/common/utils/logging';
+import MainHeaderBar from './js/components/Navigation/MainHeaderBar';
+import AppObservableStore, { messageService } from './js/stores/AppObservableStore';
+import initializejQuery from './js/utils/initializejQuery';
 
 // Lazy loaded component(s) on this page
 const FooterMain  = React.lazy(() => import('./js/components/Navigation/FooterMain'));
@@ -46,7 +51,6 @@ const PageNotFound = React.lazy(() => import('./js/pages/PageNotFound'));
 const Privacy = React.lazy(() => import('./js/pages/Privacy'));
 const SettingsEditProfile = React.lazy(() => import('./js/pages/Settings/SettingsEditProfile'));
 const SettingsYourCampaigns = React.lazy(() => import('./js/pages/Settings/SettingsYourCampaigns'));
-const SiteConfigurationRetrieveController = React.lazy(() => import('./js/components/Settings/SiteConfigurationRetrieveController'));
 const StyleGuidePage = React.lazy(() => import('./js/pages/StyleGuidePage'));
 const SuperSharingAddContacts = React.lazy(() => import('./js/pages/SuperSharing/SuperSharingAddContacts'));
 const SuperSharingChooseRecipients = React.lazy(() => import('./js/pages/SuperSharing/SuperSharingChooseRecipients'));
@@ -69,6 +73,21 @@ class App extends Component {
     this.setShowHeaderFooter = this.setShowHeaderFooter.bind(this);
   }
 
+  componentDidMount () {
+    this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
+
+    let { hostname } = window.location;
+    hostname = hostname || '';
+    initializejQuery(() => {
+      if (hostname !== 'campaigns.wevote.us') {
+        AppObservableStore.siteConfigurationRetrieve(hostname);
+      } else {
+        // Initialize Google Analytics ID with the default value from config.js
+        this.onAppObservableStoreChange();
+      }
+    });
+  }
+
   // See https://reactjs.org/docs/error-boundaries.html
   static getDerivedStateFromError (error) { // eslint-disable-line no-unused-vars
     // Update state so the next render will show the fallback UI, We should have a "Oh snap" page
@@ -79,6 +98,22 @@ class App extends Component {
   componentDidCatch (error, info) {
     // We should get this information to Splunk!
     console.error('App caught error: ', `${error} with info: `, info);
+  }
+
+  componentWillUnmount () {
+    this.appStateSubscription.unsubscribe();
+  }
+
+  onAppObservableStoreChange () {
+    if (!AppObservableStore.getGoogleAnalyticsEnabled()) {
+      setTimeout(() => {
+        console.log('Google Analytics ENABLED');
+        const trackingID = AppObservableStore.getChosenGoogleAnalyticsTrackingID() || webAppConfig.GOOGLE_ANALYTICS_TRACKING_ID;
+        ReactGA.initialize(trackingID);
+        AppObservableStore.setGoogleAnalyticsEnabled(true);
+        ReactGA.pageview(normalizedHrefPage() ? `/${normalizedHrefPage()}` : '/readyLight');
+      }, 3000);
+    }
   }
 
   setShowHeader (doShowHeader) {
@@ -101,21 +136,13 @@ class App extends Component {
     renderLog('App');
     const { doShowHeader, doShowFooter } = this.state;
     // console.log(`App doShowHeader: ${doShowHeader}, doShowFooter:${doShowFooter}`);
-    let { hostname } = window.location;
-    hostname = hostname || '';
-    let useSiteConfigurationRetrieveController = true;
-    if (hostname === 'campaigns.wevote.us') {
-      useSiteConfigurationRetrieveController = false;
-    }
+
     return (
       <ErrorBoundary>
         <Suspense fallback={<span>&nbsp;</span>}>
           <MuiThemeProvider theme={muiTheme}>
             <ThemeProvider theme={styledTheme}>
               <WeVoteRouter>
-                {useSiteConfigurationRetrieveController && (
-                  <SiteConfigurationRetrieveController />
-                )}
                 <MainHeaderBar displayHeader={doShowHeader} />
                 <Switch>
                   <Route exact path="/about"><About /></Route>
