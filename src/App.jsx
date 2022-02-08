@@ -107,7 +107,8 @@ class App extends Component {
   }
 
   onAppObservableStoreChange () {
-    if (!AppObservableStore.getGoogleAnalyticsEnabled()) {
+    if (!AppObservableStore.getGoogleAnalyticsEnabled() && !AppObservableStore.getGoogleAnalyticsPending()) {
+      AppObservableStore.setGoogleAnalyticsPending(true);
       setTimeout(() => {
         const storedTrackingID = AppObservableStore.getChosenGoogleAnalyticsTrackingID();
         const configuredTrackingID = webAppConfig.GOOGLE_ANALYTICS_TRACKING_ID;
@@ -116,7 +117,8 @@ class App extends Component {
           console.log('Google Analytics ENABLED');
           ReactGA.initialize(trackingID);
           AppObservableStore.setGoogleAnalyticsEnabled(true);
-          ReactGA.pageview(normalizedHrefPage() ? `/${normalizedHrefPage()}` : '/readyLight');
+          AppObservableStore.setGoogleAnalyticsPending(false);
+          // ReactGA.pageview(normalizedHrefPage() ? `/${normalizedHrefPage()}` : '/readyLight');
         } else {
           console.log('Google Analytics did not receive a trackingID, NOT ENABLED');
         }
