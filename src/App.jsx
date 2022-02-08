@@ -80,9 +80,11 @@ class App extends Component {
     hostname = hostname || '';
     initializejQuery(() => {
       if (hostname !== 'campaigns.wevote.us') {
+        console.log('jQuery loaded since host is not campaigns.wevote.us, firing siteConfigurationRetrieve');
         AppObservableStore.siteConfigurationRetrieve(hostname);
       } else {
         // Initialize Google Analytics ID with the default value from config.js
+        console.log('jQuery loaded for campaigns.wevote.us, init call to onAppObservableStore');
         this.onAppObservableStoreChange();
       }
     });
@@ -90,7 +92,7 @@ class App extends Component {
 
   // See https://reactjs.org/docs/error-boundaries.html
   static getDerivedStateFromError (error) { // eslint-disable-line no-unused-vars
-    // Update state so the next render will show the fallback UI, We should have a "Oh snap" page
+    // Update state so the next render will show the fallback UI, We should have an "Oh snap" page
     console.log('App caught error ', error);
     return { hasError: true };
   }
@@ -107,11 +109,17 @@ class App extends Component {
   onAppObservableStoreChange () {
     if (!AppObservableStore.getGoogleAnalyticsEnabled()) {
       setTimeout(() => {
-        console.log('Google Analytics ENABLED');
-        const trackingID = AppObservableStore.getChosenGoogleAnalyticsTrackingID() || webAppConfig.GOOGLE_ANALYTICS_TRACKING_ID;
-        ReactGA.initialize(trackingID);
-        AppObservableStore.setGoogleAnalyticsEnabled(true);
-        ReactGA.pageview(normalizedHrefPage() ? `/${normalizedHrefPage()}` : '/readyLight');
+        const storedTrackingID = AppObservableStore.getChosenGoogleAnalyticsTrackingID();
+        const configuredTrackingID = webAppConfig.GOOGLE_ANALYTICS_TRACKING_ID;
+        const trackingID = storedTrackingID || configuredTrackingID;
+        if (trackingID) {
+          console.log('Google Analytics ENABLED');
+          ReactGA.initialize(trackingID);
+          AppObservableStore.setGoogleAnalyticsEnabled(true);
+          ReactGA.pageview(normalizedHrefPage() ? `/${normalizedHrefPage()}` : '/readyLight');
+        } else {
+          console.log('Google Analytics did not receive a trackingID, NOT ENABLED');
+        }
       }, 3000);
     }
   }
