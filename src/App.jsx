@@ -3,8 +3,6 @@ import React, { Component, Suspense } from 'react';
 import ReactGA from 'react-ga';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import { normalizedHrefPage } from './js/common/utils/hrefUtils';
-import webAppConfig from './js/config';
 import muiTheme from './js/common/components/Style/mui-theme';
 import styledTheme from './js/common/components/Style/styled-theme';
 import DelayedLoad from './js/common/components/Widgets/DelayedLoad';
@@ -12,6 +10,7 @@ import ErrorBoundary from './js/common/components/Widgets/ErrorBoundary';
 import WeVoteRouter from './js/common/components/Widgets/WeVoteRouter';
 import { renderLog } from './js/common/utils/logging';
 import MainHeaderBar from './js/components/Navigation/MainHeaderBar';
+import webAppConfig from './js/config';
 import AppObservableStore, { messageService } from './js/stores/AppObservableStore';
 import initializejQuery from './js/utils/initializejQuery';
 
@@ -107,7 +106,8 @@ class App extends Component {
   }
 
   onAppObservableStoreChange () {
-    if (!AppObservableStore.getGoogleAnalyticsEnabled()) {
+    if (!AppObservableStore.getGoogleAnalyticsEnabled() && !AppObservableStore.getGoogleAnalyticsPending()) {
+      AppObservableStore.setGoogleAnalyticsPending(true);
       setTimeout(() => {
         const storedTrackingID = AppObservableStore.getChosenGoogleAnalyticsTrackingID();
         const configuredTrackingID = webAppConfig.GOOGLE_ANALYTICS_TRACKING_ID;
@@ -116,7 +116,7 @@ class App extends Component {
           console.log('Google Analytics ENABLED');
           ReactGA.initialize(trackingID);
           AppObservableStore.setGoogleAnalyticsEnabled(true);
-          ReactGA.pageview(normalizedHrefPage() ? `/${normalizedHrefPage()}` : '/readyLight');
+          AppObservableStore.setGoogleAnalyticsPending(false);
         } else {
           console.log('Google Analytics did not receive a trackingID, NOT ENABLED');
         }

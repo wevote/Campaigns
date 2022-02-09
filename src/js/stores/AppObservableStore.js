@@ -26,6 +26,7 @@ const nonFluxState = {
   currentPathname: '',
   getVoterGuideSettingsDashboardEditMode: '',
   googleAnalyticsEnabled: false,
+  googleAnalyticsPending: false,
   hideWeVoteLogo: false,
   hostname: '',
   observableUpdateCounter: 0,
@@ -120,6 +121,11 @@ export default {
   setGoogleAnalyticsEnabled (enabled) {
     nonFluxState.googleAnalyticsEnabled = enabled;
     messageService.sendMessage('state updated googleAnalyticsEnabled');
+  },
+
+  setGoogleAnalyticsPending (enabled) {
+    nonFluxState.googleAnalyticsPending = enabled;
+    messageService.sendMessage('state updated googleAnalyticsPending');
   },
 
   setRecommendedCampaignListFirstRetrieveInitiated (value) {
@@ -257,6 +263,10 @@ export default {
 
   getGoogleAnalyticsEnabled () {
     return nonFluxState.googleAnalyticsEnabled;
+  },
+
+  getGoogleAnalyticsPending () {
+    return nonFluxState.googleAnalyticsPending;
   },
 
   getHideWeVoteLogo () {
