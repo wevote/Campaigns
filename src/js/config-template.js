@@ -37,8 +37,10 @@ module.exports = {
   GOOGLE_PEOPLE_API_KEY: '',
   GOOGLE_PEOPLE_API_CLIENT_ID: '',
 
+  // These are publishable keys (not secret)
   FACEBOOK_APP_ID: '1097389196952441',
   FULL_STORY_ORG: 'ESD0B',
   GOOGLE_ANALYTICS_TRACKING_ID: 'UA-53643204-3',
+
   STRIPE_API_KEY: 'pk_test_bWuWGC3jrMIFH3wvRvHR6Z5H',
 };
