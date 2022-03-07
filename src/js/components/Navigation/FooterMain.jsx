@@ -17,7 +17,7 @@ class FooterMain extends Component {
   }
 
   componentDidMount () {
-    // console.log('HeaderBarLogo componentDidMount');
+    // console.log('FooterMain componentDidMount');
     this.onAppObservableStoreChange();
     this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
   }
