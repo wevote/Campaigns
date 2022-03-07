@@ -3,8 +3,6 @@ import url from 'url';
 import Cookies from '../common/utils/js-cookie/Cookies';
 import webAppConfig from '../config';
 import { httpLog } from '../common/utils/logging';
-
-// December 2018:  We want to work toward being airbnb style compliant, but for now these are disabled in this file to minimize massive changes
 /* eslint no-param-reassign: 0 */
 
 

@@ -4,7 +4,13 @@ import Dispatcher from '../common/dispatcher/Dispatcher';
 class AnalyticsStore extends ReduceStore {
   getInitialState () {
     return {
+      isSignedIn: false,
     };
+  }
+
+  getIsSignedIn () {
+    const {  isSignedIn } = this.getState();
+    return isSignedIn;
   }
 
   reduce (state, action) {
@@ -25,10 +31,10 @@ class AnalyticsStore extends ReduceStore {
 
     switch (action.type) {
       case 'saveAnalyticsAction':
-        // if (action.res.action_constant === ACTION_VOTER_GUIDE_VISIT) {
-        // }
-        return state;
-
+        return {
+          ...state,
+          isSignedIn: action.res.is_signed_in,
+        };
       default:
         return state;
     }
