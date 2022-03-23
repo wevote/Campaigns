@@ -1,31 +1,31 @@
-import React, { Component } from 'react';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
+import styled from '@mui/material/styles/styled';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import AnalyticsActions from '../../actions/AnalyticsActions';
 import TwitterActions from '../../actions/TwitterActions';
 import VoterActions from '../../actions/VoterActions';
 import VoterSessionActions from '../../actions/VoterSessionActions';
+import LoadingWheel from '../../common/components/Widgets/LoadingWheel';
+import { isIPhone4in, isIPhone4p7in, restoreStylesAfterCordovaKeyboard } from '../../common/utils/cordovaUtils';
+import historyPush from '../../common/utils/historyPush';
+import { isCordova } from '../../common/utils/isCordovaOrWebApp';
+import Cookies from '../../common/utils/js-cookie/Cookies';
+import { oAuthLog, renderLog } from '../../common/utils/logging';
 import webAppConfig from '../../config';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import FacebookStore from '../../stores/FacebookStore';
 import VoterStore from '../../stores/VoterStore';
-import { isIPhone4in, isIPhone4p7in, restoreStylesAfterCordovaKeyboard } from '../../common/utils/cordovaUtils';
-import { isCordova } from '../../common/utils/isCordovaOrWebApp';
-import historyPush from '../../common/utils/historyPush';
-import { oAuthLog, renderLog } from '../../common/utils/logging';
 import { stringContains } from '../../utils/textFormat';
 import AppleSignIn from '../Apple/AppleSignIn';
 import FacebookSignIn from '../Facebook/FacebookSignIn';
-import LoadingWheel from '../../common/components/Widgets/LoadingWheel';
 import TwitterSignIn from '../Twitter/TwitterSignIn';
 import BrowserPushMessage from '../Widgets/BrowserPushMessage';
 import signInModalGlobalState from './signInModalGlobalState';
 import VoterEmailAddressEntry from './VoterEmailAddressEntry';
 import VoterPhoneEmailCordovaEntryModal from './VoterPhoneEmailCordovaEntryModal';
 import VoterPhoneVerificationEntry from './VoterPhoneVerificationEntry';
-import Cookies from '../../common/utils/js-cookie/Cookies';
 
 /* global $ */
 
@@ -536,21 +536,23 @@ SettingsAccount.propTypes = {
   focusedOnSingleInputToggle: PropTypes.func,
 };
 
-const Main = styled.div`
-  margin-top: ${({ inModal }) => (inModal ? '-16px' : '0')};
-  padding: ${({ inModal }) => (inModal ? '0' : '16px')};
+const Main = styled('div', {
+  shouldForwardProp: (prop) => !['inModal'].includes(prop),
+})(({ inModal }) => (`
+  margin-top: ${inModal ? '-16px' : '0'};
+  padding: ${inModal ? '0' : '16px'};
   text-align: center;
   padding-top: 0;
   width: 100%;
-`;
+`));
 
-const SignInSubtitle = styled.p`
+const SignInSubtitle = styled('p')`
   font-weight: 500;
   font-size: 16px;
   margin-bottom: 24px;
 `;
 
-const RecommendedText = styled.p`
+const RecommendedText = styled('p')`
   margin: 0;
   color: #333;
   font-weight: 500;
@@ -559,7 +561,7 @@ const RecommendedText = styled.p`
   margin-bottom: 4px;
 `;
 
-const TwitterContainer = styled.span`
+const TwitterContainer = styled('span')`
   color: #fff !important;
   background-color: #55acee !important;
   border-color: rgba(0,0,0,0.2);
@@ -571,7 +573,7 @@ const TwitterContainer = styled.span`
   text-overflow: ellipsis;
 `;
 
-const FacebookContainer = styled.span`
+const FacebookContainer = styled('span')`
   color: #fff;
   background-color: #3b5998 !important;
   border-color: rgba(0,0,0,0.2);

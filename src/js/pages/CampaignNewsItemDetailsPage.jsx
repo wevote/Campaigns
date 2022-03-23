@@ -1,10 +1,10 @@
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import { AccountCircle, ArrowBack } from '@material-ui/icons';
+import { AccountCircle, ArrowBack } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import anonymous from '../../img/global/icons/avatar-generic.png';
 import CampaignSupporterActions from '../actions/CampaignSupporterActions';
 import LazyImage from '../common/components/LazyImage';
@@ -752,14 +752,14 @@ const styles = (theme) => ({
   },
 });
 
-const BackToCampaignTitle = styled.div`
+const BackToCampaignTitle = styled('div')`
   font-size: 18px;
   font-weight: 600;
   margin-left: 10px;
   padding: 18px 0;
 `;
 
-const BackToNavigationBar = styled.div`
+const BackToNavigationBar = styled('div')`
   align-items: center;
   border-bottom: 1px solid #ddd;
   display: flex;
@@ -768,107 +768,107 @@ const BackToNavigationBar = styled.div`
   min-height: 59px;
 `;
 
-const CampaignDescription = styled.div`
+const CampaignDescription = styled('div')`
   font-size: 18px;
   text-align: left;
   white-space: pre-wrap;
 `;
 
-const CampaignDescriptionDesktop = styled.div`
+const CampaignDescriptionDesktop = styled('div')`
   font-size: 18px;
   margin-top: 32px;
   text-align: left;
   white-space: pre-wrap;
 `;
 
-const CampaignDescriptionWrapper = styled.div`
+const CampaignDescriptionWrapper = styled('div')`
   margin: 10px;
 `;
 
-const CampaignDescriptionDesktopWrapper = styled.div`
+const CampaignDescriptionDesktopWrapper = styled('div')(({ theme }) => (`
   margin-bottom: 10px;
   margin-top: 2px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
   }
-`;
+`));
 
-const CampaignImagePlaceholder = styled.div`
+const CampaignImagePlaceholder = styled('div')(({ theme }) => (`
   background-color: #eee;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 183px;
-  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.up('sm')} {
     min-height: 174px;
   }
-  @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.up('md')} {
     min-height: 239px;
   }
-  @media (min-width: ${({ theme }) => theme.breakpoints.lg}) {
+  ${theme.breakpoints.up('lg')} {
     min-height: 319px;
   }
-`;
+`));
 
-const CampaignImagePlaceholderText = styled.div`
+const CampaignImagePlaceholderText = styled('div')`
   color: #ccc;
 `;
 
-const CampaignImageDesktopWrapper = styled.div`
+const CampaignImageDesktopWrapper = styled('div')(({ theme }) => (`
   margin-bottom: 10px;
   min-height: 180px;
-  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.up('sm')} {
     min-height: 174px;
   }
-  @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.up('md')} {
     min-height: 239px;
   }
-  @media (min-width: ${({ theme }) => theme.breakpoints.lg}) {
+  ${theme.breakpoints.up('lg')} {
     min-height: 300px;
   }
-`;
+`));
 
-const CampaignImageMobileWrapper = styled.div`
+const CampaignImageMobileWrapper = styled('div')(({ theme }) => (`
   min-height: 174px;
-  @media (min-width: ${({ theme }) => theme.breakpoints.xs}) {
+  ${theme.breakpoints.up('xs')} {
     min-height: 117px;
   }
-`;
+`));
 
-const CampaignImage = styled.img`
+const CampaignImage = styled('img')`
   width: 100%;
 `;
 
-const CampaignImageDesktop = styled.img`
+const CampaignImageDesktop = styled('img')`
   border-radius: 5px;
   width: 100%;
 `;
 
-const CampaignSubSectionTitle = styled.h2`
+const CampaignSubSectionTitle = styled('h2')`
   font-size: 22px;
   margin: 0;
   margin-bottom: 10px;
   margin-top: 50px;
 `;
 
-const CampaignTitleAndScoreBar = styled.div`
+const CampaignTitleAndScoreBar = styled('div')(({ theme }) => (`
   margin: 10px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
   }
-`;
+`));
 
-const CampaignTitleDesktop = styled.h1`
+const CampaignTitleDesktop = styled('h1')(({ theme }) => (`
   font-size: 28px;
   text-align: center;
   margin: 30px 20px 40px 20px;
   min-height: 34px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     font-size: 24px;
     min-height: 29px;
   }
-`;
+`));
 
-const CampaignTitleMobile = styled.h1`
+const CampaignTitleMobile = styled('h1')`
   font-size: 22px;
   margin: 0;
   margin-bottom: 10px;
@@ -876,7 +876,7 @@ const CampaignTitleMobile = styled.h1`
   text-align: left;
 `;
 
-const CampaignUpdate = styled.div`
+const CampaignUpdate = styled('div')(({ theme }) => (`
   color: #808080;
   font-size: 14px;
   font-weight: 700;
@@ -885,26 +885,26 @@ const CampaignUpdate = styled.div`
     // Switch to 15px left/right margin when auto is too small
     margin: 0 15px;
   }
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     margin: 0 6px;
   }
-`;
+`));
 
-const CampaignUpdateBar = styled.div`
-  align-items: bottom;
+const CampaignUpdateBar = styled('div')`
+  align-items: bottom;  // bottom is nonsense css
   display: flex;
   justify-content: flex-start;
   margin-bottom: 12px;
 `;
 
-const ColumnOneThird = styled.div`
+const ColumnOneThird = styled('div')`
   flex: 1;
   flex-direction: column;
   flex-basis: 40%;
   margin: 0 0 0 25px;
 `;
 
-const ColumnsWrapper = styled.div`
+const ColumnsWrapper = styled('div')`
   display: flex;
   @media (max-width: 1005px) {
     // Switch to 15px left/right margin when auto is too small
@@ -912,40 +912,40 @@ const ColumnsWrapper = styled.div`
   }
 `;
 
-const ColumnTwoThirds = styled.div`
+const ColumnTwoThirds = styled('div')`
   flex: 2;
   flex-direction: column;
   flex-basis: 60%;
 `;
 
-const CommentsListWrapper = styled.div`
+const CommentsListWrapper = styled('div')(({ theme }) => (`
   margin-bottom: 25px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     margin: 0 10px 25px 10px;
   }
-`;
+`));
 
-const DatePostedWrapper = styled.span`
+const DatePostedWrapper = styled('span')`
   color: #808080;
   font-weight: 700;
   text-transform: uppercase;
 `;
 
-const DetailsSectionDesktopTablet = styled.div`
+const DetailsSectionDesktopTablet = styled('div')`
   display: flex;
   flex-flow: column;
 `;
 
-const DetailsSectionMobile = styled.div`
+const DetailsSectionMobile = styled('div')`
   display: flex;
   flex-flow: column;
 `;
 
-const EditContinueButtonsWrapper = styled.div`
+const EditContinueButtonsWrapper = styled('div')`
   display: flex;
 `;
 
-const EditContinueInnerWrapper = styled.div`
+const EditContinueInnerWrapper = styled('div')`
   align-items: center;
   display: flex;
   justify-content: space-between;
@@ -958,34 +958,34 @@ const EditContinueInnerWrapper = styled.div`
   }
 `;
 
-const EditContinueOuterWrapper = styled.div`
+const EditContinueOuterWrapper = styled('div')`
   background-color: #f6f4f6;
   border-bottom: 1px solid #ddd;
   // margin: 10px 0;
   width: 100%;
 `;
 
-const NewsItemSubjectDesktop = styled.h1`
+const NewsItemSubjectDesktop = styled('h1')(({ theme }) => (`
   font-size: 32px;
   margin: 0 0 24px 0;
   min-height: 34px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     font-size: 24px;
     min-height: 29px;
   }
-`;
+`));
 
-const NewsItemSubjectMobile = styled.h1`
+const NewsItemSubjectMobile = styled('h1')(({ theme }) => (`
   font-size: 28px;
   margin: 0 6px 12px 6px;
   min-height: 34px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     font-size: 24px;
     min-height: 29px;
   }
-`;
+`));
 
-const PressReleaseEnd = styled.div`
+const PressReleaseEnd = styled('div')`
   align-items: center;
   color: #808080;
   display: flex;
@@ -994,46 +994,46 @@ const PressReleaseEnd = styled.div`
   margin-top: 20px;
 `;
 
-const PreviewHeader = styled.div`
+const PreviewHeader = styled('div')`
   font-size: 24px;
   font-weight: 700;
   text-transform: uppercase;
 `;
 
-const SpeakerAndPhotoOuterWrapper = styled.div`
+const SpeakerAndPhotoOuterWrapper = styled('div')(({ theme }) => (`
   align-items: center;
   display: flex;
   justify-content: flex-start;
   margin-bottom: 20px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     margin: 0 6px 10px 6px;
   }
-`;
+`));
 
-const SpeakerName = styled.span`
+const SpeakerName = styled('span')`
   // color: #808080;
   font-size: 16px;
   font-weight: 500 !important;
 `;
 
-const SpeakerVoterPhotoWrapper = styled.div`
+const SpeakerVoterPhotoWrapper = styled('div')`
   margin-right: 6px;
 `;
 
-const SupportButtonFooterWrapper = styled.div`
+const SupportButtonFooterWrapper = styled('div')`
   position: fixed;
   width: 100%;
   bottom: 0;
   display: block;
 `;
 
-const SupportButtonPanel = styled.div`
+const SupportButtonPanel = styled('div')`
   background-color: #fff;
   border-top: 1px solid #ddd;
   padding: 10px;
 `;
 
-const UpdateSupportersHeader = styled.div`
+const UpdateSupportersHeader = styled('div')`
   margin-bottom: 24px;
   margin-top: 30px;
 `;

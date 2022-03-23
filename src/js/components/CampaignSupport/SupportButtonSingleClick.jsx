@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
+import { Button } from '@mui/material';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import CampaignStore from '../../stores/CampaignStore';
+import React, { Component } from 'react';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
-import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import initializejQuery from '../../utils/initializejQuery';
 import { isCordova } from '../../common/utils/isCordovaOrWebApp';
 import { renderLog } from '../../common/utils/logging';
+import CampaignStore from '../../stores/CampaignStore';
+import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
+import initializejQuery from '../../utils/initializejQuery';
 
 class SupportButtonSingleClick extends Component {
   constructor (props) {
@@ -134,12 +134,12 @@ const styles = (theme) => ({
   },
 });
 
-const ButtonPanel = styled.div`
+const ButtonPanel = styled('div')`
   background-color: #fff;
   padding: 0;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
   width: 100%;
   display: block;
 `;

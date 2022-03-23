@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react';
+import { Button } from '@mui/material';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import React, { PureComponent } from 'react';
 import { getTextColorFromBackground } from '../../utils/color';
 import { renderLog } from '../../utils/logging';
 
@@ -121,7 +121,7 @@ const styles = () => ({
   },
 });
 
-const SplitButtonSeparatorLeft = styled.div`
+const SplitButtonSeparatorLeft = styled('div')`
   display: inline-block;
   height: 100%;
   width: 1.5px !important;
@@ -132,7 +132,7 @@ const SplitButtonSeparatorLeft = styled.div`
   left: 44px;
 `;
 
-const SplitButtonSeparatorRight = styled.div`
+const SplitButtonSeparatorRight = styled('div')`
   display: inline-block;
   height: 100%;
   width: 1.5px !important;
@@ -143,21 +143,23 @@ const SplitButtonSeparatorRight = styled.div`
   right: 44px;
 `;
 
-const SplitButtonIcon = styled.span`
+const SplitButtonIcon = styled('span', {
+  shouldForwardProp: (prop) => !['adjustedIconWidth'].includes(prop),
+})(({ adjustedIconWidth }) => (`
   flex: none;
   display: flex;
   align-items: center;
   height: 100%;
   padding: 0 13.3px;
-  ${({ adjustedIconWidth }) => (adjustedIconWidth ? `width: ${adjustedIconWidth}px;` : 'width: 44px;')}
+  ${adjustedIconWidth ? `width: ${adjustedIconWidth}px;` : 'width: 44px;'}
   * {
     padding-right: 24px;
     width: 100%;
     font-size: 22px;
   }
-`;
+`));
 
-const SplitButtonText = styled.span`
+const SplitButtonText = styled('span')`
   padding: 8px 8px 8px;
   text-align: center;
   flex: 1 1 0;

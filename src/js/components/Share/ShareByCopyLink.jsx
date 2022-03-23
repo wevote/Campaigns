@@ -1,13 +1,14 @@
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
+import withTheme from '@mui/styles/withTheme';
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { withStyles, withTheme } from '@material-ui/core/styles';
+import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
+import { renderLog } from '../../common/utils/logging';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CampaignStore from '../../stores/CampaignStore';
-import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import { openSnackbar } from '../Widgets/SnackNotifier';
-import { renderLog } from '../../common/utils/logging';
 import { generateSharingLink } from './shareButtonCommon';
 
 class ShareByCopyLink extends Component {
@@ -136,7 +137,7 @@ const styles = () => ({
   },
 });
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
   cursor: pointer;
   display: block !important;
   @media (min-width: 600px) {

@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import { FormControl, TextField } from '@mui/material';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { TextField, FormControl } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import React, { Component } from 'react';
 import CampaignStartActions from '../../actions/CampaignStartActions';
+import { renderLog } from '../../common/utils/logging';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import CampaignStore from '../../stores/CampaignStore';
-import { renderLog } from '../../common/utils/logging';
 
 class CampaignTitleInputField extends Component {
   constructor (props) {
@@ -132,12 +132,12 @@ const styles = () => ({
   },
 });
 
-const ColumnFullWidth = styled.div`
+const ColumnFullWidth = styled('div')`
   padding: 8px 12px;
   width: 100%;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
   display: flex;
   justify-content: space-between;
   margin-left: -12px;

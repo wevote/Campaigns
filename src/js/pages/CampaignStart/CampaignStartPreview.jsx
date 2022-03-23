@@ -1,9 +1,9 @@
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Button } from '@mui/material';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
+import styled from '@mui/material/styles/styled';
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import { OuterWrapper, PageWrapper } from '../../common/components/Style/stepDisplayStyles';
 import DelayedLoad from '../../common/components/Widgets/DelayedLoad';
@@ -287,89 +287,89 @@ const styles = (theme) => ({
   },
 });
 
-const CampaignDescription = styled.div`
+const CampaignDescription = styled('div')`
   font-size: 15px;
   margin: 10px 0;
   white-space: pre-wrap;
 `;
 
-const CampaignDescriptionMissing = styled.div`
+const CampaignDescriptionMissing = styled('div')`
   color: red;
   font-size: 18px;
   margin: 10px 0;
 `;
 
-const CampaignImage = styled.img`
+const CampaignImage = styled('img')`
   width: 100%;
 `;
 
-const CampaignImageMissing = styled.div`
+const CampaignImageMissing = styled('div')`
   color: red;
   font-size: 18px;
   font-weight: 600;
 `;
 
-const CampaignImageMissingWrapper = styled.div`
+const CampaignImageMissingWrapper = styled('div')`
   display: flex;
   justify-content: flex-start;
 `;
 
-const CampaignPoliticianList = styled.div`
+const CampaignPoliticianList = styled('div')`
   font-size: 17px;
   margin: 10px 0;
 `;
 
-const CampaignPoliticianListMissing = styled.div`
+const CampaignPoliticianListMissing = styled('div')`
   color: red;
   font-size: 18px;
   margin: 10px 0;
 `;
 
-const CampaignStartSection = styled.div`
+const CampaignStartSection = styled('div')`
   margin-bottom: 60px !important;
   max-width: 620px;
   width: 100%;
 `;
 
-const CampaignStartSectionWrapper = styled.div`
+const CampaignStartSectionWrapper = styled('div')`
   display: flex;
   justify-content: center;
 `;
 
-const CampaignTitleDesktop = styled.h1`
+const CampaignTitleDesktop = styled('h1')(({ theme }) => (`
   font-size: 28px;
   text-align: center;
   margin: 30px 20px 40px 20px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     font-size: 24px;
   }
-`;
+`));
 
-const CampaignTitleMissing = styled.div`
+const CampaignTitleMissing = styled('div')`
   color: red;
 `;
 
-const CampaignTitleMobile = styled.h1`
+const CampaignTitleMobile = styled('h1')`
   font-size: 18px;
   text-align: left;
   margin: 0;
 `;
 
-const DesktopDisplayWrapper = styled.div`
+const DesktopDisplayWrapper = styled('div')`
 `;
 
-const InnerWrapper = styled.div`
+const InnerWrapper = styled('div')`
   width: 100%;
 `;
 
-const MobileDisplayWrapper = styled.div`
+const MobileDisplayWrapper = styled('div')`
 `;
 
-const SaveCancelButtonsWrapper = styled.div`
+const SaveCancelButtonsWrapper = styled('div')`
   display: flex;
 `;
 
-const SaveCancelInnerWrapper = styled.div`
+const SaveCancelInnerWrapper = styled('div')`
   align-items: center;
   display: flex;
   justify-content: flex-end;
@@ -382,7 +382,7 @@ const SaveCancelInnerWrapper = styled.div`
   }
 `;
 
-const SaveCancelOuterWrapper = styled.div`
+const SaveCancelOuterWrapper = styled('div')`
   background-color: #f6f4f6;
   border-bottom: 1px solid #ddd;
   // margin: 10px 0;

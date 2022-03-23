@@ -1,23 +1,20 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { Close } from '@mui/icons-material';
+import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
+import withTheme from '@mui/styles/withTheme';
 import clsx from 'clsx';
-import { Dialog, DialogContent, DialogTitle, IconButton } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
-import { withStyles, withTheme } from '@material-ui/core/styles';
-import styled from 'styled-components';
-import { lazyLoader, libraryNeedsLoading } from '../../utils/lazyLoader';
-import { renderLog } from '../../common/utils/logging';
-import { isAndroid, isIOS,
-  isIPhone3p5in, isIPhone4in, isIPhone4p7in, isIPhone5p8in, isIPhone6p1in, isIPhone6p5in,
-  isWebAppHeight0to568, isWebAppHeight569to667, isWebAppHeight668to736, isWebAppHeight737to896,
-  restoreStylesAfterCordovaKeyboard,
-} from '../../common/utils/cordovaUtils';
-import { isCordova, isWebApp } from '../../common/utils/isCordovaOrWebApp';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { isAndroid, isIOS, isIPhone3p5in, isIPhone4in, isIPhone4p7in, isIPhone5p8in, isIPhone6p1in, isIPhone6p5in, isWebAppHeight0to568, isWebAppHeight569to667, isWebAppHeight668to736, isWebAppHeight737to896, restoreStylesAfterCordovaKeyboard } from '../../common/utils/cordovaUtils';
 import historyPush from '../../common/utils/historyPush';
-import SettingsAccount from './SettingsAccount';
+import { isCordova, isWebApp } from '../../common/utils/isCordovaOrWebApp';
+import { renderLog } from '../../common/utils/logging';
 import VoterStore from '../../stores/VoterStore';
 import initializejQuery from '../../utils/initializejQuery';
+import { lazyLoader, libraryNeedsLoading } from '../../utils/lazyLoader';
 import { stringContains } from '../../utils/textFormat';
+import SettingsAccount from './SettingsAccount';
 import signInModalGlobalState from './signInModalGlobalState';
 
 /* global $ */
@@ -179,6 +176,7 @@ class SignInModal extends Component {
             classes={{ root: classes.closeButton }}
             onClick={() => { this.closeFunction(); }}
             id="profileCloseSignInModal"
+            size="large"
           >
             <Close />
           </IconButton>
@@ -312,12 +310,12 @@ const styles = (theme) => ({
   },
   closeButton: {
     position: 'absolute',
-    right: `${theme.spacing(1)}px`,
-    top: `${theme.spacing(1)}px`,
+    right: theme.spacing(1),
+    top: theme.spacing(1),
   },
 });
 
-const SignInText = styled.span`
+const SignInText = styled('span')`
   display: block;
   text-align: center;
   min-width: 200px;

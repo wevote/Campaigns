@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import styled from '@mui/material/styles/styled';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import React, { Component } from 'react';
 import Cookies from '../../common/utils/js-cookie/Cookies';
-import AppObservableStore from '../../stores/AppObservableStore';
-import voterSignOut from '../../utils/voterSignOut';
-import VoterStore from '../../stores/VoterStore';
 import { renderLog } from '../../common/utils/logging';
+import AppObservableStore from '../../stores/AppObservableStore';
+import VoterStore from '../../stores/VoterStore';
 import { stringContains } from '../../utils/textFormat';
+import voterSignOut from '../../utils/voterSignOut';
 
 
 class SignInButton extends Component {
@@ -80,11 +80,13 @@ SignInButton.propTypes = {
   topNavigationStyles: PropTypes.bool,
 };
 
-const SignInText = styled.div`
-  ${({ topNavigationStyles }) => (topNavigationStyles ? 'color: #6f6f6f; font-size: 14px; :hover { color: #4371cc; };' : '')}
-`;
+const SignInText = styled('div', {
+  shouldForwardProp: (prop) => !['topNavigationStyles'].includes(prop),
+})(({ topNavigationStyles }) => (`
+  ${topNavigationStyles ? 'color: #6f6f6f; font-size: 14px; :hover { color: #4371cc; };' : ''}
+`));
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
   width: 100%;
 `;
 

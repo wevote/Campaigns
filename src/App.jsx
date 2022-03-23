@@ -1,10 +1,8 @@
-import { MuiThemeProvider } from '@material-ui/core/styles';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import React, { Component, Suspense } from 'react';
 import ReactGA from 'react-ga';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { ThemeProvider } from 'styled-components';
-import muiTheme from './js/common/components/Style/mui-theme';
-import styledTheme from './js/common/components/Style/styled-theme';
+import muiTheme from './js/common/components/Style/muiTheme';
 import DelayedLoad from './js/common/components/Widgets/DelayedLoad';
 import ErrorBoundary from './js/common/components/Widgets/ErrorBoundary';
 import WeVoteRouter from './js/common/components/Widgets/WeVoteRouter';
@@ -148,8 +146,8 @@ class App extends Component {
     return (
       <ErrorBoundary>
         <Suspense fallback={<span>&nbsp;</span>}>
-          <MuiThemeProvider theme={muiTheme}>
-            <ThemeProvider theme={styledTheme}>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={muiTheme}>
               <WeVoteRouter>
                 <MainHeaderBar displayHeader={doShowHeader} />
                 <Switch>
@@ -242,7 +240,7 @@ class App extends Component {
                 </DelayedLoad>
               </WeVoteRouter>
             </ThemeProvider>
-          </MuiThemeProvider>
+          </StyledEngineProvider>
         </Suspense>
       </ErrorBoundary>
     );

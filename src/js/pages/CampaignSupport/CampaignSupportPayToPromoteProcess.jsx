@@ -1,12 +1,12 @@
 import loadable from '@loadable/component';
-import { Button, InputAdornment, TextField } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Button, InputAdornment, TextField } from '@mui/material';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import CampaignActions from '../../actions/CampaignActions';
 import DonationListForm from '../../common/components/Donation/DonationListForm';
 import InjectedCheckoutForm from '../../common/components/Donation/InjectedCheckoutForm';
@@ -486,54 +486,56 @@ const styles = () => ({
   },
 });
 
-const ButtonInsideWrapper = styled.div`
+const ButtonInsideWrapper = styled('div')`
   align-items: center;
   display: flex;
   justify-content: space-between;
   width: 100%;
 `;
 
-const ContentTitle = styled.h1`
+const ContentTitle = styled('h1')(({ theme }) => (`
   font-size: 22px;
   font-weight: 600;
   margin: 20px 0;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     font-size: 20px;
   }
-`;
+`));
 
-const ContributeGridWrapper = styled.div`
+const ContributeGridWrapper = styled('div', {
+  shouldForwardProp: (prop) => !['show'].includes(prop),
+})(({ show, theme }) => (`
   background-color: #ebebeb;
   padding: 10px;
   border: 1px solid darkgrey;
   margin: auto auto 20px auto;
-  visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
-  height: ${(props) => (props.show ? 'inherit' : '5px')};
+  visibility: ${show ? 'visible' : 'hidden'};
+  height: ${show ? 'inherit' : '5px'};
   width: 500px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     width: 300px;
-`;
+`));
 
-const ContributeGridSection = styled.div`
+const ContributeGridSection = styled('div')`
   background-color: #ebebeb;
   display: flex;
   flex-direction: column;
   padding: 10px 10px 2px 10px;
 `;
 
-const ContributeMonthlyText = styled.div`
+const ContributeMonthlyText = styled('div')`
   font-weight: 600;
   padding: 0 0 2px 18px;
 `;
 
-const ContributeGridItem = styled.div`
+const ContributeGridItem = styled('div')`
   background-color: #ebebeb;
   padding: 5px 10px;
   font-size: 30px;
   text-align: center;
 `;
 
-const ContributeGridItemOtherItem = styled.div`
+const ContributeGridItemOtherItem = styled('div')`
   background-color: #ebebeb;
   padding: 5px 10px;
   font-size: 30px;
@@ -541,42 +543,44 @@ const ContributeGridItemOtherItem = styled.div`
   grid-column: auto / span 2;
 `;
 
-const IntroductionMessageSection = styled.div`
+const IntroductionMessageSection = styled('div')(({ theme }) => (`
   padding: 1em 2em;
   display: flex;
   flex-flow: column;
   align-items: center;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     padding: 0 1em;
   }
+`));
+
+const InnerWrapper = styled('div')`
 `;
 
-const InnerWrapper = styled.div`
-`;
-
-const PaymentAmount = styled.div`
+const PaymentAmount = styled('div')`
   font-size: 1.1rem;
 `;
 
-const PaymentCenteredWrapper = styled.div`
+const PaymentCenteredWrapper = styled('div', {
+  shouldForwardProp: (prop) => !['show'].includes(prop),
+})(({ show, theme }) => (`
   width: 500px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     width: 300px;
   }
   display: inline-block;
-  background-color: ${(props) => (props.show ? 'rgb(246, 244,246)' : 'inherit')};
-  box-shadow: ${(props) => (props.show ?
-    '0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0px rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%)' : 'none')};
-  border: ${(props) => (props.show ? '2px solid darkgrey' : 'none')};
+  background-color: ${show ? 'rgb(246, 244,246)' : 'inherit'};
+  box-shadow: ${show ?
+    '0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0px rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%)' : 'none'};
+  border: ${show ? '2px solid darkgrey' : 'none'};
   border-radius: 3px;
   padding: 8px;
-`;
+`));
 
-const PaymentWrapper  = styled.div`
+const PaymentWrapper  = styled('div')`
   text-align: center;
 `;
 
-const WhatYouGet = styled.div`
+const WhatYouGet = styled('div')`
   font-size: 1.3rem;
 `;
 

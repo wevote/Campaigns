@@ -1,7 +1,7 @@
-import React, { Component, Suspense } from 'react';
 import loadable from '@loadable/component';
-import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
+import React, { Component, Suspense } from 'react';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 
 const TopNavigationDesktop = loadable(() => import('./TopNavigationDesktop'));
@@ -54,10 +54,10 @@ const styles = () => ({
   },
 });
 
-const HeaderBarWrapper = styled.div`
+const HeaderBarWrapper = styled('div')`
   align-items: center;
   display: flex;
-  height: 42px;
+  height: 48px;
 `;
 
 export default withStyles(styles)(TopNavigationDesktopController);

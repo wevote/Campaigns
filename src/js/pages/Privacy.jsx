@@ -1,9 +1,9 @@
+import styled from '@mui/material/styles/styled';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import PrivacyBody from '../common/components/PrivacyBody';
-import { renderLog } from '../common/utils/logging';
 import { OuterWrapper, PageWrapper } from '../common/components/Style/stepDisplayStyles';
+import { renderLog } from '../common/utils/logging';
 
 class Privacy extends Component {
   static getProps () {
@@ -31,6 +31,6 @@ class Privacy extends Component {
   }
 }
 
-const InnerWrapper = styled.div``;
+const InnerWrapper = styled('div')``;
 
 export default Privacy;

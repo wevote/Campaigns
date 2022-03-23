@@ -1,9 +1,9 @@
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Button } from '@mui/material';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import VoterActions from '../../actions/VoterActions';
 import VoterPhotoUpload from '../../common/components/Settings/VoterPhotoUpload';
 import { PageWrapper } from '../../common/components/Style/stepDisplayStyles';
@@ -159,29 +159,29 @@ const styles = () => ({
   },
 });
 
-const InputFieldsWrapper = styled.div`
+const InputFieldsWrapper = styled('div')`
   margin-top: 25px;
 `;
 
-const IntroductionMessageSection = styled.div`
+const IntroductionMessageSection = styled('div')(({ theme }) => (`
   padding: 1em 0 1em 0;
   display: flex;
   flex-flow: column;
   align-items: center;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     padding: 1em 0 .5em 0;
   }
-`;
+`));
 
-const OneInputFieldWrapper = styled.div`
+const OneInputFieldWrapper = styled('div')`
   margin-bottom: 25px;
 `;
 
-const SaveCancelButtonsWrapper = styled.div`
+const SaveCancelButtonsWrapper = styled('div')`
   display: flex;
 `;
 
-const SaveCancelInnerWrapper = styled.div`
+const SaveCancelInnerWrapper = styled('div')`
   align-items: center;
   display: flex;
   justify-content: flex-end;
@@ -194,32 +194,32 @@ const SaveCancelInnerWrapper = styled.div`
   }
 `;
 
-const SaveCancelOuterWrapper = styled.div`
+const SaveCancelOuterWrapper = styled('div')`
   background-color: #f6f4f6;
   border-bottom: 1px solid #ddd;
   // margin: 10px 0;
   width: 100%;
 `;
 
-const SaveInnerWrapper = styled.div`
+const SaveInnerWrapper = styled('div')`
   display: flex;
 `;
 
-const SaveOuterWrapper = styled.div`
+const SaveOuterWrapper = styled('div')`
   align-items: center;
   display: flex;
   justify-content: flex-end;
   padding: 8px 0;
 `;
 
-const YourNameWrapper = styled.h1`
+const YourNameWrapper = styled('h1')(({ theme }) => (`
   font-size: 42px;
   text-align: center;
   margin: 1em 0 0 0;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     font-size: 28px;
     // margin: 25px;
   }
-`;
+`));
 
 export default withStyles(styles)(SettingsEditProfile);

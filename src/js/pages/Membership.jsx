@@ -1,20 +1,20 @@
-import React, { Component, Suspense } from 'react';
 import loadable from '@loadable/component';
-import { Button, InputAdornment, TextField } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Button, InputAdornment, TextField } from '@mui/material';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import PropTypes from 'prop-types';
+import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import DonationListForm from '../common/components/Donation/DonationListForm';
-import LoadingWheel from '../common/components/Widgets/LoadingWheel';
 import InjectedCheckoutForm from '../common/components/Donation/InjectedCheckoutForm';
+import { OuterWrapper, PageWrapper } from '../common/components/Style/stepDisplayStyles';
+import LoadingWheel from '../common/components/Widgets/LoadingWheel';
+import DonateStore from '../common/stores/DonateStore';
+import { renderLog } from '../common/utils/logging';
 import webAppConfig from '../config';
 import initializejQuery from '../utils/initializejQuery';
-import { renderLog } from '../common/utils/logging';
-import DonateStore from '../common/stores/DonateStore';
-import { OuterWrapper, PageWrapper } from '../common/components/Style/stepDisplayStyles';
 
 
 const stripePromise = loadStripe(webAppConfig.STRIPE_API_KEY);
@@ -308,27 +308,29 @@ const styles = () => ({
   },
 });
 
-const ContentTitle = styled.h1`
+const ContentTitle = styled('h1')(({ theme }) => (`
   font-size: 22px;
   font-weight: 600;
   margin: 20px 0;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     font-size: 20px;
   }
+`));
+
+const InnerWrapper = styled('div')`
 `;
 
-const InnerWrapper = styled.div`
-`;
-
-const PaymentWrapper  = styled.div`
-  visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
-  height: ${(props) => (props.show ? 'inherit' : '0')};
+const PaymentWrapper  = styled('div', {
+  shouldForwardProp: (prop) => !['show'].includes(prop),
+})(({ show }) => (`
+  visibility: ${show ? 'visible' : 'hidden'};
+  height: ${show ? 'inherit' : '0'};
   text-align: center;
-`;
+`));
 
-const PaymentCenteredWrapper  = styled.div`
+const PaymentCenteredWrapper  = styled('div')(({ theme }) => (`
   width: 500px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     width: 300px;
   }
   display: inline-block;
@@ -337,66 +339,68 @@ const PaymentCenteredWrapper  = styled.div`
   border: 2px solid darkgrey;
   border-radius: 3px;
   padding: 8px;
-`;
+`));
 
-const IntroductionMessageSection = styled.div`
+const IntroductionMessageSection = styled('div')(({ theme }) => (`
   padding: 1em 2em;
   display: flex;
   flex-flow: column;
   align-items: center;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     padding: 0 1em;
   }
-`;
+`));
 
-const PageSubStatement = styled.div`
+const PageSubStatement = styled('div', {
+  shouldForwardProp: (prop) => !['show'].includes(prop),
+})(({ show, theme }) => (`
   font-size: 18px;
   text-align: left;
   margin: 0 0 1em;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
   }
-  visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
-`;
+  visibility: ${show ? 'visible' : 'hidden'};
+`));
 
-const ContributeGridWrapper = styled.div`
+const ContributeGridWrapper = styled('div')(({ theme }) => (`
   background-color: #ebebeb;
   padding: 10px;
   border: 1px solid darkgrey;
   margin: auto auto 20px auto;
   width: 500px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     width: 300px;
   }
-`;
+`));
 
-const ContributeGridSection = styled.div`
+const ContributeGridSection = styled('div')`
   display: grid;
   grid-template-columns: auto auto;
   background-color: #ebebeb;
   padding: 10px 10px 2px 10px;
 `;
 
-const ContributeMonthlyText = styled.div`
+const ContributeMonthlyText = styled('div')`
   font-weight: 600;
   padding: 0 0 2px 18px;
 `;
 
-const ContributeGridItem = styled.div`
+const ContributeGridItem = styled('div')`
   background-color: #ebebeb;
   padding: 5px 10px;
   font-size: 30px;
   text-align: center;
 `;
 
-const ContributeGridItemJoin = styled.div`
-  ${({ joining }) => ((joining) ?
+const ContributeGridItemJoin = styled('div')(({ joining }) => (`
+  ${joining ?
     'padding: 5px 10px;' :
     'padding: 5px 10px;'
-  )};
+  };
   background-color: #ebebeb;
   font-size: 30px;
   text-align: center;
   grid-column: auto / span 2;
-`;
+`));
 
 export default withStyles(styles)(Membership);

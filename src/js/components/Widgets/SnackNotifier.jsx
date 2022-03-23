@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import { Snackbar } from '@mui/material';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { Snackbar } from '@material-ui/core';
-import { renderLog } from '../../common/utils/logging';
+import React, { Component } from 'react';
 import { snackOffset } from '../../common/utils/cordovaUtils';
+import { renderLog } from '../../common/utils/logging';
 
 let openSnackbarFn;
 

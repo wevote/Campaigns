@@ -1,17 +1,17 @@
+import { CircularProgress } from '@mui/material';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { CircularProgress } from '@material-ui/core';
 import TwitterActions from '../../actions/TwitterActions';
 import VoterActions from '../../actions/VoterActions';
+import historyPush from '../../common/utils/historyPush';
+import { isWebApp } from '../../common/utils/isCordovaOrWebApp';
+import Cookies from '../../common/utils/js-cookie/Cookies';
+import { oAuthLog, renderLog } from '../../common/utils/logging';
 import SpinnerPage from '../../components/Widgets/SpinnerPage';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import TwitterStore from '../../stores/TwitterStore';
 import VoterStore from '../../stores/VoterStore';
-import { isWebApp } from '../../common/utils/isCordovaOrWebApp';
-import historyPush from '../../common/utils/historyPush';
-import Cookies from '../../common/utils/js-cookie/Cookies';
 import initializejQuery from '../../utils/initializejQuery';
-import { oAuthLog, renderLog } from '../../common/utils/logging';
 import { stringContains } from '../../utils/textFormat';
 
 export default class TwitterSignInProcess extends Component {

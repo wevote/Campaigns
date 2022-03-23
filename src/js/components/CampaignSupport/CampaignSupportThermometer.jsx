@@ -1,9 +1,9 @@
-import React from 'react';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import CampaignStore from '../../stores/CampaignStore';
+import React from 'react';
 import { renderLog } from '../../common/utils/logging';
+import CampaignStore from '../../stores/CampaignStore';
 import { numberWithCommas } from '../../utils/textFormat';
 
 class CampaignSupportThermometer extends React.Component {
@@ -125,19 +125,21 @@ const styles = () => ({
   },
 });
 
-const GoalText = styled.span`
+const GoalText = styled('span')`
   font-size: 18px;
 `;
 
-const ProgressBar = styled.div`
+const ProgressBar = styled('div', {
+  shouldForwardProp: (prop) => !['percentage'].includes(prop),
+})(({ percentage }) => (`
   background: #ccc;
   border-radius: 6px;
   display: flex;
   width: 100%;
   height: 12px;
-  margin: 0px 0 12px;
+  margin: 0 0 12px;
   span#progress-bar {
-    width: ${({ percentage }) => percentage}%;
+    width: ${percentage}%;
     display: block;
     height: 12px;
     border-radius: 6px 0 0 6px;
@@ -153,22 +155,24 @@ const ProgressBar = styled.div`
     border-left: 6px solid #fe2712;
     border-top: 6px solid transparent;
   };
-`;
+`));
 
-const ProgressBarWrapper = styled.div`
+const ProgressBarWrapper = styled('div')`
   margin-top: 6px;
 `;
 
-const SupportersText = styled.span`
+const SupportersText = styled('span', {
+  shouldForwardProp: (prop) => !['inCompressedMode'].includes(prop),
+})(({ inCompressedMode }) => (`
   color: black !important;
-  font-size: ${({ inCompressedMode }) => (inCompressedMode ? '16px' : '18px')};
-  font-weight: ${({ inCompressedMode }) => (inCompressedMode ? '400' : '800')};
+  font-size: ${inCompressedMode ? '16px' : '18px'};
+  font-weight: ${inCompressedMode ? '400' : '800'};
+`));
+
+const TextWrapper = styled('div')`
 `;
 
-const TextWrapper = styled.div`
-`;
-
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
 `;
 
 export default withStyles(styles)(CampaignSupportThermometer);

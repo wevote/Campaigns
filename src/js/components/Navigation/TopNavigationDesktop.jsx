@@ -1,10 +1,11 @@
+import { AppBar, Tab, Tabs, Toolbar } from '@mui/material';
+import styled from '@mui/material/styles/styled';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { AppBar, Tab, Tabs, Toolbar } from '@material-ui/core';
-import { ThemeProvider } from '@material-ui/core/styles';
-import AppObservableStore from '../../stores/AppObservableStore';
 import startsWith from '../../common/utils/startsWith';
-import { campaignTheme } from '../Style/campaignTheme';
+import AppObservableStore from '../../stores/AppObservableStore';
+// import { ThemeProvider } from '@mui/material/styles';
+// import { campaignTheme } from '../Style/campaignTheme';
 
 
 export default function TopNavigationDesktop () {
@@ -58,34 +59,44 @@ export default function TopNavigationDesktop () {
   // console.log('Render TopNavigationDesktop.jsx');
   return (
     <div>
-      <ThemeProvider theme={campaignTheme(true, 30)}>
-        <AppBar
-          position="relative"
-          color="default"
-        >
-          <Toolbar disableGutters>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="Tab menu"
-              TabIndicatorProps={showIndicatorUnderline ? (
-                {}
-              ) : (
-                {
-                  style: {
-                    display: 'none',
-                  },
-                }
-              )}
-            >
-              {showStartACampaign && <Tab id="topNav-0" label="Start a campaign" style={{ minWidth: 125 }} onClick={() => history.push('/start-a-campaign')} />}
-              {showYourCampaigns && <Tab id="topNav-1" label="Your campaigns" style={{ minWidth: 125 }} onClick={() => history.push('/profile/started')} />}
-              {showMembership && <Tab id="topNav-2" label="Membership" style={{ minWidth: 100 }} onClick={() => history.push('/membership')} />}
-              {showSearch && <Tab id="topNav-3" label="Search" style={{ minWidth: 60 }} onClick={() => history.push('/search')} />}
-            </Tabs>
-          </Toolbar>
-        </AppBar>
-      </ThemeProvider>
+      {/* <ThemeProvider theme={campaignTheme(true, 30)}> */}
+      <AppBarStyled
+        position="relative"
+        color="default"
+      >
+        <ToolbarStyled disableGutters>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="Tab menu"
+            TabIndicatorProps={showIndicatorUnderline ? (
+              {}
+            ) : (
+              {
+                style: {
+                  display: 'none',
+                },
+              }
+            )}
+          >
+            {showStartACampaign && <Tab id="topNav-0" label="Start a campaign" style={{ minWidth: 125 }} onClick={() => history.push('/start-a-campaign')} />}
+            {showYourCampaigns && <Tab id="topNav-1" label="Your campaigns" style={{ minWidth: 125 }} onClick={() => history.push('/profile/started')} />}
+            {showMembership && <Tab id="topNav-2" label="Membership" style={{ minWidth: 100 }} onClick={() => history.push('/membership')} />}
+            {showSearch && <Tab id="topNav-3" label="Search" style={{ minWidth: 60 }} onClick={() => history.push('/search')} />}
+          </Tabs>
+        </ToolbarStyled>
+      </AppBarStyled>
+      {/* </ThemeProvider > */}
     </div>
   );
 }
+
+const AppBarStyled = styled(AppBar)`
+  box-shadow: none;
+  padding-bottom: 0;
+`;
+
+const ToolbarStyled = styled(Toolbar)`
+  min-height: unset !important;
+`;
+

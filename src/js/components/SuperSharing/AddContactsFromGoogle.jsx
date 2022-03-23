@@ -1,13 +1,13 @@
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Button } from '@mui/material';
+import withStyles from '@mui/styles/withStyles';
 import { loadGapiInsideDOM } from 'gapi-script';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import VoterActions from '../../actions/VoterActions';
-import AddContactConsts from '../../constants/AddContactConsts';
-import VoterStore from '../../stores/VoterStore';
 import { renderLog } from '../../common/utils/logging';
 import webAppConfig from '../../config'; // eslint-disable-line import/no-cycle
+import AddContactConsts from '../../constants/AddContactConsts';
+import VoterStore from '../../stores/VoterStore';
 
 
 class AddContactsFromGoogle extends Component {

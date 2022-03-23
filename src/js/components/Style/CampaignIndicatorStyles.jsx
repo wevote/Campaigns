@@ -1,6 +1,6 @@
-import styled from 'styled-components';
+import styled from '@mui/material/styles/styled';
 
-const BlockedIndicator = styled.span`
+const BlockedIndicator = styled('span')`
   background-color: #efc2c2;
   border-radius: 4px;
   color: #2e3c5d;
@@ -14,19 +14,19 @@ const BlockedIndicator = styled.span`
   }
 `;
 
-const BlockedReason = styled.div`
+const BlockedReason = styled('div')(({ theme }) => (`
   background-color: #efc2c2;
   border-radius: 4px;
   color: #2e3c5d;
   font-size: 18px;
   margin-top: 10px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
+  ${theme.breakpoints.down('lg')} {
     margin: 10px;
   }
   padding: 5px 12px;
-`;
+`));
 
-const DraftModeIndicator = styled.span`
+const DraftModeIndicator = styled('span')`
   background-color: #ccc;
   border-radius: 4px;
   color: #2e3c5d;
@@ -38,7 +38,7 @@ const DraftModeIndicator = styled.span`
   }
 `;
 
-const EditIndicator = styled.span`
+const EditIndicator = styled('span')`
   background-color: #fff;
   border: 1px solid rgba(46, 60, 93, 0.5);
   border-radius: 4px;
@@ -57,7 +57,7 @@ const EditIndicator = styled.span`
   }
 `;
 
-const ElectionInPast = styled.span`
+const ElectionInPast = styled('span')`
   background-color: #00cc66;
   border-radius: 4px;
   color: #2e3c5d;
@@ -71,19 +71,19 @@ const ElectionInPast = styled.span`
   // }
 `;
 
-const IndicatorButtonWrapper = styled.div`
+const IndicatorButtonWrapper = styled('div')`
   margin-bottom: 4px;
   margin-right: 8px;
 `;
 
-const IndicatorDefaultButtonWrapper = styled.div`
+const IndicatorDefaultButtonWrapper = styled('div')`
   cursor: pointer;
   margin-bottom: 4px;
   margin-right: 8px;
   margin-top: 2px;
 `;
 
-const IndicatorRow = styled.div`
+const IndicatorRow = styled('div')`
   display: flex;
   flex-wrap: wrap;
   justify-content: start;

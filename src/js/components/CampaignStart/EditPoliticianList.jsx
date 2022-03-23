@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
+import React, { Component } from 'react';
 import anonymous from '../../../img/global/icons/avatar-generic.png';
+import { convertStateCodeToStateText } from '../../common/utils/addressFunctions';
+import { renderLog } from '../../common/utils/logging';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import CampaignStore from '../../stores/CampaignStore';
-import { renderLog } from '../../common/utils/logging';
-import { convertStateCodeToStateText } from '../../common/utils/addressFunctions';
 import DeletePoliticianCheckbox from './DeletePoliticianCheckbox';
 
 class EditPoliticianList extends Component {
@@ -116,57 +116,58 @@ EditPoliticianList.propTypes = {
 const styles = () => ({
 });
 
-const CampaignPoliticianDelete = styled.div`
+const CampaignPoliticianDelete = styled('div')`
   margin-bottom: 8px;
 `;
 
-const CampaignPoliticianListWrapper = styled.div`
+const CampaignPoliticianListWrapper = styled('div')`
   margin-top: 15px;
 `;
 
-const CampaignPoliticianImage = styled.img`
+const CampaignPoliticianImage = styled('img')`
   border-radius: 3px;
   margin-bottom: 8px;
   margin-right: 4px;
 `;
 
-const CampaignPoliticianName = styled.div`
+const CampaignPoliticianName = styled('div')`
   margin-bottom: 8px;
 `;
 
-const CampaignPoliticianRow = styled.div`
+const CampaignPoliticianRow = styled('div')`
   align-items: center;
   display: flex;
   justify-content: space-between;
 `;
 
-const CampaignPoliticianState = styled.div`
+const CampaignPoliticianState = styled('div')`
   color: #999;
   margin-bottom: 8px;
   margin-left: 10px;
 `;
 
-const CampaignPoliticianNameAndImageWrapper = styled.div`
+const CampaignPoliticianNameAndImageWrapper = styled('div')`
   align-items: center;
   display: flex;
   justify-content: flex-start;
 `;
 
-const CampaignPoliticianWrapper = styled.div`
+const CampaignPoliticianWrapper = styled('div')(({ theme }) => (`
   align-items: center;
   display: flex;
   justify-content: flex-start;
-  @media (max-width: 1005px) {
+  //@media (max-width: 1005px) {
+  ${theme.breakpoints.down('lg')} {
     flex-wrap: wrap;
   }
-`;
+`));
 
-const ColumnFullWidth = styled.div`
+const ColumnFullWidth = styled('div')`
   padding: 8px 12px;
   width: 100%;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
   display: flex;
   justify-content: space-between;
   margin-left: -12px;

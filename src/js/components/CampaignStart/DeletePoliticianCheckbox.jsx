@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import { Checkbox, FormControl, FormControlLabel } from '@mui/material';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Checkbox, FormControl, FormControlLabel } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import React, { Component } from 'react';
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import { renderLog } from '../../common/utils/logging';
 
@@ -94,12 +94,12 @@ const CheckboxLabel = styled(FormControlLabel)`
   margin-bottom: 0 !important;
 `;
 
-const ColumnFullWidth = styled.div`
+const ColumnFullWidth = styled('div')`
   padding: 0 12px;
   width: 100%;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
   display: flex;
   justify-content: space-between;
   width: calc(100% + 24px);

@@ -1,19 +1,15 @@
-import React, { Component } from 'react';
+import { Button } from '@mui/material';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import {
-  CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper,
-  CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper,
-  CampaignSupportSection, CampaignSupportSectionWrapper,
-} from '../Style/CampaignSupportStyles';
+import React, { Component } from 'react';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 import ShareByCopyLink from '../Share/ShareByCopyLink';
 import ShareByEmailButton from '../Share/ShareByEmailButton';
 import ShareOnFacebookButton from '../Share/ShareOnFacebookButton';
 import ShareOnTwitterButton from '../Share/ShareOnTwitterButton';
+import { CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper, CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper, CampaignSupportSection, CampaignSupportSectionWrapper } from '../Style/CampaignSupportStyles';
 
 
 class CampaignShareChunk extends Component {
@@ -174,11 +170,11 @@ const styles = () => ({
   },
 });
 
-const PublicOrPrivateSectionHeader = styled.span`
+const PublicOrPrivateSectionHeader = styled('span')`
   font-weight: 600;
 `;
 
-const PublicOrPrivateSectionText = styled.span`
+const PublicOrPrivateSectionText = styled('span')`
   color: #999;
 `;
 

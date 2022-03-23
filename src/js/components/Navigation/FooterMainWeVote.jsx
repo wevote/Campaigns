@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
 import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
 
 
@@ -181,7 +181,7 @@ const styles = (theme) => ({
   },
 });
 
-const BottomSection = styled.div`
+const BottomSection = styled('div')`
   border-top: 1px solid lightgray;
   display: flex;
   flex-flow: column;
@@ -189,19 +189,19 @@ const BottomSection = styled.div`
   text-align: left;
 `;
 
-const Column = styled.div`
+const Column = styled('div')(({ theme }) => (`
   display: flex;
   flex-flow: column nowrap;
   width: 150px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     width: 50%;
   }
-  @media (max-width: ${({ theme }) => theme.breakpoints.xs}) {
+  ${theme.breakpoints.down('xs')} {
     width: 100%;
   }
-`;
+`));
 
-const ColumnTitle = styled.div`
+const ColumnTitle = styled('div')`
   color: #808080;
   font-size: 13px;
   font-weight: 700;
@@ -210,37 +210,37 @@ const ColumnTitle = styled.div`
   text-transform: uppercase;
 `;
 
-const Text = styled.p`
+const Text = styled('p')(({ theme }) => (`
   color: #808080;
   font-size: 14px;
   margin-right: 0.5em;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     font-size: 14px;
   }
-`;
+`));
 
-const TopSectionInnerWrapper = styled.div`
+const TopSectionInnerWrapper = styled('div')(({ theme }) => (`
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   width: 100%;
   justify-content: space-between;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     flex-wrap: wrap;
   }
-`;
+`));
 
-const TopSectionOuterWrapper = styled.div`
+const TopSectionOuterWrapper = styled('div')`
   display: flex;
   justify-content: space-between;
   width: 100%;
 `;
 
-const WeVoteName = styled.span`
+const WeVoteName = styled('span')`
   font-weight: 600;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
 `;
 
 export default withStyles(styles)(FooterMainWeVote);

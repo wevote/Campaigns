@@ -1,31 +1,25 @@
-import React, { Component, Suspense } from 'react';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
+import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import AppObservableStore, { messageService } from '../stores/AppObservableStore';
-import {
-  BlockedIndicator, BlockedReason, DraftModeIndicator, EditIndicator,
-  ElectionInPast, IndicatorButtonWrapper, IndicatorRow,
-} from '../components/Style/CampaignIndicatorStyles';
-import CampaignOwnersList from '../components/CampaignSupport/CampaignOwnersList';
-import CampaignTopNavigation from '../components/Navigation/CampaignTopNavigation';
-import CampaignStore from '../stores/CampaignStore';
 import CampaignSupporterActions from '../actions/CampaignSupporterActions';
-import CampaignSupporterStore from '../stores/CampaignSupporterStore';
-import CompleteYourProfileModalController from '../components/Settings/CompleteYourProfileModalController';
+import { PageWrapper } from '../common/components/Style/stepDisplayStyles';
 import DelayedLoad from '../common/components/Widgets/DelayedLoad';
-import {
-  getCampaignXValuesFromIdentifiers,
-  retrieveCampaignXFromIdentifiersIfNeeded,
-} from '../utils/campaignUtils';
-import historyPush from '../common/utils/historyPush';
-import initializejQuery from '../utils/initializejQuery';
-import keepHelpingDestination from '../utils/keepHelpingDestination';
 import OpenExternalWebSite from '../common/components/Widgets/OpenExternalWebSite';
+import historyPush from '../common/utils/historyPush';
 import { renderLog } from '../common/utils/logging';
 import returnFirstXWords from '../common/utils/returnFirstXWords';
-import { PageWrapper } from '../common/components/Style/stepDisplayStyles';
+import CampaignOwnersList from '../components/CampaignSupport/CampaignOwnersList';
+import CampaignTopNavigation from '../components/Navigation/CampaignTopNavigation';
+import CompleteYourProfileModalController from '../components/Settings/CompleteYourProfileModalController';
+import { BlockedIndicator, BlockedReason, DraftModeIndicator, EditIndicator, ElectionInPast, IndicatorButtonWrapper, IndicatorRow } from '../components/Style/CampaignIndicatorStyles';
+import AppObservableStore, { messageService } from '../stores/AppObservableStore';
+import CampaignStore from '../stores/CampaignStore';
+import CampaignSupporterStore from '../stores/CampaignSupporterStore';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../utils/campaignUtils';
+import initializejQuery from '../utils/initializejQuery';
+import keepHelpingDestination from '../utils/keepHelpingDestination';
 
 const CampaignCommentsList = React.lazy(() => import('../components/Campaign/CampaignCommentsList'));
 const CampaignDetailsActionSideBox = React.lazy(() => import('../components/CampaignSupport/CampaignDetailsActionSideBox'));
@@ -568,114 +562,114 @@ const styles = () => ({
 //   padding: 5px 12px;
 // `;
 
-const CampaignDescription = styled.div`
+const CampaignDescription = styled('div')`
   font-size: 18px;
   text-align: left;
   white-space: pre-wrap;
 `;
 
-const CampaignDescriptionDesktop = styled.div`
+const CampaignDescriptionDesktop = styled('div')`
   font-size: 18px;
   margin-top: 32px;
   text-align: left;
   white-space: pre-wrap;
 `;
 
-const CampaignDescriptionWrapper = styled.div`
+const CampaignDescriptionWrapper = styled('div')`
   margin: 10px;
 `;
 
-const CampaignDescriptionDesktopWrapper = styled.div`
+const CampaignDescriptionDesktopWrapper = styled('div')(({ theme }) => (`
   margin-bottom: 10px;
   margin-top: 2px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
   }
-`;
+`));
 
-const CampaignImagePlaceholder = styled.div`
+const CampaignImagePlaceholder = styled('div')(({ theme }) => (`
   background-color: #eee;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 183px;
-  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.up('sm')} {
     min-height: 174px;
   }
-  @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     min-height: 239px;
   }
-  @media (min-width: ${({ theme }) => theme.breakpoints.lg}) {
+  ${theme.breakpoints.up('lg')} {
     min-height: 319px;
   }
-`;
+`));
 
-const CampaignImagePlaceholderText = styled.div`
+const CampaignImagePlaceholderText = styled('div')`
   color: #ccc;
 `;
 
-const CampaignImageDesktopWrapper = styled.div`
+const CampaignImageDesktopWrapper = styled('div')(({ theme }) => (`
   margin-bottom: 10px;
   min-height: 180px;
-  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.up('sm')} {
     min-height: 174px;
   }
-  @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.up('md')} {
     min-height: 239px;
   }
-  @media (min-width: ${({ theme }) => theme.breakpoints.lg}) {
+  ${theme.breakpoints.up('lg')} {
     min-height: 300px;
   }
-`;
+`));
 
-const CampaignImageMobileWrapper = styled.div`
+const CampaignImageMobileWrapper = styled('div')(({ theme }) => (`
   min-height: 174px;
-  @media (min-width: ${({ theme }) => theme.breakpoints.xs}) {
+  ${theme.breakpoints.down('xs')} {
     min-height: 117px;
   }
-`;
+`));
 
-const CampaignImage = styled.img`
+const CampaignImage = styled('img')`
   width: 100%;
 `;
 
-const CampaignImageDesktop = styled.img`
+const CampaignImageDesktop = styled('img')`
   border-radius: 5px;
   width: 100%;
 `;
 
-const CampaignOwnersDesktopWrapper = styled.div`
+const CampaignOwnersDesktopWrapper = styled('div')`
   margin-bottom: 8px;
 `;
 
-const CampaignOwnersWrapper = styled.div`
+const CampaignOwnersWrapper = styled('div')`
 `;
 
-const CampaignSubSectionTitle = styled.h2`
+const CampaignSubSectionTitle = styled('h2')`
   font-size: 22px;
   margin: 0;
   margin-bottom: 10px;
   margin-top: 50px;
 `;
 
-const CampaignTitleAndScoreBar = styled.div`
+const CampaignTitleAndScoreBar = styled('div')(({ theme }) => (`
   margin: 10px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
   }
-`;
+`));
 
-const CampaignTitleDesktop = styled.h1`
+const CampaignTitleDesktop = styled('h1')(({ theme }) => (`
   font-size: 28px;
   text-align: center;
   margin: 30px 20px 40px 20px;
   min-height: 34px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     font-size: 24px;
     min-height: 29px;
   }
-`;
+`));
 
-const CampaignTitleMobile = styled.h1`
+const CampaignTitleMobile = styled('h1')`
   font-size: 22px;
   margin: 0;
   margin-bottom: 10px;
@@ -683,14 +677,14 @@ const CampaignTitleMobile = styled.h1`
   text-align: left;
 `;
 
-const ColumnOneThird = styled.div`
+const ColumnOneThird = styled('div')`
   flex: 1;
   flex-direction: column;
   flex-basis: 40%;
   margin: 0 0 0 25px;
 `;
 
-const ColumnsWrapper = styled.div`
+const ColumnsWrapper = styled('div')`
   display: flex;
   @media (max-width: 1005px) {
     // Switch to 15px left/right margin when auto is too small
@@ -698,37 +692,37 @@ const ColumnsWrapper = styled.div`
   }
 `;
 
-const ColumnTwoThirds = styled.div`
+const ColumnTwoThirds = styled('div')`
   flex: 2;
   flex-direction: column;
   flex-basis: 60%;
 `;
 
-const CommentsListWrapper = styled.div`
+const CommentsListWrapper = styled('div')(({ theme }) => (`
   margin-bottom: 25px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     margin: 0 10px 25px 10px;
   }
-`;
+`));
 
-const DetailsSectionDesktopTablet = styled.div`
+const DetailsSectionDesktopTablet = styled('div')`
   display: flex;
   flex-flow: column;
 `;
 
-const DetailsSectionMobile = styled.div`
+const DetailsSectionMobile = styled('div')`
   display: flex;
   flex-flow: column;
 `;
 
-const SupportButtonFooterWrapper = styled.div`
+const SupportButtonFooterWrapper = styled('div')`
   position: fixed;
   width: 100%;
   bottom: 0;
   display: block;
 `;
 
-const SupportButtonPanel = styled.div`
+const SupportButtonPanel = styled('div')`
   background-color: #fff;
   border-top: 1px solid #ddd;
   padding: 10px;

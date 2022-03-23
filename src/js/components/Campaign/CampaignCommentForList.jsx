@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
+import { AccountCircle } from '@mui/icons-material';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import TruncateMarkup from 'react-truncate-markup';
-import { withStyles } from '@material-ui/core/styles';
-import { AccountCircle } from '@material-ui/icons';
 import anonymous from '../../../img/global/icons/avatar-generic.png';
+import LazyImage from '../../common/components/LazyImage';
+import { timeFromDate } from '../../common/utils/dateFormat';
+import { isCordova } from '../../common/utils/isCordovaOrWebApp';
+import { renderLog } from '../../common/utils/logging';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import { isCordova } from '../../common/utils/isCordovaOrWebApp';
-import LazyImage from '../../common/components/LazyImage';
-import { renderLog } from '../../common/utils/logging';
-import { timeFromDate } from '../../common/utils/dateFormat';
-import { stringContains } from '../../utils/textFormat';
 import VoterStore from '../../stores/VoterStore';
+import { stringContains } from '../../utils/textFormat';
 
 class CampaignCommentForList extends Component {
   constructor (props) {
@@ -202,34 +202,34 @@ const styles = (theme) => ({
   },
 });
 
-const Comment = styled.div`
+const Comment = styled('div')`
   font-size: 18px;
   margin: 0;
 `;
 
-const CommentName = styled.span`
+const CommentName = styled('span')`
   color: #808080;
   font-weight: 500 !important;
 `;
 
-const CommentNameWrapper = styled.div`
+const CommentNameWrapper = styled('div')`
   color: #999;
   font-size: 12px;
 `;
 
-const CommentTextInnerWrapper = styled.div`
+const CommentTextInnerWrapper = styled('div')`
   white-space: pre-wrap;
 `;
 
-const CommentTextWrapper = styled.div`
+const CommentTextWrapper = styled('div')`
   margin-top: 5px;
 `;
 
-const CommentVoterPhotoWrapper = styled.div`
+const CommentVoterPhotoWrapper = styled('div')`
   margin-right: 6px;
 `;
 
-const CommentWrapper = styled.div`
+const CommentWrapper = styled('div')`
   border-radius: 10px;
   border-top-left-radius: 0;
   display: flex;
@@ -238,25 +238,25 @@ const CommentWrapper = styled.div`
   width: 100%;
 `;
 
-const OneCampaignInnerWrapper = styled.div`
+const OneCampaignInnerWrapper = styled('div')(({ theme }) => (`
   margin: 15px 0;
-  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.up('sm')} {
     display: flex;
     justify-content: space-between;
     margin: 15px;
   }
-`;
+`));
 
-const OneCampaignOuterWrapper = styled.div`
+const OneCampaignOuterWrapper = styled('div')(({ theme }) => (`
   border-top: 1px solid #ddd;
   margin-top: 15px;
-  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.up('sm')} {
     border: 1px solid #ddd;
     border-radius: 5px;
   }
-`;
+`));
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
 `;
 
 export default withStyles(styles)(CampaignCommentForList);

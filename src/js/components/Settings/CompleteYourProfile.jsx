@@ -1,23 +1,24 @@
-import React, { Component, Suspense } from 'react';
-import PropTypes from 'prop-types';
 import loadable from '@loadable/component';
-import { Button } from '@material-ui/core';
-import { withStyles, withTheme } from '@material-ui/core/styles';
-import styled from 'styled-components';
-import AppObservableStore from '../../stores/AppObservableStore';
-import CampaignStore from '../../stores/CampaignStore';
+import { Button } from '@mui/material';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
+import withTheme from '@mui/styles/withTheme';
+import PropTypes from 'prop-types';
+import React, { Component, Suspense } from 'react';
+import VoterActions from '../../actions/VoterActions';
+import VoterPhotoUpload from '../../common/components/Settings/VoterPhotoUpload';
 import DelayedLoad from '../../common/components/Widgets/DelayedLoad';
-import initializejQuery from '../../utils/initializejQuery';
 import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../../common/utils/logging';
-import SettingsVerifySecretCode from './SettingsVerifySecretCode';
+import AppObservableStore from '../../stores/AppObservableStore';
+import CampaignStore from '../../stores/CampaignStore';
+import VoterStore from '../../stores/VoterStore';
+import initializejQuery from '../../utils/initializejQuery';
 import VisibleToPublicCheckbox from '../CampaignSupport/VisibleToPublicCheckbox';
-import VoterActions from '../../actions/VoterActions';
+import SettingsVerifySecretCode from './SettingsVerifySecretCode';
 import VoterEmailInputField from './VoterEmailInputField';
 import VoterFirstNameInputField from './VoterFirstNameInputField';
 import VoterLastNameInputField from './VoterLastNameInputField';
-import VoterPhotoUpload from '../../common/components/Settings/VoterPhotoUpload';
-import VoterStore from '../../stores/VoterStore';
 
 const SignInButton = loadable(() => import('../Navigation/SignInButton'));
 const SignInModalController = loadable(() => import('../Settings/SignInModalController'));
@@ -383,42 +384,50 @@ const styles = () => ({
   },
 });
 
-const AlreadyHaveAccount = styled.div`
+const AlreadyHaveAccount = styled('div')`
   margin-right: 2px;
 `;
 
-const ButtonWrapper = styled.div`
+const ButtonWrapper = styled('div', {
+  shouldForwardProp: (prop) => !['outerMarginsOff'].includes(prop),
+})(({ outerMarginsOff }) => (`
   background-color: #fff;
-  margin: ${(props) => (props.outerMarginsOff ? '8px 0 0 0' : '8px 15px 0 15px')};
-`;
+  margin: ${outerMarginsOff ? '8px 0 0 0' : '8px 15px 0 15px'};
+`));
 
-const CheckboxWrapper = styled.div`
-  margin: ${(props) => (props.outerMarginsOff ? '25px 0 0 0' : '25px 15px 0 15px')};
-`;
+const CheckboxWrapper = styled('div', {
+  shouldForwardProp: (prop) => !['outerMarginsOff'].includes(prop),
+})(({ outerMarginsOff }) => (`
+  margin: ${outerMarginsOff ? '25px 0 0 0' : '25px 15px 0 15px'};
+`));
 
-const FinePrint = styled.div`
+const FinePrint = styled('div', {
+  shouldForwardProp: (prop) => !['outerMarginsOff'].includes(prop),
+})(({ outerMarginsOff }) => (`
   color: #999;
   font-size: 13px;
-  margin: ${(props) => (props.outerMarginsOff ? '10px 0 15px 0' : '10px 15px 15px 15px')};
-`;
+  margin: ${outerMarginsOff ? '10px 0 15px 0' : '10px 15px 15px 15px'};
+`));
 
-const InputFieldsWrapper = styled.div`
-  margin: ${(props) => (props.outerMarginsOff ? '0 0 !important' : '0 15px !important')};
-`;
+const InputFieldsWrapper = styled('div', {
+  shouldForwardProp: (prop) => !['outerMarginsOff'].includes(prop),
+})(({ outerMarginsOff }) => (`
+  margin: ${outerMarginsOff ? '0 0 !important' : '0 15px !important'};
+`));
 
-const IntroductionText = styled.div`
+const IntroductionText = styled('div')`
   font-size: 15px;
   margin: 10px 15px;
 `;
 
-const SignInWrapper = styled.div`
+const SignInWrapper = styled('div')`
   display: flex;
   justify-content: flex-start;
   margin-top: 4px;
   width: 100%;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
 `;
 
 export default withTheme(withStyles(styles)(CompleteYourProfile));

@@ -1,63 +1,69 @@
-import styled from 'styled-components';
+import styled from '@mui/material/styles/styled';
 
-const CampaignSupportDesktopButtonPanel = styled.div`
+const CampaignSupportDesktopButtonPanel = styled('div')`
   background-color: #fff;
   margin-top: 8px;
 `;
 
-const CampaignSupportDesktopButtonWrapper = styled.div`
+const CampaignSupportDesktopButtonWrapper = styled('div')`
   display: flex;
   justify-content: center;
   width: 100%;
 `;
 
-const CampaignSupportImageWrapper = styled.div`
+const CampaignSupportImageWrapper = styled('div', {
+  shouldForwardProp: (prop) => !['borderRadiusOnTop'].includes(prop),
+})(({ borderRadiusOnTop, theme }) => (`
   align-items: center;
   background-color: #eee;
-  ${({ borderRadiusOnTop }) => (borderRadiusOnTop ? `border-radius: ${borderRadiusOnTop} ${borderRadiusOnTop} 0 0;` : 'border-radius: 5px;')}
+  ${borderRadiusOnTop ? `border-radius: ${borderRadiusOnTop} ${borderRadiusOnTop} 0 0;` : 'border-radius: 5px;'}
   display: flex;
   justify-content: center;
   min-height: 324px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     min-height: 279px;
   }
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     min-height: 146px;
   }
-`;
+`));
 
-const CampaignSupportImageWrapperText = styled.div`
+const CampaignSupportImageWrapperText = styled('div')`
   color: #ccc;
 `;
 
-const CampaignSupportMobileButtonPanel = styled.div`
+const CampaignSupportMobileButtonPanel = styled('div')`
   background-color: #fff;
   margin-top: 8px;
 `;
 
-const CampaignSupportMobileButtonWrapper = styled.div`
+const CampaignSupportMobileButtonWrapper = styled('div')`
   display: block;
   width: 100%;
 `;
 
-const CampaignSupportSection = styled.div`
-  ${({ marginBottomOff }) => (marginBottomOff ? '' : 'margin-bottom: 20px !important;')}
+const CampaignSupportSection = styled('div', {
+  shouldForwardProp: (prop) => !['marginBottomOff'].includes(prop),
+})(({ marginBottomOff }) => (`
+  ${marginBottomOff ? '' : 'margin-bottom: 20px !important;'}
   width: 100%;
-`;
+`));
 
-const CampaignSupportSectionWrapper = styled.div`
+const CampaignSupportSectionWrapper = styled('div', {
+  shouldForwardProp: (prop) => !['marginTopOff'].includes(prop),
+})(({ marginTopOff }) => (`
   display: flex;
   justify-content: center;
-  ${({ marginTopOff }) => (marginTopOff ? '' : 'margin-top: 20px;')}
+  ${marginTopOff ? '' : 'margin-top: 20px;'}
   max-width: 620px;
-`;
+`));
 
-const SkipForNowButtonPanel = styled.div`
+const SkipForNowButtonPanel = styled('div')`
   background-color: #fff;
   margin-top: 40px;
 `;
 
-const SkipForNowButtonWrapper = styled.div`
+const SkipForNowButtonWrapper = styled('div')`
   display: flex;
   justify-content: center;
   width: 100%;

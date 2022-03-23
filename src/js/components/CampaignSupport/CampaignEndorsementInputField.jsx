@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
+import { FormControl, TextField } from '@mui/material';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { TextField, FormControl } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import CampaignStore from '../../stores/CampaignStore';
+import React, { Component } from 'react';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
-import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { renderLog } from '../../common/utils/logging';
 import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
+import CampaignStore from '../../stores/CampaignStore';
+import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 
 class CampaignEndorsementInputField extends Component {
   constructor (props) {
@@ -151,12 +151,12 @@ const styles = () => ({
   },
 });
 
-const ColumnFullWidth = styled.div`
+const ColumnFullWidth = styled('div')`
   padding: 8px 12px 0 12px;
   width: 100%;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
   display: flex;
   justify-content: space-between;
   margin-left: -12px;

@@ -1,20 +1,18 @@
-import React, { Component, Suspense } from 'react';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
+import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import AppObservableStore, { messageService } from '../stores/AppObservableStore';
-import {
-  BlockedReason,
-} from '../components/Style/CampaignIndicatorStyles';
+import { PageWrapper } from '../common/components/Style/stepDisplayStyles';
+import OpenExternalWebSite from '../common/components/Widgets/OpenExternalWebSite';
+import { isCordova } from '../common/utils/isCordovaOrWebApp';
+import { renderLog } from '../common/utils/logging';
 import CampaignTopNavigation from '../components/Navigation/CampaignTopNavigation';
+import { BlockedReason } from '../components/Style/CampaignIndicatorStyles';
+import AppObservableStore, { messageService } from '../stores/AppObservableStore';
 import CampaignStore from '../stores/CampaignStore';
 import CampaignSupporterStore from '../stores/CampaignSupporterStore';
 import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
-import { isCordova } from '../common/utils/isCordovaOrWebApp';
-import OpenExternalWebSite from '../common/components/Widgets/OpenExternalWebSite';
-import { renderLog } from '../common/utils/logging';
-import { PageWrapper } from '../common/components/Style/stepDisplayStyles';
 
 const CampaignCommentsList = React.lazy(() => import('../components/Campaign/CampaignCommentsList'));
 const CampaignRetrieveController = React.lazy(() => import('../components/Campaign/CampaignRetrieveController'));
@@ -218,13 +216,13 @@ const styles = () => ({
 //   padding: 5px 12px;
 // `;
 
-const CampaignTitleWrapper = styled.div`
+const CampaignTitleWrapper = styled('div')(({ theme }) => (`
   margin: 10px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
   }
-`;
+`));
 
-const CampaignTitleText = styled.h1`
+const CampaignTitleText = styled('h1')`
   font-size: 22px;
   margin: 0;
   margin-bottom: 10px;
@@ -232,11 +230,11 @@ const CampaignTitleText = styled.h1`
   text-align: left;
 `;
 
-const CommentsListWrapper = styled.div`
+const CommentsListWrapper = styled('div')`
   margin: 0 0 25px 0;
 `;
 
-const CommentsSectionInnerWrapper = styled.div`
+const CommentsSectionInnerWrapper = styled('div')`
   margin: 0 15px;
   max-width: 680px;
   @media (max-width: 1005px) {
@@ -245,16 +243,16 @@ const CommentsSectionInnerWrapper = styled.div`
   }
 `;
 
-const CommentsSectionOuterWrapper = styled.div`
+const CommentsSectionOuterWrapper = styled('div')`
   display: flex;
   justify-content: center;
 `;
 
-const PageSubStatement = styled.div`
+const PageSubStatement = styled('div')`
   margin-top: 10px;
 `;
 
-const PageStatement = styled.h2`
+const PageStatement = styled('h2')`
   font-size: 22px;
   margin-top: 30px;
   text-align: left;

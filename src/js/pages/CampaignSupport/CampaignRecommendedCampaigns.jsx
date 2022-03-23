@@ -1,11 +1,11 @@
 import loadable from '@loadable/component';
-import { Button, TextField } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Button, TextField } from '@mui/material';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
 import TruncateMarkup from 'react-truncate-markup';
-import styled from 'styled-components';
 import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
 import arrayContains from '../../common/utils/arrayContains';
 import historyPush from '../../common/utils/historyPush';
@@ -535,20 +535,20 @@ CampaignRecommendedCampaigns.propTypes = {
   setShowHeaderFooter: PropTypes.func,
 };
 
-const CampaignDescription = styled.div`
+const CampaignDescription = styled('div')`
   font-size: 17px;
   margin: 4px 0;
   min-height: 50px;
 `;
 
-const CampaignImage = styled.img`
+const CampaignImage = styled('img')`
   border-radius: 8px 8px 0 0;
   max-width: 620px;
   min-height: 117px;
   width: 100%;
 `;
 
-const CampaignTitle = styled.h1`
+const CampaignTitle = styled('h1')`
   font-size: 20px;
   margin: 0;
   margin-bottom: 10px;
@@ -557,50 +557,50 @@ const CampaignTitle = styled.h1`
   text-align: left;
 `;
 
-const RecommendedCampaignsIntroText = styled.div`
+const RecommendedCampaignsIntroText = styled('div')(({ theme }) => (`
   font-size: 20px;
   font-weight: 400;
   margin: 18px 0 20px 0;
   max-width: 620px;
   text-align: center;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     font-size: 16px;
   }
-`;
+`));
 
-const RecommendedCampaignWrapper = styled.div`
+const RecommendedCampaignWrapper = styled('div')`
   border: 1px solid #ddd;
   border-radius: 10px;
   box-shadow: 0 20px 40px -25px #999;
   max-width: 620px;
 `;
 
-const RecommendedCampaignDetailsWrapper = styled.div`
+const RecommendedCampaignDetailsWrapper = styled('div')(({ theme }) => (`
   margin: 0;
   padding: 0 15px 15px 15px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     padding: 0 8px 8px 8px;
   }
-`;
+`));
 
-const SkipButtonWrapper = styled.div`
+const SkipButtonWrapper = styled('div')`
   width: 40%;
 `;
 
-const SupportButtonWrapper = styled.div`
+const SupportButtonWrapper = styled('div')`
   width: 58%;
 `;
 
-const SkipOrSupportFooter = styled.div`
+const SkipOrSupportFooter = styled('div')(({ theme }) => (`
   bottom: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 25px;
   width: 100%;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     margin-top: 20px;
   }
-`;
+`));
 
 export default withStyles(commonMuiStyles)(CampaignRecommendedCampaigns);

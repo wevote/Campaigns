@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
+import React, { Component } from 'react';
 import { EmailShareButton } from 'react-share';
-import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import { isAndroid } from '../../common/utils/cordovaUtils';
 import { isCordova } from '../../common/utils/isCordovaOrWebApp';
 import { renderLog } from '../../common/utils/logging';
-import { cordovaSocialSharingByEmail, generateQuoteForSharing, generateSharingLink } from './shareButtonCommon';
 import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
+import CampaignStore from '../../stores/CampaignStore';
+import { cordovaSocialSharingByEmail, generateQuoteForSharing, generateSharingLink } from './shareButtonCommon';
 
 class ShareByEmailButton extends Component {
   constructor (props) {
@@ -137,7 +137,7 @@ ShareByEmailButton.propTypes = {
 const styles = () => ({
 });
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
   width: 100%;
   display: block;
 `;

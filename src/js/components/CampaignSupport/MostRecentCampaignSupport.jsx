@@ -1,15 +1,15 @@
-import React from 'react';
+import { AccountCircle } from '@mui/icons-material';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { AccountCircle } from '@material-ui/icons';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
 import anonymous from '../../../img/global/icons/avatar-generic.png';
-import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import CampaignStore from '../../stores/CampaignStore';
 import LazyImage from '../../common/components/LazyImage';
+import { timeFromDate } from '../../common/utils/dateFormat';
 import { renderLog } from '../../common/utils/logging';
 import returnFirstXWords from '../../common/utils/returnFirstXWords';
-import { timeFromDate } from '../../common/utils/dateFormat';
+import CampaignStore from '../../stores/CampaignStore';
+import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { stringContains } from '../../utils/textFormat';
 
 class MostRecentCampaignSupport extends React.Component {
@@ -227,10 +227,10 @@ const styles = () => ({
   },
 });
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
 `;
 
-const CommentsWrapper = styled.div`
+const CommentsWrapper = styled('div')`
   height: 100px;
   max-height: 140px;
   overflow-y: scroll;
@@ -256,20 +256,20 @@ const CommentsWrapper = styled.div`
   }
 `;
 
-const CommentTextWrapper = styled.div`
+const CommentTextWrapper = styled('div')`
   justify-content: center;
   display: flex;
   flex-direction: column;
 `;
 
-const CommentVoterPhotoWrapper = styled.div`
+const CommentVoterPhotoWrapper = styled('div')`
   align-items: flex-start;
   display: flex;
   margin-right: 6px;
   width: 24px;
 `;
 
-const CommentWrapper = styled.div`
+const CommentWrapper = styled('div')`
   border-radius: 10px;
   border-top-left-radius: 0;
   display: flex;
@@ -278,18 +278,18 @@ const CommentWrapper = styled.div`
   width: 100%;
 `;
 
-const Comment = styled.p`
+const Comment = styled('p')`
   color: #999;
   font-size: 14px;
   margin: 0;
 `;
 
-const CommentName = styled.span`
+const CommentName = styled('span')`
   color: #808080;
   font-weight: 500 !important;
 `;
 
-const CommentNameWrapper = styled.div`
+const CommentNameWrapper = styled('div')`
   color: #999;
   font-size: 12px;
 `;

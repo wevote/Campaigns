@@ -1,8 +1,8 @@
-import { withStyles } from '@material-ui/core/styles';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 import { OuterWrapper, PageWrapper } from '../common/components/Style/stepDisplayStyles';
 import attributionText from '../common/constants/attributionText';
 import { renderLog } from '../common/utils/logging';
@@ -77,20 +77,20 @@ const styles = () => ({
   },
 });
 
-const CompileDate = styled.div`
+const CompileDate = styled('div')`
   margin: 20px 0;
 `;
 
-const ContentTitle = styled.div`
+const ContentTitle = styled('div')(({ theme }) => (`
   font-size: 22px;
   font-weight: 600;
   margin: 20px 0;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     font-size: 20px;
   }
-`;
+`));
 
-const InnerWrapper = styled.div`
+const InnerWrapper = styled('div')`
 `;
 
 export default withStyles(styles)(Attributions);

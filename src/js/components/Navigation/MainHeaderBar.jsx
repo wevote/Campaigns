@@ -1,16 +1,16 @@
-import React, { Suspense } from 'react';
 import loadable from '@loadable/component';
-import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core';
-import { Launch } from '@material-ui/icons';
-import { makeStyles } from '@material-ui/core/styles';
-import styled from 'styled-components';
-import AppObservableStore from '../../stores/AppObservableStore';
-import historyPush from '../../common/utils/historyPush';
+import { Launch } from '@mui/icons-material';
+import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import styled from '@mui/material/styles/styled';
+import makeStyles from '@mui/styles/makeStyles';
+import React, { Suspense } from 'react';
 import DelayedLoad from '../../common/components/Widgets/DelayedLoad';
-import initializeFacebookSDK from '../../utils/initializeFacebookSDK';
-import initializeAppleSDK from '../../utils/initializeAppleSDK';
 import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
+import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
+import AppObservableStore from '../../stores/AppObservableStore';
+import initializeAppleSDK from '../../utils/initializeAppleSDK';
+import initializeFacebookSDK from '../../utils/initializeFacebookSDK';
 
 const HeaderBarLogo = loadable(() => import('./HeaderBarLogo'));
 const SignInButton = loadable(() => import('./SignInButton'));
@@ -19,6 +19,7 @@ const TopNavigationDesktopController = loadable(() => import('./TopNavigationDes
 const VoterNameAndPhoto = loadable(() => import('./VoterNameAndPhoto'));
 
 
+// TODO: Mar 23, 2022, makeStyles is legacy in MUI 5, replace instance with styled-components or sx if there are issues
 const useStyles = makeStyles((theme) => ({
   appBarRoot: {
     boxShadow: 'none',
@@ -53,7 +54,8 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '27px',
   },
   menuItem: {
-    [theme.breakpoints.down('md')]: {
+    textTransform: 'none',
+    [theme.breakpoints.down('lg')]: {
       minHeight: 'unset',
     },
     '&:hover': {
@@ -144,9 +146,15 @@ export default function MainHeaderBar (displayHeader) {
   return (
     <OuterWrapperHeaderBar displayHeader={displayThis}>
       <div className={classes.innerWrapper}>
-        <AppBar className={classes.appBarRoot} position="static" color="default">
+        <AppBar className={classes.appBarRoot} position="static" color="default" id="MainheaderBar_AppBar">
           <Toolbar className={classes.toolbarRoot} disableGutters>
-            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="menu"
+              size="large"
+            >
               <Suspense fallback={<span>&nbsp;</span>}>
                 <HeaderBarLogo />
               </Suspense>
@@ -177,6 +185,7 @@ export default function MainHeaderBar (displayHeader) {
                 id="openMainHeaderBarDropDown"
                 onClick={handleMenu}
                 aria-label="menu"
+                size="large"
               >
                 <Suspense fallback={<span>&nbsp;</span>}>
                   <VoterNameAndPhoto />
@@ -244,14 +253,16 @@ export default function MainHeaderBar (displayHeader) {
   );
 }
 
-const OuterWrapperHeaderBar = styled.div`
+const OuterWrapperHeaderBar = styled('div', {
+  shouldForwardProp: (prop) => !['displayHeader'].includes(prop),
+})(({ displayHeader }) => (`
   border-bottom: 1px solid #ddd;
   flex-grow: 1;
   min-height: 36px;
-  display: ${({ displayHeader }) => ((displayHeader) ? '' : 'none')};
-`;
+  display: ${displayHeader ? '' : 'none'};
+`));
 
-const SignInTopBarWrapper = styled.div`
+const SignInTopBarWrapper = styled('div')`
   cursor: pointer;
   margin-right: 12px;
 `;

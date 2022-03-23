@@ -1,10 +1,10 @@
 import loadable from '@loadable/component';
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Button } from '@mui/material';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import VoterActions from '../../actions/VoterActions';
 import ShareActions from '../../common/actions/ShareActions';
 import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
@@ -514,45 +514,45 @@ const buttonMini = (theme) => ({
 
 const combinedStyles = Object.assign(buttonMini, commonMuiStyles);
 
-const ActionRequired = styled.div`
+const ActionRequired = styled('div')`
   color: red;
 `;
 
-const ActionRequiredSpan = styled.span`
+const ActionRequiredSpan = styled('span')`
   color: red;
 `;
 
-const BottomOfPageSpacer = styled.div`
+const BottomOfPageSpacer = styled('div')`
   margin-bottom: 150px;
 `;
 
-const ButtonFooterWrapper = styled.div`
+const ButtonFooterWrapper = styled('div')`
   position: fixed;
   width: 100%;
   bottom: 0;
   display: block;
 `;
 
-const ButtonPanel = styled.div`
+const ButtonPanel = styled('div')`
   background-color: #fff;
   border-top: 1px solid #ddd;
   padding: 10px;
 `;
 
-const StepInnerLeftWrapper = styled.div`
+const StepInnerLeftWrapper = styled('div')`
   padding-right: 4px;
   width: 100%;
 `;
 
-const StepInnerRightWrapper = styled.div`
+const StepInnerRightWrapper = styled('div')`
 `;
 
-const StepNumberTitle = styled.div`
-  color: ${(props) => (props.inverseColor ? 'white' : props.theme.colors.brandBlue)};
+const StepNumberTitle = styled('div')(({ theme }) => (`
+  color: ${theme.colors.brandBlue};
   font-weight: 600;
-`;
+`));
 
-const StepOuterWrapper = styled.div`
+const StepOuterWrapper = styled('div')`
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -560,17 +560,17 @@ const StepOuterWrapper = styled.div`
   width: 100%;
 `;
 
-const StepPreviewText = styled.div`
+const StepPreviewText = styled('div')`
   font-size: 14px;
   margin-top: 4px;
   padding-right: 6px;
 `;
 
-const StepPreviewTextMessage = styled.div`
+const StepPreviewTextMessage = styled('div')`
   white-space: pre-wrap;
 `;
 
-const StepRow = styled.div`
+const StepRow = styled('div')`
   align-items: flex-start;
   display: flex;
   flex-flow: row nowrap;

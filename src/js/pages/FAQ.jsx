@@ -1,11 +1,11 @@
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
 import FAQBody from '../common/components/FAQBody';
-import { lazyLoader, libraryNeedsLoading } from '../utils/lazyLoader';
-import { renderLog } from '../common/utils/logging';
 import { OuterWrapper, PageWrapper } from '../common/components/Style/stepDisplayStyles';
+import { renderLog } from '../common/utils/logging';
+import { lazyLoader, libraryNeedsLoading } from '../utils/lazyLoader';
 
 
 class FAQ extends Component {
@@ -48,7 +48,7 @@ const styles = () => ({
   },
 });
 
-const InnerWrapper = styled.div`
+const InnerWrapper = styled('div')`
 `;
 
 export default withStyles(styles)(FAQ);

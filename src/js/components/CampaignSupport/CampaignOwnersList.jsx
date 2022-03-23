@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import CampaignStore from '../../stores/CampaignStore';
+import React, { Component } from 'react';
 import { renderLog } from '../../common/utils/logging';
+import CampaignStore from '../../stores/CampaignStore';
 import { stringContains } from '../../utils/textFormat';
 
 
@@ -167,27 +167,29 @@ CampaignOwnersList.propTypes = {
 const styles = () => ({
 });
 
-const CampaignXOwnerListWrapper = styled.div`
+const CampaignXOwnerListWrapper = styled('div')`
   align-items: center;
   display: flex;
   justify-content: start;
 `;
 
-const CampaignXOwnerLeadPhoto = styled.img`
+const CampaignXOwnerLeadPhoto = styled('img')`
   border-radius: 3px;
   margin-right: 8px;
 `;
 
-const CampaignXOwnerWrapper = styled.span`
-  ${(props) => (props.compressedMode ? 'font-size: 12px;' : '')};
-`;
+const CampaignXOwnerWrapper = styled('span', {
+  shouldForwardProp: (prop) => !['compressedMode'].includes(prop),
+})(({ compressedMode }) => (`
+  ${compressedMode ? 'font-size: 12px;' : ''};
+`));
 
-const ColumnFullWidth = styled.div`
+const ColumnFullWidth = styled('div')`
   padding: 8px 8px 0 0;
   width: 100%;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
   display: flex;
   justify-content: space-between;
   margin-left: 0;

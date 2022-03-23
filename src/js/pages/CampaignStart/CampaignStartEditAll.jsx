@@ -1,9 +1,9 @@
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Button } from '@mui/material';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
 import { OuterWrapper, PageWrapper } from '../../common/components/Style/stepDisplayStyles';
@@ -339,35 +339,35 @@ CampaignStartEditAll.propTypes = {
 };
 
 
-const CampaignStartSection = styled.div`
+const CampaignStartSection = styled('div')`
   margin-bottom: 60px !important;
   max-width: 620px;
   width: 100%;
 `;
 
-const CampaignStartSectionWrapper = styled.div`
+const CampaignStartSectionWrapper = styled('div')`
   display: flex;
   justify-content: center;
 `;
 
-const SaveCancelButtonsWrapper = styled.div`
+const SaveCancelButtonsWrapper = styled('div')`
   display: flex;
 `;
 
-const SaveCancelInnerWrapper = styled.div`
+const SaveCancelInnerWrapper = styled('div')`
   align-items: center;
   display: flex;
   justify-content: flex-end;
   margin: 0 auto;
   max-width: 960px;
   padding: 8px 0;
-  @media (max-width: 1005px) {
+   @media (max-width: 1005px) {
     // Switch to 15px left/right margin when auto is too small
     margin: 0 15px;
   }
 `;
 
-const SaveCancelOuterWrapper = styled.div`
+const SaveCancelOuterWrapper = styled('div')`
   background-color: #f6f4f6;
   border-bottom: 1px solid #ddd;
   margin-top: 0;
@@ -376,12 +376,12 @@ const SaveCancelOuterWrapper = styled.div`
   z-index: 2;
 `;
 
-const InnerWrapper = styled.div`
+const InnerWrapper = styled('div')`
   margin-top: 75px;
   width: 100%;
 `;
 
-const PhotoUploadWrapper = styled.div`
+const PhotoUploadWrapper = styled('div')`
   margin-top: 32px;
 `;
 

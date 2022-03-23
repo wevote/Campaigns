@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
+import styled from '@mui/material/styles/styled';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import CreatableSelect from 'react-select/creatable';
-import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
 import CampaignStartActions from '../../actions/CampaignStartActions';
+import SearchAllActions from '../../actions/SearchAllActions';
+import { renderLog } from '../../common/utils/logging';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import CampaignStore from '../../stores/CampaignStore';
-import { renderLog } from '../../common/utils/logging';
-import SearchAllActions from '../../actions/SearchAllActions';
 import SearchAllStore from '../../stores/SearchAllStore';
 
 const candidateOptionsDefault = [
@@ -166,12 +166,12 @@ AddPoliticianInputField.propTypes = {
 const styles = () => ({
 });
 
-const ColumnFullWidth = styled.div`
+const ColumnFullWidth = styled('div')`
   padding: 8px 12px;
   width: 100%;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
   display: flex;
   justify-content: space-between;
   margin-left: -12px;
