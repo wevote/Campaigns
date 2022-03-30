@@ -1,4 +1,4 @@
-import styled from '@mui/material/styles/styled';
+import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
@@ -262,8 +262,7 @@ const CampaignTitleWrapper = styled('div')`
 
 const CampaignTitleText = styled('h1')`
   font-size: 22px;
-  margin: 0;
-  margin-bottom: 10px;
+  margin: 0 0 10px 0;
   min-height: 27px;
   text-align: left;
 `;

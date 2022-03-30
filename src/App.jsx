@@ -234,6 +234,7 @@ class App extends Component {
                   <Route path="*" component={PageNotFound} />
                 </Switch>
                 <DelayedLoad waitBeforeShow={4000}>
+                  {/* March 29, 2022: This forces a full rerender of the footer on every tab change, could be optimized */}
                   <Suspense fallback={<span>&nbsp;</span>}>
                     <FooterMain displayFooter={doShowFooter} />
                   </Suspense>

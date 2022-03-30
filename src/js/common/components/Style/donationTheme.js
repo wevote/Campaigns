@@ -1,15 +1,15 @@
-import { createTheme, adaptV4Theme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 
 export function donationTheme (topNav, heightOfBar) {
   const defaultTheme = createTheme();
 
-  return createTheme(adaptV4Theme({
+  return createTheme({
     typography: {
       button: {
         textTransform: 'none',
       },
     },
-    overrides: {
+    components: {
       MuiTab: {
         root: {
           minHeight: 0,
@@ -53,7 +53,7 @@ export function donationTheme (topNav, heightOfBar) {
         },
       },
     },
-  }));
+  });
 }
 
 export function dummy () {

@@ -1,6 +1,6 @@
 import loadable from '@loadable/component';
 import { Button, InputAdornment, TextField } from '@mui/material';
-import styled from '@mui/material/styles/styled';
+import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -414,7 +414,7 @@ CampaignSupportPayToPromoteProcess.propTypes = {
   setShowHeaderFooter: PropTypes.func,
 };
 
-const styles = () => ({
+const styles = (theme) => ({
   buttonDefault: {
     boxShadow: 'none !important',
     fontSize: '14px',
@@ -457,7 +457,7 @@ const styles = () => ({
     fontSize: 18,
     color: 'black',
     backgroundColor: 'white',
-    boxShadow: '0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0px rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%)',
+    boxShadow: theme.boxStyles.default,
   },
   textFieldInputRoot: {
     fontSize: 18,
@@ -569,8 +569,7 @@ const PaymentCenteredWrapper = styled('div', {
   }
   display: inline-block;
   background-color: ${show ? 'rgb(246, 244,246)' : 'inherit'};
-  box-shadow: ${show ?
-    '0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0px rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%)' : 'none'};
+  box-shadow: ${show ? theme.boxStyles.default : 'none'};
   border: ${show ? '2px solid darkgrey' : 'none'};
   border-radius: 3px;
   padding: 8px;

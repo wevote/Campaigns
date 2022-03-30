@@ -1,6 +1,6 @@
 import { AccountCircle, ArrowBack } from '@mui/icons-material';
 import { Button } from '@mui/material';
-import styled from '@mui/material/styles/styled';
+import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
@@ -846,9 +846,7 @@ const CampaignImageDesktop = styled('img')`
 
 const CampaignSubSectionTitle = styled('h2')`
   font-size: 22px;
-  margin: 0;
-  margin-bottom: 10px;
-  margin-top: 50px;
+  margin: 50px 0 10px 0;
 `;
 
 const CampaignTitleAndScoreBar = styled('div')(({ theme }) => (`
@@ -870,8 +868,7 @@ const CampaignTitleDesktop = styled('h1')(({ theme }) => (`
 
 const CampaignTitleMobile = styled('h1')`
   font-size: 22px;
-  margin: 0;
-  margin-bottom: 10px;
+  margin: 0 0 10px 0;
   min-height: 27px;
   text-align: left;
 `;
@@ -891,7 +888,7 @@ const CampaignUpdate = styled('div')(({ theme }) => (`
 `));
 
 const CampaignUpdateBar = styled('div')`
-  align-items: bottom;  // bottom is nonsense css
+  // align-items: bottom;  // bottom is nonsense css
   display: flex;
   justify-content: flex-start;
   margin-bottom: 12px;

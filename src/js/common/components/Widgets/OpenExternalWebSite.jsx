@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { stringContains } from '../../../utils/textFormat';
 import { cordovaOpenSafariView } from '../../utils/cordovaUtils';
 import { isWebApp } from '../../utils/isCordovaOrWebApp';
 import { renderLog } from '../../utils/logging';
-import { stringContains } from '../../../utils/textFormat';
 
 export default class OpenExternalWebSite extends Component {
   render () {

@@ -1,6 +1,6 @@
 import loadable from '@loadable/component';
 import { Button } from '@mui/material';
-import styled from '@mui/material/styles/styled';
+import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
@@ -151,7 +151,7 @@ class CampaignSupportEndorsement extends Component {
 
   getCampaignBasePath = () => {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
-    let campaignBasePath = '';
+    let campaignBasePath;
     if (campaignSEOFriendlyPath) {
       campaignBasePath = `/c/${campaignSEOFriendlyPath}`;
     } else {

@@ -1,11 +1,11 @@
-import { IconButton, Tooltip } from '@mui/material';
-import withStyles from '@mui/styles/withStyles';
 import { Facebook, GitHub, Instagram, Mail, Twitter } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
 import { styled as muiStyled } from '@mui/styles';
+import withStyles from '@mui/styles/withStyles';
 import React, { Suspense } from 'react';
-import styled from '@mui/material/styles/styled';
-import normalizedImagePath from '../../utils/normalizedImagePath';
+import styled from 'styled-components';
 import { renderLog } from '../../utils/logging';
+import normalizedImagePath from '../../utils/normalizedImagePath';
 
 const OpenExternalWebSite = React.lazy(() => import(/* webpackChunkName: 'OpenExternalWebSite' */ './OpenExternalWebSite'));
 

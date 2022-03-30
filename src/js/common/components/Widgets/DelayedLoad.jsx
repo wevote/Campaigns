@@ -1,7 +1,6 @@
-import styled from '@mui/material/styles/styled';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { isCordova } from '../../utils/isCordovaOrWebApp';
+import styled from 'styled-components';
 
 class DelayedLoad extends Component {
   constructor (props) {
@@ -43,8 +42,6 @@ DelayedLoad.propTypes = {
 
 const DelayedLoadingWrapper = styled('div')`
   padding: 5px;
-  margin-top: ${() => (isCordova() ? '100px' : null)};
-  padding-bottom: ${() => (isCordova() ? '800px' : null)};
 `;
 
 const LoadingText = styled('div')`

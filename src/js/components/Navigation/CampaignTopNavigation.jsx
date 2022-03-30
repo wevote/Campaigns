@@ -1,8 +1,9 @@
-import { adaptV4Theme, AppBar, Tab, Tabs, Toolbar } from '@mui/material';
+import { AppBar, Tab, Tabs, Toolbar } from '@mui/material';
 import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { renderLog } from '../../common/utils/logging';
 import startsWith, { endsWith } from '../../common/utils/startsWith';
 
 
@@ -32,13 +33,13 @@ export default function CampaignTopNavigation (incomingVariables) {
 
   const defaultTheme = createTheme();
 
-  const theme = createTheme(adaptV4Theme({
+  const theme = createTheme({
     typography: {
       button: {
         textTransform: 'none',
       },
     },
-    overrides: {
+    components: {
       MuiButtonBase: {
         root: {
           '&:hover': {
@@ -55,7 +56,7 @@ export default function CampaignTopNavigation (incomingVariables) {
         },
       },
     },
-  }));
+  });
 
   const { campaignSEOFriendlyPath, campaignXWeVoteId } = incomingVariables;
   // console.log('incomingVariables:', incomingVariables);
@@ -89,7 +90,7 @@ export default function CampaignTopNavigation (incomingVariables) {
     updatesUrl = `/id/${campaignXWeVoteId}/updates`;
   }
 
-  // console.log('Render CampaignTopNavigation.jsx');
+  renderLog('CampaignTopNavigation functional component');
   return (
     <div className={classes.root}>
       <AppBar
@@ -99,7 +100,7 @@ export default function CampaignTopNavigation (incomingVariables) {
       >
         <StyledEngineProvider injectFirst>
           <ThemeProvider theme={theme}>
-            <Toolbar className={classes.toolbarRoot} disableGutters>
+            <Toolbar disableGutters/* className={classes.toolbarRoot} */>
               <Tabs value={value} onChange={handleChange} aria-label="Tab menu">
                 <Tab id="weTarget-0" label="Campaign details" onClick={() => history.push(detailsUrl)} />
                 <Tab id="weTarget-1" label="Comments" onClick={() => history.push(commentsUrl)} />

@@ -1,6 +1,6 @@
 import loadable from '@loadable/component';
 import { Button, InputAdornment, TextField } from '@mui/material';
-import styled from '@mui/material/styles/styled';
+import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -60,7 +60,7 @@ class Membership extends Component {
   }
 
   onDonateStoreChange () {
-    console.log('onDonateStore DonateStore:', DonateStore.getAll());
+    // console.log('onDonateStore DonateStore:', DonateStore.getAll());
     if (DonateStore.donationSuccess()  && DonateStore.donationResponseReceived()) {
       console.log('onDonateStoreChange successful donation detected');
       this.setState({
@@ -256,7 +256,7 @@ Membership.propTypes = {
   showFooter: PropTypes.func,
 };
 
-const styles = () => ({
+const styles = (theme) => ({
   buttonRoot: {
     border: '1px solid #2e3c5d',
     fontSize: 18,
@@ -278,7 +278,7 @@ const styles = () => ({
     fontSize: 18,
     color: 'black',
     backgroundColor: 'white',
-    boxShadow: '0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0px rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%)',
+    boxShadow: theme.boxStyles.default,
   },
   textFieldInputRoot: {
     fontSize: 18,
@@ -335,7 +335,7 @@ const PaymentCenteredWrapper  = styled('div')(({ theme }) => (`
   }
   display: inline-block;
   background-color: rgb(246, 244,246);
-  box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0px rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+  box-shadow: ${theme.boxStyles.default},
   border: 2px solid darkgrey;
   border-radius: 3px;
   padding: 8px;

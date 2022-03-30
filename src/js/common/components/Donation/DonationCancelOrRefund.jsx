@@ -1,8 +1,8 @@
 import { Button, Grid, Modal } from '@mui/material';
-import styled from '@mui/material/styles/styled';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import DonateActions from '../../actions/DonateActions';
 import { renderLog } from '../../utils/logging';
 
@@ -159,7 +159,7 @@ const StyledModalFrame = styled('div')(({ theme }) => (`
   top: 30%;
   border: 2px solid #000;
   outline: 0;
-  box-shadow: 0 3px 5px -1px rgb(0 0 0 / 20%), 0px 5px 8px 0px rgb(0 0 0 / 14%), 0px 1px 14px 0px rgb(0 0 0 / 12%);
+  box-shadow: ${theme.boxShadow.default};
   ${theme.breakpoints.down('sm')} {
     left: 0;
     top: 0;

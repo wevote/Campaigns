@@ -1,5 +1,5 @@
 import { Button, Checkbox } from '@mui/material';
-import styled from '@mui/material/styles/styled';
+import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import { loadGapiInsideDOM } from 'gapi-script';
 import moment from 'moment';
@@ -363,15 +363,15 @@ const ContactsOuterContainer = styled('div', {
   padding-top: 10px;
 `));
 
-const ContactsContainer = styled('div')`
+const ContactsContainer = styled('div')(({ theme }) => (`
   overflow-y: auto;
   background-color: rgb(254, 254, 228, 0.01);
   border: 1px solid darkgrey;
   margin: 16px auto 11px;
   height: 300px;
   width: 100%;
-  box-shadow: 0 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
-`;
+  box-shadow: ${theme.boxStyles.default};
+`));
 
 const styles = () => ({
   buttonRoot: {

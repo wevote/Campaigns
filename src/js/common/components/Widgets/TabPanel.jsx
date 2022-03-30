@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import * as PropTypes from 'prop-types';
 import React from 'react';
+import { renderLog } from '../../utils/logging';
 
 export default function TabPanel (props) {
   const { children, value, index, ...other } = props;
@@ -10,7 +11,7 @@ export default function TabPanel (props) {
   // The bad prop spreading case is where it is used to avoid having to list the props you want, leaving the code
   // very difficult to maintain.  In this situation, we are naming all the props we know about, and using
   // spreading only for those we don't yet use or know about.
-
+  renderLog('TabPanel functional component');
   return (
     <div
       role="tabpanel"

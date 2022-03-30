@@ -1,6 +1,6 @@
 import loadable from '@loadable/component';
 import { Button, TextField } from '@mui/material';
-import styled from '@mui/material/styles/styled';
+import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
@@ -177,7 +177,7 @@ class CampaignRecommendedCampaigns extends Component {
 
   getCampaignBasePath = () => {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
-    let campaignBasePath = '';
+    let campaignBasePath;
     if (campaignSEOFriendlyPath) {
       campaignBasePath = `/c/${campaignSEOFriendlyPath}`;
     } else {
@@ -550,9 +550,7 @@ const CampaignImage = styled('img')`
 
 const CampaignTitle = styled('h1')`
   font-size: 20px;
-  margin: 0;
-  margin-bottom: 10px;
-  margin-top: 10px;
+  margin: 10px 0;
   min-height: 27px;
   text-align: left;
 `;

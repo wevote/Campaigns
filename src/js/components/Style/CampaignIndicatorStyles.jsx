@@ -1,4 +1,4 @@
-import styled from '@mui/material/styles/styled';
+import styled from 'styled-components';
 
 const BlockedIndicator = styled('span')`
   background-color: #efc2c2;

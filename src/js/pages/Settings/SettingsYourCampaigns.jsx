@@ -3,7 +3,7 @@ import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import styled from '@mui/material/styles/styled';
+import styled from 'styled-components';
 import { PageWrapper } from '../../common/components/Style/stepDisplayStyles';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';

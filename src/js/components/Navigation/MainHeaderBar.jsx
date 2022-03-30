@@ -1,9 +1,9 @@
 import loadable from '@loadable/component';
 import { Launch } from '@mui/icons-material';
 import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
-import styled from '@mui/material/styles/styled';
 import makeStyles from '@mui/styles/makeStyles';
 import React, { Suspense } from 'react';
+import styled from 'styled-components';
 import DelayedLoad from '../../common/components/Widgets/DelayedLoad';
 import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
 import historyPush from '../../common/utils/historyPush';
@@ -11,11 +11,12 @@ import { renderLog } from '../../common/utils/logging';
 import AppObservableStore from '../../stores/AppObservableStore';
 import initializeAppleSDK from '../../utils/initializeAppleSDK';
 import initializeFacebookSDK from '../../utils/initializeFacebookSDK';
+import TopNavigationAppBar from './TopNavigationAppBar';
 
 const HeaderBarLogo = loadable(() => import('./HeaderBarLogo'));
 const SignInButton = loadable(() => import('./SignInButton'));
 const SignInModalController = loadable(() => import('../Settings/SignInModalController'));
-const TopNavigationDesktopController = loadable(() => import('./TopNavigationDesktopController'));
+// const TopNavigationDesktopController = loadable(() => import('./TopNavigationDesktopController'));
 const VoterNameAndPhoto = loadable(() => import('./VoterNameAndPhoto'));
 
 
@@ -55,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
   },
   menuItem: {
     textTransform: 'none',
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down('md')]: {
       minHeight: 'unset',
     },
     '&:hover': {
@@ -105,7 +106,7 @@ export default function MainHeaderBar (displayHeader) {
   const displayThis = displayHeader.displayHeader;
 
   const handleMenu = (event) => {
-    // console.log('MainHeaderBar handleMenu event:', event);
+    console.log('MainHeaderBar handleMenu event:', event);
     setAnchorEl(event.currentTarget);
   };
 
@@ -140,9 +141,9 @@ export default function MainHeaderBar (displayHeader) {
   const showStartACampaign = !(inPrivateLabelMode) || voterCanStartCampaignXForThisPrivateLabelSite;
   const showMembership = !(inPrivateLabelMode);
 
-  renderLog('MainHeaderBar');
 
   // console.log('MainHeaderBar displayHeader: ', displayHeader);
+  renderLog('MainHeaderBar functional component');
   return (
     <OuterWrapperHeaderBar displayHeader={displayThis}>
       <div className={classes.innerWrapper}>
@@ -160,7 +161,7 @@ export default function MainHeaderBar (displayHeader) {
               </Suspense>
             </IconButton>
             <Suspense fallback={<span>&nbsp;</span>}>
-              <TopNavigationDesktopController />
+              <TopNavigationAppBar />
             </Suspense>
             <Typography variant="h6" className={classes.title}>
               &nbsp;
@@ -191,7 +192,7 @@ export default function MainHeaderBar (displayHeader) {
                   <VoterNameAndPhoto />
                 </Suspense>
               </IconButton>
-              <Menu
+              <MainHeaderMenu
                 id="menu-appbar"
                 anchorEl={anchorEl}
                 anchorOrigin={{
@@ -244,7 +245,7 @@ export default function MainHeaderBar (displayHeader) {
                 {!inPrivateLabelMode && <MenuItem className={classes.menuExtraItem} onClick={() => handleClose('/faq')}>Frequently asked questions</MenuItem>}
                 {!inPrivateLabelMode && <MenuItem className={classes.menuExtraItem} onClick={() => handleClose('/terms')}>Terms of service</MenuItem>}
                 {!inPrivateLabelMode && <MenuItem className={classes.menuExtraItem} onClick={() => handleClose('/privacy')}>Privacy Policy</MenuItem>}
-              </Menu>
+              </MainHeaderMenu>
             </div>
           </Toolbar>
         </AppBar>
@@ -265,4 +266,7 @@ const OuterWrapperHeaderBar = styled('div', {
 const SignInTopBarWrapper = styled('div')`
   cursor: pointer;
   margin-right: 12px;
+`;
+
+const MainHeaderMenu = styled(Menu)`
 `;

@@ -1,4 +1,4 @@
-import styled from '@mui/material/styles/styled';
+import styled from 'styled-components';
 
 const CampaignStartDesktopButtonPanel = styled('div')`
   background-color: #fff;

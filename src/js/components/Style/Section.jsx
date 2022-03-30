@@ -1,4 +1,4 @@
-import styled from '@mui/material/styles/styled';
+import styled from 'styled-components';
 
 const Section = styled('div', {
   shouldForwardProp: (prop) => !['noTopMargin', 'noSideMargins', 'variant', 'rounded'].includes(prop),
@@ -52,20 +52,6 @@ const Step = styled('div')(({ theme }) => (`
   }
 `));
 
-// const StepNumberNotUsed = styled('div')`
-//   width: 24px;
-//   height: 24px;
-//   background: ${(props) => props.theme.colors.brandBlue};
-//   color: white;
-//   border-radius: 4px;
-//   ${theme.breakpoints.down('md')} {
-//     width: 35px;
-//     height: 35px;
-//     min-width: 35px;
-//     font-size: 24px;
-//   }
-// `;
-
 const StepLabel = styled('p')(({ theme }) => (`
   font-weight: bold;
   color: #333;
@@ -102,9 +88,6 @@ const ButtonContainer = styled('div')`
   margin-left: -132px;
 `;
 
-// @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-//   flex-flow: column-reverse;
-// }
 const DescriptionContainer = styled('div')`
   display: flex;
   margin: 1em 3em;
@@ -162,8 +145,7 @@ const NetworkContainer = styled('div')`
   flex-flow: row wrap;
   align-items: center;
   justify-content: space-between;
-  padding: 2em;
-  padding-bottom: 3em;
+  padding: 2em 2em 3em 2em;
 `;
 
 const NetworkImage = styled('img')(({ theme }) => (`

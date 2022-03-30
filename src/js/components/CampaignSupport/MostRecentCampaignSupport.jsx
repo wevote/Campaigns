@@ -1,8 +1,8 @@
 import { AccountCircle } from '@mui/icons-material';
-import styled from '@mui/material/styles/styled';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from 'styled-components';
 import anonymous from '../../../img/global/icons/avatar-generic.png';
 import LazyImage from '../../common/components/LazyImage';
 import { timeFromDate } from '../../common/utils/dateFormat';

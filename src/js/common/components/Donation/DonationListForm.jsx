@@ -8,8 +8,6 @@ import { normalizedHref } from '../../utils/hrefUtils';
 import { renderLog } from '../../utils/logging';
 import TabPanel from '../Widgets/TabPanel';
 import DonationList from './DonationList';
-// import { donationTheme } from '../Style/donationTheme';
-// import { ThemeProvider } from '@mui/material/styles';
 
 /*
 July 2021 TODO: Same named file in the WebApp and Campaigns -- PLEASE KEEP THEM IDENTICAL -- make symmetrical changes and test on both sides
@@ -44,6 +42,7 @@ class DonationListForm extends Component {
 
   render () {
     renderLog('DonationListForm');  // Set LOG_RENDER_EVENTS to log all renders
+    // console.log('Render DonationListForm.jsx   ---------- value', this.state.value, !Number.isNaN(this.state.value));
     const { leftTabIsMembership } = this.props;
     const { value } = this.state;
     // console.log('this.value =========', value);
@@ -64,8 +63,6 @@ class DonationListForm extends Component {
       h4Txt = 'Existing memberships and prior "Chip In" payments:';
     } else if (isPayToPromote) {
       h4Txt = 'Prior "Chip In" payments, and any existing memberships';
-    } else {
-      h4Txt = 'Existing memberships and prior payments:';
     }
 
     const firstTabLabel = leftTabIsMembership ? 'Memberships' :  'Payment history';
@@ -75,7 +72,6 @@ class DonationListForm extends Component {
         <div style={{ padding: '32px  0' }}>
           <h4>{h4Txt}</h4>
           <input type="hidden" value={this.state.activeKey} />
-          {/* <ThemeProvider theme={donationTheme(false, 40)}> */}
           <AppBar position="relative" color="default" elevation={0}>
             <Tabs
               value={this.state.value}
@@ -100,7 +96,6 @@ class DonationListForm extends Component {
               <DonationList isCampaign={isCampaign} displayMembershipTab={!leftTabIsMembership} showPremiumPlan={false} />
             </TabPanel>
           </div>
-          {/* </ThemeProvider> */}
         </div>
       );
     } else {

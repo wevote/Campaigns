@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import styled from '@mui/material/styles/styled';
+import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
@@ -361,7 +361,7 @@ const SaveCancelInnerWrapper = styled('div')`
   margin: 0 auto;
   max-width: 960px;
   padding: 8px 0;
-   @media (max-width: 1005px) {
+  @media (max-width: 1005px) {
     // Switch to 15px left/right margin when auto is too small
     margin: 0 15px;
   }

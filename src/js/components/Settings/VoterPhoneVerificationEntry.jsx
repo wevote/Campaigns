@@ -1,11 +1,11 @@
 import { Delete, Phone } from '@mui/icons-material';
 import { Button, InputBase, Paper } from '@mui/material';
 import Alert from '@mui/material/Alert';
-import styled from '@mui/material/styles/styled';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { isValidPhoneNumber } from 'react-phone-number-input';
+import styled from 'styled-components';
 import VoterActions from '../../actions/VoterActions';
 import LoadingWheel from '../../common/components/Widgets/LoadingWheel';
 import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
@@ -669,12 +669,11 @@ const CancelButtonContainer = styled('div')`
 `;
 
 const Wrapper = styled('div')`
-  margin-top: ${isWebApp() ? '32px;' : '0'};
-
+  margin-top: 32px;
 `;
 
 const PhoneNumberSection = styled('div')`
-  margin-top: ${isWebApp() ? '18px;' : '0'};
+  margin-top: 18px;
 `;
 
 const Error = styled('div')`

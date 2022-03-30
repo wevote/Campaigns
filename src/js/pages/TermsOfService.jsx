@@ -1,6 +1,6 @@
-import styled from '@mui/material/styles/styled';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
+import styled from 'styled-components';
 import { OuterWrapper, PageWrapper } from '../common/components/Style/stepDisplayStyles';
 import TermsOfServiceBody from '../common/components/TermsOfServiceBody';
 import { renderLog } from '../common/utils/logging';

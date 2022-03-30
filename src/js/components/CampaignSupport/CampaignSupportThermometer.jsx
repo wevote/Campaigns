@@ -1,7 +1,7 @@
-import styled from '@mui/material/styles/styled';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from 'styled-components';
 import { renderLog } from '../../common/utils/logging';
 import CampaignStore from '../../stores/CampaignStore';
 import { numberWithCommas } from '../../utils/textFormat';

@@ -37,6 +37,10 @@ export default class WeVoteRouter extends BrowserRouter {
       console.log('Router:  initial history is: ', JSON.stringify(this.history, null, 2));
     }
     this.history.listen((location, action) => {
+      // TODO: March 2022, enable google analytics for Campaigns
+      // if (AppObservableStore.getGoogleAnalyticsEnabled()) {
+      //   ReactGA.pageview(normalizedHrefPage() ? `/${normalizedHrefPage()}` : '/readyLight');
+      // }
       AppObservableStore.incrementObservableUpdateCounter();   // Encourage an update of Header.jsx on each push
       const currentPathname = location.pathname || '';
       AppObservableStore.setCurrentPathname(currentPathname);
@@ -47,6 +51,11 @@ export default class WeVoteRouter extends BrowserRouter {
         console.log(` Router: The current URL is ${location.pathname}${location.search}${location.hash}`);
         console.log(` Router: The last navigation action was ${action}`, JSON.stringify(this.history, null, 2));
       }
+      // This message has to be handled in the componentDidMount of the class that will receive it
+      // TODO: March 2022, enable google analytics for Campaigns
+      // if (location && location.state && location.state.message) {
+      //   AppObservableStore.setPendingSnackMessage(location.state.message, location.state.severity);
+      // }
     });
   }
 }

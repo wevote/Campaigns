@@ -72,28 +72,8 @@ html {
   color: #4371cc;
 }
 
-.u-link-color-on-hover:hover {
-  color: #4371cc;
-}
-
-.u-link-color--gray {
-  color: #aaa;
-}
-
-.u-link-underline {
-  text-decoration: underline;
-}
-
-.u-link-underline-on-hover:hover {
-  text-decoration: underline;
-}
-
 .u-no-break { /* Replacement for nobr and &nbsp */
   white-space: nowrap;
-}
-
-.u-text-fade-at-end {
-  position: relative;
 }
 
 .u-text-fade-at-end::after {

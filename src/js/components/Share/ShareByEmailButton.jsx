@@ -1,8 +1,8 @@
-import styled from '@mui/material/styles/styled';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { EmailShareButton } from 'react-share';
+import styled from 'styled-components';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
 import { isAndroid } from '../../common/utils/cordovaUtils';
 import { isCordova } from '../../common/utils/isCordovaOrWebApp';

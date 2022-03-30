@@ -1,11 +1,10 @@
 import { Button } from '@mui/material';
-import styled from '@mui/material/styles/styled';
 import withStyles from '@mui/styles/withStyles';
 import { DropzoneArea } from 'mui-file-dropzone';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import CampaignStartActions from '../../actions/CampaignStartActions';
-import { isIPad } from '../../common/utils/cordovaUtils';
 import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
 import { renderLog } from '../../common/utils/logging';
 import CampaignStartStore from '../../stores/CampaignStartStore';
@@ -46,11 +45,6 @@ class CampaignPhotoUpload extends Component {
   componentWillUnmount () {
     this.campaignStartStoreListener.remove();
     this.campaignStoreListener.remove();
-    // TODO Figure out how to add fileReader.removeEventListener
-    // if (this.fileReader) {
-    //   this.fileReader.removeEventListener('load', this.cachePhotoFromFileReader, false);
-    //   this.fileReader = null;
-    // }
   }
 
   handleDrop (files) {
@@ -58,21 +52,13 @@ class CampaignPhotoUpload extends Component {
       const fileFromDropzone = files[0];
       if (!fileFromDropzone) return;
       const fileReader = new FileReader();
+      // No need to 'remove' this type of event listener
       fileReader.addEventListener('load', () => {
         const photoFromFileReader = fileReader.result;
         // console.log('photoFromFileReader:', photoFromFileReader);
         CampaignStartActions.campaignPhotoQueuedToSave(photoFromFileReader);
       });
       fileReader.readAsDataURL(fileFromDropzone);
-      // An attempt at figuring out how to removeEventListener
-      // this.fileReader = new FileReader();
-      // this.fileReader.addEventListener('load', () => {
-      //   const photoFromFileReader = this.fileReader.result;
-      //   // console.log('photoFromFileReader:', photoFromFileReader);
-      //   CampaignStartActions.campaignPhotoQueuedToSave(photoFromFileReader);
-      // });
-      // this.fileReader.addEventListener('load', () => this.cachePhotoFromFileReader);
-      // this.fileReader.readAsDataURL(fileFromDropzone);
     }
   }
 
@@ -95,13 +81,6 @@ class CampaignPhotoUpload extends Component {
       campaignPhotoQueuedToDeleteSet,
     });
   }
-
-  // cachePhotoFromFileReader = () => {
-  //   const photoFromFileReader = this.fileReader.result;
-  //   // console.log('photoFromFileReader:', photoFromFileReader);
-  //   CampaignStartActions.campaignPhotoQueuedToSave(photoFromFileReader);
-  //   return true;
-  // }
 
   markCampaignImageForDelete = () => {
     CampaignStartActions.campaignPhotoQueuedToDelete(true);
@@ -147,7 +126,6 @@ class CampaignPhotoUpload extends Component {
                   </OverlayInnerWrapper>
                 </OverlayOuterWrapper>
               ) : (
-                // <MuiThemeProvider theme={muiTheme}>
                 <DropzoneArea
                   acceptedFiles={['image/*']}
                   classes={{
@@ -160,7 +138,6 @@ class CampaignPhotoUpload extends Component {
                   maxFileSize={6000000}
                   onChange={this.handleDrop}
                 />
-                // </MuiThemeProvider>
               )}
             </ColumnFullWidth>
           </Wrapper>
@@ -205,7 +182,7 @@ const CampaignImage = styled('img')`
 `;
 
 const CampaignImageWrapper = styled('div')`
-  margin-top: ${isIPad() ? '-11px' : '-44px'};
+  margin-top: -44px;
 `;
 
 const CampaignImageDeleteButtonOuterWrapper = styled('div')`
@@ -214,7 +191,6 @@ const CampaignImageDeleteButtonOuterWrapper = styled('div')`
   width: 100%;
   position: relative;
   z-index: 1;
-  transform: ${isIPad() ? 'translate(0%, 100%)' : ''}
 `;
 
 const CampaignImageDeleteButtonInnerWrapper = styled('div')`

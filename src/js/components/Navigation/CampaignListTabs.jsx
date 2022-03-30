@@ -1,6 +1,7 @@
 import { AppBar, Tab, Tabs, Toolbar } from '@mui/material';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { renderLog } from '../../common/utils/logging';
 import startsWith from '../../common/utils/startsWith';
 // import { ThemeProvider } from '@mui/material/styles';
 // import { campaignTheme } from '../Style/campaignTheme';
@@ -23,8 +24,8 @@ export default function CampaignListTabs () {  // incomingVariables
     setValue(1);
   }
 
-  // console.log('Render CampaignListTabs.jsx');
-
+  // console.log('Render CampaignListTabs.jsx   ---------- value', value, !Number.isNaN(value));
+  renderLog('CampaignListTabs functional component');
   return (
     <div>
       {/* <ThemeProvider theme={campaignTheme(false, 33)}> */}

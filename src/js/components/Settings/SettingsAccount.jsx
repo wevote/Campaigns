@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import styled from '@mui/material/styles/styled';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
@@ -553,12 +553,11 @@ const SignInSubtitle = styled('p')`
 `;
 
 const RecommendedText = styled('p')`
-  margin: 0;
+  margin: 0 0 4px 0;
   color: #333;
   font-weight: 500;
   font-size: 16px;
   text-align: left;
-  margin-bottom: 4px;
 `;
 
 const TwitterContainer = styled('span')`

@@ -1,5 +1,5 @@
 import { AccountCircle } from '@mui/icons-material';
-import styled from '@mui/material/styles/styled';
+import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -266,15 +266,13 @@ const styles = (theme) => ({
 const NewsItemSubjectWrapper = styled('div')`
   font-size: 20px;
   font-weight: 600;
-  margin: 0;
-  margin-bottom: 8px;
+  margin: 0 0 8px 0;
 `;
 
 const NewsItemTextWrapper = styled('div')`
   font-size: 16px;
   line-height: 1.4;
-  margin: 0;
-  margin-bottom: 8px;
+  margin: 0 0 8px 0;
 `;
 
 const NewsItemWrapper = styled('div')`
