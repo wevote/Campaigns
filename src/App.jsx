@@ -143,6 +143,7 @@ class App extends Component {
     const { doShowHeader, doShowFooter } = this.state;
     // console.log(`App doShowHeader: ${doShowHeader}, doShowFooter:${doShowFooter}`);
 
+    /* eslint-disable react/jsx-one-expression-per-line */
     return (
       <ErrorBoundary>
         <Suspense fallback={<span>&nbsp;</span>}>
@@ -154,6 +155,7 @@ class App extends Component {
                   <Route exact path="/about"><About /></Route>
                   <Route exact path="/addContacts"><AddContacts showFooter={this.setShowFooter} /></Route>
                   <Route exact path="/attributions"><Attributions /></Route>
+                  <Route exact path="/more/attributions"><Attributions /></Route> {/* Compatibility with common/CreditsBody */}
                   <Route exact path="/c/:campaignSEOFriendlyPath" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/add-update" render={(props) => <CampaignNewsItemText match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/add-update/:campaignXNewsItemWeVoteId" render={(props) => <CampaignNewsItemText match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
@@ -210,11 +212,12 @@ class App extends Component {
                   <Route exact path="/id/:campaignXWeVoteId/why-do-you-support" render={(props) => <CampaignSupportEndorsement match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/impact"><Impact /></Route>
                   <Route exact path="/membership"><Membership showFooter={this.setShowFooter} /></Route>
+                  <Route exact path="/more/donate"><Membership showFooter={this.setShowFooter} /></Route>  {/* Compatibility with common/CreditsBody */}
                   <Route exact path="/more/about"><About /></Route>
                   <Route exact path="/more/credits"><Credits /></Route>
                   <Route exact path="/more/faq"><FAQ /></Route>
-                  <Route exact path="/more/privacy"><Privacy /></Route>
-                  <Route exact path="/more/terms"><TermsOfService /></Route>
+                  <Route exact path="/privacy"><Privacy /></Route>
+                  <Route exact path="/terms"><TermsOfService /></Route>
                   <Route exact path="/privacy"><Privacy /></Route>
                   <Route exact path="/profile/started"><SettingsYourCampaigns /></Route>
                   <Route exact path="/profile/supported"><SettingsYourCampaigns /></Route>

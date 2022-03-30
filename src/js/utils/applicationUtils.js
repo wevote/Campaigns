@@ -42,6 +42,7 @@ export function getApplicationViewBooleans (pathname) {
     pathnameLowerCase === '/more/absentee' ||
     pathnameLowerCase === '/more/alerts' ||
     pathnameLowerCase === '/more/credits' ||
+    pathnameLowerCase === '/credits' ||
     startsWith('/more/donate', pathnameLowerCase) ||
     pathnameLowerCase === '/more/elections' ||
     startsWith('/office/', pathnameLowerCase) ||
@@ -51,9 +52,11 @@ export function getApplicationViewBooleans (pathname) {
     pathnameLowerCase === '/more/network/organizations' ||
     startsWith('/more/pricing', pathnameLowerCase) ||
     pathnameLowerCase === '/more/privacy' ||
+    pathnameLowerCase === '/privacy' ||
     pathnameLowerCase === '/more/register' ||
     pathnameLowerCase === '/more/sign_in' ||
     pathnameLowerCase === '/more/terms' ||
+    pathnameLowerCase === '/terms' ||
     pathnameLowerCase === '/more/verify' ||
     startsWith('/verifythisisme/', pathnameLowerCase) ||
     pathnameLowerCase === '/welcome') {
@@ -194,8 +197,11 @@ export function getApplicationViewBooleans (pathname) {
       startsWith('/friends', pathnameLowerCase) ||
       startsWith('/measure', pathnameLowerCase) || // Show Footer if back to not specified above
       (pathnameLowerCase === '/more/attributions') ||
+      (pathnameLowerCase === '/attributions') ||
       (pathnameLowerCase === '/more/privacy') ||
+      (pathnameLowerCase === '/privacy') ||
       (pathnameLowerCase === '/more/terms') ||
+      (pathnameLowerCase === '/terms') ||
       startsWith('/news', pathnameLowerCase) ||
       startsWith('/office', pathnameLowerCase) || // Show Footer if back to not specified above
       startsWith('/values', pathnameLowerCase) ||
