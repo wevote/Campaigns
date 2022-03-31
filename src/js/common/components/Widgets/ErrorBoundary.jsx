@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { isAndroidSizeFold } from '../../utils/cordovaUtils';
+import isMobileScreenSize from '../../utils/isMobileScreenSize';
 
 class ErrorBoundary extends Component {
   constructor (props) {
@@ -21,12 +22,14 @@ class ErrorBoundary extends Component {
   }
 
   render () {
+    const mobile = isMobileScreenSize();  // Not responsive, but we do not have access to the theme here
+
     if (this.state.hasError) {
       // You could render any custom fallback UI here
       return (
         <div style={{
           margin: isAndroidSizeFold() ? '50px' : '10px',
-          padding: '10px',
+          padding: 'auto',
           top: '60px',
           position: 'fixed',
           backgroundColor: 'white',
@@ -39,7 +42,12 @@ class ErrorBoundary extends Component {
             <a style={{ color: 'blue' }} href="/">restarting</a>
             &nbsp;the app.
           </h1>
-          <h1 style={{ margin: '20px', color: 'black' }}>
+          <h1 style={{
+            margin: '20px',
+            color: 'black',
+            fontSize: `${mobile ? '20px' : ''}`,
+          }}
+          >
             Please send us an email at &nbsp;
             <a
               href="mailto:info@WeVote.US"
