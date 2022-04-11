@@ -1,5 +1,5 @@
 import React from 'react';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -17,16 +17,16 @@ SpinnerPage.propTypes = {
   bottomWords: PropTypes.string,
 };
 
-const PageContainer = styled.div`
+const PageContainer = styled('div')`
   padding: 20px;
   text-align: center;
 `;
 
-const TopWords = styled.h2`
+const TopWords = styled('h2')`
   padding: 20px;
 `;
 
-const BottomWords = styled.h3`
+const BottomWords = styled('h3')`
   padding: 20px;
 `;
 

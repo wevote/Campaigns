@@ -1,22 +1,19 @@
-import React, { Component, Suspense } from 'react';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components';
+import React, { Component, Suspense } from 'react';
 import TruncateMarkup from 'react-truncate-markup';
-import { withStyles } from '@material-ui/core/styles';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import {
-  BlockedIndicator, DraftModeIndicator, EditIndicator, ElectionInPast,
-  IndicatorButtonWrapper, IndicatorDefaultButtonWrapper, IndicatorRow,
-} from '../Style/CampaignIndicatorStyles';
-import CampaignOwnersList from '../CampaignSupport/CampaignOwnersList';
-import CampaignStore from '../../stores/CampaignStore';
+import styled, { css } from 'styled-components';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
-import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import { renderLog } from '../../common/utils/logging';
 import historyPush from '../../common/utils/historyPush';
+import { renderLog } from '../../common/utils/logging';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import CampaignStore from '../../stores/CampaignStore';
+import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import initializejQuery from '../../utils/initializejQuery';
 import keepHelpingDestination from '../../utils/keepHelpingDestination';
 import { numberWithCommas } from '../../utils/textFormat';
+import CampaignOwnersList from '../CampaignSupport/CampaignOwnersList';
+import { BlockedIndicator, DraftModeIndicator, EditIndicator, ElectionInPast, IndicatorButtonWrapper, IndicatorDefaultButtonWrapper, IndicatorRow } from '../Style/CampaignIndicatorStyles';
 
 const SupportButtonBeforeCompletionScreen = React.lazy(() => import('../CampaignSupport/SupportButtonBeforeCompletionScreen'));
 
@@ -510,7 +507,7 @@ const CampaignImageDesktopSharedStyles = css`
   width: 224px;
 `;
 
-const CampaignImageDesktopPlaceholder = styled.div`
+const CampaignImageDesktopPlaceholder = styled('div')`
   background-color: #eee;
   display: flex;
   justify-content: center;
@@ -518,7 +515,7 @@ const CampaignImageDesktopPlaceholder = styled.div`
   ${CampaignImageDesktopSharedStyles}
 `;
 
-const CampaignImageDesktop = styled.img`
+const CampaignImageDesktop = styled('img')`
   border-radius: 5px;
   ${CampaignImageDesktopSharedStyles}
 `;
@@ -529,7 +526,7 @@ const CampaignImageMobileSharedStyles = css`
   width: 100%;
 `;
 
-const CampaignImageMobilePlaceholder = styled.div`
+const CampaignImageMobilePlaceholder = styled('div')`
   background-color: #eee;
   display: flex;
   justify-content: center;
@@ -538,19 +535,19 @@ const CampaignImageMobilePlaceholder = styled.div`
   ${CampaignImageMobileSharedStyles}
 `;
 
-const CampaignImagePlaceholderText = styled.div`
+const CampaignImagePlaceholderText = styled('div')`
   color: #ccc;
 `;
 
-const CampaignImageMobile = styled.img`
+const CampaignImageMobile = styled('img')`
   border-radius: 5px;
   ${CampaignImageMobileSharedStyles}
 `;
 
-const CampaignOwnersWrapper = styled.div`
+const CampaignOwnersWrapper = styled('div')`
 `;
 
-const ClickableDiv = styled.div`
+const ClickableDiv = styled('div')`
   cursor: pointer;
   width: 100%;
 `;
@@ -612,7 +609,7 @@ const ClickableDiv = styled.div`
 //   margin-top: 2px;
 // `;
 
-const IndicatorSupportButtonWrapper = styled.div`
+const IndicatorSupportButtonWrapper = styled('div')`
   margin-bottom: 4px;
   margin-right: 8px;
   margin-top: -1px;
@@ -625,30 +622,30 @@ const IndicatorSupportButtonWrapper = styled.div`
 //   margin-top: 12px;
 // `;
 
-const OneCampaignDescription = styled.div`
+const OneCampaignDescription = styled('div')`
   font-size: 14px;
   margin: 4px 0;
 `;
 
-const OneCampaignInnerWrapper = styled.div`
+const OneCampaignInnerWrapper = styled('div')(({ theme }) => (`
   margin: 15px 0;
-  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.up('sm')} {
     display: flex;
     justify-content: space-between;
     margin: 15px;
   }
-`;
+`));
 
-const OneCampaignOuterWrapper = styled.div`
+const OneCampaignOuterWrapper = styled('div')(({ theme }) => (`
   border-top: 1px solid #ddd;
   margin-top: 15px;
-  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+    ${theme.breakpoints.up('sm')} {
     border: 1px solid #ddd;
     border-radius: 5px;
   }
-`;
+`));
 
-const OneCampaignPhotoDesktopColumn = styled.div`
+const OneCampaignPhotoDesktopColumn = styled('div')`
   margin-bottom: 0;
   margin-left: 15px;
   margin-top: 0;
@@ -656,45 +653,45 @@ const OneCampaignPhotoDesktopColumn = styled.div`
   width: 224px;
 `;
 
-const OneCampaignPhotoWrapperMobile = styled.div`
+const OneCampaignPhotoWrapperMobile = styled('div')(({ theme }) => (`
   cursor: pointer;
   margin-bottom: 8px;
   margin-top: 8px;
   min-height: 150px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.xs}) {
+  ${theme.breakpoints.down('xs')} {
     margin-top: 0;
     min-height: auto;
     width: 100%;
   }
-`;
+`));
 
-const OneCampaignTextColumn = styled.div`
+const OneCampaignTextColumn = styled('div')`
   width: 100%;
 `;
 
-const OneCampaignTitle = styled.h1`
+const OneCampaignTitle = styled('h1')(({ theme }) => (`
   font-size: 18px;
   margin: 0;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+   ${theme.breakpoints.down('sm')} {
     margin-bottom: 4px;
   }
-`;
+`));
 
-const SupportersActionLink = styled.span`
+const SupportersActionLink = styled('span')`
   font-size: 14px;
 `;
 
-const SupportersCount = styled.span`
+const SupportersCount = styled('span')`
   color: #808080;
   font-weight: 600 !important;
   font-size: 14px;
 `;
 
-const SupportersWrapper = styled.div`
+const SupportersWrapper = styled('div')`
   margin-bottom: 6px;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
 `;
 
 export default withStyles(styles)(CampaignCardForList);

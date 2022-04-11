@@ -1,13 +1,13 @@
-import React, { Component, Suspense } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import CampaignCardForList from '../Campaign/CampaignCardForList';
+import withStyles from '@mui/styles/withStyles';
+import PropTypes from 'prop-types';
+import React, { Component, Suspense } from 'react';
+import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
+import { renderLog } from '../../common/utils/logging';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
+import CampaignCardForList from '../Campaign/CampaignCardForList';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
-import { renderLog } from '../../common/utils/logging';
 
 const FirstCampaignListController = React.lazy(() => import('../Campaign/FirstCampaignListController'));
 
@@ -151,25 +151,25 @@ const styles = () => ({
 //   font-size: 18px;
 //   text-align: center;
 //   margin: 0 2em 6em;
-//   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+//   ${theme.breakpoints.down('md')} {
 //     font-size: 16px;
 //     margin: 0 1em 5em;
 //   }
 // `;
 
-const LoadMoreItemsManuallyWrapper = styled.div`
-  margin-bottom: 0px;
+const LoadMoreItemsManuallyWrapper = styled('div')`
+  margin-bottom: 0;
   @media print{
     display: none;
   }
 `;
 
-const WhatIsHappeningTitle = styled.h2`
+const WhatIsHappeningTitle = styled('h2')`
   font-size: 22px;
   text-align: left;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
 `;
 
 export default withStyles(styles)(HomeCampaignList);

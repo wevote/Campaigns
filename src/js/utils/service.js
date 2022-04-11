@@ -1,5 +1,4 @@
 import assign from 'object-assign';
-import url from 'url';
 import Cookies from '../common/utils/js-cookie/Cookies';
 import webAppConfig from '../config';
 import { httpLog } from '../common/utils/logging';
@@ -68,11 +67,11 @@ export default function $ajax (options) {
   ) {
     // Retrieve API data from CDN
     options.data = assign({}, options.data || {}); // Do not pass voter_device_id
-    options.url = `${url.resolve(defaults.baseCdnUrl, options.endpoint)}/`;
+    options.url = `${defaults.baseCdnUrl}${options.endpoint}/`;
   } else {
     // Retrieve API from API Server Pool
     options.data = assign({}, options.data || {}, defaults.data());
-    options.url = `${url.resolve(defaults.baseUrl, options.endpoint)}/`;
+    options.url = `${defaults.baseUrl}${options.endpoint}/`;
   }
 
   httpLog(`AJAX URL: ${options.url}`);
@@ -80,7 +79,6 @@ export default function $ajax (options) {
     httpLog('AJAX voter_device_id: ', Cookies.get('voter_device_id'));
   }
 
-  /* global $ */
   /* eslint no-undef: ["error", { "typeof": true }] */
   // Attempts to wait until jQuery has loaded
   // window.onload = function() {
@@ -101,5 +99,6 @@ export default function $ajax (options) {
   //     return $.ajax(options);
   //   }, 50);
   // };
+  const { $ } = window;
   return $.ajax(options);
 }

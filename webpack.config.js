@@ -42,6 +42,9 @@ module.exports = {
   },
   resolve: {
     extensions: ['*', '.js', '.jsx'],
+    alias: {
+      '@mui/styled-engine': '@mui/styled-engine-sc',
+    },
   },
   output: {
     path: path.resolve(__dirname, './build'),
@@ -94,17 +97,17 @@ module.exports = {
     }),
   ],
   devServer: (isHTTPS ? {
-    contentBase: path.resolve(__dirname, './build'),
+    static: path.join(__dirname, './build'),
     https: {
       key: fs.readFileSync('./src/cert/server.key'),
       cert: fs.readFileSync('./src/cert/server.crt'),
     },
     host: 'localhost',
     port,
-    public: `localhost:${port}`,
+    // public: `localhost:${port}`,
     historyApiFallback: true,
     open: true,
-    disableHostCheck: true,
+    // disableHostCheck: true,
   } : {
     contentBase: path.resolve(__dirname, './build'),
     host: 'localhost',

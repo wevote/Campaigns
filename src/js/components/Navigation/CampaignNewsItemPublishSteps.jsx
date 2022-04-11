@@ -1,5 +1,5 @@
-import { withStyles } from '@material-ui/core/styles';
-import { Done } from '@material-ui/icons';
+import { Done } from '@mui/icons-material';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import commonMuiStyles from '../../common/components/Style/commonMuiStyles';

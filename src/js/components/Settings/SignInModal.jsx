@@ -1,26 +1,20 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { Close } from '@mui/icons-material';
+import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import withStyles from '@mui/styles/withStyles';
+import withTheme from '@mui/styles/withTheme';
 import clsx from 'clsx';
-import { Dialog, DialogContent, DialogTitle, IconButton } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
-import { withStyles, withTheme } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import styled from 'styled-components';
-import { lazyLoader, libraryNeedsLoading } from '../../utils/lazyLoader';
+import { isWebAppHeight0to568, isWebAppHeight569to667, isWebAppHeight668to736, isWebAppHeight737to896 } from '../../common/utils/cordovaUtils';
 import { renderLog } from '../../common/utils/logging';
-import { isAndroid, isIOS,
-  isIPhone3p5in, isIPhone4in, isIPhone4p7in, isIPhone5p8in, isIPhone6p1in, isIPhone6p5in,
-  isWebAppHeight0to568, isWebAppHeight569to667, isWebAppHeight668to736, isWebAppHeight737to896,
-  restoreStylesAfterCordovaKeyboard,
-} from '../../common/utils/cordovaUtils';
-import { isCordova, isWebApp } from '../../common/utils/isCordovaOrWebApp';
-import historyPush from '../../common/utils/historyPush';
-import SettingsAccount from './SettingsAccount';
+import AppObservableStore from '../../stores/AppObservableStore';
 import VoterStore from '../../stores/VoterStore';
 import initializejQuery from '../../utils/initializejQuery';
-import { stringContains } from '../../utils/textFormat';
+import { lazyLoader, libraryNeedsLoading } from '../../utils/lazyLoader';
+import SettingsAccount from './SettingsAccount';
 import signInModalGlobalState from './signInModalGlobalState';
 
-/* global $ */
 
 class SignInModal extends Component {
   constructor (props) {
@@ -46,21 +40,6 @@ class SignInModal extends Component {
     }
   }
 
-  componentDidUpdate () {
-    if (isIOS()) {
-      // Cordova really has trouble with animations on dialogs, while the visible area is being compressed to fit the software keyboard
-      // eslint-disable-next-line func-names
-      $('*').each(function () {
-        const styleWorking = $(this).attr('style');
-        if (styleWorking && stringContains('transition', styleWorking)) {
-          console.log(`SignInModal componentDidUpdate transition style removed before: ${styleWorking}`);
-          const cleaned = styleWorking.replace(/transition.*?;/, '');
-          $(this).attr('style', cleaned);
-        }
-      });
-    }
-  }
-
   componentDidCatch (error, info) {
     // We should get this information to Splunk!
     console.error('SignInModal caught error: ', `${error} with info: `, info);
@@ -83,10 +62,7 @@ class SignInModal extends Component {
     const secretCodeVerificationStatus = VoterStore.getSecretCodeVerificationStatus();
     const { secretCodeVerified } = secretCodeVerificationStatus;
     if (secretCodeVerified) {
-      if (isWebApp()) {
-        // In Cordova something else has already closed the dialog, so this has to be suppressed to avoid an error -- Jan 27, 2020 is this still needed?
-        this.props.closeFunction();
-      }
+      this.closeFunction();
     } else {
       const voter = VoterStore.getVoter();
       this.setState({
@@ -107,18 +83,11 @@ class SignInModal extends Component {
   };
 
   closeFunction = () => {
-    // console.log('SignInModal closeFunction');
+    console.log('SignInModal closeFunction');
     signInModalGlobalState.set('textOrEmailSignInInProcess', false);
-
-    if (this.props.closeFunction) {
-      this.props.closeFunction();
-    }
-
-    if (isCordova()) {
-      // console.log('closeFunction in SignInModal doing restoreStylesAfterCordovaKeyboard and historyPush');
-      restoreStylesAfterCordovaKeyboard('SignInModal');
-      historyPush('/ballot');
-    }
+    AppObservableStore.setShowSignInModal(false);
+    console.log('SignInModal closeFunction before force set state');
+    this.setState({});
   };
 
   onKeyDown = (event) => {
@@ -133,6 +102,7 @@ class SignInModal extends Component {
   render () {
     renderLog('SignInModal');  // Set LOG_RENDER_EVENTS to log all renders
     const { classes } = this.props;
+    const show = AppObservableStore.showSignInModal();
 
     const { focusedInputName, focusedOnSingleInputToggle, voter, voterIsSignedIn } = this.state;
     if (!voter) {
@@ -140,10 +110,7 @@ class SignInModal extends Component {
       return <div className="undefined-props" />;
     }
     // console.log('SignInModal render voter found');
-
-    if (voter && voterIsSignedIn && isCordova()) {
-      return false;
-    }
+    // console.log('SignInModal AppObservableStore.showSignInModal()', show);
 
     // This modal is shown when the voter wants to sign in.
     // console.log('window.screen.height:', window.screen.height);
@@ -162,16 +129,14 @@ class SignInModal extends Component {
             // iPhoneX/iPhone11 Pro Max
             [classes.emailInputWebApp737to896]: isWebAppHeight737to896() && focusedOnSingleInputToggle && focusedInputName === 'email',
             [classes.phoneInputWebApp737to896]: isWebAppHeight737to896() && focusedOnSingleInputToggle && focusedInputName === 'phone',
-            [classes.signInModalDialogLarger]: (isIPhone5p8in() || isIPhone6p1in() || isIPhone6p5in()) && isCordova(),
-            [classes.signInModalDialogAndroid]: isAndroid(),
           }),
           root: classes.dialogRoot,
         }}
-        open={this.props.show}
+        open={show}
         onClose={() => { this.closeFunction(); }}
       >
         <DialogTitle>
-          <SignInText className="h2">
+          <SignInText className="h2" style={{ paddingRight: 30 }}>
             Sign In
           </SignInText>
           <IconButton
@@ -179,6 +144,7 @@ class SignInModal extends Component {
             classes={{ root: classes.closeButton }}
             onClick={() => { this.closeFunction(); }}
             id="profileCloseSignInModal"
+            size="large"
           >
             <Close />
           </IconButton>
@@ -208,8 +174,6 @@ class SignInModal extends Component {
 }
 SignInModal.propTypes = {
   classes: PropTypes.object,
-  show: PropTypes.bool,
-  closeFunction: PropTypes.func.isRequired,
 };
 
 /*
@@ -220,7 +184,7 @@ be honored, Cordova tries to do the best it can, but sometimes it crashes and lo
 For Cordova eliminate as many fixed vertical dimensions as needed to avoid overconstraint.
 */
 const styles = (theme) => ({
-  dialogRoot: isWebApp() ? {
+  dialogRoot: {
     height: '100%',
     // position: 'absolute !important', // Causes problem on Firefox
     top: '-15%',
@@ -229,17 +193,8 @@ const styles = (theme) => ({
     bottom: 'unset !important',
     width: '100%',
     zIndex: '9010 !important',
-  } : {
-    height: '100%',
-    position: 'absolute !important',
-    top: '-15%',
-    left: '0% !important',
-    right: 'unset !important',
-    bottom: 'unset !important',
-    width: '100%',
-    // zIndex: '9010 !important',
   },
-  dialogPaper: isWebApp() ? {
+  dialogPaper: {
     [theme.breakpoints.down('sm')]: {
       minWidth: '95%',
       maxWidth: '95%',
@@ -248,29 +203,12 @@ const styles = (theme) => ({
       height: 'unset',
       margin: '0 auto',
     },
-  } : {
-    margin: '0 !important',
-    width: '95%',
-    height: 'unset',
-    maxHeight: '90%',
-    offsetHeight: 'unset !important',
-    top: '50%',
-    left: '50%',
-    right: 'unset !important',
-    bottom: 'unset !important',
-    position: 'absolute',
-    transform: (isIPhone3p5in() || isIPhone4in() || isIPhone4p7in()) ? 'translate(-50%, -59%)' : 'translate(-50%, -25%)',
   },
-  focusedOnSingleInput: isWebApp() ? {
+  focusedOnSingleInput: {
     [theme.breakpoints.down('sm')]: {
       position: 'absolute',
       top: '75%',
       left: '73%',
-    },
-  } : {},
-  emailInputWebApp0to568: {
-    [theme.breakpoints.down('sm')]: {
-      transform: 'translate(-75%, -50%)',
     },
   },
   phoneInputWebApp0to568: {
@@ -312,12 +250,12 @@ const styles = (theme) => ({
   },
   closeButton: {
     position: 'absolute',
-    right: `${theme.spacing(1)}px`,
-    top: `${theme.spacing(1)}px`,
+    right: theme.spacing(1),
+    top: theme.spacing(1),
   },
 });
 
-const SignInText = styled.span`
+const SignInText = styled('span')`
   display: block;
   text-align: center;
   min-width: 200px;

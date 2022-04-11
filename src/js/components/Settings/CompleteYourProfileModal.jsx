@@ -1,17 +1,13 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-} from '@material-ui/core';
-import { Close } from '@material-ui/icons';
-import { withStyles, withTheme } from '@material-ui/core/styles';
+import { Close } from '@mui/icons-material';
+import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import styled from 'styled-components';
-import CompleteYourProfile from './CompleteYourProfile';
-import VoterStore from '../../stores/VoterStore';
+import withStyles from '@mui/styles/withStyles';
+import withTheme from '@mui/styles/withTheme';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { renderLog } from '../../common/utils/logging';
+import VoterStore from '../../stores/VoterStore';
+import CompleteYourProfile from './CompleteYourProfile';
 
 
 class CompleteYourProfileModal extends Component {
@@ -100,6 +96,7 @@ class CompleteYourProfileModal extends Component {
             classes={{ root: classes.closeButton }}
             onClick={() => { this.closeModalFunction(); }}
             id="completeYourProfileModalClose"
+            size="large"
           >
             <Close />
           </IconButton>
@@ -160,7 +157,7 @@ const styles = () => ({
   },
 });
 
-const DialogTitleText = styled.span`
+const DialogTitleText = styled('span')`
   display: block;
 `;
 

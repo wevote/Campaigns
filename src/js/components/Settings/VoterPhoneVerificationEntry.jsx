@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import { Delete, Phone } from '@mui/icons-material';
+import { Button, InputBase, Paper } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { isValidPhoneNumber } from 'react-phone-number-input';
-import { withStyles } from '@material-ui/core/styles';
-import { Delete, Phone } from '@material-ui/icons';
-import { Paper, InputBase, Button } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
+import styled from 'styled-components';
+import VoterActions from '../../actions/VoterActions';
+import LoadingWheel from '../../common/components/Widgets/LoadingWheel';
+import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
 import { isCordova, isWebApp } from '../../common/utils/isCordovaOrWebApp';
 import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
-import LoadingWheel from '../../common/components/Widgets/LoadingWheel';
 import { renderLog } from '../../common/utils/logging';
-import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
+import VoterStore from '../../stores/VoterStore';
 import SettingsVerifySecretCode from './SettingsVerifySecretCode';
 import signInModalGlobalState from './signInModalGlobalState';
-import VoterActions from '../../actions/VoterActions';
-import VoterStore from '../../stores/VoterStore';
 
 /* global $ */
 
@@ -574,7 +574,7 @@ class VoterPhoneVerificationEntry extends Component {
     });
 
     return (
-      <Wrapper isWeb={isWebApp()} id="voterPhoneEntryWrapper">
+      <Wrapper id="voterPhoneEntryWrapper">
         {(hideEverythingButSignInWithPhoneForm || hideExistingPhoneNumbers) ? (
           <span>
             {smsPhoneNumberStatusHtml}
@@ -582,7 +582,7 @@ class VoterPhoneVerificationEntry extends Component {
         ) : (
           <div>
             {verifiedSMSFound ? (
-              <PhoneNumberSection isWeb={isWebApp()}>
+              <PhoneNumberSection>
                 <span className="h3">
                   Your Phone Number
                   {smsPhoneNumberListCount > 1 ? 's' : ''}
@@ -651,7 +651,7 @@ const styles = {
   },
 };
 
-const ButtonWrapper = styled.div`
+const ButtonWrapper = styled('div')`
   width: 100%;
   margin: 4px 0 0 0;
   display: flex;
@@ -659,29 +659,29 @@ const ButtonWrapper = styled.div`
   justify-content: flex-end;
 `;
 
-const ButtonContainer = styled.div`
+const ButtonContainer = styled('div')`
   width: fit-content;
   margin-left: 8px;
 `;
 
-const CancelButtonContainer = styled.div`
+const CancelButtonContainer = styled('div')`
   width: fit-content;
 `;
 
-const Wrapper = styled.div`
-  margin-top: ${({ isWeb }) => (isWeb ? '32px;' : '0')};
+const Wrapper = styled('div')`
+  margin-top: 32px;
 `;
 
-const PhoneNumberSection = styled.div`
-  margin-top: ${({ isWeb }) => (isWeb ? '18px;' : '0')};
+const PhoneNumberSection = styled('div')`
+  margin-top: 18px;
 `;
 
-const Error = styled.div`
+const Error = styled('div')`
   color: rgb(255, 73, 34);
   font-size: 14px;
 `;
 
-const SignInSectionText = styled.div`
+const SignInSectionText = styled('div')`
   display: block;
   text-align: left;
   font-weight: 500;

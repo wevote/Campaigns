@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import { Close } from '@mui/icons-material';
+import { IconButton, Snackbar } from '@mui/material';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
-import { Snackbar, IconButton } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import { Close } from '@material-ui/icons';
-import { renderLog } from '../../common/utils/logging';
+import React, { Component } from 'react';
 import { snackOffset } from '../../common/utils/cordovaUtils';
 import { isWebApp } from '../../common/utils/isCordovaOrWebApp';
+import { renderLog } from '../../common/utils/logging';
 
 
 class BrowserPushMessage extends Component {
@@ -67,6 +67,7 @@ class BrowserPushMessage extends Component {
             aria-label="Close"
             color="inherit"
             onClick={this.handleClose}
+            size="large"
           >
             <Close />
           </IconButton>,

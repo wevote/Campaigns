@@ -1,11 +1,11 @@
 import loadable from '@loadable/component';
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import { Done } from '@material-ui/icons';
+import { Done } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import styled from 'styled-components';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import VoterActions from '../../actions/VoterActions';
 import ShareActions from '../../common/actions/ShareActions';
 import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
@@ -545,41 +545,41 @@ SuperSharingChooseRecipients.propTypes = {
   setShowHeaderFooter: PropTypes.func,
 };
 
-const BottomOfPageSpacer = styled.div`
+const BottomOfPageSpacer = styled('div')`
   margin-bottom: 150px;
 `;
 
-const ButtonFooterWrapper = styled.div`
+const ButtonFooterWrapper = styled('div')`
   position: fixed;
   width: 100%;
   bottom: 0;
   display: block;
 `;
 
-const ButtonPanel = styled.div`
+const ButtonPanel = styled('div')`
   background-color: #fff;
   border-top: 1px solid #ddd;
   padding: 10px;
 `;
 
-const ContactDisplayEmail = styled.div`
+const ContactDisplayEmail = styled('div')`
   font-size: 0.8em;
   text-overflow: ellipsis;
 `;
 
-const ContactDisplayName = styled.div`
+const ContactDisplayName = styled('div')`
   text-overflow: ellipsis;
 `;
 
-const ContactFilterWrapper = styled.div`
+const ContactFilterWrapper = styled('div')`
   font-size: 0.8em;
   margin-right: 4px;
 `;
 
-const ContactNameWrapper = styled.div`
+const ContactNameWrapper = styled('div')`
 `;
 
-const ContactOuterWrapper = styled.div`
+const ContactOuterWrapper = styled('div')`
   align-items: center;
   border-top: 1px solid #ddd;
   display: flex;
@@ -587,52 +587,54 @@ const ContactOuterWrapper = styled.div`
   padding: 6px 0;
 `;
 
-const ContactPhotoImage = styled.img`
+const ContactPhotoImage = styled('img')`
   height: 48px;
   width: 48px;
 `;
 
-const ContactPhotoWrapper = styled.div`
+const ContactPhotoWrapper = styled('div')`
 `;
 
-const ContactSelectCheckWrapper = styled.div`
+const ContactSelectCheckWrapper = styled('div')`
 `;
 
-const ContactSelectWrapper = styled.div`
+const ContactSelectWrapper = styled('div')`
   align-items: center;
   display: flex;
   justify-content: flex-end;
 `;
 
-const DesktopActionSpacer = styled.div`
+const DesktopActionSpacer = styled('div')`
   margin-top: 35px;
 `;
 
-const LoadMoreItemsManuallyWrapper = styled.div`
-  margin-bottom: 0px;
+const LoadMoreItemsManuallyWrapper = styled('div')`
+  margin-bottom: 0;
   @media print{
     display: none;
   }
 `;
 
-const CheckmarkWrapper = styled.div`
-  color: ${(props) => (props.inverseColor ? 'white' : '#E8E8E8')};
+const CheckmarkWrapper = styled('div', {
+  shouldForwardProp: (prop) => !['inverseColor'].includes(prop),
+})(({ inverseColor, theme }) => (`
+  color: ${inverseColor ? 'white' : '#E8E8E8'};
   font-size: 16px;
   font-weight: 600;
   margin-top: -2px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     font-size: 14px;
   }
-`;
+`));
 
-const StepWrapperThin = styled.div`
+const StepWrapperThin = styled('div')(({ theme }) => (`
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-end;
   width: 60px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     width: 50px;
   }
-`;
+`));
 
 export default withStyles(commonMuiStyles)(SuperSharingChooseRecipients);

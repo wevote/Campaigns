@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { Checkbox, FormControl, FormControlLabel } from '@mui/material';
 import styled from 'styled-components';
-import { Checkbox, FormControl, FormControlLabel } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import withStyles from '@mui/styles/withStyles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
-import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import { renderLog } from '../../common/utils/logging';
+import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 
 class VisibleToPublicCheckbox extends Component {
   constructor (props) {
@@ -142,12 +142,12 @@ const CheckboxLabel = styled(FormControlLabel)`
   margin-bottom: 0 !important;
 `;
 
-const ColumnFullWidth = styled.div`
+const ColumnFullWidth = styled('div')`
   padding: 0 12px;
   width: 100%;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
   display: flex;
   justify-content: space-between;
   margin-left: -12px;

@@ -1,24 +1,15 @@
-import React, { Component } from 'react';
-import { Button } from '@material-ui/core';
-import { DropzoneArea } from 'material-ui-dropzone';
+import { Button } from '@mui/material';
+import withStyles from '@mui/styles/withStyles';
+import { DropzoneArea } from 'mui-file-dropzone';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import styled from 'styled-components';
-import { MuiThemeProvider, createTheme, withStyles } from '@material-ui/core/styles';
 import CampaignStartActions from '../../actions/CampaignStartActions';
-import CampaignStartStore from '../../stores/CampaignStartStore';
-import CampaignStore from '../../stores/CampaignStore';
 import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
 import { renderLog } from '../../common/utils/logging';
+import CampaignStartStore from '../../stores/CampaignStartStore';
+import CampaignStore from '../../stores/CampaignStore';
 
-const muiTheme = createTheme({
-  overrides: {
-    MuiDropzonePreviewList: {
-      image: {
-        maxWidth: 'auto',
-      },
-    },
-  },
-});
 
 class CampaignPhotoUpload extends Component {
   constructor (props) {
@@ -54,11 +45,6 @@ class CampaignPhotoUpload extends Component {
   componentWillUnmount () {
     this.campaignStartStoreListener.remove();
     this.campaignStoreListener.remove();
-    // TODO Figure out how to add fileReader.removeEventListener
-    // if (this.fileReader) {
-    //   this.fileReader.removeEventListener('load', this.cachePhotoFromFileReader, false);
-    //   this.fileReader = null;
-    // }
   }
 
   handleDrop (files) {
@@ -66,21 +52,13 @@ class CampaignPhotoUpload extends Component {
       const fileFromDropzone = files[0];
       if (!fileFromDropzone) return;
       const fileReader = new FileReader();
+      // No need to 'remove' this type of event listener
       fileReader.addEventListener('load', () => {
         const photoFromFileReader = fileReader.result;
         // console.log('photoFromFileReader:', photoFromFileReader);
         CampaignStartActions.campaignPhotoQueuedToSave(photoFromFileReader);
       });
       fileReader.readAsDataURL(fileFromDropzone);
-      // An attempt at figuring out how to removeEventListener
-      // this.fileReader = new FileReader();
-      // this.fileReader.addEventListener('load', () => {
-      //   const photoFromFileReader = this.fileReader.result;
-      //   // console.log('photoFromFileReader:', photoFromFileReader);
-      //   CampaignStartActions.campaignPhotoQueuedToSave(photoFromFileReader);
-      // });
-      // this.fileReader.addEventListener('load', () => this.cachePhotoFromFileReader);
-      // this.fileReader.readAsDataURL(fileFromDropzone);
     }
   }
 
@@ -103,13 +81,6 @@ class CampaignPhotoUpload extends Component {
       campaignPhotoQueuedToDeleteSet,
     });
   }
-
-  // cachePhotoFromFileReader = () => {
-  //   const photoFromFileReader = this.fileReader.result;
-  //   // console.log('photoFromFileReader:', photoFromFileReader);
-  //   CampaignStartActions.campaignPhotoQueuedToSave(photoFromFileReader);
-  //   return true;
-  // }
 
   markCampaignImageForDelete = () => {
     CampaignStartActions.campaignPhotoQueuedToDelete(true);
@@ -155,20 +126,18 @@ class CampaignPhotoUpload extends Component {
                   </OverlayInnerWrapper>
                 </OverlayOuterWrapper>
               ) : (
-                <MuiThemeProvider theme={muiTheme}>
-                  <DropzoneArea
-                    acceptedFiles={['image/*']}
-                    classes={{
-                      icon: classes.dropzoneIcon,
-                      root: classes.dropzoneRoot,
-                    }}
-                    dropzoneText={dropzoneText}
-                    filesLimit={1}
-                    initialFiles={campaignPhotoExists ? [campaignPhotoLargeUrl] : undefined}
-                    maxFileSize={6000000}
-                    onChange={this.handleDrop}
-                  />
-                </MuiThemeProvider>
+                <DropzoneArea
+                  acceptedFiles={['image/*']}
+                  classes={{
+                    icon: classes.dropzoneIcon,
+                    root: classes.dropzoneRoot,
+                  }}
+                  dropzoneText={dropzoneText}
+                  filesLimit={1}
+                  initialFiles={campaignPhotoExists ? [campaignPhotoLargeUrl] : undefined}
+                  maxFileSize={6000000}
+                  onChange={this.handleDrop}
+                />
               )}
             </ColumnFullWidth>
           </Wrapper>
@@ -208,46 +177,45 @@ const styles = (theme) => ({
   },
 });
 
-const CampaignImage = styled.img`
+const CampaignImage = styled('img')`
   width: 100%;
 `;
 
-const CampaignImageWrapper = styled.div`
-  margin-top: ${({ ipad }) => (ipad ? '-11px' : '-44px')};
+const CampaignImageWrapper = styled('div')`
+  margin-top: -44px;
 `;
 
-const CampaignImageDeleteButtonOuterWrapper = styled.div`
+const CampaignImageDeleteButtonOuterWrapper = styled('div')`
   display: flex;
   justify-content: flex-end;
   width: 100%;
   position: relative;
   z-index: 1;
-  transform: ${({ ipad }) => (ipad ? 'translate(0%, 100%)' : '')}
 `;
 
-const CampaignImageDeleteButtonInnerWrapper = styled.div`
+const CampaignImageDeleteButtonInnerWrapper = styled('div')`
   margin-right: 8px;
   z-index: 2;
 `;
 
-const ColumnFullWidth = styled.div`
+const ColumnFullWidth = styled('div')`
   padding: 8px 12px;
   width: 100%;
 `;
 
-const OverlayOuterWrapper = styled.div`
+const OverlayOuterWrapper = styled('div')`
   align-self: flex-end;
   // width: 640px;
   display: flex;
   // padding: 0 15px;
 `;
 
-const OverlayInnerWrapper = styled.div`
+const OverlayInnerWrapper = styled('div')`
   min-height: 37px;
   width: 100%;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
   display: flex;
   justify-content: space-between;
   margin-left: -12px;

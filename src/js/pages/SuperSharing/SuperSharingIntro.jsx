@@ -1,9 +1,9 @@
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Button } from '@mui/material';
+import styled from 'styled-components';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import VoterActions from '../../actions/VoterActions';
 import ShareActions from '../../common/actions/ShareActions';
 import { OuterWrapper, PageWrapper, StepNumberBordered, StepNumberPlaceholder } from '../../common/components/Style/stepDisplayStyles';
@@ -238,81 +238,81 @@ const styles = (theme) => ({
   },
 });
 
-const ContentRow = styled.div`
+const ContentRow = styled('div')`
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
 `;
 
-const ContentTitle = styled.h1`
+const ContentTitle = styled('h1')(({ theme }) => (`
   font-size: 22px;
   font-weight: 600;
   margin: 20px 0;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     font-size: 20px;
   }
-`;
+`));
 
-const DesktopButtonPanel = styled.div`
+const DesktopButtonPanel = styled('div')`
   background-color: #fff;
   padding: 10px 0;
 `;
 
-const DesktopButtonWrapper = styled.div`
+const DesktopButtonWrapper = styled('div')`
   width: 100%;
   display: block;
   margin: 30px 0;
 `;
 
-const Dot = styled.div`
+const Dot = styled('div')(({ theme }) => (`
   padding-top: 2px;
   text-align: center;
   align-self: center;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     padding-top: 3px;
   }
+`));
+
+const InnerWrapper = styled('div')`
 `;
 
-const InnerWrapper = styled.div`
-`;
-
-const MobileButtonPanel = styled.div`
+const MobileButtonPanel = styled('div')`
   background-color: #fff;
   border-top: 1px solid #ddd;
   margin: 0;
   padding: 10px;
 `;
 
-const MobileButtonWrapper = styled.div`
+const MobileButtonWrapper = styled('div')`
   position: fixed;
   width: 100%;
   bottom: 0;
   display: block;
 `;
 
-const StepText = styled.div`
+const StepText = styled('div')(({ theme }) => (`
   color: #555;
   font-size: 16px;
   padding: 0 8px;
   text-align: left;
   vertical-align: top;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     font-size: 16px;
     padding: 0 12px;
   }
-`;
+`));
 
-const StepTitle = styled.div`
+const StepTitle = styled('div')(({ theme }) => (`
   font-size: 20px;
   font-weight: 600;
   padding: 0 8px;
   text-align: left;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     font-size: 17px;
   }
-`;
+`));
 
-const TitleRow = styled.div`
+const TitleRow = styled('div')`
   align-content: center;
   display: flex;
   flex-flow: row nowrap;

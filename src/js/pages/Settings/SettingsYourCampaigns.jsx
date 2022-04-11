@@ -1,5 +1,5 @@
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Button } from '@mui/material';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
@@ -109,22 +109,22 @@ const styles = () => ({
   },
 });
 
-const IntroductionMessageSection = styled.div`
+const IntroductionMessageSection = styled('div')(({ theme }) => (`
   padding: 3em 0 1em 0;
   display: flex;
   flex-flow: column;
   align-items: center;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     padding: 1em 0 .5em 0;
   }
-`;
+`));
 
-const VoterPhotoImage = styled.img`
+const VoterPhotoImage = styled('img')`
   border-radius: 100px;
   max-width: 200px;
 `;
 
-const VoterPhotoTooBig = styled.div`
+const VoterPhotoTooBig = styled('div')`
   background-color: #efc2c2;
   border-radius: 4px;
   color: #2e3c5d;
@@ -134,7 +134,7 @@ const VoterPhotoTooBig = styled.div`
   padding: 5px 12px;
 `;
 
-const VoterPhotoWrapper = styled.div`
+const VoterPhotoWrapper = styled('div')`
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -143,25 +143,25 @@ const VoterPhotoWrapper = styled.div`
   width: 100%;
 `;
 
-const YourNameWrapper = styled.h1`
+const YourNameWrapper = styled('h1')(({ theme }) => (`
   font-size: 42px;
   text-align: center;
   margin: 1em 0 0 0;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     font-size: 28px;
     // margin: 25px;
   }
-`;
+`));
 
-const YourLocationWrapper = styled.div`
+const YourLocationWrapper = styled('div')(({ theme }) => (`
   color: #555;
   font-size: 18px;
   text-align: center;
   margin: 20px 2em 2em;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     font-size: 16px;
     margin: 20px 1em 1em;
   }
-`;
+`));
 
 export default withStyles(styles)(SettingsYourCampaigns);

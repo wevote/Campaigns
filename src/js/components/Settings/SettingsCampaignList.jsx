@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import { renderLog } from '../../common/utils/logging';
+import withStyles from '@mui/styles/withStyles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import CampaignActions from '../../actions/CampaignActions';
-import CampaignCardForList from '../Campaign/CampaignCardForList';
+import { renderLog } from '../../common/utils/logging';
+import startsWith from '../../common/utils/startsWith';
 import CampaignStore from '../../stores/CampaignStore';
 import initializejQuery from '../../utils/initializejQuery';
+import CampaignCardForList from '../Campaign/CampaignCardForList';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
-import startsWith from '../../common/utils/startsWith';
 
 
 const STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY = 6;
@@ -148,19 +148,19 @@ const styles = () => ({
   },
 });
 
-const LoadMoreItemsManuallyWrapper = styled.div`
-  margin-bottom: 0px;
+const LoadMoreItemsManuallyWrapper = styled('div')(({ theme }) => (`
+  margin-bottom: 0;
   padding-left: 16px;
   padding-right: 26px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     padding-right: 16px;
   }
   @media print{
     display: none;
   }
-`;
+`));
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
 `;
 
 export default withStyles(styles)(SettingsCampaignList);

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
+import { OuterWrapper, PageWrapper } from '../common/components/Style/stepDisplayStyles';
 import TermsOfServiceBody from '../common/components/TermsOfServiceBody';
 import { renderLog } from '../common/utils/logging';
-import { OuterWrapper, PageWrapper } from '../common/components/Style/stepDisplayStyles';
 
 
 class TermsOfService extends Component {
@@ -28,6 +28,6 @@ class TermsOfService extends Component {
   }
 }
 
-const InnerWrapper = styled.div``;
+const InnerWrapper = styled('div')``;
 
 export default TermsOfService;

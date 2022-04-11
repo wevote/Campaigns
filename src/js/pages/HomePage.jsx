@@ -1,13 +1,13 @@
-import React, { Component, Suspense } from 'react';
-import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
+import { Button } from '@mui/material';
 import styled from 'styled-components';
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import AppObservableStore, { messageService } from '../stores/AppObservableStore';
-import { renderLog } from '../common/utils/logging';
-import historyPush from '../common/utils/historyPush';
+import withStyles from '@mui/styles/withStyles';
+import PropTypes from 'prop-types';
+import React, { Component, Suspense } from 'react';
+import Helmet from 'react-helmet';
 import { PageWrapper } from '../common/components/Style/stepDisplayStyles';
+import historyPush from '../common/utils/historyPush';
+import { renderLog } from '../common/utils/logging';
+import AppObservableStore, { messageService } from '../stores/AppObservableStore';
 
 const HomeCampaignList = React.lazy(() => import('../components/Home/HomeCampaignList'));
 
@@ -120,37 +120,37 @@ const styles = () => ({
   },
 });
 
-const IntroductionMessageSection = styled.div`
+const IntroductionMessageSection = styled('div')(({ theme }) => (`
   padding: 3em 0;
   display: flex;
   flex-flow: column;
   align-items: center;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     padding: 1em 0;
   }
-`;
+`));
 
-const PageStatement = styled.h1`
+const PageStatement = styled('h1')(({ theme }) => (`
   font-size: 42px;
   text-align: center;
   margin: 1em 0;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     font-size: 28px;
   }
-`;
+`));
 
-const PageSubStatement = styled.div`
+const PageSubStatement = styled('div')(({ theme }) => (`
   color: #555;
   font-size: 18px;
   text-align: center;
   margin: 0 2em 2em;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     font-size: 16px;
     margin: 0 1em 1em;
   }
-`;
+`));
 
-const WhatIsHappeningSection = styled.div`
+const WhatIsHappeningSection = styled('div')`
   margin: 0 0 25px 0;
 `;
 

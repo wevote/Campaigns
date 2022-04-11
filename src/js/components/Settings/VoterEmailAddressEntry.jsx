@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
-import Alert from '@material-ui/lab/Alert';
+import { Delete, Mail } from '@mui/icons-material';
+import { Button, InputBase, Paper } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import { Button, Paper, InputBase } from '@material-ui/core';
-import { Delete, Mail } from '@material-ui/icons';
+import VoterActions from '../../actions/VoterActions';
 import LoadingWheel from '../../common/components/Widgets/LoadingWheel';
+import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
 import { blurTextFieldAndroid, focusTextFieldAndroid } from '../../common/utils/cordovaUtils';
-import { isCordova, isWebApp } from '../../common/utils/isCordovaOrWebApp';
+import { isCordova } from '../../common/utils/isCordovaOrWebApp';
 import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
 import { renderLog } from '../../common/utils/logging';
-import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
-import SettingsVerifySecretCode from './SettingsVerifySecretCode';
-import VoterActions from '../../actions/VoterActions';
 import VoterStore from '../../stores/VoterStore';
+import SettingsVerifySecretCode from './SettingsVerifySecretCode';
 import signInModalGlobalState from './signInModalGlobalState';
 
 /* global $ */
@@ -387,7 +387,7 @@ class VoterEmailAddressEntry extends Component {
       </span>
     );
 
-    let enterEmailTitle = isWebApp() ? 'Sign in with Email' : 'Email the Sign In code to';
+    let enterEmailTitle = 'Sign in with Email';
     // let enterEmailExplanation = isWebApp() ? "You'll receive a magic link in your email. Click that link to be signed into your We Vote account." :
     //   "You'll receive a magic link in the email on this phone. Click that link to be signed into your We Vote account.";
     if (voter && voter.is_signed_in) {
@@ -558,7 +558,7 @@ class VoterEmailAddressEntry extends Component {
     });
 
     return (
-      <Wrapper isWeb={isWebApp()}>
+      <Wrapper>
         {(hideEverythingButSignInWithEmailForm || hideExistingEmailAddresses) ? (
           <span>
             {emailAddressStatusHtml}
@@ -566,7 +566,7 @@ class VoterEmailAddressEntry extends Component {
         ) : (
           <div>
             {verifiedEmailsFound ? (
-              <EmailSection isWeb={isWebApp()}>
+              <EmailSection>
                 <span className="h3">
                   Your Email
                   {voterEmailAddressListCount > 1 ? 's' : ''}
@@ -580,7 +580,7 @@ class VoterEmailAddressEntry extends Component {
               </span>
             )}
             {unverifiedEmailsFound && (
-              <EmailSection isWeb={isWebApp()}>
+              <EmailSection>
                 <span className="h3">Emails to Verify</span>
                 {toVerifyEmailListHtml}
               </EmailSection>
@@ -588,7 +588,7 @@ class VoterEmailAddressEntry extends Component {
           </div>
         )}
         {!hideSignInWithEmailForm && (
-          <EmailSection isWeb={isWebApp()}>
+          <EmailSection>
             {enterEmailHtml}
           </EmailSection>
         )}
@@ -629,7 +629,7 @@ const styles = {
   },
 };
 
-const ButtonWrapper = styled.div`
+const ButtonWrapper = styled('div')`
   width: 100%;
   margin: 4px 0 0 0;
   display: flex;
@@ -637,16 +637,16 @@ const ButtonWrapper = styled.div`
   justify-content: flex-end;
 `;
 
-const ButtonContainer = styled.div`
+const ButtonContainer = styled('div')`
   width: fit-content;
   margin-left: 8px;
 `;
 
-const CancelButtonContainer = styled.div`
+const CancelButtonContainer = styled('div')`
   width: fit-content;
 `;
 
-const SignInSectionText = styled.div`
+const SignInSectionText = styled('div')`
   display: block;
   text-align: left;
   font-weight: 500;
@@ -654,12 +654,12 @@ const SignInSectionText = styled.div`
 `;
 
 
-const Wrapper = styled.div`
-  margin-top: ${({ isWeb }) => (isWeb ? '32px;' : '0')};
+const Wrapper = styled('div')`
+  margin-top: 32px;
 `;
 
-const EmailSection = styled.div`
-  margin-top: ${({ isWeb }) => (isWeb ? '18px;' : '0')};
+const EmailSection = styled('div')`
+  margin-top: 18px;
 `;
 
 export default withStyles(styles)(VoterEmailAddressEntry);

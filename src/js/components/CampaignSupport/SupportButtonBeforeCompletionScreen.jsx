@@ -1,13 +1,14 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Button } from '@material-ui/core';
-import { withStyles, withTheme } from '@material-ui/core/styles';
+import { Button } from '@mui/material';
 import styled from 'styled-components';
+import withStyles from '@mui/styles/withStyles';
+import withTheme from '@mui/styles/withTheme';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import historyPush from '../../common/utils/historyPush';
+import { renderLog } from '../../common/utils/logging';
 import AppObservableStore from '../../stores/AppObservableStore';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import historyPush from '../../common/utils/historyPush';
-import { renderLog } from '../../common/utils/logging';
 import VoterStore from '../../stores/VoterStore';
 
 
@@ -265,10 +266,10 @@ const styles = () => ({
   },
 });
 
-const ButtonPanel = styled.div`
+const ButtonPanel = styled('div')`
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
 `;
 
 export default withTheme(withStyles(styles)(SupportButtonBeforeCompletionScreen));

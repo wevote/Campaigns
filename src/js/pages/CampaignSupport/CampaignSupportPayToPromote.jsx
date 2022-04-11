@@ -1,10 +1,10 @@
 import loadable from '@loadable/component';
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Button } from '@mui/material';
+import styled from 'styled-components';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
@@ -134,7 +134,7 @@ class CampaignSupportPayToPromote extends Component {
 
   getCampaignBasePath = () => {
     const { campaignSEOFriendlyPath, campaignXWeVoteId } = this.state;
-    let campaignBasePath = '';
+    let campaignBasePath;
     if (campaignSEOFriendlyPath) {
       campaignBasePath = `/c/${campaignSEOFriendlyPath}`;
     } else {
@@ -313,7 +313,7 @@ CampaignSupportPayToPromote.propTypes = {
 };
 
 
-const CampaignThermometerWrapper = styled.div`
+const CampaignThermometerWrapper = styled('div')`
   margin-top: 25px;
   min-height: 75px;
 `;

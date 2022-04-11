@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import CampaignCommentForList from './CampaignCommentForList';
+import { renderLog } from '../../common/utils/logging';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
-import { renderLog } from '../../common/utils/logging';
+import CampaignCommentForList from './CampaignCommentForList';
 
 const STARTING_NUMBER_OF_COMMENTS_TO_DISPLAY = 10;
 const NUMBER_OF_COMMENTS_TO_ADD_WHEN_MORE_CLICKED = 4;
@@ -153,20 +153,20 @@ const styles = () => ({
   },
 });
 
-const LoadMoreItemsManuallyWrapper = styled.div`
-  margin-bottom: 0px;
+const LoadMoreItemsManuallyWrapper = styled('div')`
+  margin-bottom: 0;
   @media print{
     display: none;
   }
 `;
 
-const NoCommentsFound = styled.div`
+const NoCommentsFound = styled('div')`
   border-top: 1px solid #ddd;
   margin-top: 25px;
   padding-top: 25px;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
 `;
 
 export default withStyles(styles)(CampaignCommentsList);

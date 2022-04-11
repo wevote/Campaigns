@@ -1,15 +1,16 @@
-import { Button, Dialog, OutlinedInput } from '@material-ui/core';
-import { withStyles, withTheme } from '@material-ui/core/styles';
-import { ArrowBack, ArrowBackIos } from '@material-ui/icons';
+import { ArrowBack, ArrowBackIos } from '@mui/icons-material';
+import { Button, Dialog, OutlinedInput } from '@mui/material';
+import styled from 'styled-components';
+import withStyles from '@mui/styles/withStyles';
+import withTheme from '@mui/styles/withTheme';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import VoterActions from '../../actions/VoterActions';
-import VoterStore from '../../stores/VoterStore';
 import { hasIPhoneNotch, isIOS, isIPhone4in } from '../../common/utils/cordovaUtils';
 import { isCordova, isWebApp } from '../../common/utils/isCordovaOrWebApp';
 import { renderLog } from '../../common/utils/logging';
+import VoterStore from '../../stores/VoterStore';
 
 /* global $ */
 
@@ -98,25 +99,11 @@ class SettingsVerifySecretCode extends Component {
       $('#textOrEmailEntryDialog').css('display', 'unset');  // Reveal the entry dialog
     }
     this.voterStoreListener.remove();
-    if (this.closeVerifyModalLocalTimer) {
-      clearTimeout(this.closeVerifyModalLocalTimer);
-    }
     if (this.clearSecretCodeVerificationStatusTimer) {
       clearTimeout(this.clearSecretCodeVerificationStatusTimer);
     }
     window.removeEventListener('paste', this.onPaste);
   }
-
-  handleDigit6Blur = () => {
-    const { digit1, digit2, digit3, digit4, digit5, digit6, voterPhoneNumber } = this.state;
-    this.setState({ condensed: false });
-    if (digit6 && isCordova()) {
-      // Jan 2020 this comment looks wrong, but might still contain a clue:  When there is a voterEmailAddress value and the keyboard closes, submit
-      const secretCode = `${digit1}${digit2}${digit3}${digit4}${digit5}${digit6}`;
-      const codeSentToSMSPhoneNumber = !!voterPhoneNumber;
-      VoterActions.voterVerifySecretCode(secretCode, codeSentToSMSPhoneNumber);
-    }
-  };
 
   handleKeyDown2 (e) {
     if (e.keyCode === 8 && this.state.digit2 === '') {
@@ -453,6 +440,7 @@ class SettingsVerifySecretCode extends Component {
     }
   };
 
+  // March 30, 2022 TODO: Does this duplicate function even get executed?
   handleDigit6Blur = () => {
     const { digit1, digit2, digit3, digit4, digit5, digit6, voterPhoneNumber } = this.state;
     this.setState({ condensed: false });
@@ -710,68 +698,79 @@ const styles = (theme) => ({
   },
 });
 
-const ModalTitleArea = styled.div`
+const ModalTitleArea = styled('div', {
+  shouldForwardProp: (prop) => !['condensed'].includes(prop),
+})(({ condensed }) => (`
   width: 100%;
-  padding: ${(props) => (props.condensed ? '8px' : '12px')};
+  padding: ${condensed ? '8px' : '12px'};
   box-shadow: 0 20px 40px -25px #999;
   z-index: 999;
   display: flex;
   justify-content: flex-start;
   position: absolute;
   top: 0;
-`;
+`));
 
-const ModalContent = styled.div`
+const ModalContent = styled('div', {
+  shouldForwardProp: (prop) => !['condensed'].includes(prop),
+})(({ condensed }) => (`
   display: flex;
   flex-direction: column;
-  align-items: ${(props) => (props.condensed ? 'flex-start' : 'space-evenly')};
+  align-items: ${condensed ? 'flex-start' : 'space-evenly'};
   height: ${() => (isWebApp() ?  '100%' : 'unset')};
   width: 80%;
   max-width: 400px;
   margin: 0 auto;
-  padding: ${(props) => (props.condensed ? '66px 0 0 0' : '86px 0 72px 0')};
+  padding: ${condensed ? '66px 0 0 0' : '86px 0 72px 0'};
+`));
+
+const TextContainer = styled('div')`
 `;
 
-const TextContainer = styled.div`
-`;
+const ButtonsContainer = styled('div', {
+  shouldForwardProp: (prop) => !['condensed'].includes(prop),
+})(({ condensed }) => (`
+  margin-top: ${condensed ? '16px' : 'auto'};
+`));
 
-const ButtonsContainer = styled.div`
-  margin-top: ${(props) => (props.condensed ? '16px' : 'auto')};
-`;
-
-const Title = styled.h3`
+const Title = styled('h3', {
+  shouldForwardProp: (prop) => !['condensed'].includes(prop),
+})(({ condensed, theme }) => (`
   font-weight: bold;
   font-size: ${() => (isIPhone4in() ? '26px' : '30px')};
   padding: 0 10px;
-  margin-bottom: ${(props) => (props.condensed ? '16px' : '36px')};
+  margin-bottom: ${condensed ? '16px' : '36px'};
   color: black;
   text-align: center;
-  @media(min-width: 569px) {
-    font-size: 36px;
+  // @media(min-width: 569px) {
+  ${theme.breakpoints.up('sm')} {
+     font-size: 36px;
   }
-`;
+`));
 
-const Subtitle = styled.h4`
+const Subtitle = styled('h4')`
   color: #ccc;
   font-weight: bold;
   text-align: center;
 `;
 
-const PhoneSubtitle = styled.h4`
+const PhoneSubtitle = styled('h4')`
   color: black;
   font-weight: bold;
   text-align: center;
 `;
 
-const InputContainer = styled.div`
+const InputContainer = styled('div', {
+  shouldForwardProp: (prop) => !['condensed'].includes(prop),
+})(({ condensed }) => (`
   display: flex;
   justify-content: space-between;
   margin: auto;
   width: 100%;
-  margin-top: ${(props) => (props.condensed ? '16px' : '32px')};
-`;
+  margin-top: ${condensed ? '16px' : '32px'};
+`));
 
-const ErrorMessage = styled.div`
+const ErrorMessage = styled('div')`
   color: red;
   margin: 12px 0;
   text-align: center;

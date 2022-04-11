@@ -1,17 +1,17 @@
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Button } from '@mui/material';
+import styled from 'styled-components';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import CampaignStartActions from '../../actions/CampaignStartActions';
+import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../common/components/Style/adviceBoxStyles';
 import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
 import { OuterWrapper, PageWrapper } from '../../common/components/Style/stepDisplayStyles';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 import CampaignTitleInputField from '../../components/CampaignStart/CampaignTitleInputField';
 import CampaignStartSteps from '../../components/Navigation/CampaignStartSteps';
-import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../common/components/Style/adviceBoxStyles';
 import { CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
 import { CampaignStartDesktopButtonPanel, CampaignStartDesktopButtonWrapper, CampaignStartMobileButtonPanel, CampaignStartMobileButtonWrapper, CampaignStartSection, CampaignStartSectionWrapper } from '../../components/Style/CampaignStartStyles';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
@@ -133,7 +133,7 @@ CampaignStartAddTitle.propTypes = {
 };
 
 
-const InnerWrapper = styled.div`
+const InnerWrapper = styled('div')`
 `;
 
 

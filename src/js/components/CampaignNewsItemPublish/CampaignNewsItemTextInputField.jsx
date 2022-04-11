@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { FormControl, TextField } from '@mui/material';
 import styled from 'styled-components';
-import { TextField, FormControl } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import CampaignStore from '../../stores/CampaignStore';
+import withStyles from '@mui/styles/withStyles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import CampaignNewsItemActions from '../../actions/CampaignNewsItemActions';
-import CampaignNewsItemStore from '../../stores/CampaignNewsItemStore';
 import { renderLog } from '../../common/utils/logging';
 import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
+import CampaignNewsItemStore from '../../stores/CampaignNewsItemStore';
+import CampaignStore from '../../stores/CampaignStore';
 
 class CampaignNewsItemTextInputField extends Component {
   constructor (props) {
@@ -195,12 +195,12 @@ const styles = () => ({
   },
 });
 
-const ColumnFullWidth = styled.div`
+const ColumnFullWidth = styled('div')`
   padding: 8px 12px 0 12px;
   width: 100%;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
   display: flex;
   flex-direction: column;
   margin-left: -12px;

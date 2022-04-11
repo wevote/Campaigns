@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { isCordova } from '../../utils/isCordovaOrWebApp';
 
 class DelayedLoad extends Component {
   constructor (props) {
@@ -41,13 +40,11 @@ DelayedLoad.propTypes = {
   waitBeforeShow: PropTypes.number.isRequired,
 };
 
-const DelayedLoadingWrapper = styled.div`
+const DelayedLoadingWrapper = styled('div')`
   padding: 5px;
-  margin-top: ${() => (isCordova() ? '100px' : null)};
-  padding-bottom: ${() => (isCordova() ? '800px' : null)};
 `;
 
-const LoadingText = styled.div`
+const LoadingText = styled('div')`
   padding: 5px;
   text-align: center;
 `;

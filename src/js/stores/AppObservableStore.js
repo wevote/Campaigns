@@ -336,7 +336,12 @@ export default {
   },
 
   isOnFacebookSupportedDomainUrl () {
-    return nonFluxState.onFacebookSupportedDomainUrl;
+    let { onFacebookSupportedDomainUrl } = nonFluxState;
+    if (onFacebookSupportedDomainUrl === undefined) {
+      const { hostname } = window.location;
+      ({ onFacebookSupportedDomainUrl } = this.calculateUrlSettings(hostname));
+    }
+    return onFacebookSupportedDomainUrl;
   },
 
   isOnChosenFullDomainUrl () {

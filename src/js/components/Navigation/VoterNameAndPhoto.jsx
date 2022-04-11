@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { AccountCircle } from '@material-ui/icons';
-import MenuIcon from '@material-ui/icons/Menu';
-import { withStyles } from '@material-ui/core/styles';
+import { AccountCircle } from '@mui/icons-material';
+import MenuIcon from '@mui/icons-material/Menu';
 import styled from 'styled-components';
+import withStyles from '@mui/styles/withStyles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import avatarGeneric from '../../../img/global/icons/avatar-generic.png';
 import LazyImage from '../../common/components/LazyImage';
 import { renderLog } from '../../common/utils/logging';
-import { shortenText } from '../../utils/textFormat';
 import VoterStore from '../../stores/VoterStore';
+import { shortenText } from '../../utils/textFormat';
 
 
 class VoterNameAndPhoto extends Component {
@@ -98,24 +98,24 @@ const styles = () => ({
   },
 });
 
-const FirstNameWrapper = styled.div`
+const FirstNameWrapper = styled('div')`
   color: #999;
   font-size: 14px;
   padding-right: 4px;
 `;
 
-const NameAndPhotoWrapper = styled.div`
+const NameAndPhotoWrapper = styled('div')`
   align-items: center;
   display: flex;
   margin-right: 6px;
 `;
 
-const NamePhotoMenuWrapper = styled.div`
+const NamePhotoMenuWrapper = styled('div')`
   align-items: center;
   display: flex;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
   margin-right: 2px;
 `;
 

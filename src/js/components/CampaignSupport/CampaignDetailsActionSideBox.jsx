@@ -1,15 +1,16 @@
-import React, { Component, Suspense } from 'react';
-import PropTypes from 'prop-types';
-import { Button } from '@material-ui/core';
-import { withStyles, withTheme } from '@material-ui/core/styles';
+import { Button } from '@mui/material';
 import styled from 'styled-components';
-import CampaignShareChunk from '../Campaign/CampaignShareChunk';
+import withStyles from '@mui/styles/withStyles';
+import withTheme from '@mui/styles/withTheme';
+import PropTypes from 'prop-types';
+import React, { Component, Suspense } from 'react';
+import VoterActions from '../../actions/VoterActions';
+import { renderLog } from '../../common/utils/logging';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import { renderLog } from '../../common/utils/logging';
-import SupportButton from './SupportButton';
-import VoterActions from '../../actions/VoterActions';
 import VoterStore from '../../stores/VoterStore';
+import CampaignShareChunk from '../Campaign/CampaignShareChunk';
+import SupportButton from './SupportButton';
 
 const CompleteYourProfile = React.lazy(() => import('../Settings/CompleteYourProfile'));
 const MostRecentCampaignSupport = React.lazy(() => import('../CampaignSupport/MostRecentCampaignSupport'));
@@ -324,28 +325,28 @@ const styles = (theme) => ({
   },
 });
 
-const ButtonPanel = styled.div`
+const ButtonPanel = styled('div')`
   background-color: #fff;
   padding: 10px 0;
 `;
 
-const CampaignShareChunkWrapper = styled.div`
+const CampaignShareChunkWrapper = styled('div')`
   margin-top: 100px;
 `;
 
-const CompleteYourProfileWrapper = styled.div`
+const CompleteYourProfileWrapper = styled('div')`
   margin-top: 20px;
 `;
 
-const KeepHelpingWrapper = styled.div`
+const KeepHelpingWrapper = styled('div')`
   width: 100%;
   display: block;
 `;
 
-const ProfileAlreadyComplete = styled.div`
+const ProfileAlreadyComplete = styled('div')`
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
 `;
 
 export default withTheme(withStyles(styles)(CampaignDetailsActionSideBox));

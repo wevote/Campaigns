@@ -1,10 +1,8 @@
-import { MuiThemeProvider } from '@material-ui/core/styles';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import React, { Component, Suspense } from 'react';
 import ReactGA from 'react-ga';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { ThemeProvider } from 'styled-components';
-import muiTheme from './js/common/components/Style/mui-theme';
-import styledTheme from './js/common/components/Style/styled-theme';
+import muiTheme from './js/common/components/Style/muiTheme';
 import DelayedLoad from './js/common/components/Widgets/DelayedLoad';
 import ErrorBoundary from './js/common/components/Widgets/ErrorBoundary';
 import WeVoteRouter from './js/common/components/Widgets/WeVoteRouter';
@@ -145,17 +143,19 @@ class App extends Component {
     const { doShowHeader, doShowFooter } = this.state;
     // console.log(`App doShowHeader: ${doShowHeader}, doShowFooter:${doShowFooter}`);
 
+    /* eslint-disable react/jsx-one-expression-per-line */
     return (
       <ErrorBoundary>
         <Suspense fallback={<span>&nbsp;</span>}>
-          <MuiThemeProvider theme={muiTheme}>
-            <ThemeProvider theme={styledTheme}>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={muiTheme}>
               <WeVoteRouter>
                 <MainHeaderBar displayHeader={doShowHeader} />
                 <Switch>
                   <Route exact path="/about"><About /></Route>
                   <Route exact path="/addContacts"><AddContacts showFooter={this.setShowFooter} /></Route>
                   <Route exact path="/attributions"><Attributions /></Route>
+                  <Route exact path="/more/attributions"><Attributions /></Route> {/* Compatibility with common/CreditsBody */}
                   <Route exact path="/c/:campaignSEOFriendlyPath" render={(props) => <CampaignDetailsPage match={props.match} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/add-update" render={(props) => <CampaignNewsItemText match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/c/:campaignSEOFriendlyPath/add-update/:campaignXNewsItemWeVoteId" render={(props) => <CampaignNewsItemText match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
@@ -212,11 +212,12 @@ class App extends Component {
                   <Route exact path="/id/:campaignXWeVoteId/why-do-you-support" render={(props) => <CampaignSupportEndorsement match={props.match} setShowHeaderFooter={this.setShowHeaderFooter} />} />
                   <Route exact path="/impact"><Impact /></Route>
                   <Route exact path="/membership"><Membership showFooter={this.setShowFooter} /></Route>
+                  <Route exact path="/more/donate"><Membership showFooter={this.setShowFooter} /></Route>  {/* Compatibility with common/CreditsBody */}
                   <Route exact path="/more/about"><About /></Route>
                   <Route exact path="/more/credits"><Credits /></Route>
                   <Route exact path="/more/faq"><FAQ /></Route>
-                  <Route exact path="/more/privacy"><Privacy /></Route>
-                  <Route exact path="/more/terms"><TermsOfService /></Route>
+                  <Route exact path="/privacy"><Privacy /></Route>
+                  <Route exact path="/terms"><TermsOfService /></Route>
                   <Route exact path="/privacy"><Privacy /></Route>
                   <Route exact path="/profile/started"><SettingsYourCampaigns /></Route>
                   <Route exact path="/profile/supported"><SettingsYourCampaigns /></Route>
@@ -236,13 +237,14 @@ class App extends Component {
                   <Route path="*" component={PageNotFound} />
                 </Switch>
                 <DelayedLoad waitBeforeShow={4000}>
+                  {/* March 29, 2022: This forces a full rerender of the footer on every tab change, could be optimized */}
                   <Suspense fallback={<span>&nbsp;</span>}>
                     <FooterMain displayFooter={doShowFooter} />
                   </Suspense>
                 </DelayedLoad>
               </WeVoteRouter>
             </ThemeProvider>
-          </MuiThemeProvider>
+          </StyledEngineProvider>
         </Suspense>
       </ErrorBoundary>
     );

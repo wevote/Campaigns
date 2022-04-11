@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { Button } from '@mui/material';
 import styled from 'styled-components';
-import { Button } from '@material-ui/core';
-import { withStyles, withTheme } from '@material-ui/core/styles';
+import withStyles from '@mui/styles/withStyles';
+import withTheme from '@mui/styles/withTheme';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { renderLog } from '../../common/utils/logging';
 
 class LoadMoreItemsManually extends Component {
@@ -53,7 +54,7 @@ const styles = (theme) => ({
   },
 });
 
-const LoadMoreItemsStyled = styled.div`
+const LoadMoreItemsStyled = styled('div')`
   display: flex;
   justify-content: center;
   margin: 15px 0;

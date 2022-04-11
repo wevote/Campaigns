@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
+import { Ballot } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import styled from 'styled-components';
-import { Ballot } from '@material-ui/icons';
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import AppObservableStore, { messageService } from '../stores/AppObservableStore';
+import withStyles from '@mui/styles/withStyles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import Helmet from 'react-helmet';
 import historyPush from '../common/utils/historyPush';
 import { renderLog } from '../common/utils/logging';
+import AppObservableStore, { messageService } from '../stores/AppObservableStore';
 
 class PageNotFound extends Component {
   constructor (props) {
@@ -76,23 +76,23 @@ const styles = (theme) => ({
   },
 });
 
-const EmptyBallotMessageContainer = styled.div`
+const EmptyBallotMessageContainer = styled('div')`
   padding: 3em 2em;
   display: flex;
   flex-flow: column;
   align-items: center;
 `;
 
-const EmptyBallotText = styled.p`
+const EmptyBallotText = styled('p')(({ theme }) => (`
   font-size: 24px;
   text-align: center;
   margin: 1em 2em 3em;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     margin: 1em;
   }
-`;
+`));
 
-const PageWrapperNotFound = styled.div`
+const PageWrapperNotFound = styled('div')`
   margin: 0 15px;
 `;
 

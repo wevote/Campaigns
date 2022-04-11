@@ -1,10 +1,10 @@
-import { IconButton } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import { Close } from '@material-ui/icons';
+import { Close } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
+import styled from 'styled-components';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import { OuterWrapper } from '../../common/components/Style/stepDisplayStyles';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
@@ -119,6 +119,7 @@ class CompleteYourProfileMobile extends Component {
                   classes={{ root: classes.closeButton }}
                   onClick={() => { this.cancelFunction(); }}
                   id="completeYourProfileMobileClose"
+                  size="large"
                 >
                   <Close />
                 </IconButton>
@@ -159,19 +160,19 @@ const styles = () => ({
   },
 });
 
-const ContentTitle = styled.h1`
+const ContentTitle = styled('h1')(({ theme }) => (`
   font-size: 22px;
   font-weight: 600;
   margin: 20px 15px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     font-size: 20px;
   }
+`));
+
+const InnerWrapper = styled('div')`
 `;
 
-const InnerWrapper = styled.div`
-`;
-
-const PageWrapperComplete = styled.div`
+const PageWrapperComplete = styled('div')`
   margin: 0 auto;
   max-width: 480px;
 `;

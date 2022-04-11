@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { FormControl, TextField } from '@mui/material';
 import styled from 'styled-components';
-import { TextField, FormControl } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import CampaignStore from '../../stores/CampaignStore';
-import { renderLog } from '../../common/utils/logging';
-import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
+import withStyles from '@mui/styles/withStyles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import ShareActions from '../../common/actions/ShareActions';
 import ShareStore from '../../common/stores/ShareStore';
+import { renderLog } from '../../common/utils/logging';
+import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
+import CampaignStore from '../../stores/CampaignStore';
 import superSharingSuggestedEmailText from '../../utils/superSharingSuggestedEmailText';
 
 class SuperShareItemComposeInputField extends Component {
@@ -256,12 +256,12 @@ const styles = () => ({
   },
 });
 
-const ColumnFullWidth = styled.div`
+const ColumnFullWidth = styled('div')`
   padding: 8px 12px 0 12px;
   width: 100%;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
   display: flex;
   flex-direction: column;
   margin-left: -12px;

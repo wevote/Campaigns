@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
 import styled from 'styled-components';
-// import { Button, Card } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import { renderLog } from '../common/utils/logging';
+import withStyles from '@mui/styles/withStyles';
+import React, { Component } from 'react';
+import Helmet from 'react-helmet';
 import { isCordova } from '../common/utils/isCordovaOrWebApp';
+import { renderLog } from '../common/utils/logging';
+
 
 class StyleGuidePage extends Component {
   // static getProps () {
@@ -81,41 +80,41 @@ const styles = () => ({
   },
 });
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')(({ theme }) => (`
   margin: 0 15px;
-  @media (max-width: ${({ theme, cordova }) => (cordova ? undefined : theme.breakpoints.md)}) {
+  ${theme.breakpoints.down('md')} {
   }
-`;
+`));
 
-const IntroductionMessageSection = styled.div`
+const IntroductionMessageSection = styled('div')(({ theme }) => (`
   padding: 1em 2em;
   display: flex;
   flex-flow: column;
   align-items: center;
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+  ${theme.breakpoints.down('md')} {
     padding: 1em;
   }
-`;
+`));
 
-const PageStatement = styled.h1`
+const PageStatement = styled('h1')`
   font-size: 32px;
   text-align: center;
 `;
 
-const PreModified = styled.pre`
+const PreModified = styled('pre')`
   margin: 0 0;
 `;
 
-const StyleItemLeft = styled.div`
+const StyleItemLeft = styled('div')`
 `;
 
-const StyleItemRight = styled.div`
+const StyleItemRight = styled('div')`
   background: #ddd;
   border: .5px solid #ddd;
   padding: 5px;
 `;
 
-const StyleSection = styled.div`
+const StyleSection = styled('div')`
   border-top: 1px solid #ddd;
   display: flex;
   flex-flow: row wrap;
@@ -124,20 +123,20 @@ const StyleSection = styled.div`
   padding-top: 20px;
 `;
 
-const StyleTitle = styled.span`
+const StyleTitle = styled('span')`
   font-weight: bold;
   margin-right: 5px;
 `;
 
-const StyleTitleAndDescription = styled.div`
+const StyleTitleAndDescription = styled('div')`
   font-size: 18px;
 `;
 
-const TextDefault18px = styled.div`
+const TextDefault18px = styled('div')`
   font-size: 18px;
 `;
 
-const TitleH3 = styled.h3`
+const TitleH3 = styled('h3')`
   font-size: 22px;
   text-align: left;
 `;

@@ -54,7 +54,7 @@ export default class FAQBody extends Component {
             body="www.WeVoteEducation.org"
           />
         </Suspense>
-        - 501(c)(3) and
+        &nbsp;- 501(c)(3) FEIN 47-2691544 and&nbsp;
         <Suspense fallback={<></>}>
           <OpenExternalWebSite
             linkIdAttribute="weVoteUSAWebsite"
@@ -63,7 +63,7 @@ export default class FAQBody extends Component {
             body="www.WeVoteUSA.org"
           />
         </Suspense>
-        - 501(c)(4))
+        &nbsp;- 501(c)(4) FEIN 81-1052585)
         based in Oakland, CA. We do not support or oppose any political candidate or party.
         We are not affiliated with WeVoteProject.org or WeVoteUSA.com.
         <br />
@@ -74,7 +74,7 @@ export default class FAQBody extends Component {
         We Vote is a volunteer-driven movement. We
         rely on volunteers across the country who use
         their engineering, design, and other skills to build
-        We Vote. We are over 100 people who have donated 9,000+ volunteer hours, including
+        We Vote. We are over 100 people who have donated 12,000+ volunteer hours, including&nbsp;
         <Suspense fallback={<></>}>
           <OpenExternalWebSite
             linkIdAttribute="wevoteGithubContributors"
@@ -83,7 +83,7 @@ export default class FAQBody extends Component {
             body="90+ contributors on GitHub."
           />
         </Suspense>
-        We also have a
+        &nbsp;We also have a&nbsp;
         <Suspense fallback={<></>}>
           <OpenExternalWebSite
             linkIdAttribute="weVoteAboutUsPage"
@@ -92,8 +92,8 @@ export default class FAQBody extends Component {
             body="small team of core staff"
           />
         </Suspense>
-        and volunteer board members.
-        Please feel free to reach out to us with questions via our
+        &nbsp;and volunteer board members.
+        Please feel free to reach out to us with questions via our&nbsp;
         <Suspense fallback={<></>}>
           <OpenExternalWebSite
             linkIdAttribute="weVoteContactUsPage"
@@ -102,7 +102,7 @@ export default class FAQBody extends Component {
             body="Contact Us form."
           />
         </Suspense>
-        Our mailing address is:
+        &nbsp;Our mailing address is:
         <br />
         We Vote
         <br />
@@ -122,7 +122,7 @@ export default class FAQBody extends Component {
 
         <strong>Is this an app or a website?</strong>
         <br />
-        We have a mobile-ready website, as well as
+        We have a mobile-ready website, as well as&nbsp;
         <Suspense fallback={<></>}>
           <OpenExternalWebSite
             linkIdAttribute="weVoteIPhone"
@@ -131,7 +131,7 @@ export default class FAQBody extends Component {
             body="iPhone"
           />
         </Suspense>
-        and
+        &nbsp;and&nbsp;
         <Suspense fallback={<></>}>
           <OpenExternalWebSite
             linkIdAttribute="weVoteAndroid"
@@ -140,8 +140,8 @@ export default class FAQBody extends Component {
             body="Android"
           />
         </Suspense>
-        apps.
-        We are free and open source:
+        &nbsp;apps.
+        We are free and open source:&nbsp;
         <Suspense fallback={<></>}>
           <OpenExternalWebSite
             linkIdAttribute="wevoteGithub"
@@ -247,12 +247,12 @@ export default class FAQBody extends Component {
   }
 }
 
-const ContentTitle = styled.h1`
+const ContentTitle = styled('h1')(({ theme }) => (`
   font-size: 22px;
   font-weight: 600;
   margin: 20px 0;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     font-size: 20px;
   }
-`;
+`));
 

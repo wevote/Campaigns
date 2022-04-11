@@ -1,4 +1,4 @@
-import { createTheme } from '@material-ui/core/styles';
+import { createTheme } from '@mui/material/styles';
 
 export function donationTheme (topNav, heightOfBar) {
   const defaultTheme = createTheme();
@@ -9,7 +9,7 @@ export function donationTheme (topNav, heightOfBar) {
         textTransform: 'none',
       },
     },
-    overrides: {
+    components: {
       MuiTab: {
         root: {
           minHeight: 0,

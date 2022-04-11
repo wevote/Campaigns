@@ -6,20 +6,15 @@ import SignInModal from './SignInModal';
 import VoterActions from '../../actions/VoterActions';
 
 
+// March 22, 2022 -- I don't think this component is needed, what is left here could just be merged into SignInModal
 class SignInModalController extends Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-      showSignInModal: false,
-    };
-  }
-
   componentDidMount () {
-    const showSignInModal = AppObservableStore.showSignInModal();
     this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
     this.voterFirstRetrieve();
-    // this.start = window.performance.now();
-    this.setState({ showSignInModal });
+  }
+
+  shouldComponentUpdate () {
+    return AppObservableStore.showSignInModal();
   }
 
   componentWillUnmount () {
@@ -27,16 +22,8 @@ class SignInModalController extends Component {
   }
 
   onAppObservableStoreChange () {
-    const showSignInModal = AppObservableStore.showSignInModal();
-    // console.log('SignInModalController onAppObservableStoreChange, showSignInModal:', showSignInModal);
-    this.setState({ showSignInModal });
+    this.setState({});
   }
-
-  closeSignInModal = () => {
-    AppObservableStore.setShowSignInModal(false);
-    // console.log('closeSignInModal');
-    this.setState({ showSignInModal: false });
-  };
 
   voterFirstRetrieve = () => {
     initializejQuery(() => {
@@ -51,12 +38,11 @@ class SignInModalController extends Component {
 
   render () {
     renderLog('SignInModalController');  // Set LOG_RENDER_EVENTS to log all renders
-    const { showSignInModal } = this.state;
-    // console.log('SignInModalController showSignInModal at render: ', showSignInModal);
+    const showSignInModal = AppObservableStore.showSignInModal();
 
     return (
       <div>
-        {showSignInModal ? <SignInModal show={showSignInModal} closeFunction={this.closeSignInModal} /> : null}
+        {showSignInModal ? <SignInModal /> : null}
       </div>
     );
   }

@@ -1,10 +1,13 @@
+import { AppBar, Tab, Tabs, Toolbar } from '@mui/material';
+import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { AppBar, Tab, Tabs, Toolbar } from '@material-ui/core';
-import { createTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { renderLog } from '../../common/utils/logging';
 import startsWith, { endsWith } from '../../common/utils/startsWith';
 
 
+// TODO: Mar 23, 2022, makeStyles is legacy in MUI 5, replace instance with styled-components or sx if there are issues
 const useStyles = makeStyles((theme) => ({
   appBarRoot: {
     borderBottom: 0,
@@ -17,9 +20,9 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
-  toolbarRoot: {
-    minHeight: 0,
-  },
+  // toolbarRoot: {
+  //   minHeight: 0,
+  // },
 }));
 
 
@@ -36,7 +39,7 @@ export default function CampaignTopNavigation (incomingVariables) {
         textTransform: 'none',
       },
     },
-    overrides: {
+    components: {
       MuiButtonBase: {
         root: {
           '&:hover': {
@@ -87,7 +90,7 @@ export default function CampaignTopNavigation (incomingVariables) {
     updatesUrl = `/id/${campaignXWeVoteId}/updates`;
   }
 
-  // console.log('Render CampaignTopNavigation.jsx');
+  renderLog('CampaignTopNavigation functional component');
   return (
     <div className={classes.root}>
       <AppBar
@@ -95,15 +98,17 @@ export default function CampaignTopNavigation (incomingVariables) {
         color="default"
         className={classes.appBarRoot}
       >
-        <ThemeProvider theme={theme}>
-          <Toolbar className={classes.toolbarRoot} disableGutters>
-            <Tabs value={value} onChange={handleChange} aria-label="Tab menu">
-              <Tab id="weTarget-0" label="Campaign details" onClick={() => history.push(detailsUrl)} />
-              <Tab id="weTarget-1" label="Comments" onClick={() => history.push(commentsUrl)} />
-              <Tab id="weTarget-2" label="Updates" onClick={() => history.push(updatesUrl)} />
-            </Tabs>
-          </Toolbar>
-        </ThemeProvider>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <Toolbar disableGutters/* className={classes.toolbarRoot} */>
+              <Tabs value={value} onChange={handleChange} aria-label="Tab menu">
+                <Tab id="weTarget-0" label="Campaign details" onClick={() => history.push(detailsUrl)} />
+                <Tab id="weTarget-1" label="Comments" onClick={() => history.push(commentsUrl)} />
+                <Tab id="weTarget-2" label="Updates" onClick={() => history.push(updatesUrl)} />
+              </Tabs>
+            </Toolbar>
+          </ThemeProvider>
+        </StyledEngineProvider>
       </AppBar>
     </div>
   );

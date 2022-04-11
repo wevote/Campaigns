@@ -1,10 +1,10 @@
+import styled from 'styled-components';
+import withStyles from '@mui/styles/withStyles';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
 import CreditsBody from '../common/components/CreditsBody';
-import { renderLog } from '../common/utils/logging';
 import { OuterWrapper, PageWrapper } from '../common/components/Style/stepDisplayStyles';
+import { renderLog } from '../common/utils/logging';
 
 
 class Credits extends Component {
@@ -44,23 +44,23 @@ const styles = (theme) => ({
   },
 });
 
-const ContentTitle = styled.h1`
+const ContentTitle = styled('h1')(({ theme }) => (`
   font-size: 22px;
   font-weight: 600;
   margin: 20px 0;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     font-size: 20px;
   }
-`;
+`));
 
-const InnerWrapper = styled.div`
+const InnerWrapper = styled('div')`
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
   background: white;
 `;
 
-const Section = styled.div`
+const Section = styled('div')`
   display: flex;
   flex-flow: column;
   text-align: center;

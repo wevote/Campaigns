@@ -1,20 +1,17 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { AccountCircle } from '@mui/icons-material';
 import styled from 'styled-components';
+import withStyles from '@mui/styles/withStyles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import TruncateMarkup from 'react-truncate-markup';
-import { withStyles } from '@material-ui/core/styles';
-import { AccountCircle } from '@material-ui/icons';
 import anonymous from '../../../img/global/icons/avatar-generic.png';
-import {
-  BlockedIndicator, DraftModeIndicator, EditIndicator,
-  IndicatorButtonWrapper, IndicatorDefaultButtonWrapper, IndicatorRow,
-} from '../Style/CampaignIndicatorStyles';
-import CampaignStore from '../../stores/CampaignStore';
-import historyPush from '../../common/utils/historyPush';
 import LazyImage from '../../common/components/LazyImage';
-import { renderLog } from '../../common/utils/logging';
 import { timeFromDate } from '../../common/utils/dateFormat';
+import historyPush from '../../common/utils/historyPush';
+import { renderLog } from '../../common/utils/logging';
+import CampaignStore from '../../stores/CampaignStore';
 import { stringContains } from '../../utils/textFormat';
+import { BlockedIndicator, DraftModeIndicator, EditIndicator, IndicatorButtonWrapper, IndicatorDefaultButtonWrapper, IndicatorRow } from '../Style/CampaignIndicatorStyles';
 
 class CampaignNewsItemForList extends Component {
   constructor (props) {
@@ -266,67 +263,65 @@ const styles = (theme) => ({
   },
 });
 
-const NewsItemSubjectWrapper = styled.div`
+const NewsItemSubjectWrapper = styled('div')`
   font-size: 20px;
   font-weight: 600;
-  margin: 0;
-  margin-bottom: 8px;
+  margin: 0 0 8px 0;
 `;
 
-const NewsItemTextWrapper = styled.div`
+const NewsItemTextWrapper = styled('div')`
   font-size: 16px;
   line-height: 1.4;
-  margin: 0;
-  margin-bottom: 8px;
+  margin: 0 0 8px 0;
 `;
 
-const NewsItemWrapper = styled.div`
+const NewsItemWrapper = styled('div')`
   border-radius: 10px;
   border-top-left-radius: 0;
   margin: 0;
   width: 100%;
 `;
 
-const OneCampaignInnerWrapper = styled.div`
+const OneCampaignInnerWrapper = styled('div')(({ theme }) => (`
   margin: 15px 0;
-  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.up('sm')} {
     display: flex;
     justify-content: space-between;
     margin: 15px;
   }
-`;
+`));
 
-const OneCampaignOuterWrapper = styled.div`
+const OneCampaignOuterWrapper = styled('div')(({ theme }) => (`
   border-top: 1px solid #ddd;
   margin-top: 15px;
-  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.up('sm')} {
     border: 1px solid #ddd;
     border-radius: 5px;
   }
-`;
+`));
 
-const SpeakerAndTimeWrapper = styled.div`
+const SpeakerAndTimeWrapper = styled('div')`
   color: #999;
   font-size: 12px;
 `;
 
-const SpeakerAndPhotoOuterWrapper = styled.div`
+const SpeakerAndPhotoOuterWrapper = styled('div')`
   align-items: center;
   display: flex;
   justify-content: flex-start;
   margin-top: 24px;
 `;
 
-const SpeakerName = styled.span`
+const SpeakerName = styled('span')`
   color: #808080;
   font-weight: 500 !important;
 `;
 
-const SpeakerVoterPhotoWrapper = styled.div`
+const SpeakerVoterPhotoWrapper = styled('div')`
   margin-right: 6px;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
 `;
 
 export default withStyles(styles)(CampaignNewsItemForList);

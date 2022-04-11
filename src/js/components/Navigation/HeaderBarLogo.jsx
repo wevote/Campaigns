@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import withStyles from '@mui/styles/withStyles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { withStyles } from '@material-ui/core/styles';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import normalizedImagePath from '../../common/utils/normalizedImagePath';
 import logoLight from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-200x66.svg';
 import logoDark from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-dark-141x46.svg';
+import normalizedImagePath from '../../common/utils/normalizedImagePath';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 
 
 class HeaderBarLogo extends Component {
@@ -97,7 +97,7 @@ const styles = () => ({
   },
 });
 
-const CampaignsSubtitleInner = styled.span`
+const CampaignsSubtitleInner = styled('span')`
   position: absolute;
   font-size: 10px;
   right: 16px;
@@ -105,27 +105,27 @@ const CampaignsSubtitleInner = styled.span`
   color: #2e3c5d;
 `;
 
-const CampaignsSubtitleOuter = styled.span`
+const CampaignsSubtitleOuter = styled('span')`
   position: relative;
 `;
 
-const ChosenSiteLogoImage = styled.img`
+const ChosenSiteLogoImage = styled('img')`
   height: 38px;
   margin: 2px;
 `;
 
-const ChosenSiteLogoWrapper = styled.div`
+const ChosenSiteLogoWrapper = styled('div')(({ theme }) => (`
   min-width: 180px;
-  @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
+  ${theme.breakpoints.down('xl')} {
     margin-left: 10px;
   }
-`;
+`));
 
-const HeaderBarWrapper = styled.div`
+const HeaderBarWrapper = styled('div')`
   height: 42px;
 `;
 
-const WeVoteLogoWrapper = styled.div`
+const WeVoteLogoWrapper = styled('div')`
   height: 42px;
   min-width: 141px;
 `;

@@ -1,10 +1,10 @@
+import styled from 'styled-components';
+import withStyles from '@mui/styles/withStyles';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import { lazyLoader, libraryNeedsLoading } from '../utils/lazyLoader';
-import { renderLog } from '../common/utils/logging';
 import { OuterWrapper, PageWrapper } from '../common/components/Style/stepDisplayStyles';
+import { renderLog } from '../common/utils/logging';
+import { lazyLoader, libraryNeedsLoading } from '../utils/lazyLoader';
 
 
 class Impact extends Component {
@@ -50,16 +50,16 @@ const styles = () => ({
   },
 });
 
-const ContentTitle = styled.h1`
+const ContentTitle = styled('h1')(({ theme }) => (`
   font-size: 22px;
   font-weight: 600;
   margin: 20px 0;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} { {
     font-size: 20px;
   }
-`;
+`));
 
-const InnerWrapper = styled.div`
+const InnerWrapper = styled('div')`
 `;
 
 export default withStyles(styles)(Impact);

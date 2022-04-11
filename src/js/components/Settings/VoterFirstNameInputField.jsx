@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { FormControl, TextField } from '@mui/material';
 import styled from 'styled-components';
-import { TextField, FormControl } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import withStyles from '@mui/styles/withStyles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import VoterActions from '../../actions/VoterActions';
-import VoterStore from '../../stores/VoterStore';
 import { renderLog } from '../../common/utils/logging';
+import VoterStore from '../../stores/VoterStore';
 
 class VoterFirstNameInputField extends Component {
   constructor (props) {
@@ -109,11 +109,11 @@ const styles = () => ({
   },
 });
 
-const ColumnFullWidth = styled.div`
+const ColumnFullWidth = styled('div')`
   width: 100%;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled('div')`
   display: flex;
   justify-content: space-between;
   width: 100%;

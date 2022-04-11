@@ -1,19 +1,19 @@
 import loadable from '@loadable/component';
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Button } from '@mui/material';
+import styled from 'styled-components';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import VoterActions from '../../actions/VoterActions';
 import ShareActions from '../../common/actions/ShareActions';
+import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../common/components/Style/adviceBoxStyles';
 import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
 import ShareStore from '../../common/stores/ShareStore';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
 import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
-import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../common/components/Style/adviceBoxStyles';
 import { CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
 import { CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper, CampaignSupportImageWrapper, CampaignSupportImageWrapperText, CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper, CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
@@ -398,31 +398,31 @@ SuperSharingAddContacts.propTypes = {
   setShowHeaderFooter: PropTypes.func,
 };
 
-const BottomOfPageSpacer = styled.div`
+const BottomOfPageSpacer = styled('div')`
   margin-bottom: 150px;
 `;
 
-const ButtonFooterWrapper = styled.div`
+const ButtonFooterWrapper = styled('div')`
   position: fixed;
   width: 100%;
   bottom: 0;
   display: block;
 `;
 
-const ButtonPanel = styled.div`
+const ButtonPanel = styled('div')`
   background-color: #fff;
   border-top: 1px solid #ddd;
   padding: 10px;
 `;
 
-const ContinueButtonDesktopWrapper = styled.div`
+const ContinueButtonDesktopWrapper = styled('div')`
   display: flex;
   justify-content: center;
   margin-top: 40px;
   width: 100%;
 `;
 
-const DeleteLink = styled.div`
+const DeleteLink = styled('div')`
   margin-top: 8px;
 `;
 

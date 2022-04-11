@@ -1,11 +1,11 @@
-import { Button, Checkbox } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Button, Checkbox } from '@mui/material';
+import styled from 'styled-components';
+import withStyles from '@mui/styles/withStyles';
 import { loadGapiInsideDOM } from 'gapi-script';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import styled from 'styled-components';
 import VoterActions from '../actions/VoterActions';
 import { OuterWrapper, PageWrapper } from '../common/components/Style/stepDisplayStyles';
 import { renderLog } from '../common/utils/logging';
@@ -331,45 +331,47 @@ AddContacts.propTypes = {
   showFooter: PropTypes.func,
 };
 
-const ContentTitle = styled.h1`
+const ContentTitle = styled('h1')(({ theme }) => (`
   font-size: 22px;
   font-weight: 600;
   margin: 20px 0;
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  ${theme.breakpoints.down('sm')} {
     font-size: 20px;
   }
+`));
+
+const InnerWrapper = styled('div')`
 `;
 
-const InnerWrapper = styled.div`
-`;
-
-const ListItem = styled.li`
+const ListItem = styled('li')`
   font-size: 18px;
   margin: 15px 0;
 `;
 
-const BigQuestion = styled.div`
+const BigQuestion = styled('div')`
   font-size: 20px;
   font-weight: 700;
   padding-top: 16px;
 `;
 
-const ContactsOuterContainer = styled.div`
-  display: ${({ displayResults }) => (displayResults ? 'block' : 'none')};
+const ContactsOuterContainer = styled('div', {
+  shouldForwardProp: (prop) => !['displayResults'].includes(prop),
+})(({ displayResults }) => (`
+  display: ${displayResults ? 'block' : 'none'};
   font-size: 18px;
   font-weight: 400;
   padding-top: 10px;
-`;
+`));
 
-const ContactsContainer = styled.div`
+const ContactsContainer = styled('div')(({ theme }) => (`
   overflow-y: auto;
   background-color: rgb(254, 254, 228, 0.01);
   border: 1px solid darkgrey;
   margin: 16px auto 11px;
   height: 300px;
   width: 100%;
-  box-shadow: 0 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
-`;
+  box-shadow: ${theme.boxStyles.default};
+`));
 
 const styles = () => ({
   buttonRoot: {
