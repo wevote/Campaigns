@@ -102,10 +102,6 @@ const styles = () => ({
   formControl: {
     width: '100%',
   },
-  // TODO: Figure out how to apply to TextField
-  textField: {
-    fontSize: '22px',
-  },
 });
 
 const ColumnFullWidth = styled('div')`
