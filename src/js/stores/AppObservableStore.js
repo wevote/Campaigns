@@ -48,6 +48,7 @@ const nonFluxState = {
   siteConfigurationHasBeenRetrieved: false,
   siteOwnerOrganizationWeVoteId: '',
   storeSignInStartFullUrl: false,
+  voterBallotItemsRetrieveHasBeenCalled: false,
   voterExternalIdHasBeenSavedOnce: {}, // Dict with externalVoterId and membershipOrganizationWeVoteId as keys, and true/false as value
   voterFirstRetrieveInitiated: false,
 };

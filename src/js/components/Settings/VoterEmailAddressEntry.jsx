@@ -3,18 +3,22 @@ import { Button, InputBase, Paper } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import styled from 'styled-components';
 import VoterActions from '../../actions/VoterActions';
 import LoadingWheel from '../../common/components/Widgets/LoadingWheel';
-import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
-import { blurTextFieldAndroid, focusTextFieldAndroid } from '../../common/utils/cordovaUtils';
-import { isCordova } from '../../common/utils/isCordovaOrWebApp';
+import {
+  blurTextFieldAndroid,
+  focusTextFieldAndroid,
+} from '../../common/utils/cordovaUtils';
+import { isCordova, isWebApp } from '../../common/utils/isCordovaOrWebApp';
 import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
 import { renderLog } from '../../common/utils/logging';
 import VoterStore from '../../stores/VoterStore';
 import SettingsVerifySecretCode from './SettingsVerifySecretCode';
 import signInModalGlobalState from './signInModalGlobalState';
+
+const OpenExternalWebSite = React.lazy(() => import(/* webpackChunkName: 'OpenExternalWebSite' */ '../../common/components/Widgets/OpenExternalWebSite'));
 
 /* global $ */
 
@@ -271,14 +275,12 @@ class VoterEmailAddressEntry extends Component {
   };
 
   onFocus = () => {
-    // console.log('VoterEmailAddressEntry onFocus');
     const { displayEmailVerificationButton } = this.state;
     if (!displayEmailVerificationButton) {
       this.displayEmailVerificationButton();
       this.turnOtherSignInOptionsOff();
     }
     focusTextFieldAndroid();
-    // e.stopPropagation();
   };
 
   onAnimationEndCancel = () => {
@@ -356,12 +358,14 @@ class VoterEmailAddressEntry extends Component {
             { secretCodeSystemLocked && (
               <div>
                 Your account is locked. Please
-                <OpenExternalWebSite
-                  linkIdAttribute="weVoteSupportVoterEmailAddressEntry"
-                  url="https://help.wevote.us/hc/en-us/requests/new"
-                  target="_blank"
-                  body={<span>contact We Vote support for help.</span>}
-                />
+                <Suspense fallback={<></>}>
+                  <OpenExternalWebSite
+                    linkIdAttribute="weVoteSupportVoterEmailAddressEntry"
+                    url="https://help.wevote.us/hc/en-us/requests/new"
+                    target="_blank"
+                    body={<span>contact We Vote support for help.</span>}
+                  />
+                </Suspense>
               </div>
             )}
           </Alert>
@@ -387,7 +391,7 @@ class VoterEmailAddressEntry extends Component {
       </span>
     );
 
-    let enterEmailTitle = 'Sign in with Email';
+    let enterEmailTitle = isWebApp() ? 'Sign in with Email' : 'Email the Sign In code to';
     // let enterEmailExplanation = isWebApp() ? "You'll receive a magic link in your email. Click that link to be signed into your We Vote account." :
     //   "You'll receive a magic link in the email on this phone. Click that link to be signed into your We Vote account.";
     if (voter && voter.is_signed_in) {
@@ -646,6 +650,10 @@ const CancelButtonContainer = styled('div')`
   width: fit-content;
 `;
 
+const EmailSection = styled('div')`
+  margin-top: 18px;
+`;
+
 const SignInSectionText = styled('div')`
   display: block;
   text-align: left;
@@ -653,13 +661,8 @@ const SignInSectionText = styled('div')`
   margin-bottom: 6px;
 `;
 
-
 const Wrapper = styled('div')`
   margin-top: 32px;
-`;
-
-const EmailSection = styled('div')`
-  margin-top: 18px;
 `;
 
 export default withStyles(styles)(VoterEmailAddressEntry);

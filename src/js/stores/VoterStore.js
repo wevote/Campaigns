@@ -144,36 +144,6 @@ class VoterStore extends ReduceStore {
     return emailAddressList;
   }
 
-  getPrimaryEmailAddressDict () {
-    const { emailAddressList } = this.getState();
-    let oneEmail = {};
-    let primaryEmailAddress = {};
-    for (let i = 0; i < emailAddressList.length; ++i) {
-      oneEmail = emailAddressList[i];
-      // console.log('getPrimaryEmailAddressDict, oneEmail:', oneEmail);
-      if (oneEmail.primary_email_address === true &&
-          oneEmail.email_permanent_bounce === false &&
-          oneEmail.email_ownership_is_verified === true) {
-        primaryEmailAddress = oneEmail;
-      }
-    }
-    // console.log('getPrimaryEmailAddressDict, primaryEmailAddress:', primaryEmailAddress);
-    return primaryEmailAddress;
-  }
-
-  getEmailAddressesVerifiedCount () {
-    const { emailAddressList } = this.getState();
-    let oneEmail = {};
-    let verifiedCount = 0;
-    for (let i = 0; i < emailAddressList.length; ++i) {
-      oneEmail = emailAddressList[i];
-      if (oneEmail.email_ownership_is_verified === true) {
-        verifiedCount += 1;
-      }
-    }
-    return verifiedCount;
-  }
-
   getEmailAddressStatus () {
     return this.getState().emailAddressStatus;
   }
@@ -233,23 +203,6 @@ class VoterStore extends ReduceStore {
   getSMSPhoneNumberList () {
     const { smsPhoneNumberList } = this.getState();
     return smsPhoneNumberList;
-  }
-
-  getSMSPhoneNumbersVerifiedCount () {
-    const { smsPhoneNumberList } = this.getState();
-    let onePhoneNumber = {};
-    let verifiedCount = 0;
-    for (let i = 0; i < smsPhoneNumberList.length; ++i) {
-      onePhoneNumber = smsPhoneNumberList[i];
-      if (onePhoneNumber.sms_ownership_is_verified === true) {
-        verifiedCount += 1;
-      }
-    }
-    return verifiedCount;
-  }
-
-  getStateCodeFromIPAddress () {
-    return this.getState().voter.state_code_from_ip_address || '';
   }
 
   getTwitterHandle () {

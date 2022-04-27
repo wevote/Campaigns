@@ -63,7 +63,7 @@ class VoterEmailInputField extends Component {
   render () {
     renderLog('VoterEmailInputField');  // Set LOG_RENDER_EVENTS to log all renders
 
-    const { voterEmailMissing, voterEmailPlaceholder, classes, externalUniqueId } = this.props;
+    const { classes, externalUniqueId, showLabel, voterEmailMissing, voterEmailPlaceholder } = this.props;
     const { voterEmail, voterEmailDisabled } = this.state;
     return (
       <div className="">
@@ -76,7 +76,7 @@ class VoterEmailInputField extends Component {
                   disabled={voterEmailDisabled}
                   error={voterEmailMissing && !voterEmail}
                   id={`voterEmail-${externalUniqueId}`}
-                  label={voterEmailMissing && !voterEmail ? 'Email Required' : null}
+                  label={voterEmailMissing && !voterEmail ? 'Email Required' : `${showLabel ? 'Email' : ''}`}
                   margin={voterEmailMissing && !voterEmail ? 'dense' : 'none'}
                   name="voterEmail"
                   variant="outlined"
@@ -94,19 +94,16 @@ class VoterEmailInputField extends Component {
   }
 }
 VoterEmailInputField.propTypes = {
-  voterEmailMissing: PropTypes.bool,
-  voterEmailPlaceholder: PropTypes.string,
   classes: PropTypes.object,
   externalUniqueId: PropTypes.string,
+  showLabel: PropTypes.bool,
+  voterEmailMissing: PropTypes.bool,
+  voterEmailPlaceholder: PropTypes.string,
 };
 
 const styles = () => ({
   formControl: {
     width: '100%',
-  },
-  // TODO: Figure out how to apply to TextField
-  textField: {
-    fontSize: '22px',
   },
 });
 
