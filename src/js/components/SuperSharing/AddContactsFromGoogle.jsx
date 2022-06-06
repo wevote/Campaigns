@@ -194,7 +194,7 @@ class AddContactsFromGoogle extends Component {
           classes={mobileMode ? { root: classes.buttonMobile } : { root: classes.buttonDesktop }}
           color="primary"
           disabled={disableButton}
-          id="addFromGoogleContacts"
+          id="addContactsFromGoogle"
           variant={darkButton ? 'contained' : 'outlined'}
           onClick={this.onButtonClick}
         >

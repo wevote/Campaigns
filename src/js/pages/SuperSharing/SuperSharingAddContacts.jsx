@@ -177,9 +177,9 @@ class SuperSharingAddContacts extends Component {
   }
 
   onClickDeleteGoogleContacts () {
-    const deleteFromGooglePeopleApi = true;
+    const deleteAllVoterContactEmails = true;
     initializejQuery(() => {
-      VoterActions.voterContactListDelete(deleteFromGooglePeopleApi);
+      VoterActions.voterContactListDelete(deleteAllVoterContactEmails);
     });
   }
 

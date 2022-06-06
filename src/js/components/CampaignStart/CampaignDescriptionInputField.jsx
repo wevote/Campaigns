@@ -102,7 +102,7 @@ class CampaignDescriptionInputField extends Component {
                   multiline
                   rows={8}
                   variant="outlined"
-                  placeholder="Why is important for candidate(s) to win?"
+                  placeholder="Why is it important for candidate(s) to win?"
                   value={campaignDescription}
                   onKeyDown={this.handleKeyPress}
                   onChange={this.updateCampaignDescription}
