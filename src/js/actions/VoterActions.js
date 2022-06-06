@@ -161,9 +161,9 @@ export default {
     });
   },
 
-  voterContactListDelete (deleteFromGooglePeopleApi = false) {
+  voterContactListDelete (deleteAllVoterContactEmails = false) {
     Dispatcher.loadEndpoint('voterContactListSave', {
-      delete_from_google_people_api: deleteFromGooglePeopleApi,
+      delete_all_voter_contact_emails: deleteAllVoterContactEmails,
     });
   },
 
