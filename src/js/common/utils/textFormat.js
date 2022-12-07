@@ -1,26 +1,5 @@
 // textFormat.js
-import stringContains from '../common/utils/stringContains';
-
-export function abbreviateNumber (num) {
-  // =< 1,000,000 - round to hundred-thousand (1.4M)
-  if (num >= 1000000) {
-    return `${(num / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
-  }
-  // 100,000 – 999,999 - round to nearest thousand (847K)
-  if (num >= 100000) {
-    return `${(num / 1000).toFixed(0).replace(/\.0$/, '')}K`;
-  }
-  // 10,000 – 99,999 - round to single decimal (45.8K)
-  if (num >= 10000) {
-    return `${(num / 1000).toFixed(1).replace(/\.0$/, '')}K`;
-  }
-  // < 10,000 - add comma for thousands (3,857)
-  if (num < 10000) {
-    const stringNum = num.toString();
-    return stringNum.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  }
-  return num;
-}
+import stringContains from './stringContains';
 
 // We assume that arrayHaystack contains objects with one property with the name in needleProperty
 // When we find the first object in the arrayHaystack, replace it with the newObject
@@ -38,15 +17,37 @@ export function arrayReplaceObjectMatchingPropertyValue (needleValue, needleProp
   };
 }
 
-// Gives preference to the earlier entry in the incoming array
-export function arrayUnique (array) {
-  const a = array.concat();
-  for (let i = 0; i < a.length; ++i) {
-    for (let j = i + 1; j < a.length; ++j) {
-      if (a[i] === a[j]) a.splice(j--, 1);
-    }
+export function calculateBallotBaseUrl (incomingBallotBaseUrl, incomingPathname) {
+  const incomingPathnameExists = incomingPathname && incomingPathname !== '';
+  const ballotBaseUrlEmpty = !incomingBallotBaseUrl || incomingBallotBaseUrl === '';
+  let ballotBaseUrl = '';
+  if ((incomingBallotBaseUrl === '/ready') || (incomingBallotBaseUrl === '/welcome')) {
+    ballotBaseUrl = '/ready';
+  } else if (incomingPathnameExists && ballotBaseUrlEmpty) {
+    // console.log("incomingPathname:", incomingPathname);
+    // Strip off everything after these path strings "/ballot" "/positions" "/followers" "/followed"
+    const temp1 = incomingPathname.toLowerCase().split('/ballot')[0];
+    const temp2 = temp1.split('/positions')[0];
+    const temp3 = temp2.split('/followers')[0];
+    const temp4 = temp3.split('/followed')[0];
+    ballotBaseUrl = `${temp4}/ballot`;
+    // console.log("ballotBaseUrl:", ballotBaseUrl);
+  } else {
+    ballotBaseUrl = incomingBallotBaseUrl || '/ballot';
   }
-  return a;
+  return ballotBaseUrl;
+}
+
+export function calculateBallotBaseUrlForVoterGuide (incomingBallotBaseUrl, incomingPathname) {
+  const incomingPathnameExists = incomingPathname && incomingPathname !== '';
+  let ballotBaseUrl = '';
+  if (incomingPathnameExists) {
+    ballotBaseUrl = incomingPathname;
+    // console.log("ballotBaseUrl:", ballotBaseUrl);
+  } else {
+    ballotBaseUrl = incomingBallotBaseUrl || '/ballot';
+  }
+  return ballotBaseUrl;
 }
 
 export function convertNameToSlug (incomingString) {
@@ -74,13 +75,6 @@ export function cleanArray (actual) {
 
 export function convertToInteger (incomingNumber) {
   return parseInt(incomingNumber, 10) || 0;
-}
-
-export function elipses (name, mobile) {
-  function cut (position) {
-    return name.length < position ? name : `${name.slice(0, position)}...`;
-  }
-  return mobile ? cut(3) : cut(8);
 }
 
 export function extractTwitterHandleFromTextString (incomingString) {
@@ -135,40 +129,6 @@ export function mergeTwoObjectLists (obj1, obj2) {
   });
 
   return obj3;
-}
-
-function startsWithLocal (needle, incomingString) {
-  // IE 10 does not support the "string.startsWith" function.  DO NOT USE THAT FUNCTION
-  // console.log("startsWith, needle:", needle, ", haystack: ", incomingString);
-  if (incomingString) {
-    return incomingString.indexOf(needle) === 0;
-  } else {
-    return false;
-  }
-}
-
-// If Display name is repeated in beginning of the description, remove the name from the description (along with trailing 'is') and capitalize next word to begin description.
-export function removeTwitterNameFromDescription (displayName, twitterDescription) {
-  const displayNameNotNull = displayName || '';
-  const twitterDescriptionNotNull = twitterDescription || '';
-  let twitterDescriptionMinusName;
-
-  if (startsWithLocal(displayNameNotNull, twitterDescriptionNotNull)) {
-    twitterDescriptionMinusName = twitterDescriptionNotNull.substr(displayNameNotNull.length);
-  } else if (startsWithLocal(`The ${displayNameNotNull}`, twitterDescriptionNotNull)) {
-    twitterDescriptionMinusName = twitterDescriptionNotNull.substr(displayNameNotNull.length + 4);
-  } else if (twitterDescriptionNotNull.length) {
-    twitterDescriptionMinusName = twitterDescriptionNotNull;
-  } else {
-    twitterDescriptionMinusName = '';
-  }
-  if (startsWithLocal(', ', twitterDescriptionMinusName)) {
-    twitterDescriptionMinusName = twitterDescriptionMinusName.substr(2);
-  }
-  if (startsWithLocal(': ', twitterDescriptionMinusName)) {
-    twitterDescriptionMinusName = twitterDescriptionMinusName.substr(2);
-  }
-  return twitterDescriptionMinusName;
 }
 
 export function sentenceCaseString (incomingString) {
