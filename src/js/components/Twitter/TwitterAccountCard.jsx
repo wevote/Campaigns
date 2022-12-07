@@ -6,7 +6,7 @@ import { renderLog } from '../../common/utils/logging';
 import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
 import abbreviateNumber from '../../common/utils/abbreviateNumber';
 import numberWithCommas from '../../common/utils/numberWithCommas';
-import { removeTwitterNameFromDescription } from '../../utils/textFormat';
+import removeTwitterNameFromDescription from '../../common/utils/removeTwitterNameFromDescription';
 
 export default class TwitterAccountCard extends Component {
   render () {

@@ -5,7 +5,7 @@ import LoadingWheel from '../../common/components/Widgets/LoadingWheel';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 import VoterStore from '../../stores/VoterStore';
-import { extractTwitterHandleFromTextString } from '../../utils/textFormat';
+import { extractTwitterHandleFromTextString } from '../../common/utils/textFormat';
 
 
 export default class TwitterHandleBox extends Component {

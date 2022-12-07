@@ -4,7 +4,7 @@ import VoterActions from '../src/js/actions/VoterActions'; // eslint-disable-lin
 import VoterStore from '../src/js/stores/VoterStore'; // eslint-disable-line import/no-cycle
 import webAppConfig from '../src/js/config'; // eslint-disable-line import/no-cycle
 import { isCordova } from '../src/js/common/utils/isCordovaOrWebApp'; // eslint-disable-line import/no-cycle
-import { stringContains } from '../src/js/utils/textFormat';
+import stringContains from '../src/js/common/utils/stringContains';
 
 /**
  * AppStore allows you to store state information, in situations where there is no API call needed
