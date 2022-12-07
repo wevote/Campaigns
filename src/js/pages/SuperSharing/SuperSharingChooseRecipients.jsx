@@ -15,6 +15,7 @@ import arrayContains from '../../common/utils/arrayContains';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 import removeValueFromArray from '../../common/utils/removeValueFromArray';
+import shortenText from '../../common/utils/shortenText';
 import defaultVoterContactEmailSort from '../../common/utils/voterContactEmailSorting';
 import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
 import { CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
@@ -26,7 +27,6 @@ import CampaignStore from '../../stores/CampaignStore';
 import VoterStore from '../../stores/VoterStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
 import initializejQuery from '../../utils/initializejQuery';
-import { shortenText } from '../../utils/textFormat';
 
 
 const NUMBER_OF_RECIPIENTS_TO_ADD_WHEN_MORE_CLICKED = 25;

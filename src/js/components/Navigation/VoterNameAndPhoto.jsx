@@ -7,8 +7,8 @@ import React, { Component } from 'react';
 import avatarGeneric from '../../../img/global/icons/avatar-generic.png';
 import LazyImage from '../../common/components/LazyImage';
 import { renderLog } from '../../common/utils/logging';
+import shortenText from '../../common/utils/shortenText';
 import VoterStore from '../../stores/VoterStore';
-import { shortenText } from '../../utils/textFormat';
 
 
 class VoterNameAndPhoto extends Component {

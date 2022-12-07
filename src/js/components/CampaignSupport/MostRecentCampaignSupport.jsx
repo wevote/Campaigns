@@ -8,9 +8,9 @@ import LazyImage from '../../common/components/LazyImage';
 import { timeFromDate } from '../../common/utils/dateFormat';
 import { renderLog } from '../../common/utils/logging';
 import returnFirstXWords from '../../common/utils/returnFirstXWords';
+import stringContains from '../../common/utils/stringContains';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import { stringContains } from '../../utils/textFormat';
 
 class MostRecentCampaignSupport extends React.Component {
   constructor (props) {

@@ -9,8 +9,8 @@ import LazyImage from '../../common/components/LazyImage';
 import { timeFromDate } from '../../common/utils/dateFormat';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
+import stringContains from '../../common/utils/stringContains';
 import CampaignStore from '../../stores/CampaignStore';
-import { stringContains } from '../../utils/textFormat';
 import { BlockedIndicator, DraftModeIndicator, EditIndicator, IndicatorButtonWrapper, IndicatorDefaultButtonWrapper, IndicatorRow } from '../Style/CampaignIndicatorStyles';
 
 class CampaignNewsItemForList extends Component {

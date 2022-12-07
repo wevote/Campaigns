@@ -30,7 +30,7 @@ class SplitIconButton extends PureComponent {
       background: backgroundColor || '#2e3c5d',
       border: '1px solid rgba(46, 60, 93, .5)',
       color: fontColor || getTextColorFromBackground(backgroundColor || '#2e3c5d'),
-      fontSize: fontSize || '13px',
+      fontSize: fontSize || '16px',
     };
 
     let buttonStyles;
@@ -116,6 +116,7 @@ const styles = () => ({
   },
   splitButton: {
     boxShadow: 'none !important',
+    minWidth: 270,
     padding: '0 !important',
     width: '100%',
     whiteSpace: 'nowrap',
@@ -163,6 +164,7 @@ const SplitButtonText = styled('span')`
   padding: 8px 8px 8px;
   text-align: center;
   flex: 1 1 0;
+  font-size: 18px;
   font-weight: 500;
 `;
 

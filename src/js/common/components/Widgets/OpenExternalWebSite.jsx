@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { stringContains } from '../../../utils/textFormat';
-import { cordovaOpenSafariView } from '../../utils/cordovaUtils';
+import { cordovaOpenSafariView, isAndroid } from '../../utils/cordovaUtils';
 import { isWebApp } from '../../utils/isCordovaOrWebApp';
 import { renderLog } from '../../utils/logging';
+import stringContains from '../../utils/stringContains';
 
 export default class OpenExternalWebSite extends Component {
   render () {
@@ -15,6 +15,13 @@ export default class OpenExternalWebSite extends Component {
     let externalUrl = url;
     if (!stringContains('http', externalUrl)) {
       externalUrl = `http://${externalUrl}`;
+    }
+    if (isAndroid) {
+      // Rendered message:
+      // "Webpage not available"
+      // "The webpage at http://www.sos.ca.gov/elections/ballot-measures/qualified-ballot-measures could not be loaded because: net::ERR_CLEARTEXT_NOT_PERMITTED"
+      // Cordova Android 8 and higher will not open a http link, and if the site doesn't handle SSL, tough luck
+      externalUrl = externalUrl.replace('http://', 'https://');
     }
 
     if (isWebApp()) {
