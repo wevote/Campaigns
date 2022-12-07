@@ -14,7 +14,7 @@ export default function moneyStringToPennies (moneyString) {
       penniesInt = parseInt(pieces[0]) * 100;   // Dollars as pennies
     }
     if (pieces.length > 1) {
-      let padded;
+      let padded = '';
       if (pieces[1].length === 1) {
         padded = `${pieces[1]}0`;                 // 5.1
       } else {

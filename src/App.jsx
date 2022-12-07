@@ -246,6 +246,7 @@ class App extends Component {
             </ThemeProvider>
           </StyledEngineProvider>
         </Suspense>
+        <span />
       </ErrorBoundary>
     );
   }

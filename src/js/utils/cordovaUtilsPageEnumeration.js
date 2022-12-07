@@ -1,6 +1,6 @@
 import CordovaPageConstants from '../constants/CordovaPageConstants';
 // import { showBallotDecisionsTabs } from '../utilsApi/showBallotDecisionsTabs'; // eslint-disable-line import/no-cycle
-import { stringContains } from './textFormat';
+import stringContains from '../common/utils/stringContains';
 
 
 // eslint-disable-next-line import/prefer-default-export

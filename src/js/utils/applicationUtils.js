@@ -2,7 +2,7 @@ import Cookies from '../common/utils/js-cookie/Cookies';
 import { isIOSAppOnMac } from '../common/utils/cordovaUtils';
 import { isCordova, isWebApp } from '../common/utils/isCordovaOrWebApp';
 import startsWith from '../common/utils/startsWith';
-import { stringContains } from './textFormat';
+import stringContains from '../common/utils/stringContains';
 
 
 // We have to do all this, because we allow urls where the path starts with a twitter username (handle)

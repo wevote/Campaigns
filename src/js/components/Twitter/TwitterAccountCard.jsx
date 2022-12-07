@@ -4,7 +4,9 @@ import ParsedTwitterDescription from './ParsedTwitterDescription';
 import ImageHandler from '../ImageHandler';
 import { renderLog } from '../../common/utils/logging';
 import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
-import { abbreviateNumber, numberWithCommas, removeTwitterNameFromDescription } from '../../utils/textFormat';
+import abbreviateNumber from '../../common/utils/abbreviateNumber';
+import numberWithCommas from '../../common/utils/numberWithCommas';
+import { removeTwitterNameFromDescription } from '../../utils/textFormat';
 
 export default class TwitterAccountCard extends Component {
   render () {

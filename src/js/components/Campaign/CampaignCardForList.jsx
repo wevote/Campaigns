@@ -11,7 +11,7 @@ import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import initializejQuery from '../../utils/initializejQuery';
 import keepHelpingDestination from '../../utils/keepHelpingDestination';
-import { numberWithCommas } from '../../utils/textFormat';
+import numberWithCommas from '../../common/utils/numberWithCommas';
 import CampaignOwnersList from '../CampaignSupport/CampaignOwnersList';
 import { BlockedIndicator, DraftModeIndicator, EditIndicator, ElectionInPast, IndicatorButtonWrapper, IndicatorDefaultButtonWrapper, IndicatorRow } from '../Style/CampaignIndicatorStyles';
 

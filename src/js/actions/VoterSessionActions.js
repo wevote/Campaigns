@@ -1,7 +1,7 @@
 import Dispatcher from '../common/dispatcher/Dispatcher';
 import Cookies from '../common/utils/js-cookie/Cookies';
+import stringContains from '../common/utils/stringContains';
 import AppObservableStore from '../stores/AppObservableStore';
-import { stringContains } from '../utils/textFormat';
 
 export default {
   voterSignOut () {  // To discuss - having Store/Actions vs. voterSignOut as a function

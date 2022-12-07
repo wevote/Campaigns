@@ -16,9 +16,9 @@ import { CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper,
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CampaignStore from '../../stores/CampaignStore';
+import numberWithCommas from '../../common/utils/numberWithCommas';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
 import initializejQuery from '../../utils/initializejQuery';
-import { numberWithCommas } from '../../utils/textFormat';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
 const VoterFirstRetrieveController = loadable(() => import('../../components/Settings/VoterFirstRetrieveController'));

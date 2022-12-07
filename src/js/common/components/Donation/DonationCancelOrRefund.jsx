@@ -159,7 +159,7 @@ const StyledModalFrame = styled('div')(({ theme }) => (`
   top: 30%;
   border: 2px solid #000;
   outline: 0;
-  box-shadow: ${theme.boxShadow.default};
+  box-shadow: 0 3px 5px -1px rgb(0 0 0 / 20%), 0px 5px 8px 0px rgb(0 0 0 / 14%), 0px 1px 14px 0px rgb(0 0 0 / 12%);
   ${theme.breakpoints.down('sm')} {
     left: 0;
     top: 0;

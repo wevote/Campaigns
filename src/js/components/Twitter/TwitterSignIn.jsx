@@ -8,7 +8,7 @@ import { isWebApp } from '../../common/utils/isCordovaOrWebApp';
 import historyPush from '../../common/utils/historyPush';
 import SplitIconButton from '../../common/components/Widgets/SplitIconButton';
 import startsWith from '../../common/utils/startsWith';
-import { shortenText } from '../../utils/textFormat';
+import shortenText from '../../common/utils/shortenText';
 import TwitterActions from '../../actions/TwitterActions';
 import webAppConfig from '../../config';
 

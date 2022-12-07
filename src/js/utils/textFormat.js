@@ -1,4 +1,5 @@
 // textFormat.js
+import stringContains from '../common/utils/stringContains';
 
 export function abbreviateNumber (num) {
   // =< 1,000,000 - round to hundred-thousand (1.4M)
@@ -136,18 +137,6 @@ export function mergeTwoObjectLists (obj1, obj2) {
   return obj3;
 }
 
-export function numberWithCommas (rawNumber) {
-  if (rawNumber === 0) {
-    return 0;
-  } else if (rawNumber) {
-    const parts = rawNumber.toString().split('.');
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    return parts.join('.');
-  } else {
-    return '';
-  }
-}
-
 function startsWithLocal (needle, incomingString) {
   // IE 10 does not support the "string.startsWith" function.  DO NOT USE THAT FUNCTION
   // console.log("startsWith, needle:", needle, ", haystack: ", incomingString);
@@ -205,35 +194,6 @@ export function sentenceCaseString (incomingString) {
   return finalString;
 }
 
-export function shortenText (incomingString, maximumLength) {
-  if (!incomingString || incomingString === '') {
-    return '';
-  }
-  const maximumLengthInteger = parseInt(maximumLength, 10);
-  if (maximumLengthInteger < 1) {
-    return '';
-  }
-  let cropLengthToMakeRoomForEllipses = maximumLengthInteger - 2;
-  // Don't allow the string to use less than 3 characters
-  const minimumCharactersToDisplay = 3;
-  cropLengthToMakeRoomForEllipses = cropLengthToMakeRoomForEllipses > 2 ? cropLengthToMakeRoomForEllipses : minimumCharactersToDisplay;
-  if (incomingString.length >= maximumLengthInteger) {
-    const incomingStringShortened = incomingString.slice(0, cropLengthToMakeRoomForEllipses);
-    return `${incomingStringShortened.trim()}...`;
-  } else {
-    return incomingString;
-  }
-}
-
-export function stringContains (needle, stringHaystack) {
-  // console.log("stringContains, needle:", needle, ", haystack: ", stringHaystack);
-  if (stringHaystack) {
-    return stringHaystack.indexOf(needle) !== -1;
-  } else {
-    return false;
-  }
-}
-
 export function stripHtmlFromString (incomingString) {
   if (!incomingString || incomingString === '') {
     return '';
@@ -250,16 +210,4 @@ export const vimeoRegX = /http(s)?:\/\/(www\.)?vimeo.com\/(\d+)(\/)?(#.*)?/;
 // This must be placed after declaration of stringContains
 export function isProperlyFormattedVoterGuideWeVoteId (voterGuideWeVoteId) {
   return voterGuideWeVoteId && stringContains('wv', voterGuideWeVoteId) && stringContains('vg', voterGuideWeVoteId);
-}
-
-export function getBooleanValue (thing) {
-  if (thing === undefined) {
-    return false;
-  } else if (typeof thing === 'boolean') {
-    return thing;
-  } else if (typeof thing === 'string') {
-    return thing === 'true';
-  } else {
-    return false;
-  }
 }

@@ -12,6 +12,7 @@ import { StepCircle, StepNumber } from '../../common/components/Style/stepDispla
 import ShareStore from '../../common/stores/ShareStore';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
+import numberWithCommas from '../../common/utils/numberWithCommas';
 import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
 import { CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
 import { CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper, CampaignSupportImageWrapper, CampaignSupportImageWrapperText, CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
@@ -22,7 +23,6 @@ import VoterStore from '../../stores/VoterStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
 import initializejQuery from '../../utils/initializejQuery';
 import { onStep1ClickPath, onStep2ClickPath, onStep3ClickPath } from '../../utils/superSharingStepPaths';
-import { numberWithCommas } from '../../utils/textFormat';
 
 const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
 const VoterFirstRetrieveController = loadable(() => import('../../components/Settings/VoterFirstRetrieveController'));

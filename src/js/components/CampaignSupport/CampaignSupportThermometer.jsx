@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import { renderLog } from '../../common/utils/logging';
+import numberWithCommas from '../../common/utils/numberWithCommas';
 import CampaignStore from '../../stores/CampaignStore';
-import { numberWithCommas } from '../../utils/textFormat';
 
 class CampaignSupportThermometer extends React.Component {
   constructor (props) {

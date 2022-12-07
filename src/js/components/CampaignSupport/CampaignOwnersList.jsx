@@ -3,8 +3,8 @@ import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { renderLog } from '../../common/utils/logging';
+import stringContains from '../../common/utils/stringContains';
 import CampaignStore from '../../stores/CampaignStore';
-import { stringContains } from '../../utils/textFormat';
 
 
 class CampaignOwnersList extends Component {

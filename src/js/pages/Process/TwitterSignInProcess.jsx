@@ -7,12 +7,12 @@ import historyPush from '../../common/utils/historyPush';
 import { isWebApp } from '../../common/utils/isCordovaOrWebApp';
 import Cookies from '../../common/utils/js-cookie/Cookies';
 import { oAuthLog, renderLog } from '../../common/utils/logging';
+import stringContains from '../../common/utils/stringContains';
 import SpinnerPage from '../../components/Widgets/SpinnerPage';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import TwitterStore from '../../stores/TwitterStore';
 import VoterStore from '../../stores/VoterStore';
 import initializejQuery from '../../utils/initializejQuery';
-import { stringContains } from '../../utils/textFormat';
 
 export default class TwitterSignInProcess extends Component {
   constructor (props) {

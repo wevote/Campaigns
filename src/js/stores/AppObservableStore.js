@@ -2,8 +2,8 @@ import { Subject } from 'rxjs';
 import VoterActions from '../actions/VoterActions';   // eslint-disable-line import/no-cycle
 import webAppConfig from '../config';
 import $ajax from '../utils/service';
-import { stringContains } from '../utils/textFormat';
 import { isCordova } from '../common/utils/isCordovaOrWebApp';
+import stringContains from '../common/utils/stringContains';
 import VoterStore from './VoterStore';
 
 const subject = new Subject();

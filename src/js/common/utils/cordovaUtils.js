@@ -1,7 +1,7 @@
 import React from 'react';
 import webAppConfig from '../../config';
-import { cordovaOffsetLog, oAuthLog } from './logging';
 import { isCordova, isWebApp } from './isCordovaOrWebApp';
+import { cordovaOffsetLog, oAuthLog } from './logging';
 
 /* global $  */
 
@@ -153,18 +153,18 @@ export function getIOSSizeString () {
   const iPhone3p5inPhones = ['iPhone1,1', 'iPhone1,2', 'iPhone2,1', 'iPhone3,1', 'iPhone3,2', 'iPhone3,3', 'iPhone4,1'];
   //    iPhone:             5            5            5C           5C           5S           5S           SE
   const iPhone4inPhones = ['iPhone5,1', 'iPhone5,2', 'iPhone5,3', 'iPhone5,4', 'iPhone6,1', 'iPhone6,2', 'iPhone8,4'];
-  //    iPhone:               6            6S           7            7            8             8             SE 2nd Gen
-  const iPhone4p7inPhones = ['iPhone7,2', 'iPhone8,1', 'iPhone9,1', 'iPhone9,3', 'iPhone10,1', 'iPhone10,4', 'iPhone12,8'];
+  //    iPhone:               6            6S           7            7            8             8             SE 2nd Gen    SE 3rd Gen
+  const iPhone4p7inPhones = ['iPhone7,2', 'iPhone8,1', 'iPhone9,1', 'iPhone9,3', 'iPhone10,1', 'iPhone10,4', 'iPhone12,8', 'iPhone14,6'];
   //    iPhone:                 6 Plus       6S Plus      7 Plus       7Plus        8 Plus        8 Plus
   const isIPhone5p5inEarlyPhones = ['iPhone7,1', 'iPhone8,2', 'iPhone9,2', 'iPhone9,4', 'iPhone10,2', 'iPhone10,5'];
   //    iPhone:                      12 Mini       13 mini
   const isIPhone5p5inMiniPhones = ['iPhone13,1', 'iPhone14,4'];
   //    iPhone:               X             X             XS            11 Pro
   const iPhone5p8inPhones = ['iPhone10,3', 'iPhone10,6', 'iPhone11,2', 'iPhone12,3'];
-  //    iPhone:               XR            11            12 Pro         12             13 Pro           13
-  const iPhone6p1inPhones = ['iPhone11,8', 'iPhone12,1', 'iPhone13,3', 'iPhone13,2', 'iPhone14,2', 'iPhone14,5'];
-  //    iPhone:               XS Max        XS Max        11 Pro Max   12ProMax(6.7) 13ProMax(6.7)
-  const iPhone6p5inPhones = ['iPhone11,4', 'iPhone11,6', 'iPhone12,5', 'iPhone13,4', 'iPhone14,3'];
+  //    iPhone:               XR            11            12 Pro         12             13 Pro           13           14
+  const iPhone6p1inPhones = ['iPhone11,8', 'iPhone12,1', 'iPhone13,3', 'iPhone13,2', 'iPhone14,2', 'iPhone14,5', 'iPhone14,7'];
+  //    iPhone:               XS Max        XS Max        11 Pro Max   12ProMax(6.7) 13ProMax(6.7)   14 Plus         14 Pro     14 Pro Max
+  const iPhone6p5inPhones = ['iPhone11,4', 'iPhone11,6', 'iPhone12,5', 'iPhone13,4', 'iPhone14,3', 'iPhone14,8', 'iPhone15,2', 'iPhone15,3'];
   if (iPhone3p5inPhones.includes(window.device.model)) {
     return 'isIPhone3p5in';
   } else if (iPhone4inPhones.includes(window.device.model)) {
@@ -320,7 +320,7 @@ export function isIPhone6p1in () {
 export function isIPhone6p5in () {
   if (isIOS()) {
     if (getIOSSizeString() === 'isIPhone6p5in') {
-      logMatch('isIPhone6p5in: iPhone XsMax or 11/12 Pro Max (6.5")', true);
+      logMatch('isIPhone6p5in: iPhone XsMax or 11/12/13/14 Pro Max (6.7"),', true);
       return true;
     }
   }
@@ -371,6 +371,23 @@ export function isIPad11in () {
   return false;
 }
 
+export function hasDynamicIsland () {
+  if (isIOS() && !isIOSAppOnMac() &&
+    ['iPhone15,2', 'iPhone15,3'].includes(window.device.model)) {
+    logMatch('iPhone 14 Pro or 14 Pro Max, Dynamic Island Sized Header', true);
+    return true;
+  }
+  return false;
+}
+
+export function isIPhone14Pro ()  {
+  if (isIOS() && !isIOSAppOnMac() &&
+    ['iPhone15,2'].includes(window.device.model)) {
+    logMatch('iPhone 14 Pro (not Max) Dynamic Island Sized Header', true);
+    return true;
+  }
+  return false;
+}
 
 export function isIPadGiantSize () {
   if (!isIPad()) {
@@ -405,54 +422,66 @@ export function getAndroidSize () {
   if (androidSizeString !== undefined) {
     return androidSizeString;
   }
-  const ratio = window.devicePixelRatio || 1;
-  const aspectRatio = window.screen.height / window.screen.width;
-  const screen = {
-    width: window.screen.width * ratio,
-    height: window.screen.height * ratio,
-  };
+  // https://developer.samsung.com/galaxy-emulator-skin/galaxy-z.html
+  // https://www.gsmarena.com
+  // {"width":2208,"height":1768,"diameter":8.84,"xdpi":320,"ydpi":320,"densityValue":2,"densityBucket":"xhdpi"} Galaxy Z Fold3 -- fold 7.6"  ~19.305 cm
+  // {"width":1440,"height":2956,"diameter":5.87,"xdpi":560,"ydpi":560,"densityValue":3.5,"densityBucket":"xxhdpi"} Pixel 4XL --lg  6.3"
+  // see AndroidSizes criteria at https://docs.google.com/spreadsheets/d/1-_0jthH0coeWqs3KZh4TxSToSgscL-UP64wV7nwkIsI/edit?usp=sharing
 
-  androidPixels = screen.width * screen.height;
-  androidSizeString = 'default';
-  // const ratioString = parseFloat(ratio).toFixed(2);
-
-  /* sm   = 480*800   =   384,000     Nexus One
-     md   = 1080*1920 = 2,073,600     PixelXL, Nexus5X, Moto G5
-     lg   = 1440*2560 = 3,686,400     Nexus6P
-     xl   = 2560*1600 = 4,240,000     Nexus10 Tablet ratio = 1.656
-     xl   = 1200*1920 = 2,306,705     Galaxy Tab A 10.1", ratio = 1.3312500715255737
-     xl with AndroidNotch                 (for camera)
-          = 1440*3201 = 4,609,440,    Samsung Galaxy S20 Ultra, ratio = 3
-     fold = 1536*2152 = 3,305,372     Galaxy Fold 7.3", ratio = 2, aspectRatio ~= 1.401
-         && 1170*2208 = 3,908,160     'Galaxy Z Fold 3' 7.6" ratioString = '3.00' aspectRatio ~= 1.247
-     June 2019: detecting the Galaxy Tab A by ratio, is a bit of a hack, and could bite us someday if there was an android phone with a 1.33 ratio
-  */
-
-  if (window.device.model === 'Moto G (5) Plus') {
-    logMatch('Moto G (5) Plus', true);
-    androidSizeString = '--md';
-  } else if (androidPixels > 3.7E6 && aspectRatio < 1.0) {
-    androidSizeString = '--xl';
-  } else if (androidPixels > 3.3E6 && aspectRatio < 1.4 && aspectRatio > 1.2) {
-    androidSizeString = '--fold';
-  } else if (androidPixels > 3E6) {
-    androidSizeString = '--lg';
-  } else if (androidPixels > 1E6) {
-    androidSizeString = '--md';
-  } else {
-    androidSizeString = '--sm';
+  if (!window.isDeviceReady) {
+    return 'device not ready';
   }
-  cordovaOffsetLog(`getAndroidSize(): ${androidSizeString}`);
+  androidSizeString = 'default';
+  const { width, height, diameter } = window.pbakondyScreenSize;
+
+  androidPixels = width * height;
+  // const screenSize = Math.sqrt(((width / xdpi) ** 2) + ((height / ydpi) ** 2));
+  const aspectRatio = height / width;
+  if (aspectRatio < 1) {
+    androidSizeString = '--wide';
+  } else if (diameter < 4.9) {
+    androidSizeString = '--sm';
+  } else if (diameter < 6) {
+    androidSizeString = '--md';
+  } else if (diameter < 6.6) {
+    androidSizeString = '--lg';
+  } else {
+    androidSizeString = '--xl';
+  }
+
+  console.log(`Cordova:  getAndroidSize(): ${androidSizeString}, reported diagonal: ${diameter} `);
 
   return androidSizeString;
 }
 
 export function hasAndroidNotch () {
-  if (androidPixels === 4609440) {
+  // https://deviceatlas.com/blog/list-of-user-agent-strings  (last letter U, like SM-G988U, is a country code ... USA)
+  const ua = navigator.userAgent.toLowerCase();
+  if (ua.includes('SM-S908') ||       // Samsung Galaxy S22 Ultra
+      ua.includes('SM-S906') ||       // Samsung Galaxy S22+
+      ua.includes('SM-S901') ||       // Samsung Galaxy S22
+      ua.includes('SM-G996') ||       // Samsung Galaxy S21
+      ua.includes('SM-G980') ||       // Samsung Galaxy S20
+      ua.includes('SM-G973')) {       // Samsung Galaxy S10
+    return true;
+  }
+
+  // window.device.model: "sdk_gphone64_arm64"
+
+  if (androidPixels === 4446720) {
+    logMatch('Android Samsung Galaxy S22 Ultra (or S22+) detected by pixel size');
+    return true;
+  } else if (androidPixels === 2527200) {
+    logMatch('Android Samsung Galaxy S22 detected by pixel size');  // 1440 x 3040
+    return true;
+  } else if (androidPixels === 2562000) {
+    logMatch('Android Samsung Galaxy S21 detected by pixel size');  // 1080 x 2400
+    return true;
+  } else if (androidPixels === 4608000) {
     logMatch('Android Samsung Galaxy S20 Ultra detected by pixel size');
     return true;
-  } else if (androidPixels === 4380480) {
-    logMatch('Android Samsung Galaxy S10 plus detected by pixel size');
+  } else if (androidPixels === 4377600) {
+    logMatch('Android Samsung Galaxy S10 detected by pixel size');  // 1080x2340
     return true;
   }
   return false;
@@ -488,30 +517,20 @@ export function isAndroidSizeLG () {
   return false;
 }
 
+export function isAndroidSizeWide () {
+  if (isAndroid()) {
+    if (getAndroidSize() === '--wide') {
+      logMatch('isAndroidSizeWide: based on aspect ratio, could be a foldable wide screen, or a tablet', true);
+      return true;
+    }
+  }
+  return false;
+}
+
 export function isAndroidSizeXL () {
   if (isAndroid()) {
     if (getAndroidSize() === '--xl') {
-      logMatch('isAndroidSizeXL: xl = 2560*1600 = 4,420,000  Nexus10 Tablet', true);
-      return true;
-    }
-  }
-  return false;
-}
-
-export function isAndroidSizeFold () {
-  if (isAndroid()) {
-    if (getAndroidSize() === '--fold') {
-      logMatch('isAndroidSizeFold: based on aspect ratio, probably a Galaxy Fold 7.3"', true);
-      return true;
-    }
-  }
-  return false;
-}
-
-export function isAndroidTablet () {
-  if (isAndroid()) {
-    if (window.innerWidth > 768) {
-      logMatch('isAndroidTablet: based on width"', true);
+      logMatch('isAndroidSizeXL: xl = Pixel Pro or S22 Ultra, or a Note20 with a pen', true);
       return true;
     }
   }
@@ -559,7 +578,12 @@ export function isWebAppHeight737to896 () {
 }
 
 export function isAndroidSimulator () {
-  return window.location.href.startsWith('file:///android');
+  if (isAndroid()) {
+    const { device } = window;
+    if (device) return device.isVirtual;
+    return window.location.href.startsWith('file:///android');
+  }
+  return false;
 }
 
 export function isCordovaButNotATablet () {
@@ -567,7 +591,12 @@ export function isCordovaButNotATablet () {
 }
 
 export function isIOsSimulator () {
-  return window.location.href.startsWith('file:///Users');
+  if (isIOS()) {
+    const { device } = window;
+    if (device) return device.isVirtual;
+    return window.location.href.startsWith('file:///Users') || window.location.href.startsWith('app://localhost');
+  }
+  return false;
 }
 
 export function isSimulator () {
@@ -607,13 +636,14 @@ export function prepareForCordovaKeyboard (callerString) {
     let fileName = '';
     try {
       fileName = callerString.substr(callerString.lastIndexOf('/') + 1);
-      // eslint-disable-next-line no-empty
-    } catch (e) {}
-    console.log(`prepareForCordovaKeyboard ^^^^^^^^^^ ${fileName}`);
+    } catch (e) {
+      console.log('error in prepareForCordovaKeyboard', e);
+    }
     cordovaOffsetLog(`prepareForCordovaKeyboard ^^^^^^^^^^ ${fileName}`);
+
     $('#app').removeClass('app-wrapper').addClass('app-wrapper__cordova');
     $('body').css('height', '');
-    $('.footroom-wrapper').css('display', 'none');
+    $("div[class^='FooterWrapper-']").css('display', 'none');
   }
 }
 
@@ -622,12 +652,18 @@ export function restoreStylesAfterCordovaKeyboard (callerString) {
     let fileName = '';
     try {
       fileName = callerString.substr(callerString.lastIndexOf('/') + 1);
+      if (isIOS()) {
+        window.Keyboard.disableScroll(false);
+      }
       // eslint-disable-next-line no-empty
-    } catch (e) {}
+    } catch (e) {
+      console.log('error in restoreStylesAfterCordovaKeyboard', e);
+    }
     cordovaOffsetLog(`restoreStylesAfterCordovaKeyboard vvvvvvvvvv ${fileName}`);
+
     $('#app').removeClass('app-wrapper__cordova').addClass('app-wrapper');
     $('body').css('height', getCordovaScreenHeight());
-    $('.footroom-wrapper').css('display', '');
+    $("div[class^='FooterWrapper-']").css('display', '');
   }
 }
 
@@ -637,9 +673,9 @@ export function setGlobalScreenSize (result) {
   window.pbakondyScreenSize = result;
 }
 
-export function focusTextFieldAndroid () {
+export function focusTextFieldAndroid (clue) {
   if (isAndroid()) {
-    prepareForCordovaKeyboard('AddFriendsByEmail');
+    prepareForCordovaKeyboard(clue);
   }
 }
 
@@ -648,7 +684,6 @@ export function blurTextFieldAndroid () {
     restoreStylesAfterCordovaKeyboard('AddFriendsByEmail');
   }
 }
-
 
 export function chipLabelText (fullLabel) {
   if (isWebApp() && window.innerWidth < 350) { // iPhone SE/SE2/5 in Web Browser
@@ -708,15 +743,16 @@ export function polyfillFixes (file) {
   // November 2, 2018:  Polyfill for "Object.entries"
   //   react-bootstrap 1.0 (bootstrap 4) relies on Object.entries in splitComponentProps.js
   //   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries#Polyfill
-  if (!Object.entries) {
-    Object.entries = function poly (obj) {
-      const localProps = Object.keys(obj);
-      let i = localProps.length;
-      const resArray = new Array(i); // preallocate the Array
-      while (i--) resArray[i] = [localProps[i], obj[localProps[i]]];
-      return resArray;
-    };
-  }
+  // removed Aug 6, 2022:
+  // if (!Object.entries) {
+  //   Object.entries = function poly (obj) {
+  //     const localProps = Object.keys(obj);
+  //     let i = localProps.length;
+  //     const resArray = new Array(i); // preallocate the Array
+  //     while (i--) resArray[i] = [localProps[i], obj[localProps[i]]];
+  //     return resArray;
+  //   };
+  // }
 
   // And another for ObjectAssign
   if (!Object.assign) {
@@ -755,6 +791,10 @@ export function polyfillFixes (file) {
   }
 }
 
+export function isCordovaWide () {
+  return isIPad() || isAndroidSizeWide();
+}
+
 export function cordovaLinkToBeSharedFixes (link) {
   let linkToBeShared = link;
   linkToBeShared = linkToBeShared.replace('https://file:/', 'https://wevote.us/');  // Cordova
@@ -764,6 +804,24 @@ export function cordovaLinkToBeSharedFixes (link) {
   linkToBeShared = linkToBeShared.replace('app://localhost/index.html#/', 'https://wevote.us/');  // Cordova iOS Nov 2021
   return linkToBeShared;
 }
+// ////////////////////////
+// this was used in ShareButtonFooter before I started using cordovaLinkToBeSharedFixes above
+// getCurrentFullUrl () {
+//   const { location: { href } } = window;
+//   let currentFullUrl = href || ''; // We intentionally don't use normalizedHref() here
+//   // Handles localhost and Cordova, always builds url to wevote.us
+//   if (currentFullUrl.startsWith('https://localhost')) {
+//     currentFullUrl = currentFullUrl.replace(/https:\/\/localhost.*?\//, 'https://wevote.us/');
+//     // console.log(`currentFullUrl adjusted for localhost: ${currentFullUrl}`);
+//   } else if (currentFullUrl.startsWith('file:///')) {
+//     currentFullUrl = currentFullUrl.replace(/file:.*?android_asset\/www\/index.html#\//, 'https://wevote.us/');
+//     // console.log(`currentFullUrl adjusted for Cordova android: ${currentFullUrl}`);
+//   } else if (currentFullUrl.startsWith('file://')) {
+//     currentFullUrl = currentFullUrl.replace(/file:\/\/.*?Vote.app\/www\/index.html#\//, 'https://wevote.us/');
+//     // console.log(`currentFullUrl adjusted for Cordova ios: ${currentFullUrl}`);
+//   }
+//   return currentFullUrl;
+// }
 
 // In-line
 polyfillFixes('cordovaUtils.js'); // Possibly redundant, but its need was confirmed in the debugger.  This has to run, before any polyfill is needed.

@@ -10,10 +10,10 @@ import LazyImage from '../../common/components/LazyImage';
 import { timeFromDate } from '../../common/utils/dateFormat';
 import { isCordova } from '../../common/utils/isCordovaOrWebApp';
 import { renderLog } from '../../common/utils/logging';
+import stringContains from '../../common/utils/stringContains';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import VoterStore from '../../stores/VoterStore';
-import { stringContains } from '../../utils/textFormat';
 
 class CampaignCommentForList extends Component {
   constructor (props) {

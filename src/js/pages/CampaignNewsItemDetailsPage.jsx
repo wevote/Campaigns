@@ -15,6 +15,7 @@ import { formatDateToMonthDayYear } from '../common/utils/dateFormat';
 import historyPush from '../common/utils/historyPush';
 import { renderLog } from '../common/utils/logging';
 import returnFirstXWords from '../common/utils/returnFirstXWords';
+import stringContains from '../common/utils/stringContains';
 import CampaignNewsItemPublishSteps from '../components/Navigation/CampaignNewsItemPublishSteps';
 import CompleteYourProfileModalController from '../components/Settings/CompleteYourProfileModalController';
 import { BlockedIndicator, BlockedReason, DraftModeIndicator, EditIndicator, ElectionInPast, IndicatorButtonWrapper, IndicatorRow } from '../components/Style/CampaignIndicatorStyles';
@@ -24,7 +25,6 @@ import CampaignSupporterStore from '../stores/CampaignSupporterStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../utils/campaignUtils';
 import initializejQuery from '../utils/initializejQuery';
 import keepHelpingDestination from '../utils/keepHelpingDestination';
-import { stringContains } from '../utils/textFormat';
 
 const CampaignCommentsList = React.lazy(() => import('../components/Campaign/CampaignCommentsList'));
 const CampaignDetailsActionSideBox = React.lazy(() => import('../components/CampaignSupport/CampaignDetailsActionSideBox'));

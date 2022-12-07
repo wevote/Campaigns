@@ -1,7 +1,7 @@
 import { ReduceStore } from 'flux/utils';
 import Cookies from '../common/utils/js-cookie/Cookies';
+import stringContains from '../common/utils/stringContains';
 import Dispatcher from '../common/dispatcher/Dispatcher';
-import { stringContains } from '../utils/textFormat';
 
 
 class VoterStore extends ReduceStore {

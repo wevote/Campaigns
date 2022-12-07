@@ -1,6 +1,7 @@
 import { AccountCircle } from '@mui/icons-material';
 import withStyles from '@mui/styles/withStyles';
 import { DropzoneArea } from 'mui-file-dropzone';
+// import { DropzoneArea } from 'material-ui-dropzone'; // Still needs work before it can be used
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import styled from 'styled-components';
@@ -14,6 +15,7 @@ class VoterPhotoUpload extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      showDropzoneIcon: true,
       voterProfileUploadedImageUrlLarge: '',
     };
 
@@ -24,6 +26,18 @@ class VoterPhotoUpload extends Component {
     // console.log('VoterPhotoUpload, componentDidMount');
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
     this.onVoterStoreChange();
+
+    const voterProfileUploadedImageUrlLarge = VoterStore.getVoterProfileUploadedImageUrlLarge();
+    let dropzoneText = isMobileScreenSize() ? 'Upload profile photo' : 'Drag your profile photo here (or click to find file)';
+    let showDropzoneIcon = true;
+    if (voterProfileUploadedImageUrlLarge) {
+      dropzoneText = isMobileScreenSize() ? 'Upload new photo' : 'Drag new profile photo here (or click to find file)';
+      showDropzoneIcon = false;
+    }
+    this.setState({
+      dropzoneText,
+      showDropzoneIcon,
+    });
   }
 
   componentWillUnmount () {
@@ -32,6 +46,7 @@ class VoterPhotoUpload extends Component {
   }
 
   handleDrop (files) {
+    const { voterProfileUploadedImageUrlLarge } = this.state;
     if (files && files[0]) {
       const fileFromDropzone = files[0];
       if (!fileFromDropzone) return;
@@ -42,6 +57,22 @@ class VoterPhotoUpload extends Component {
         VoterActions.voterPhotoQueuedToSave(photoFromFileReader);
       });
       fileReader.readAsDataURL(fileFromDropzone);
+      const dropzoneText = isMobileScreenSize() ? 'A small preview of your photo is shown below. You can: 1) Click \'Save photo\' below to continue, or 2) click here to upload different photo.' : 'A small preview of your photo is shown below. You can: 1) click \'Save photo\' below to continue, 2) delete it (hover over photo to see trash can), or 3) drag a NEW version here (or click here to find file).';
+      this.setState({
+        dropzoneText,
+        showDropzoneIcon: false,
+      });
+    } else {
+      let dropzoneText = isMobileScreenSize() ? 'Upload profile photo' : 'Drag your profile photo here (or click to find file)';
+      let showDropzoneIcon = true;
+      if (voterProfileUploadedImageUrlLarge) {
+        dropzoneText = isMobileScreenSize() ? 'Upload new photo' : 'Drag new profile photo here (or click to find file)';
+        showDropzoneIcon = false;
+      }
+      this.setState({
+        dropzoneText,
+        showDropzoneIcon,
+      });
     }
   }
 
@@ -60,32 +91,32 @@ class VoterPhotoUpload extends Component {
   render () {
     renderLog('VoterPhotoUpload');  // Set LOG_RENDER_EVENTS to log all renders
 
-    const { classes, maxWidth } = this.props;
-    const { voterProfileUploadedImageUrlLarge } = this.state;
-    let dropzoneText = isMobileScreenSize() ? 'Upload profile photo' : 'Drag your profile photo here (or click to find file)';
-    if (voterProfileUploadedImageUrlLarge) {
-      dropzoneText = isMobileScreenSize() ? 'Upload new photo' : 'Drag new profile photo here (or click to find file)';
-    }
+    const { classes, limitPhotoHeight, maxWidth } = this.props;
+    const { dropzoneText, showDropzoneIcon, voterProfileUploadedImageUrlLarge } = this.state;
     return (
       <OuterWrapper>
         <form onSubmit={(e) => { e.preventDefault(); }}>
           <Wrapper>
             <ColumnFullWidth>
               {voterProfileUploadedImageUrlLarge ? (
-                <VoterPhotoWrapper>
+                <VoterPhotoWrapper limitPhotoHeight={limitPhotoHeight}>
                   <VoterPhotoImage maxWidth={maxWidth} src={voterProfileUploadedImageUrlLarge} alt="Profile Photo" />
                   <DeleteLink
                     className="u-link-color u-link-underline u-cursor--pointer"
                     onClick={this.submitDeleteYourPhoto}
                   >
-                    delete
+                    remove photo
                   </DeleteLink>
                 </VoterPhotoWrapper>
               ) : (
                 <DropzoneArea
                   acceptedFiles={['image/*']}
-                  classes={{
+                  classes={showDropzoneIcon ? {
                     icon: classes.dropzoneIcon,
+                    root: classes.dropzoneRoot,
+                    text: classes.dropzoneText,
+                  } : {
+                    icon: classes.dropzoneIconHidden,
                     root: classes.dropzoneRoot,
                     text: classes.dropzoneText,
                   }}
@@ -106,12 +137,16 @@ class VoterPhotoUpload extends Component {
 }
 VoterPhotoUpload.propTypes = {
   classes: PropTypes.object,
+  limitPhotoHeight: PropTypes.bool,
   maxWidth: PropTypes.number,
 };
 
 const styles = (theme) => ({
   dropzoneIcon: {
     color: '#999',
+  },
+  dropzoneIconHidden: {
+    display: 'none',
   },
   dropzoneRoot: {
     color: '#999',
@@ -150,14 +185,17 @@ const VoterPhotoImage = styled('img', {
   ${maxWidth ? `max-width: ${maxWidth}px;` : 'max-width: 200px;'}
 `));
 
-const VoterPhotoWrapper = styled('div')`
+const VoterPhotoWrapper = styled('div', {
+  shouldForwardProp: (prop) => !['limitPhotoHeight'].includes(prop),
+})(({ limitPhotoHeight }) => (`
   align-items: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  ${limitPhotoHeight ? 'height: 130px;' : ''}
+  justify-content: flex-end;
   margin-bottom: 0;
   width: 100%;
-`;
+`));
 
 const Wrapper = styled('div')`
   display: flex;
