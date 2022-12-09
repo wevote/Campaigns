@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import initializejQuery from '../../utils/initializejQuery';
+import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
+import initializejQuery from '../../common/utils/initializejQuery';
 import { renderLog } from '../../common/utils/logging';
 import SignInModal from './SignInModal';
 import VoterActions from '../../actions/VoterActions';

@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { renderLog } from '../../common/utils/logging';
 import startsWith from '../../common/utils/startsWith';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
 // import { ThemeProvider } from '@mui/material/styles';
 // import { campaignTheme } from '../Style/campaignTheme';
 

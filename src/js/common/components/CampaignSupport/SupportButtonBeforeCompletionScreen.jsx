@@ -4,12 +4,12 @@ import withStyles from '@mui/styles/withStyles';
 import withTheme from '@mui/styles/withTheme';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import historyPush from '../../common/utils/historyPush';
-import { renderLog } from '../../common/utils/logging';
+import historyPush from '../../utils/historyPush';
+import { renderLog } from '../../utils/logging';
 import AppObservableStore from '../../stores/AppObservableStore';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import VoterStore from '../../stores/VoterStore';
+import VoterStore from '../../../stores/VoterStore';
 
 
 class SupportButtonBeforeCompletionScreen extends Component {

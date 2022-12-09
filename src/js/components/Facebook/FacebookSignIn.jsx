@@ -6,7 +6,7 @@ import FacebookActions from '../../actions/FacebookActions';
 import VoterActions from '../../actions/VoterActions';
 import SplitIconButton from '../../common/components/Widgets/SplitIconButton';
 import { oAuthLog, renderLog } from '../../common/utils/logging';
-import { messageService } from '../../stores/AppObservableStore';
+import { messageService } from '../../common/stores/AppObservableStore';
 import FacebookStore from '../../stores/FacebookStore';
 import VoterStore from '../../stores/VoterStore';
 import signInModalGlobalState from '../Settings/signInModalGlobalState';

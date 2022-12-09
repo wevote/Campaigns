@@ -11,7 +11,7 @@ import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 import VoterFirstNameInputField from '../../components/Settings/VoterFirstNameInputField';
 import VoterLastNameInputField from '../../components/Settings/VoterLastNameInputField';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
 import VoterStore from '../../stores/VoterStore';
 
 class SettingsEditProfile extends Component {

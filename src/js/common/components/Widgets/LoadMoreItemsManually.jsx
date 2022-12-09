@@ -4,7 +4,7 @@ import withStyles from '@mui/styles/withStyles';
 import withTheme from '@mui/styles/withTheme';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { renderLog } from '../../common/utils/logging';
+import { renderLog } from '../../utils/logging';
 
 class LoadMoreItemsManually extends Component {
   constructor (props) {

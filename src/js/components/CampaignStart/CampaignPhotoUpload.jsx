@@ -8,7 +8,7 @@ import CampaignStartActions from '../../actions/CampaignStartActions';
 import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
 import { renderLog } from '../../common/utils/logging';
 import CampaignStartStore from '../../stores/CampaignStartStore';
-import CampaignStore from '../../stores/CampaignStore';
+import CampaignStore from '../../common/stores/CampaignStore';
 
 
 class CampaignPhotoUpload extends Component {

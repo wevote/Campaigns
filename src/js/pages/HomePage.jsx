@@ -1,15 +1,15 @@
 import { Button } from '@mui/material';
-import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
+import styled from 'styled-components';
 import { PageWrapper } from '../common/components/Style/stepDisplayStyles';
 import historyPush from '../common/utils/historyPush';
 import { renderLog } from '../common/utils/logging';
-import AppObservableStore, { messageService } from '../stores/AppObservableStore';
+import AppObservableStore, { messageService } from '../common/stores/AppObservableStore';
 
-const HomeCampaignList = React.lazy(() => import('../components/Home/HomeCampaignList'));
+const CampaignList = React.lazy(() => import(/* webpackChunkName: 'CampaignList' */ '../common/components/Campaign/CampaignList'));
 
 class HomePage extends Component {
   constructor (props) {
@@ -22,7 +22,7 @@ class HomePage extends Component {
   }
 
   componentDidMount () {
-    // console.log('HeaderBarLogo componentDidMount');
+    // console.log('HomePage componentDidMount');
     this.onAppObservableStoreChange();
     this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
   }
@@ -62,7 +62,7 @@ class HomePage extends Component {
             </IntroductionMessageSection>
             <WhatIsHappeningSection>
               <Suspense fallback={<span>&nbsp;</span>}>
-                <HomeCampaignList hideTitle />
+                <CampaignList hideTitle />
               </Suspense>
             </WhatIsHappeningSection>
           </PageWrapper>
@@ -99,7 +99,7 @@ class HomePage extends Component {
             </IntroductionMessageSection>
             <WhatIsHappeningSection>
               <Suspense fallback={<span>&nbsp;</span>}>
-                <HomeCampaignList />
+                <CampaignList titleTextIfCampaigns="What's happening on WeVote.US" />
               </Suspense>
             </WhatIsHappeningSection>
           </PageWrapper>

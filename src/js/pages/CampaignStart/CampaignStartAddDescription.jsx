@@ -14,9 +14,9 @@ import CampaignDescriptionInputField from '../../components/CampaignStart/Campai
 import CampaignStartSteps from '../../components/Navigation/CampaignStartSteps';
 import { CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
 import { CampaignStartDesktopButtonPanel, CampaignStartDesktopButtonWrapper, CampaignStartMobileButtonPanel, CampaignStartMobileButtonWrapper, CampaignStartSection, CampaignStartSectionWrapper } from '../../components/Style/CampaignStartStyles';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
 import CampaignStartStore from '../../stores/CampaignStartStore';
-import initializejQuery from '../../utils/initializejQuery';
+import initializejQuery from '../../common/utils/initializejQuery';
 
 
 class CampaignStartAddDescription extends Component {

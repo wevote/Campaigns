@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
+import CampaignSupporterActions from '../../common/actions/CampaignSupporterActions';
 import { isCordova } from '../../common/utils/isCordovaOrWebApp';
 import { renderLog } from '../../common/utils/logging';
-import CampaignStore from '../../stores/CampaignStore';
-import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import initializejQuery from '../../utils/initializejQuery';
+import CampaignStore from '../../common/stores/CampaignStore';
+import CampaignSupporterStore from '../../common/stores/CampaignSupporterStore';
+import initializejQuery from '../../common/utils/initializejQuery';
 
 class SupportButtonSingleClick extends Component {
   constructor (props) {

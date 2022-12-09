@@ -2,13 +2,13 @@ import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import CampaignActions from '../../actions/CampaignActions';
+import CampaignActions from '../../common/actions/CampaignActions';
 import { renderLog } from '../../common/utils/logging';
 import startsWith from '../../common/utils/startsWith';
-import CampaignStore from '../../stores/CampaignStore';
-import initializejQuery from '../../utils/initializejQuery';
-import CampaignCardForList from '../Campaign/CampaignCardForList';
-import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
+import CampaignStore from '../../common/stores/CampaignStore';
+import initializejQuery from '../../common/utils/initializejQuery';
+import CampaignCardForList from '../../common/components/Campaign/CampaignCardForList';
+import LoadMoreItemsManually from '../../common/components/Widgets/LoadMoreItemsManually';
 
 
 const STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY = 6;

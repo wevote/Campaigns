@@ -7,7 +7,7 @@ import Helmet from 'react-helmet';
 import { OuterWrapper, PageWrapper, StepNumberBordered, StepNumberPlaceholder } from '../../common/components/Style/stepDisplayStyles';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
 
 
 class CampaignStartIntro extends Component {

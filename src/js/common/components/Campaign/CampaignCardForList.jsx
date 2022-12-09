@@ -4,18 +4,19 @@ import React, { Component, Suspense } from 'react';
 import TruncateMarkup from 'react-truncate-markup';
 import styled, { css } from 'styled-components';
 import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
-import historyPush from '../../common/utils/historyPush';
-import { renderLog } from '../../common/utils/logging';
+import historyPush from '../../utils/historyPush';
+import { renderLog } from '../../utils/logging';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import initializejQuery from '../../utils/initializejQuery';
+import isMobileScreenSize from '../../utils/isMobileScreenSize';
 import keepHelpingDestination from '../../utils/keepHelpingDestination';
-import numberWithCommas from '../../common/utils/numberWithCommas';
+import numberWithCommas from '../../utils/numberWithCommas';
 import CampaignOwnersList from '../CampaignSupport/CampaignOwnersList';
 import { BlockedIndicator, DraftModeIndicator, EditIndicator, ElectionInPast, IndicatorButtonWrapper, IndicatorDefaultButtonWrapper, IndicatorRow } from '../Style/CampaignIndicatorStyles';
 
-const SupportButtonBeforeCompletionScreen = React.lazy(() => import('../CampaignSupport/SupportButtonBeforeCompletionScreen'));
+const SupportButtonBeforeCompletionScreen = React.lazy(() => import(/* webpackChunkName: 'SupportButtonBeforeCompletionScreen' */ '../CampaignSupport/SupportButtonBeforeCompletionScreen'));
 
 class CampaignCardForList extends Component {
   constructor (props) {
@@ -282,6 +283,7 @@ class CampaignCardForList extends Component {
 
   render () {
     renderLog('CampaignCardForList');  // Set LOG_RENDER_EVENTS to log all renders
+    const { limitCardWidth } = this.props;
     const { campaignSupported, campaignX, inPrivateLabelMode, voterCanEditThisCampaign } = this.state;
     if (!campaignX) {
       return null;
@@ -303,25 +305,14 @@ class CampaignCardForList extends Component {
       we_vote_hosted_campaign_photo_medium_url: CampaignPhotoMediumUrl,
     } = campaignX;
     return (
-      <Wrapper>
+      <CampaignCardForListWrapper limitCardWidth={limitCardWidth}>
         <OneCampaignOuterWrapper>
-          <OneCampaignInnerWrapper>
+          <OneCampaignInnerWrapper limitCardWidth={limitCardWidth || isMobileScreenSize()}>
             <OneCampaignTextColumn>
               <ClickableDiv onClick={this.onCampaignClick}>
                 <OneCampaignTitle>
                   {campaignTitle}
                 </OneCampaignTitle>
-                <OneCampaignPhotoWrapperMobile className="u-show-mobile">
-                  {CampaignPhotoLargeUrl ? (
-                    <CampaignImageMobile src={CampaignPhotoLargeUrl} alt="Campaign" />
-                  ) : (
-                    <CampaignImageMobilePlaceholder>
-                      <CampaignImagePlaceholderText>
-                        No image provided
-                      </CampaignImagePlaceholderText>
-                    </CampaignImageMobilePlaceholder>
-                  )}
-                </OneCampaignPhotoWrapperMobile>
                 <SupportersWrapper>
                   <SupportersCount>
                     {numberWithCommas(supportersCount)}
@@ -456,6 +447,17 @@ class CampaignCardForList extends Component {
                 )}
               </IndicatorRow>
             </OneCampaignTextColumn>
+            <OneCampaignPhotoWrapperMobile className="u-show-mobile">
+              {CampaignPhotoLargeUrl ? (
+                <CampaignImageMobile src={CampaignPhotoLargeUrl} alt="Campaign" />
+              ) : (
+                <CampaignImageMobilePlaceholder>
+                  <CampaignImagePlaceholderText>
+                    No image provided
+                  </CampaignImagePlaceholderText>
+                </CampaignImageMobilePlaceholder>
+              )}
+            </OneCampaignPhotoWrapperMobile>
             <OneCampaignPhotoDesktopColumn className="u-show-desktop-tablet" onClick={this.onCampaignClick}>
               {CampaignPhotoMediumUrl ? (
                 <CampaignImageDesktop src={CampaignPhotoMediumUrl} alt="Campaign" width="224px" height="117px" />
@@ -469,12 +471,13 @@ class CampaignCardForList extends Component {
             </OneCampaignPhotoDesktopColumn>
           </OneCampaignInnerWrapper>
         </OneCampaignOuterWrapper>
-      </Wrapper>
+      </CampaignCardForListWrapper>
     );
   }
 }
 CampaignCardForList.propTypes = {
   campaignXWeVoteId: PropTypes.string,
+  limitCardWidth: PropTypes.bool,
 };
 
 const styles = (theme) => ({
@@ -486,19 +489,11 @@ const styles = (theme) => ({
   },
 });
 
-// const BlockedIndicator = styled.span`
-//   background-color: #efc2c2;
-//   border-radius: 4px;
-//   color: #2e3c5d;
-//   cursor: pointer;
-//   font-size: 14px;
-//   margin-right: 10px;
-//   margin-top: 10px;
-//   padding: 5px 12px;
-//   &:hover {
-//     background-color: #eaaeae;
-//   }
-// `;
+const CampaignCardForListWrapper = styled('div', {
+  shouldForwardProp: (prop) => !['limitCardWidth'].includes(prop),
+})(({ limitCardWidth }) => (`
+  ${limitCardWidth ? 'width: 300px;' : ''}
+`));
 
 const CampaignImageDesktopSharedStyles = css`
   cursor: pointer;
@@ -552,96 +547,32 @@ const ClickableDiv = styled('div')`
   width: 100%;
 `;
 
-// const DraftModeIndicator = styled.span`
-//   background-color: #ccc;
-//   border-radius: 4px;
-//   color: #2e3c5d;
-//   cursor: pointer;
-//   font-size: 14px;
-//   padding: 5px 12px;
-//   &:hover {
-//     background-color: #bfbfbf;
-//   }
-// `;
-
-// const EditIndicator = styled.span`
-//   background-color: #fff;
-//   border: 1px solid rgba(46, 60, 93, 0.5);
-//   border-radius: 4px;
-//   color: #2e3c5d;
-//   cursor: pointer;
-//   font-size: 14px;
-//   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-//   font-weight: 500;
-//   line-height: 1.75;
-//   user-select: none;
-//   letter-spacing: 0.02857em;
-//   padding: 4px 12px;
-//   text-transform: none;
-//   &:hover {
-//     background-color: #f0f0f0;
-//   }
-// `;
-
-// const ElectionInPast = styled.span`
-//   background-color: #00cc66;
-//   border-radius: 4px;
-//   color: #2e3c5d;
-//   // cursor: pointer;
-//   font-size: 14px;
-//   margin-right: 10px;
-//   margin-top: 10px;
-//   padding: 5px 12px;
-//   // &:hover {
-//   //   background-color: #00b359;
-//   // }
-// `;
-
-// const IndicatorButtonWrapper = styled.div`
-//   margin-bottom: 4px;
-//   margin-right: 8px;
-// `;
-
-// const IndicatorDefaultButtonWrapper = styled.div`
-//   cursor: pointer;
-//   margin-bottom: 4px;
-//   margin-right: 8px;
-//   margin-top: 2px;
-// `;
-
 const IndicatorSupportButtonWrapper = styled('div')`
   margin-bottom: 4px;
   margin-right: 8px;
   margin-top: -1px;
 `;
 
-// const IndicatorRow = styled.div`
-//   display: flex;
-//   flex-wrap: wrap;
-//   justify-content: start;
-//   margin-top: 12px;
-// `;
-
 const OneCampaignDescription = styled('div')`
   font-size: 14px;
   margin: 4px 0;
 `;
 
-const OneCampaignInnerWrapper = styled('div')(({ theme }) => (`
-  margin: 15px 0;
-  ${theme.breakpoints.up('sm')} {
-    display: flex;
-    justify-content: space-between;
-    margin: 15px;
-  }
+const OneCampaignInnerWrapper = styled('div', {
+  shouldForwardProp: (prop) => !['limitCardWidth'].includes(prop),
+})(({ limitCardWidth }) => (`
+  display: flex;
+  ${limitCardWidth ? 'flex-direction: column-reverse;' : 'flex-direction: row;'}
+  ${limitCardWidth ? 'justify-content: flex-start;' : 'justify-content: space-between;'}
+  ${limitCardWidth ? 'margin-right: 15px;' : 'margin-bottom: 15px;'}
 `));
 
 const OneCampaignOuterWrapper = styled('div')(({ theme }) => (`
-  border-top: 1px solid #ddd;
-  margin-top: 15px;
-    ${theme.breakpoints.up('sm')} {
-    border: 1px solid #ddd;
-    border-radius: 5px;
+  // border-top: 1px solid #ddd;
+  // margin-top: 15px;
+  ${theme.breakpoints.up('sm')} {
+    // border: 1px solid #ddd;
+    // border-radius: 5px;
   }
 `));
 
@@ -689,9 +620,6 @@ const SupportersCount = styled('span')`
 
 const SupportersWrapper = styled('div')`
   margin-bottom: 6px;
-`;
-
-const Wrapper = styled('div')`
 `;
 
 export default withStyles(styles)(CampaignCardForList);

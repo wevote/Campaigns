@@ -7,7 +7,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
-import CampaignActions from '../../actions/CampaignActions';
+import CampaignActions from '../../common/actions/CampaignActions';
 import DonationListForm from '../../common/components/Donation/DonationListForm';
 import InjectedCheckoutForm from '../../common/components/Donation/InjectedCheckoutForm';
 import { OuterWrapper, PageWrapper } from '../../common/components/Style/stepDisplayStyles';
@@ -17,15 +17,15 @@ import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 import { SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
 import webAppConfig from '../../config';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import CampaignStore from '../../stores/CampaignStore';
+import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
+import CampaignStore from '../../common/stores/CampaignStore';
 import VoterStore from '../../stores/VoterStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import initializejQuery from '../../utils/initializejQuery';
+import initializejQuery from '../../common/utils/initializejQuery';
 
 
 const stripePromise = loadStripe(webAppConfig.STRIPE_API_KEY);
-const VoterFirstRetrieveController = loadable(() => import('../../components/Settings/VoterFirstRetrieveController'));
+const VoterFirstRetrieveController = loadable(() => import(/* webpackChunkName: 'VoterFirstRetrieveController' */ '../../components/Settings/VoterFirstRetrieveController'));
 
 class CampaignSupportPayToPromoteProcess extends Component {
   constructor (props) {

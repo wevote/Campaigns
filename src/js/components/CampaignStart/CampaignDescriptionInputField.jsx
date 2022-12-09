@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import CampaignStartActions from '../../actions/CampaignStartActions';
 import { renderLog } from '../../common/utils/logging';
 import CampaignStartStore from '../../stores/CampaignStartStore';
-import CampaignStore from '../../stores/CampaignStore';
+import CampaignStore from '../../common/stores/CampaignStore';
 
 class CampaignDescriptionInputField extends Component {
   constructor (props) {

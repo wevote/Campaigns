@@ -8,14 +8,14 @@ import OpenExternalWebSite from '../common/components/Widgets/OpenExternalWebSit
 import { isCordova } from '../common/utils/isCordovaOrWebApp';
 import { renderLog } from '../common/utils/logging';
 import CampaignTopNavigation from '../components/Navigation/CampaignTopNavigation';
-import { BlockedReason } from '../components/Style/CampaignIndicatorStyles';
-import AppObservableStore, { messageService } from '../stores/AppObservableStore';
-import CampaignStore from '../stores/CampaignStore';
-import CampaignSupporterStore from '../stores/CampaignSupporterStore';
+import { BlockedReason } from '../common/components/Style/CampaignIndicatorStyles';
+import AppObservableStore, { messageService } from '../common/stores/AppObservableStore';
+import CampaignStore from '../common/stores/CampaignStore';
+import CampaignSupporterStore from '../common/stores/CampaignSupporterStore';
 import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
 
-const CampaignCommentsList = React.lazy(() => import('../components/Campaign/CampaignCommentsList'));
-const CampaignRetrieveController = React.lazy(() => import('../components/Campaign/CampaignRetrieveController'));
+const CampaignCommentsList = React.lazy(() => import(/* webpackChunkName: 'CampaignCommentsList' */ '../components/Campaign/CampaignCommentsList'));
+const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../components/Campaign/CampaignRetrieveController'));
 
 
 class CampaignCommentsPage extends Component {

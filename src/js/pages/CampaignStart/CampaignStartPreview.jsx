@@ -10,10 +10,10 @@ import DelayedLoad from '../../common/components/Widgets/DelayedLoad';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 import CompleteYourProfileModalController from '../../components/Settings/CompleteYourProfileModalController';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import VoterStore from '../../stores/VoterStore';
-import initializejQuery from '../../utils/initializejQuery';
+import initializejQuery from '../../common/utils/initializejQuery';
 
 
 class CampaignStartPreview extends Component {

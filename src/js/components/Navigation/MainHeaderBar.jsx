@@ -8,16 +8,16 @@ import DelayedLoad from '../../common/components/Widgets/DelayedLoad';
 import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
-import AppObservableStore from '../../stores/AppObservableStore';
+import AppObservableStore from '../../common/stores/AppObservableStore';
 import initializeAppleSDK from '../../utils/initializeAppleSDK';
 import initializeFacebookSDK from '../../utils/initializeFacebookSDK';
 import TopNavigationAppBar from './TopNavigationAppBar';
 
-const HeaderBarLogo = loadable(() => import('./HeaderBarLogo'));
-const SignInButton = loadable(() => import('./SignInButton'));
-const SignInModalController = loadable(() => import('../Settings/SignInModalController'));
-// const TopNavigationDesktopController = loadable(() => import('./TopNavigationDesktopController'));
-const VoterNameAndPhoto = loadable(() => import('./VoterNameAndPhoto'));
+const HeaderBarLogo = loadable(() => import(/* webpackChunkName: 'HeaderBarLogo' */ './HeaderBarLogo'));
+const SignInButton = loadable(() => import(/* webpackChunkName: 'SignInButton' */ './SignInButton'));
+const SignInModalController = loadable(() => import(/* webpackChunkName: 'SignInModalController' */ '../Settings/SignInModalController'));
+// const TopNavigationDesktopController = loadable(() => import(/* webpackChunkName: 'TopNavigationDesktopController' */ './TopNavigationDesktopController'));
+const VoterNameAndPhoto = loadable(() => import(/* webpackChunkName: 'VoterNameAndPhoto' */ './VoterNameAndPhoto'));
 
 
 // TODO: Mar 23, 2022, makeStyles is legacy in MUI 5, replace instance with styled-components or sx if there are issues

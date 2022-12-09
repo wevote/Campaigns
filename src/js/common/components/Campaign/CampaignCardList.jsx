@@ -1,21 +1,19 @@
 import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
-import React, { Component, Suspense } from 'react';
-import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
-import { renderLog } from '../../common/utils/logging';
+import React, { Component } from 'react';
+import isMobileScreenSize from '../../utils/isMobileScreenSize';
+import { renderLog } from '../../utils/logging';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import CampaignCardForList from '../Campaign/CampaignCardForList';
+import CampaignCardForList from './CampaignCardForList';
 import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
-
-const FirstCampaignListController = React.lazy(() => import('../Campaign/FirstCampaignListController'));
 
 const STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY = 3;
 const STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY_MOBILE = 2;
 const NUMBER_OF_CAMPAIGNS_TO_ADD_WHEN_MORE_CLICKED = 6;
 
-class HomeCampaignList extends Component {
+class CampaignCardList extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -24,12 +22,13 @@ class HomeCampaignList extends Component {
   }
 
   componentDidMount () {
-    // console.log('HomeCampaignList componentDidMount');
+    // console.log('CampaignCardList componentDidMount');
+    const { startingNumberOfCampaignsToDisplay } = this.props;
     this.campaignSupporterStoreListener = CampaignSupporterStore.addListener(this.onCampaignSupporterStoreChange.bind(this));
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
-    if (this.props.startingNumberOfCampaignsToDisplay && this.props.startingNumberOfCampaignsToDisplay > 0) {
+    if (startingNumberOfCampaignsToDisplay && startingNumberOfCampaignsToDisplay > 0) {
       this.setState({
-        numberOfCampaignsToDisplay: this.props.startingNumberOfCampaignsToDisplay,
+        numberOfCampaignsToDisplay: startingNumberOfCampaignsToDisplay,
       });
     } else if (isMobileScreenSize()) {
       // We deviate from pure Responsive because reducing the campaigns down to 2 for mobile eliminate retrieving an extra image
@@ -37,7 +36,14 @@ class HomeCampaignList extends Component {
         numberOfCampaignsToDisplay: STARTING_NUMBER_OF_CAMPAIGNS_TO_DISPLAY_MOBILE,
       });
     }
-    this.onCampaignStoreChange();
+    this.onCampaignListChange();
+  }
+
+  componentDidUpdate (prevProps) { // prevProps, prevState, snapshot
+    const { timeStampOfChange } = this.props;
+    if (timeStampOfChange !== prevProps.timeStampOfChange) {
+      this.onCampaignListChange();
+    }
   }
 
   componentWillUnmount () {
@@ -50,11 +56,15 @@ class HomeCampaignList extends Component {
   }
 
   onCampaignStoreChange () {
-    const promotedCampaignListUnsorted = CampaignStore.getPromotedCampaignXDicts();
-    const promotedCampaignListBySupporters = promotedCampaignListUnsorted.sort(this.orderBySupportersCount);
-    const promotedCampaignList = promotedCampaignListBySupporters.sort(this.orderByOrderInList);
+    // We need to instantiate CampaignStore before we call campaignListRetrieve so that store gets filled with data
+  }
+
+  onCampaignListChange () {
+    const { incomingCampaignList } = this.props;
+    const promotedCampaignListBySupporters = incomingCampaignList.sort(this.orderBySupportersCount);
+    const campaignListFiltered = promotedCampaignListBySupporters.sort(this.orderByOrderInList);
     this.setState({
-      promotedCampaignList,
+      campaignListFiltered,
     });
   }
 
@@ -72,27 +82,19 @@ class HomeCampaignList extends Component {
   }
 
   render () {
-    renderLog('HomeCampaignList');  // Set LOG_RENDER_EVENTS to log all renders
-    // console.log('HomeCampaignList render');
-    const { hideTitle } = this.props;
-    const { promotedCampaignList, numberOfCampaignsToDisplay } = this.state;
+    renderLog('CampaignCardList');  // Set LOG_RENDER_EVENTS to log all renders
+    // console.log('CampaignCardList render');
+    const { verticalListOn } = this.props;
+    const { campaignListFiltered, numberOfCampaignsToDisplay } = this.state;
 
-    if (!promotedCampaignList) {
+    if (!campaignListFiltered) {
       return null;
     }
     let numberOfCampaignsDisplayed = 0;
     return (
       <Wrapper>
-        {!!(!hideTitle &&
-            promotedCampaignList &&
-            promotedCampaignList.length > 1) &&
-        (
-          <WhatIsHappeningTitle>
-            What&apos;s happening on WeVote.US
-          </WhatIsHappeningTitle>
-        )}
-        <div>
-          {promotedCampaignList.map((oneCampaign) => {
+        <ListWrapper verticalListOn={verticalListOn}>
+          {campaignListFiltered.map((oneCampaign) => {
             // console.log('oneCampaign:', oneCampaign);
             // console.log('numberOfCampaignsDisplayed:', numberOfCampaignsDisplayed);
             if (numberOfCampaignsDisplayed >= numberOfCampaignsToDisplay) {
@@ -105,22 +107,23 @@ class HomeCampaignList extends Component {
               <div key={`oneCampaignItem-${oneCampaign.campaignx_we_vote_id}`}>
                 <CampaignCardForList
                   campaignXWeVoteId={oneCampaign.campaignx_we_vote_id}
+                  limitCardWidth={verticalListOn}
                 />
               </div>
             );
           })}
-        </div>
-        <LoadMoreItemsManuallyWrapper>
-          {!!(promotedCampaignList &&
-              promotedCampaignList.length > 1 &&
-              numberOfCampaignsToDisplay < promotedCampaignList.length) &&
-          (
-            <LoadMoreItemsManually
-              loadMoreFunction={this.increaseNumberOfCampaignsToDisplay}
-              uniqueExternalId="HomeCampaignList"
-            />
-          )}
-        </LoadMoreItemsManuallyWrapper>
+          <LoadMoreItemsManuallyWrapper>
+            {!!(campaignListFiltered &&
+                campaignListFiltered.length > 1 &&
+                numberOfCampaignsToDisplay < campaignListFiltered.length) &&
+            (
+              <LoadMoreItemsManually
+                loadMoreFunction={this.increaseNumberOfCampaignsToDisplay}
+                uniqueExternalId="CampaignCardList"
+              />
+            )}
+          </LoadMoreItemsManuallyWrapper>
+        </ListWrapper>
         {/* {!numberOfCampaignsDisplayed && ( */}
         {/*  <DelayedLoad waitBeforeShow={2000}> */}
         {/*    <CampaignsNotAvailableToShow> */}
@@ -128,16 +131,15 @@ class HomeCampaignList extends Component {
         {/*    </CampaignsNotAvailableToShow> */}
         {/*  </DelayedLoad> */}
         {/* )} */}
-        <Suspense fallback={<span>&nbsp;</span>}>
-          <FirstCampaignListController />
-        </Suspense>
       </Wrapper>
     );
   }
 }
-HomeCampaignList.propTypes = {
-  hideTitle: PropTypes.bool,
+CampaignCardList.propTypes = {
+  incomingCampaignList: PropTypes.array,
   startingNumberOfCampaignsToDisplay: PropTypes.number,
+  timeStampOfChange: PropTypes.number,
+  verticalListOn: PropTypes.bool,
 };
 
 const styles = () => ({
@@ -146,16 +148,12 @@ const styles = () => ({
   },
 });
 
-// const CampaignsNotAvailableToShow = styled.div`
-//   color: #555;
-//   font-size: 18px;
-//   text-align: center;
-//   margin: 0 2em 6em;
-//   ${theme.breakpoints.down('md')} {
-//     font-size: 16px;
-//     margin: 0 1em 5em;
-//   }
-// `;
+const ListWrapper = styled('div', {
+  shouldForwardProp: (prop) => !['verticalListOn'].includes(prop),
+})(({ verticalListOn }) => (`
+  display: flex;
+  ${verticalListOn ? 'flex-direction: row;' : 'flex-direction: column;'}
+`));
 
 const LoadMoreItemsManuallyWrapper = styled('div')`
   margin-bottom: 0;
@@ -164,12 +162,7 @@ const LoadMoreItemsManuallyWrapper = styled('div')`
   }
 `;
 
-const WhatIsHappeningTitle = styled('h2')`
-  font-size: 22px;
-  text-align: left;
-`;
-
 const Wrapper = styled('div')`
 `;
 
-export default withStyles(styles)(HomeCampaignList);
+export default withStyles(styles)(CampaignCardList);

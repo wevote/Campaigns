@@ -7,7 +7,7 @@ import ShareActions from '../../common/actions/ShareActions';
 import ShareStore from '../../common/stores/ShareStore';
 import { renderLog } from '../../common/utils/logging';
 import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
-import CampaignStore from '../../stores/CampaignStore';
+import CampaignStore from '../../common/stores/CampaignStore';
 import superSharingSuggestedEmailText from '../../utils/superSharingSuggestedEmailText';
 
 class SuperShareItemComposeInputField extends Component {

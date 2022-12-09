@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { renderLog } from '../../common/utils/logging';
-import stringContains from '../../common/utils/stringContains';
+import { renderLog } from '../../utils/logging';
+import stringContains from '../../utils/stringContains';
 import CampaignStore from '../../stores/CampaignStore';
 
 
