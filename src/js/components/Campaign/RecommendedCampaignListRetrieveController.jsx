@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import CampaignActions from '../../actions/CampaignActions';
-import initializejQuery from '../../utils/initializejQuery';
+import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
+import CampaignActions from '../../common/actions/CampaignActions';
+import initializejQuery from '../../common/utils/initializejQuery';
 import { renderLog } from '../../common/utils/logging';
 import VoterStore from '../../stores/VoterStore';
 

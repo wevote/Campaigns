@@ -3,13 +3,13 @@ import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { FacebookMessengerShareButton } from 'react-share';
-import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
+import CampaignSupporterActions from '../../common/actions/CampaignSupporterActions';
 import { isAndroid } from '../../common/utils/cordovaUtils';
 import { isCordova } from '../../common/utils/isCordovaOrWebApp';
 import { renderLog } from '../../common/utils/logging';
 import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
 import webAppConfig from '../../config';
-import CampaignStore from '../../stores/CampaignStore';
+import CampaignStore from '../../common/stores/CampaignStore';
 import { androidFacebookClickHandler, generateQuoteForSharing, generateSharingLink } from './shareButtonCommon';
 
 class ShareByFacebookDirectMessageButton extends Component {

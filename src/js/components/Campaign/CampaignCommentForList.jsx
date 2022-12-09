@@ -11,8 +11,8 @@ import { timeFromDate } from '../../common/utils/dateFormat';
 import { isCordova } from '../../common/utils/isCordovaOrWebApp';
 import { renderLog } from '../../common/utils/logging';
 import stringContains from '../../common/utils/stringContains';
-import CampaignStore from '../../stores/CampaignStore';
-import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
+import CampaignStore from '../../common/stores/CampaignStore';
+import CampaignSupporterStore from '../../common/stores/CampaignSupporterStore';
 import VoterStore from '../../stores/VoterStore';
 
 class CampaignCommentForList extends Component {

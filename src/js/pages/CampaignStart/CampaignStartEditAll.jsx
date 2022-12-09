@@ -15,15 +15,15 @@ import CampaignDescriptionInputField from '../../components/CampaignStart/Campai
 import CampaignPhotoUpload from '../../components/CampaignStart/CampaignPhotoUpload';
 import CampaignTitleInputField from '../../components/CampaignStart/CampaignTitleInputField';
 import EditPoliticianList from '../../components/CampaignStart/EditPoliticianList';
-import { BlockedReason } from '../../components/Style/CampaignIndicatorStyles';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import { BlockedReason } from '../../common/components/Style/CampaignIndicatorStyles';
+import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
 import CampaignStartStore from '../../stores/CampaignStartStore';
-import CampaignStore from '../../stores/CampaignStore';
+import CampaignStore from '../../common/stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import initializejQuery from '../../utils/initializejQuery';
+import initializejQuery from '../../common/utils/initializejQuery';
 
 
-const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
+const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../../components/Campaign/CampaignRetrieveController'));
 
 
 class CampaignStartEditAll extends Component {

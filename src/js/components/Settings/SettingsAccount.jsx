@@ -15,7 +15,7 @@ import Cookies from '../../common/utils/js-cookie/Cookies';
 import { oAuthLog, renderLog } from '../../common/utils/logging';
 import stringContains from '../../common/utils/stringContains';
 import webAppConfig from '../../config';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
 import FacebookStore from '../../stores/FacebookStore';
 import VoterStore from '../../stores/VoterStore';
 import AppleSignIn from '../Apple/AppleSignIn';

@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import historyPush from '../common/utils/historyPush';
 import { renderLog } from '../common/utils/logging';
-import AppObservableStore, { messageService } from '../stores/AppObservableStore';
+import AppObservableStore, { messageService } from '../common/stores/AppObservableStore';
 
 class PageNotFound extends Component {
   constructor (props) {

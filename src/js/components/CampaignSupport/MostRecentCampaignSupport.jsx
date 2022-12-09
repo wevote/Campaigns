@@ -9,8 +9,8 @@ import { timeFromDate } from '../../common/utils/dateFormat';
 import { renderLog } from '../../common/utils/logging';
 import returnFirstXWords from '../../common/utils/returnFirstXWords';
 import stringContains from '../../common/utils/stringContains';
-import CampaignStore from '../../stores/CampaignStore';
-import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
+import CampaignStore from '../../common/stores/CampaignStore';
+import CampaignSupporterStore from '../../common/stores/CampaignSupporterStore';
 
 class MostRecentCampaignSupport extends React.Component {
   constructor (props) {

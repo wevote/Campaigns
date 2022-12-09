@@ -14,15 +14,15 @@ import SupportButtonSingleClick from '../../components/CampaignSupport/SupportBu
 import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSteps';
 import { CampaignSupportImageWrapper, CampaignSupportImageWrapperText, CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import CampaignStore from '../../stores/CampaignStore';
+import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
+import CampaignStore from '../../common/stores/CampaignStore';
 import VoterStore from '../../stores/VoterStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiers } from '../../utils/campaignUtils';
 
-const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
-const CampaignSupportThermometer = React.lazy(() => import('../../components/CampaignSupport/CampaignSupportThermometer'));
-const RecommendedCampaignListRetrieveController = React.lazy(() => import('../../components/Campaign/RecommendedCampaignListRetrieveController'));
-const VoterFirstRetrieveController = loadable(() => import('../../components/Settings/VoterFirstRetrieveController'));
+const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../../components/Campaign/CampaignRetrieveController'));
+const CampaignSupportThermometer = React.lazy(() => import(/* webpackChunkName: 'CampaignSupportThermometer' */ '../../components/CampaignSupport/CampaignSupportThermometer'));
+const RecommendedCampaignListRetrieveController = React.lazy(() => import(/* webpackChunkName: 'RecommendedCampaignListRetrieveController' */ '../../components/Campaign/RecommendedCampaignListRetrieveController'));
+const VoterFirstRetrieveController = loadable(() => import(/* webpackChunkName: 'VoterFirstRetrieveController' */ '../../components/Settings/VoterFirstRetrieveController'));
 
 
 class CampaignRecommendedCampaigns extends Component {

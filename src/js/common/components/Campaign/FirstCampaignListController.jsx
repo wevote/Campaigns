@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
 import CampaignActions from '../../actions/CampaignActions';
 import initializejQuery from '../../utils/initializejQuery';
-import { renderLog } from '../../common/utils/logging';
-import VoterStore from '../../stores/VoterStore';
+import { renderLog } from '../../utils/logging';
+import VoterStore from '../../../stores/VoterStore';
 
 
 class FirstCampaignListController extends Component {

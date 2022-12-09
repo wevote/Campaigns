@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { EmailShareButton } from 'react-share';
 import styled from 'styled-components';
-import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
+import CampaignSupporterActions from '../../common/actions/CampaignSupporterActions';
 import { isAndroid } from '../../common/utils/cordovaUtils';
 import { isCordova } from '../../common/utils/isCordovaOrWebApp';
 import { renderLog } from '../../common/utils/logging';
 import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
-import CampaignStore from '../../stores/CampaignStore';
+import CampaignStore from '../../common/stores/CampaignStore';
 import { cordovaSocialSharingByEmail, generateQuoteForSharing, generateSharingLink } from './shareButtonCommon';
 
 class ShareByEmailButton extends Component {

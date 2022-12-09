@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { renderLog } from '../../common/utils/logging';
-import CampaignStore from '../../stores/CampaignStore';
-import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
-import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
+import CampaignStore from '../../common/stores/CampaignStore';
+import CampaignSupporterStore from '../../common/stores/CampaignSupporterStore';
+import LoadMoreItemsManually from '../../common/components/Widgets/LoadMoreItemsManually';
 import CampaignCommentForList from './CampaignCommentForList';
 
 const STARTING_NUMBER_OF_COMMENTS_TO_DISPLAY = 10;

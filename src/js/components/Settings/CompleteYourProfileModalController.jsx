@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
 import CompleteYourProfileModal from './CompleteYourProfileModal';
 import { renderLog } from '../../common/utils/logging';
 

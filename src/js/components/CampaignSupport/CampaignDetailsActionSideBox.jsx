@@ -6,15 +6,15 @@ import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
 import VoterActions from '../../actions/VoterActions';
 import { renderLog } from '../../common/utils/logging';
-import CampaignStore from '../../stores/CampaignStore';
-import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
+import CampaignStore from '../../common/stores/CampaignStore';
+import CampaignSupporterStore from '../../common/stores/CampaignSupporterStore';
 import VoterStore from '../../stores/VoterStore';
 import CampaignShareChunk from '../Campaign/CampaignShareChunk';
 import SupportButton from './SupportButton';
 
-const CompleteYourProfile = React.lazy(() => import('../Settings/CompleteYourProfile'));
-const MostRecentCampaignSupport = React.lazy(() => import('../CampaignSupport/MostRecentCampaignSupport'));
-const VisibleToPublicCheckbox = React.lazy(() => import('../CampaignSupport/VisibleToPublicCheckbox'));
+const CompleteYourProfile = React.lazy(() => import(/* webpackChunkName: 'CompleteYourProfile' */ '../Settings/CompleteYourProfile'));
+const MostRecentCampaignSupport = React.lazy(() => import(/* webpackChunkName: 'MostRecentCampaignSupport' */ '../CampaignSupport/MostRecentCampaignSupport'));
+const VisibleToPublicCheckbox = React.lazy(() => import(/* webpackChunkName: 'VisibleToPublicCheckbox' */ '../CampaignSupport/VisibleToPublicCheckbox'));
 
 
 class CampaignDetailsActionSideBox extends Component {

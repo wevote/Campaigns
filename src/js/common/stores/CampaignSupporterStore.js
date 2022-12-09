@@ -1,5 +1,5 @@
 import { ReduceStore } from 'flux/utils';
-import Dispatcher from '../common/dispatcher/Dispatcher';
+import Dispatcher from '../dispatcher/Dispatcher';
 
 class CampaignSupporterStore extends ReduceStore {
   getInitialState () {

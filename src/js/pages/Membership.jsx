@@ -14,11 +14,11 @@ import LoadingWheel from '../common/components/Widgets/LoadingWheel';
 import DonateStore from '../common/stores/DonateStore';
 import { renderLog } from '../common/utils/logging';
 import webAppConfig from '../config';
-import initializejQuery from '../utils/initializejQuery';
+import initializejQuery from '../common/utils/initializejQuery';
 
 
 const stripePromise = loadStripe(webAppConfig.STRIPE_API_KEY);
-const VoterFirstRetrieveController = loadable(() => import('../components/Settings/VoterFirstRetrieveController'));
+const VoterFirstRetrieveController = loadable(() => import(/* webpackChunkName: 'VoterFirstRetrieveController' */ '../components/Settings/VoterFirstRetrieveController'));
 
 class Membership extends Component {
   constructor (props) {

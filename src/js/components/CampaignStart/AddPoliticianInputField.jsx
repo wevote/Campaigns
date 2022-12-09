@@ -7,7 +7,7 @@ import CampaignStartActions from '../../actions/CampaignStartActions';
 import SearchAllActions from '../../actions/SearchAllActions';
 import { renderLog } from '../../common/utils/logging';
 import CampaignStartStore from '../../stores/CampaignStartStore';
-import CampaignStore from '../../stores/CampaignStore';
+import CampaignStore from '../../common/stores/CampaignStore';
 import SearchAllStore from '../../stores/SearchAllStore';
 
 const candidateOptionsDefault = [

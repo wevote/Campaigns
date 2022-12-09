@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
+import CampaignSupporterActions from '../../common/actions/CampaignSupporterActions';
 import { renderLog } from '../../common/utils/logging';
-import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
+import CampaignSupporterStore from '../../common/stores/CampaignSupporterStore';
 
 class VisibleToPublicCheckbox extends Component {
   constructor (props) {

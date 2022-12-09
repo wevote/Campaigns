@@ -5,8 +5,8 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { isCordova } from '../../common/utils/isCordovaOrWebApp';
 import { renderLog } from '../../common/utils/logging';
-import AppObservableStore from '../../stores/AppObservableStore';
-import CampaignStore from '../../stores/CampaignStore';
+import AppObservableStore from '../../common/stores/AppObservableStore';
+import CampaignStore from '../../common/stores/CampaignStore';
 import VoterStore from '../../stores/VoterStore';
 
 class SupportButton extends Component {

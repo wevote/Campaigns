@@ -1,6 +1,6 @@
 import VoterActions from '../actions/VoterActions';
-import AppObservableStore from '../stores/AppObservableStore';
-import CampaignActions from '../actions/CampaignActions';
+import AppObservableStore from '../common/stores/AppObservableStore';
+import CampaignActions from '../common/actions/CampaignActions';
 import Cookies from '../common/utils/js-cookie/Cookies';
 
 export default function voterSignOut () { // To discuss - having Store/Actions vs. voterSignOut as a function

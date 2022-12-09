@@ -6,8 +6,8 @@ import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
 import { InnerWrapper, OuterWrapperPageTitle, OuterWrapperSteps, PageTitle, StepCircle, StepNumber, StepWrapper } from '../../common/components/Style/stepDisplayStyles';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import CampaignStore from '../../stores/CampaignStore';
+import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
+import CampaignStore from '../../common/stores/CampaignStore';
 
 
 class CampaignNewsItemPublishSteps extends Component {

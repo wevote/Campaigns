@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import React, { Component, Suspense } from 'react';
 import { renderLog } from '../src/js/common/utils/logging';
-import AppObservableStore, { messageService } from '../src/js/stores/AppObservableStore';
+import AppObservableStore, { messageService } from '../src/js/common/stores/AppObservableStore';
 
 const TopNavigationDesktop = loadable(() => import('../src/js/components/Navigation/TopNavigationAppBar'));
 

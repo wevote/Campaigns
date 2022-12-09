@@ -3,30 +3,30 @@ import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
-import CampaignSupporterActions from '../actions/CampaignSupporterActions';
+import CampaignSupporterActions from '../common/actions/CampaignSupporterActions';
 import { PageWrapper } from '../common/components/Style/stepDisplayStyles';
 import DelayedLoad from '../common/components/Widgets/DelayedLoad';
 import OpenExternalWebSite from '../common/components/Widgets/OpenExternalWebSite';
 import historyPush from '../common/utils/historyPush';
 import { renderLog } from '../common/utils/logging';
 import returnFirstXWords from '../common/utils/returnFirstXWords';
-import CampaignOwnersList from '../components/CampaignSupport/CampaignOwnersList';
+import CampaignOwnersList from '../common/components/CampaignSupport/CampaignOwnersList';
 import CampaignTopNavigation from '../components/Navigation/CampaignTopNavigation';
 import CompleteYourProfileModalController from '../components/Settings/CompleteYourProfileModalController';
-import { BlockedIndicator, BlockedReason, DraftModeIndicator, EditIndicator, ElectionInPast, IndicatorButtonWrapper, IndicatorRow } from '../components/Style/CampaignIndicatorStyles';
-import AppObservableStore, { messageService } from '../stores/AppObservableStore';
-import CampaignStore from '../stores/CampaignStore';
-import CampaignSupporterStore from '../stores/CampaignSupporterStore';
+import { BlockedIndicator, BlockedReason, DraftModeIndicator, EditIndicator, ElectionInPast, IndicatorButtonWrapper, IndicatorRow } from '../common/components/Style/CampaignIndicatorStyles';
+import AppObservableStore, { messageService } from '../common/stores/AppObservableStore';
+import CampaignStore from '../common/stores/CampaignStore';
+import CampaignSupporterStore from '../common/stores/CampaignSupporterStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../utils/campaignUtils';
-import initializejQuery from '../utils/initializejQuery';
-import keepHelpingDestination from '../utils/keepHelpingDestination';
+import initializejQuery from '../common/utils/initializejQuery';
+import keepHelpingDestination from '../common/utils/keepHelpingDestination';
 
-const CampaignCommentsList = React.lazy(() => import('../components/Campaign/CampaignCommentsList'));
-const CampaignDetailsActionSideBox = React.lazy(() => import('../components/CampaignSupport/CampaignDetailsActionSideBox'));
-const CampaignNewsItemList = React.lazy(() => import('../components/Campaign/CampaignNewsItemList'));
-const CampaignRetrieveController = React.lazy(() => import('../components/Campaign/CampaignRetrieveController'));
-const CampaignSupportThermometer = React.lazy(() => import('../components/CampaignSupport/CampaignSupportThermometer'));
-const SupportButtonBeforeCompletionScreen = React.lazy(() => import('../components/CampaignSupport/SupportButtonBeforeCompletionScreen'));
+const CampaignCommentsList = React.lazy(() => import(/* webpackChunkName: 'CampaignCommentsList' */ '../components/Campaign/CampaignCommentsList'));
+const CampaignDetailsActionSideBox = React.lazy(() => import(/* webpackChunkName: 'CampaignDetailsActionSideBox' */ '../components/CampaignSupport/CampaignDetailsActionSideBox'));
+const CampaignNewsItemList = React.lazy(() => import(/* webpackChunkName: 'CampaignNewsItemList' */ '../components/Campaign/CampaignNewsItemList'));
+const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../components/Campaign/CampaignRetrieveController'));
+const CampaignSupportThermometer = React.lazy(() => import(/* webpackChunkName: 'CampaignSupportThermometer' */ '../components/CampaignSupport/CampaignSupportThermometer'));
+const SupportButtonBeforeCompletionScreen = React.lazy(() => import(/* webpackChunkName: 'SupportButtonBeforeCompletionScreen' */ '../common/components/CampaignSupport/SupportButtonBeforeCompletionScreen'));
 
 
 class CampaignDetailsPage extends Component {

@@ -6,7 +6,7 @@ import anonymous from '../../../img/global/icons/avatar-generic.png';
 import { convertStateCodeToStateText } from '../../common/utils/addressFunctions';
 import { renderLog } from '../../common/utils/logging';
 import CampaignStartStore from '../../stores/CampaignStartStore';
-import CampaignStore from '../../stores/CampaignStore';
+import CampaignStore from '../../common/stores/CampaignStore';
 import DeletePoliticianCheckbox from './DeletePoliticianCheckbox';
 
 class EditPoliticianList extends Component {

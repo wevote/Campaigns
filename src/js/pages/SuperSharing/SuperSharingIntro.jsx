@@ -12,7 +12,7 @@ import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 import { CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import initializejQuery from '../../utils/initializejQuery';
+import initializejQuery from '../../common/utils/initializejQuery';
 
 
 class SuperSharingIntro extends Component {

@@ -8,15 +8,15 @@ import OpenExternalWebSite from '../common/components/Widgets/OpenExternalWebSit
 import { isCordova } from '../common/utils/isCordovaOrWebApp';
 import { renderLog } from '../common/utils/logging';
 import CampaignTopNavigation from '../components/Navigation/CampaignTopNavigation';
-import { BlockedReason } from '../components/Style/CampaignIndicatorStyles';
-import AppObservableStore, { messageService } from '../stores/AppObservableStore';
+import { BlockedReason } from '../common/components/Style/CampaignIndicatorStyles';
+import AppObservableStore, { messageService } from '../common/stores/AppObservableStore';
 import CampaignNewsStore from '../stores/CampaignNewsItemStore';
-import CampaignStore from '../stores/CampaignStore';
+import CampaignStore from '../common/stores/CampaignStore';
 import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
 
-const CampaignNewsItemList = React.lazy(() => import('../components/Campaign/CampaignNewsItemList'));
-const CampaignRetrieveController = React.lazy(() => import('../components/Campaign/CampaignRetrieveController'));
-const CampaignNewsItemCreateButton = React.lazy(() => import('../components/CampaignNewsItemPublish/CampaignNewsItemCreateButton'));
+const CampaignNewsItemList = React.lazy(() => import(/* webpackChunkName: 'CampaignNewsItemList' */ '../components/Campaign/CampaignNewsItemList'));
+const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../components/Campaign/CampaignRetrieveController'));
+const CampaignNewsItemCreateButton = React.lazy(() => import(/* webpackChunkName: 'CampaignNewsItemCreateButton' */ '../components/CampaignNewsItemPublish/CampaignNewsItemCreateButton'));
 
 class CampaignNewsPage extends Component {
   constructor (props) {

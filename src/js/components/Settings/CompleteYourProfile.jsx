@@ -10,18 +10,18 @@ import VoterPhotoUpload from '../../common/components/Settings/VoterPhotoUpload'
 import DelayedLoad from '../../common/components/Widgets/DelayedLoad';
 import OpenExternalWebSite from '../../common/components/Widgets/OpenExternalWebSite';
 import { renderLog } from '../../common/utils/logging';
-import AppObservableStore from '../../stores/AppObservableStore';
-import CampaignStore from '../../stores/CampaignStore';
+import AppObservableStore from '../../common/stores/AppObservableStore';
+import CampaignStore from '../../common/stores/CampaignStore';
 import VoterStore from '../../stores/VoterStore';
-import initializejQuery from '../../utils/initializejQuery';
+import initializejQuery from '../../common/utils/initializejQuery';
 import VisibleToPublicCheckbox from '../CampaignSupport/VisibleToPublicCheckbox';
 import SettingsVerifySecretCode from './SettingsVerifySecretCode';
 import VoterEmailInputField from './VoterEmailInputField';
 import VoterFirstNameInputField from './VoterFirstNameInputField';
 import VoterLastNameInputField from './VoterLastNameInputField';
 
-const SignInButton = loadable(() => import('../Navigation/SignInButton'));
-const SignInModalController = loadable(() => import('../Settings/SignInModalController'));
+const SignInButton = loadable(() => import(/* webpackChunkName: 'SignInButton' */ '../Navigation/SignInButton'));
+const SignInModalController = loadable(() => import(/* webpackChunkName: 'SignInModalController' */ '../Settings/SignInModalController'));
 
 class CompleteYourProfile extends Component {
   constructor (props) {

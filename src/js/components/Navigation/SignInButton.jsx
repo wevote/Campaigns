@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import Cookies from '../../common/utils/js-cookie/Cookies';
 import { renderLog } from '../../common/utils/logging';
 import stringContains from '../../common/utils/stringContains';
-import AppObservableStore from '../../stores/AppObservableStore';
+import AppObservableStore from '../../common/stores/AppObservableStore';
 import VoterStore from '../../stores/VoterStore';
 import voterSignOut from '../../utils/voterSignOut';
 

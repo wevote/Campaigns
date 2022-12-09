@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { renderLog } from '../../common/utils/logging';
 import numberWithCommas from '../../common/utils/numberWithCommas';
-import CampaignStore from '../../stores/CampaignStore';
+import CampaignStore from '../../common/stores/CampaignStore';
 
 class CampaignSupportThermometer extends React.Component {
   constructor (props) {

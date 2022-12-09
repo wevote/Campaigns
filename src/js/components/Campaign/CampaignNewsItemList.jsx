@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
 import styled from 'styled-components';
 import { renderLog } from '../../common/utils/logging';
-import CampaignStore from '../../stores/CampaignStore';
-import LoadMoreItemsManually from '../Widgets/LoadMoreItemsManually';
+import CampaignStore from '../../common/stores/CampaignStore';
+import LoadMoreItemsManually from '../../common/components/Widgets/LoadMoreItemsManually';
 import CampaignNewsItemForList from './CampaignNewsItemForList';
 
 const STARTING_NUMBER_OF_NEWS_ITEMS_TO_DISPLAY = 1;
 const NUMBER_OF_NEWS_ITEMS_TO_ADD_WHEN_MORE_CLICKED = 4;
 
-const CampaignNewsItemCreateButton = React.lazy(() => import('../../components/CampaignNewsItemPublish/CampaignNewsItemCreateButton'));
+const CampaignNewsItemCreateButton = React.lazy(() => import(/* webpackChunkName: 'CampaignNewsItemCreateButton' */ '../../components/CampaignNewsItemPublish/CampaignNewsItemCreateButton'));
 
 class CampaignNewsItemList extends Component {
   constructor (props) {

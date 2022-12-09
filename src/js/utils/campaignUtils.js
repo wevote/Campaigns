@@ -1,7 +1,7 @@
-import CampaignActions from '../actions/CampaignActions';
-import CampaignStore from '../stores/CampaignStore';
+import CampaignActions from '../common/actions/CampaignActions';
+import CampaignStore from '../common/stores/CampaignStore';
 import VoterStore from '../stores/VoterStore';
-import initializejQuery from './initializejQuery';
+import initializejQuery from '../common/utils/initializejQuery';
 
 export function getCampaignXValuesFromIdentifiers (campaignSEOFriendlyPath, campaignXWeVoteId) {
   // console.log('getCampaignXValuesFromIdentifiers campaignSEOFriendlyPath: ', campaignSEOFriendlyPath, ', campaignXWeVoteId: ', campaignXWeVoteId);

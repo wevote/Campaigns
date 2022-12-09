@@ -21,19 +21,19 @@ import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
 import { CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
 import { CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper, CampaignSupportImageWrapper, CampaignSupportImageWrapperText, CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
-import LoadMoreItemsManually from '../../components/Widgets/LoadMoreItemsManually';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
-import CampaignStore from '../../stores/CampaignStore';
+import LoadMoreItemsManually from '../../common/components/Widgets/LoadMoreItemsManually';
+import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
+import CampaignStore from '../../common/stores/CampaignStore';
 import VoterStore from '../../stores/VoterStore';
 import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
-import initializejQuery from '../../utils/initializejQuery';
+import initializejQuery from '../../common/utils/initializejQuery';
 
 
 const NUMBER_OF_RECIPIENTS_TO_ADD_WHEN_MORE_CLICKED = 25;
 const STARTING_NUMBER_OF_RECIPIENTS_TO_DISPLAY = 15;
 
-const CampaignRetrieveController = React.lazy(() => import('../../components/Campaign/CampaignRetrieveController'));
-const VoterFirstRetrieveController = loadable(() => import('../../components/Settings/VoterFirstRetrieveController'));
+const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../../components/Campaign/CampaignRetrieveController'));
+const VoterFirstRetrieveController = loadable(() => import(/* webpackChunkName: 'VoterFirstRetrieveController' */ '../../components/Settings/VoterFirstRetrieveController'));
 
 
 class SuperSharingChooseRecipients extends Component {

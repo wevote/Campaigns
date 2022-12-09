@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import logoLight from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-200x66.svg';
 import logoDark from '../../../img/global/svg-icons/we-vote-logo-horizontal-color-dark-141x46.svg';
 import normalizedImagePath from '../../common/utils/normalizedImagePath';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
 
 
 class HeaderBarLogo extends Component {

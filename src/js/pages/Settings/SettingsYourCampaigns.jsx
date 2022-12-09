@@ -9,7 +9,7 @@ import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 import CampaignListTabs from '../../components/Navigation/CampaignListTabs';
 import SettingsCampaignList from '../../components/Settings/SettingsCampaignList';
-import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
 import VoterStore from '../../stores/VoterStore';
 
 

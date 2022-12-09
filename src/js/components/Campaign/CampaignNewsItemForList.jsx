@@ -10,8 +10,8 @@ import { timeFromDate } from '../../common/utils/dateFormat';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 import stringContains from '../../common/utils/stringContains';
-import CampaignStore from '../../stores/CampaignStore';
-import { BlockedIndicator, DraftModeIndicator, EditIndicator, IndicatorButtonWrapper, IndicatorDefaultButtonWrapper, IndicatorRow } from '../Style/CampaignIndicatorStyles';
+import CampaignStore from '../../common/stores/CampaignStore';
+import { BlockedIndicator, DraftModeIndicator, EditIndicator, IndicatorButtonWrapper, IndicatorDefaultButtonWrapper, IndicatorRow } from '../../common/components/Style/CampaignIndicatorStyles';
 
 class CampaignNewsItemForList extends Component {
   constructor (props) {
