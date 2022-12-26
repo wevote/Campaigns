@@ -11,6 +11,7 @@ import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
 import stringContains from '../../common/utils/stringContains';
 import CampaignStore from '../../common/stores/CampaignStore';
+import { SpeakerAndPhotoOuterWrapper, SpeakerName, SpeakerVoterPhotoWrapper } from '../../common/components/Style/CampaignDetailsStyles';
 import { BlockedIndicator, DraftModeIndicator, EditIndicator, IndicatorButtonWrapper, IndicatorDefaultButtonWrapper, IndicatorRow } from '../../common/components/Style/CampaignIndicatorStyles';
 
 class CampaignNewsItemForList extends Component {
@@ -303,22 +304,6 @@ const OneCampaignOuterWrapper = styled('div')(({ theme }) => (`
 const SpeakerAndTimeWrapper = styled('div')`
   color: #999;
   font-size: 12px;
-`;
-
-const SpeakerAndPhotoOuterWrapper = styled('div')`
-  align-items: center;
-  display: flex;
-  justify-content: flex-start;
-  margin-top: 24px;
-`;
-
-const SpeakerName = styled('span')`
-  color: #808080;
-  font-weight: 500 !important;
-`;
-
-const SpeakerVoterPhotoWrapper = styled('div')`
-  margin-right: 6px;
 `;
 
 const Wrapper = styled('div')`

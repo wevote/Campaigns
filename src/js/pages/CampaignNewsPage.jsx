@@ -12,7 +12,7 @@ import { BlockedReason } from '../common/components/Style/CampaignIndicatorStyle
 import AppObservableStore, { messageService } from '../common/stores/AppObservableStore';
 import CampaignNewsStore from '../stores/CampaignNewsItemStore';
 import CampaignStore from '../common/stores/CampaignStore';
-import { getCampaignXValuesFromIdentifiers } from '../utils/campaignUtils';
+import { getCampaignXValuesFromIdentifiers } from '../common/utils/campaignUtils';
 
 const CampaignNewsItemList = React.lazy(() => import(/* webpackChunkName: 'CampaignNewsItemList' */ '../components/Campaign/CampaignNewsItemList'));
 const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../components/Campaign/CampaignRetrieveController'));

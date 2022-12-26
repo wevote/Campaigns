@@ -2,14 +2,15 @@ import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import { renderLog } from '../../common/utils/logging';
-import numberWithCommas from '../../common/utils/numberWithCommas';
-import CampaignStore from '../../common/stores/CampaignStore';
+import { renderLog } from '../../utils/logging';
+import numberWithCommas from '../../utils/numberWithCommas';
+import CampaignStore from '../../stores/CampaignStore';
 
 class CampaignSupportThermometer extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
+      finalElectionDateInPast: false,
       supportersCountNextGoal: 0,
       supportersCount: 0,
     };
@@ -34,8 +35,8 @@ class CampaignSupportThermometer extends React.Component {
     if (campaignXWeVoteId) {
       const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
       const {
-        supporters_count: supportersCount,
         campaignx_we_vote_id: campaignXWeVoteIdFromDict,
+        supporters_count: supportersCount,
       } = campaignX;
       let supportersCountChanged = false;
       if (campaignXWeVoteIdFromDict) {
@@ -58,12 +59,14 @@ class CampaignSupportThermometer extends React.Component {
       const campaignX = CampaignStore.getCampaignXByWeVoteId(campaignXWeVoteId);
       // console.log('CampaignSupportThermometer onCampaignStoreChange campaignX:', campaignX);
       const {
+        campaignx_we_vote_id: campaignXWeVoteIdFromDict,
+        final_election_date_in_past: finalElectionDateInPast,
         supporters_count: supportersCount,
         supporters_count_next_goal: supportersCountNextGoal,
-        campaignx_we_vote_id: campaignXWeVoteIdFromDict,
       } = campaignX;
       if (campaignXWeVoteIdFromDict) {
         this.setState({
+          finalElectionDateInPast,
           supportersCount,
           supportersCountNextGoal,
         });
@@ -74,20 +77,38 @@ class CampaignSupportThermometer extends React.Component {
   render () {
     renderLog('CampaignSupportThermometer');  // Set LOG_RENDER_EVENTS to log all renders
     const { inCompressedMode } = this.props;
-    const { supportersCount, supportersCountNextGoal } = this.state;
-    const calculatedPercentage = (supportersCount / supportersCountNextGoal) * 100;
+    const { finalElectionDateInPast, supportersCount, supportersCountNextGoal } = this.state;
+    let calculatedPercentage = 0;
+    if (supportersCount && supportersCountNextGoal) {
+      calculatedPercentage = (supportersCount / supportersCountNextGoal) * 100;
+    }
     const minimumPercentageForDisplay = 5;
     const percentageForDisplay = (calculatedPercentage < minimumPercentageForDisplay) ? minimumPercentageForDisplay : calculatedPercentage;
+    const numberWithCommasText = numberWithCommas(supportersCount);
+    let supportersText;
+    if (finalElectionDateInPast) {
+      if (supportersCount === 0) {
+        supportersText = `${numberWithCommasText} supporters.`;
+      } else if (supportersCount === 1) {
+        supportersText = `${numberWithCommasText} supporter.`;
+      } else {
+        supportersText = `${numberWithCommasText} supported.`;
+      }
+    } else if (supportersCount === 0) {
+      supportersText = '';
+    } else if (supportersCount === 1) {
+      supportersText = `${numberWithCommasText} supporter.`;
+    } else {
+      supportersText = `${numberWithCommasText} have supported.`;
+    }
 
     return (
-      <Wrapper>
+      <CampaignSupportThermometerWrapper>
         <TextWrapper>
           <SupportersText inCompressedMode={inCompressedMode}>
-            {numberWithCommas(supportersCount)}
-            {' '}
-            {supportersCount === 1 ? 'supporter.' : 'have supported.'}
+            {supportersText}
           </SupportersText>
-          {!inCompressedMode && (
+          {!!(supportersCountNextGoal && !inCompressedMode && !finalElectionDateInPast) && (
             <GoalText>
               {' '}
               Let&apos;s get to
@@ -103,7 +124,7 @@ class CampaignSupportThermometer extends React.Component {
             <span id="right-arrow" />
           </ProgressBar>
         </ProgressBarWrapper>
-      </Wrapper>
+      </CampaignSupportThermometerWrapper>
     );
   }
 }
@@ -172,7 +193,7 @@ const SupportersText = styled('span', {
 const TextWrapper = styled('div')`
 `;
 
-const Wrapper = styled('div')`
+const CampaignSupportThermometerWrapper = styled('div')`
 `;
 
 export default withStyles(styles)(CampaignSupportThermometer);

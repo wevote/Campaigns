@@ -19,7 +19,7 @@ import { BlockedReason } from '../../common/components/Style/CampaignIndicatorSt
 import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
 import CampaignStartStore from '../../stores/CampaignStartStore';
 import CampaignStore from '../../common/stores/CampaignStore';
-import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../common/utils/campaignUtils';
 import initializejQuery from '../../common/utils/initializejQuery';
 
 

@@ -9,7 +9,7 @@ import historyPush from '../common/utils/historyPush';
 import { renderLog } from '../common/utils/logging';
 import AppObservableStore, { messageService } from '../common/stores/AppObservableStore';
 
-const CampaignList = React.lazy(() => import(/* webpackChunkName: 'CampaignList' */ '../common/components/Campaign/CampaignList'));
+const CampaignListRoot = React.lazy(() => import(/* webpackChunkName: 'CampaignListRoot' */ '../common/components/Campaign/CampaignListRoot'));
 
 class HomePage extends Component {
   constructor (props) {
@@ -62,7 +62,7 @@ class HomePage extends Component {
             </IntroductionMessageSection>
             <WhatIsHappeningSection>
               <Suspense fallback={<span>&nbsp;</span>}>
-                <CampaignList hideTitle />
+                <CampaignListRoot hideTitle />
               </Suspense>
             </WhatIsHappeningSection>
           </PageWrapper>
@@ -99,7 +99,7 @@ class HomePage extends Component {
             </IntroductionMessageSection>
             <WhatIsHappeningSection>
               <Suspense fallback={<span>&nbsp;</span>}>
-                <CampaignList titleTextIfCampaigns="What's happening on WeVote.US" />
+                <CampaignListRoot titleTextIfCampaigns="What's happening on WeVote.US" />
               </Suspense>
             </WhatIsHappeningSection>
           </PageWrapper>

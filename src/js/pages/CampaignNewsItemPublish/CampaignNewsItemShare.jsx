@@ -19,7 +19,7 @@ import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefa
 import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
 import CampaignStore from '../../common/stores/CampaignStore';
 import CampaignSupporterStore from '../../common/stores/CampaignSupporterStore';
-import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiers } from '../../utils/campaignUtils';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiers } from '../../common/utils/campaignUtils';
 // import ShareOnFacebookButton from '../../components/Share/ShareOnFacebookButton';
 // import ShareOnTwitterButton from '../../components/Share/ShareOnTwitterButton';
 
