@@ -17,7 +17,7 @@ import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefa
 import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
 import CampaignStore from '../../common/stores/CampaignStore';
 import numberWithCommas from '../../common/utils/numberWithCommas';
-import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../common/utils/campaignUtils';
 import initializejQuery from '../../common/utils/initializejQuery';
 
 const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../../components/Campaign/CampaignRetrieveController'));

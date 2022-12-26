@@ -21,7 +21,7 @@ import AppObservableStore, { messageService } from '../../common/stores/AppObser
 import CampaignNewsItemStore from '../../stores/CampaignNewsItemStore';
 import CampaignStore from '../../common/stores/CampaignStore';
 import VoterStore from '../../stores/VoterStore';
-import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../common/utils/campaignUtils';
 import initializejQuery from '../../common/utils/initializejQuery';
 
 const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../../components/Campaign/CampaignRetrieveController'));

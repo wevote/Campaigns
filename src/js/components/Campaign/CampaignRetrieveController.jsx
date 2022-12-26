@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import initializejQuery from '../../common/utils/initializejQuery';
 import { renderLog } from '../../common/utils/logging';
-import { retrieveCampaignXFromIdentifiers } from '../../utils/campaignUtils';
+import { retrieveCampaignXFromIdentifiers } from '../../common/utils/campaignUtils';
 import VoterStore from '../../stores/VoterStore';
 
 

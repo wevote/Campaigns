@@ -4,6 +4,15 @@ import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
 import CampaignSupporterActions from '../common/actions/CampaignSupporterActions';
+import {
+  CampaignDescription, CampaignDescriptionDesktop, CampaignDescriptionWrapper,
+  CampaignDescriptionDesktopWrapper, CampaignImagePlaceholder, CampaignImagePlaceholderText,
+  CampaignImage, CampaignImageDesktop, CampaignImageDesktopWrapper, CampaignImageMobileWrapper,
+  CampaignOwnersDesktopWrapper, CampaignOwnersWrapper, CampaignSubSectionTitle,
+  CampaignTitleAndScoreBar, CampaignTitleDesktop, CampaignTitleMobile,
+  CommentsListWrapper, DetailsSectionDesktopTablet, DetailsSectionMobile,
+  SupportButtonFooterWrapper, SupportButtonPanel,
+} from '../common/components/Style/CampaignDetailsStyles';
 import { PageWrapper } from '../common/components/Style/stepDisplayStyles';
 import DelayedLoad from '../common/components/Widgets/DelayedLoad';
 import OpenExternalWebSite from '../common/components/Widgets/OpenExternalWebSite';
@@ -17,7 +26,7 @@ import { BlockedIndicator, BlockedReason, DraftModeIndicator, EditIndicator, Ele
 import AppObservableStore, { messageService } from '../common/stores/AppObservableStore';
 import CampaignStore from '../common/stores/CampaignStore';
 import CampaignSupporterStore from '../common/stores/CampaignSupporterStore';
-import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../utils/campaignUtils';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../common/utils/campaignUtils';
 import initializejQuery from '../common/utils/initializejQuery';
 import keepHelpingDestination from '../common/utils/keepHelpingDestination';
 
@@ -25,7 +34,7 @@ const CampaignCommentsList = React.lazy(() => import(/* webpackChunkName: 'Campa
 const CampaignDetailsActionSideBox = React.lazy(() => import(/* webpackChunkName: 'CampaignDetailsActionSideBox' */ '../components/CampaignSupport/CampaignDetailsActionSideBox'));
 const CampaignNewsItemList = React.lazy(() => import(/* webpackChunkName: 'CampaignNewsItemList' */ '../components/Campaign/CampaignNewsItemList'));
 const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../components/Campaign/CampaignRetrieveController'));
-const CampaignSupportThermometer = React.lazy(() => import(/* webpackChunkName: 'CampaignSupportThermometer' */ '../components/CampaignSupport/CampaignSupportThermometer'));
+const CampaignSupportThermometer = React.lazy(() => import(/* webpackChunkName: 'CampaignSupportThermometer' */ '../common/components/CampaignSupport/CampaignSupportThermometer'));
 const SupportButtonBeforeCompletionScreen = React.lazy(() => import(/* webpackChunkName: 'SupportButtonBeforeCompletionScreen' */ '../common/components/CampaignSupport/SupportButtonBeforeCompletionScreen'));
 
 
@@ -550,130 +559,6 @@ const styles = () => ({
   },
 });
 
-// const BlockedReason = styled.div`
-//   background-color: #efc2c2;
-//   border-radius: 4px;
-//   color: #2e3c5d;
-//   font-size: 18px;
-//   margin-top: 10px;
-//   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
-//     margin: 10px;
-//   }
-//   padding: 5px 12px;
-// `;
-
-const CampaignDescription = styled('div')`
-  font-size: 18px;
-  text-align: left;
-  white-space: pre-wrap;
-`;
-
-const CampaignDescriptionDesktop = styled('div')`
-  font-size: 18px;
-  margin-top: 32px;
-  text-align: left;
-  white-space: pre-wrap;
-`;
-
-const CampaignDescriptionWrapper = styled('div')`
-  margin: 10px;
-`;
-
-const CampaignDescriptionDesktopWrapper = styled('div')(({ theme }) => (`
-  margin-bottom: 10px;
-  margin-top: 2px;
-  ${theme.breakpoints.down('md')} {
-  }
-`));
-
-const CampaignImagePlaceholder = styled('div')(({ theme }) => (`
-  background-color: #eee;
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 183px;
-  ${theme.breakpoints.up('sm')} {
-    min-height: 174px;
-  }
-  ${theme.breakpoints.down('md')} {
-    min-height: 239px;
-  }
-  ${theme.breakpoints.up('lg')} {
-    min-height: 319px;
-  }
-`));
-
-const CampaignImagePlaceholderText = styled('div')`
-  color: #ccc;
-`;
-
-const CampaignImageDesktopWrapper = styled('div')(({ theme }) => (`
-  margin-bottom: 10px;
-  min-height: 180px;
-  ${theme.breakpoints.up('sm')} {
-    min-height: 174px;
-  }
-  ${theme.breakpoints.up('md')} {
-    min-height: 239px;
-  }
-  ${theme.breakpoints.up('lg')} {
-    min-height: 300px;
-  }
-`));
-
-const CampaignImageMobileWrapper = styled('div')(({ theme }) => (`
-  min-height: 174px;
-  ${theme.breakpoints.down('xs')} {
-    min-height: 117px;
-  }
-`));
-
-const CampaignImage = styled('img')`
-  width: 100%;
-`;
-
-const CampaignImageDesktop = styled('img')`
-  border-radius: 5px;
-  width: 100%;
-`;
-
-const CampaignOwnersDesktopWrapper = styled('div')`
-  margin-bottom: 8px;
-`;
-
-const CampaignOwnersWrapper = styled('div')`
-`;
-
-const CampaignSubSectionTitle = styled('h2')`
-  font-size: 22px;
-  margin: 50px 0 10px 0;
-`;
-
-const CampaignTitleAndScoreBar = styled('div')(({ theme }) => (`
-  margin: 10px;
-  ${theme.breakpoints.down('md')} {
-  }
-`));
-
-const CampaignTitleDesktop = styled('h1')(({ theme }) => (`
-  font-size: 28px;
-  text-align: center;
-  margin: 30px 20px 40px 20px;
-  min-height: 34px;
-  ${theme.breakpoints.down('md')} {
-    font-size: 24px;
-    min-height: 29px;
-  }
-`));
-
-const CampaignTitleMobile = styled('h1')`
-  font-size: 22px;
-  margin: 0 0 10px 0;
-  min-height: 27px;
-  text-align: left;
-`;
-
 const ColumnOneThird = styled('div')`
   flex: 1;
   flex-direction: column;
@@ -693,36 +578,6 @@ const ColumnTwoThirds = styled('div')`
   flex: 2;
   flex-direction: column;
   flex-basis: 60%;
-`;
-
-const CommentsListWrapper = styled('div')(({ theme }) => (`
-  margin-bottom: 25px;
-  ${theme.breakpoints.down('md')} {
-    margin: 0 10px 25px 10px;
-  }
-`));
-
-const DetailsSectionDesktopTablet = styled('div')`
-  display: flex;
-  flex-flow: column;
-`;
-
-const DetailsSectionMobile = styled('div')`
-  display: flex;
-  flex-flow: column;
-`;
-
-const SupportButtonFooterWrapper = styled('div')`
-  position: fixed;
-  width: 100%;
-  bottom: 0;
-  display: block;
-`;
-
-const SupportButtonPanel = styled('div')`
-  background-color: #fff;
-  border-top: 1px solid #ddd;
-  padding: 10px;
 `;
 
 export default withStyles(styles)(CampaignDetailsPage);
