@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const CampaignImage = styled('img', {
+export const CampaignImage = styled('img', {
   shouldForwardProp: (prop) => !['noBorderRadius'].includes(prop),
 })(({ noBorderRadius }) => (`
   ${noBorderRadius ? '' : 'border-radius: 5px;'}
@@ -9,7 +9,7 @@ const CampaignImage = styled('img', {
   width: 100%;
 `));
 
-const CampaignProcessStepIntroductionText = styled('div')(({ theme }) => (`
+export const CampaignProcessStepIntroductionText = styled('div')(({ theme }) => (`
   color: #555;
   font-size: 16px;
   max-width: 620px;
@@ -19,7 +19,7 @@ const CampaignProcessStepIntroductionText = styled('div')(({ theme }) => (`
   }
 `));
 
-const CampaignProcessStepTitle = styled('div')(({ theme }) => (`
+export const CampaignProcessStepTitle = styled('div')(({ theme }) => (`
   font-size: 32px;
   font-weight: 600;
   margin: 20px 0 10px 0;
@@ -28,9 +28,3 @@ const CampaignProcessStepTitle = styled('div')(({ theme }) => (`
     font-size: 22px;
   }
 `));
-
-export {
-  CampaignImage,
-  CampaignProcessStepIntroductionText,
-  CampaignProcessStepTitle,
-};
