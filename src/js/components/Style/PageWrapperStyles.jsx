@@ -1,16 +1,16 @@
 import styled from 'styled-components';
 
 
-const ContentInnerWrapperDefault = styled('div')`
+export const ContentInnerWrapperDefault = styled('div')`
 `;
 
-const ContentOuterWrapperDefault = styled('div')`
+export const ContentOuterWrapperDefault = styled('div')`
   display: flex;
   justify-content: center;
   margin: 15px 0;
 `;
 
-const PageWrapperDefault = styled('div')`
+export const PageWrapperDefault = styled('div')`
   margin: 0 auto;
   max-width: 960px;
   @media (max-width: 1005px) {
@@ -18,9 +18,3 @@ const PageWrapperDefault = styled('div')`
     margin: 0 15px;
   }
 `;
-
-export {
-  ContentInnerWrapperDefault,
-  ContentOuterWrapperDefault,
-  PageWrapperDefault,
-};
