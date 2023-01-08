@@ -161,7 +161,7 @@ class CampaignCardList extends Component {
           )}
         </ListWrapper>
         <Suspense fallback={<></>}>
-          <DelayedLoad showLoadingText waitBeforeShow={2000}>
+          <DelayedLoad loadingTextLeftAlign showLoadingText waitBeforeShow={2000}>
             <div>
               {!(numberDisplayed) && (
                 <CampaignsNotAvailableToShow>
