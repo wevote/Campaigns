@@ -9,6 +9,7 @@ import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
 import DonationListForm from '../common/components/Donation/DonationListForm';
 import InjectedCheckoutForm from '../common/components/Donation/InjectedCheckoutForm';
+import standardBoxShadow from '../common/components/Style/standardBoxShadow';
 import { OuterWrapper, PageWrapper } from '../common/components/Style/stepDisplayStyles';
 import LoadingWheel from '../common/components/Widgets/LoadingWheel';
 import DonateStore from '../common/stores/DonateStore';
@@ -256,7 +257,7 @@ Membership.propTypes = {
   showFooter: PropTypes.func,
 };
 
-const styles = (theme) => ({
+const styles = () => ({
   buttonRoot: {
     border: '1px solid #2e3c5d',
     fontSize: 18,
@@ -278,7 +279,7 @@ const styles = (theme) => ({
     fontSize: 18,
     color: 'black',
     backgroundColor: 'white',
-    boxShadow: theme.boxStyles.default,
+    boxShadow: standardBoxShadow(),
   },
   textFieldInputRoot: {
     fontSize: 18,
@@ -335,7 +336,7 @@ const PaymentCenteredWrapper  = styled('div')(({ theme }) => (`
   }
   display: inline-block;
   background-color: rgb(246, 244,246);
-  box-shadow: ${theme.boxStyles.default},
+  box-shadow: ${standardBoxShadow()}; // {theme.boxStyles.default};
   border: 2px solid darkgrey;
   border-radius: 3px;
   padding: 8px;

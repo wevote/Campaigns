@@ -7,6 +7,7 @@ import VoterActions from '../../actions/VoterActions';
 import SplitIconButton from '../../common/components/Widgets/SplitIconButton';
 import { oAuthLog, renderLog } from '../../common/utils/logging';
 import { messageService } from '../../common/stores/AppObservableStore';
+import standardBoxShadow from '../../common/components/Style/standardBoxShadow';
 import FacebookStore from '../../stores/FacebookStore';
 import VoterStore from '../../stores/VoterStore';
 import signInModalGlobalState from '../Settings/signInModalGlobalState';
@@ -227,8 +228,9 @@ FacebookSignIn.propTypes = {
 
 export default FacebookSignIn;
 
+// eslint-disable-next-line no-unused-vars
 const FacebookErrorContainer  = styled('h3')(({ theme }) => (`
   margin-top: 8px;
   background-color: #fff;
-  box-shadow: ${theme.boxStyles.default};
+  box-shadow: ${standardBoxShadow()}; // {theme.boxStyles.default};
 `));

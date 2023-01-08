@@ -219,7 +219,7 @@ export default function MainHeaderBar (displayHeader) {
                 <MenuItem className={classes.menuItem}>
                   <OpenExternalWebSite
                     linkIdAttribute="weVoteBallot"
-                    url="https://wevote.us/ballot"
+                    url="https://wevote.us/ready"
                     target="_blank"
                     body={(
                       <div style={{ display: 'flex' }}>

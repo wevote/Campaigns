@@ -10,6 +10,7 @@ import Helmet from 'react-helmet';
 import CampaignActions from '../../common/actions/CampaignActions';
 import DonationListForm from '../../common/components/Donation/DonationListForm';
 import InjectedCheckoutForm from '../../common/components/Donation/InjectedCheckoutForm';
+import standardBoxShadow from '../../common/components/Style/standardBoxShadow';
 import { OuterWrapper, PageWrapper } from '../../common/components/Style/stepDisplayStyles';
 import LoadingWheelComp from '../../common/components/Widgets/LoadingWheelComp';
 import DonateStore from '../../common/stores/DonateStore';
@@ -414,7 +415,7 @@ CampaignSupportPayToPromoteProcess.propTypes = {
   setShowHeaderFooter: PropTypes.func,
 };
 
-const styles = (theme) => ({
+const styles = () => ({
   buttonDefault: {
     boxShadow: 'none !important',
     fontSize: '14px',
@@ -457,7 +458,7 @@ const styles = (theme) => ({
     fontSize: 18,
     color: 'black',
     backgroundColor: 'white',
-    boxShadow: theme.boxStyles.default,
+    boxShadow: standardBoxShadow(),
   },
   textFieldInputRoot: {
     fontSize: 18,
@@ -569,7 +570,7 @@ const PaymentCenteredWrapper = styled('div', {
   }
   display: inline-block;
   background-color: ${show ? 'rgb(246, 244,246)' : 'inherit'};
-  box-shadow: ${show ? theme.boxStyles.default : 'none'};
+  box-shadow: ${show ? standardBoxShadow() : 'none'};
   border: ${show ? '2px solid darkgrey' : 'none'};
   border-radius: 3px;
   padding: 8px;

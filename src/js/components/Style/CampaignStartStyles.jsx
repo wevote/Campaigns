@@ -8,7 +8,7 @@ export const CampaignStartDesktopButtonPanel = styled('div')`
 
 export const CampaignStartDesktopButtonWrapper = styled('div')`
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   margin: 20px 0 0 0;
   width: 100%;
 `;

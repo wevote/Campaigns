@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import VoterActions from '../actions/VoterActions';
+import standardBoxShadow from '../common/components/Style/standardBoxShadow';
 import { OuterWrapper, PageWrapper } from '../common/components/Style/stepDisplayStyles';
 import { renderLog } from '../common/utils/logging';
 import webAppConfig from '../config';
@@ -363,6 +364,7 @@ const ContactsOuterContainer = styled('div', {
   padding-top: 10px;
 `));
 
+// eslint-disable-next-line no-unused-vars
 const ContactsContainer = styled('div')(({ theme }) => (`
   overflow-y: auto;
   background-color: rgb(254, 254, 228, 0.01);
@@ -370,7 +372,7 @@ const ContactsContainer = styled('div')(({ theme }) => (`
   margin: 16px auto 11px;
   height: 300px;
   width: 100%;
-  box-shadow: ${theme.boxStyles.default};
+  box-shadow: ${standardBoxShadow()}; // {theme.boxStyles.default};
 `));
 
 const styles = () => ({

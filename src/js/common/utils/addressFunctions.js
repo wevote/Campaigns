@@ -13,7 +13,7 @@ export const stateCodeMap = {
   DE: 'Delaware',
   FL: 'Florida',
   GA: 'Georgia',
-  GU: 'Guam',
+  // GU: 'Guam',
   HI: 'Hawaii',
   IA: 'Iowa',
   ID: 'Idaho',
@@ -75,7 +75,7 @@ export function convertStateCodeToStateText (stateCode) {
 export function convertStateTextToStateCode (stateText) {
   if (stateText) {
     const stateTextInArray = Object.keys(stateCodeMap).filter((stateCode) => stateCodeMap[stateCode].toLowerCase() === stateText.toLowerCase());
-    return stateTextInArray[0];
+    return stateTextInArray[0] || '';
   }
   return '';
 }
