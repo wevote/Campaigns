@@ -31,7 +31,7 @@ const CampaignStartAddPhoto = React.lazy(() => import(/* webpackChunkName: 'Camp
 const CampaignStartAddPolitician = React.lazy(() => import(/* webpackChunkName: 'CampaignStartAddPolitician' */ './js/pages/CampaignStart/CampaignStartAddPolitician'));
 const CampaignStartAddTitle = React.lazy(() => import(/* webpackChunkName: 'CampaignStartAddTitle' */ './js/pages/CampaignStart/CampaignStartAddTitle'));
 const CampaignStartEditAll = React.lazy(() => import(/* webpackChunkName: 'CampaignStartEditAll' */ './js/pages/CampaignStart/CampaignStartEditAll'));
-const CampaignStartIntro = React.lazy(() => import(/* webpackChunkName: 'CampaignStartIntro' */ './js/pages/CampaignStart/CampaignStartIntro'));
+const CampaignStartIntro = React.lazy(() => import(/* webpackChunkName: 'CampaignStartIntro' */ './js/common/pages/CampaignStart/CampaignStartIntro'));
 const CampaignStartPreview = React.lazy(() => import(/* webpackChunkName: 'CampaignStartPreview' */ './js/pages/CampaignStart/CampaignStartPreview'));
 const CampaignSupportEndorsement = React.lazy(() => import(/* webpackChunkName: 'CampaignSupportEndorsement' */ './js/pages/CampaignSupport/CampaignSupportEndorsement'));
 const CampaignSupportPayToPromote = React.lazy(() => import(/* webpackChunkName: 'CampaignSupportPayToPromote' */ './js/pages/CampaignSupport/CampaignSupportPayToPromote'));
