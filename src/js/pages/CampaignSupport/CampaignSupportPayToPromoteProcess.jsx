@@ -16,7 +16,7 @@ import LoadingWheelComp from '../../common/components/Widgets/LoadingWheelComp';
 import DonateStore from '../../common/stores/DonateStore';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
-import { SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
+import { SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../common/components/Style/CampaignSupportStyles';
 import webAppConfig from '../../config';
 import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
 import CampaignStore from '../../common/stores/CampaignStore';

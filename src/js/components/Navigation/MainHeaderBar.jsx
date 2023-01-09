@@ -14,8 +14,8 @@ import initializeFacebookSDK from '../../utils/initializeFacebookSDK';
 import TopNavigationAppBar from './TopNavigationAppBar';
 
 const HeaderBarLogo = loadable(() => import(/* webpackChunkName: 'HeaderBarLogo' */ './HeaderBarLogo'));
-const SignInButton = loadable(() => import(/* webpackChunkName: 'SignInButton' */ './SignInButton'));
-const SignInModalController = loadable(() => import(/* webpackChunkName: 'SignInModalController' */ '../Settings/SignInModalController'));
+const SignInButton = loadable(() => import(/* webpackChunkName: 'SignInButton' */ '../../common/components/Navigation/SignInButton'));
+const SignInModalController = loadable(() => import(/* webpackChunkName: 'SignInModalController' */ '../../common/components/Settings/SignInModalController'));
 // const TopNavigationDesktopController = loadable(() => import(/* webpackChunkName: 'TopNavigationDesktopController' */ './TopNavigationDesktopController'));
 const VoterNameAndPhoto = loadable(() => import(/* webpackChunkName: 'VoterNameAndPhoto' */ './VoterNameAndPhoto'));
 

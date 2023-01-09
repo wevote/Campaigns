@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import CampaignNewsItemActions from '../../actions/CampaignNewsItemActions';
 import { renderLog } from '../../common/utils/logging';
 import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
-import CampaignNewsItemStore from '../../stores/CampaignNewsItemStore';
+import CampaignNewsItemStore from '../../common/stores/CampaignNewsItemStore';
 import CampaignStore from '../../common/stores/CampaignStore';
 
 class CampaignNewsItemTextInputField extends Component {

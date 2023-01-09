@@ -8,7 +8,7 @@ import Helmet from 'react-helmet';
 import { OuterWrapper } from '../../common/components/Style/stepDisplayStyles';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
-import CompleteYourProfile from '../../components/Settings/CompleteYourProfile';
+import CompleteYourProfile from '../../common/components/Settings/CompleteYourProfile';
 import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
 
 

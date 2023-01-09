@@ -13,7 +13,7 @@ import { isCordova, isWebApp } from '../../common/utils/isCordovaOrWebApp';
 import isMobileScreenSize from '../../common/utils/isMobileScreenSize';
 import { renderLog } from '../../common/utils/logging';
 import VoterStore from '../../stores/VoterStore';
-import SettingsVerifySecretCode from './SettingsVerifySecretCode';
+import SettingsVerifySecretCode from '../../common/components/Settings/SettingsVerifySecretCode';
 import signInModalGlobalState from './signInModalGlobalState';
 
 /* global $ */

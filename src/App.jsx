@@ -19,9 +19,9 @@ const FooterMain  = React.lazy(() => import(/* webpackChunkName: 'FooterMain' */
 const About = React.lazy(() => import(/* webpackChunkName: 'About' */ './js/pages/About'));
 const AddContacts = React.lazy(() => import(/* webpackChunkName: 'AddContacts' */ './js/pages/AddContacts'));
 const Attributions = React.lazy(() => import(/* webpackChunkName: 'Attributions' */ './js/pages/Attributions'));
-const CampaignCommentsPage = React.lazy(() => import(/* webpackChunkName: 'CampaignCommentsPage' */ './js/pages/CampaignCommentsPage'));
-const CampaignNewsItemDetailsPage = React.lazy(() => import(/* webpackChunkName: 'CampaignNewsItemDetailsPage' */ './js/pages/CampaignNewsItemDetailsPage'));
-const CampaignDetailsPage = React.lazy(() => import(/* webpackChunkName: 'CampaignDetailsPage' */ './js/pages/CampaignDetailsPage'));
+const CampaignCommentsPage = React.lazy(() => import(/* webpackChunkName: 'CampaignCommentsPage' */ './js/common/pages/Campaign/CampaignCommentsPage'));
+const CampaignDetailsPage = React.lazy(() => import(/* webpackChunkName: 'CampaignDetailsPage' */ './js/common/pages/Campaign/CampaignDetailsPage'));
+const CampaignNewsItemDetailsPage = React.lazy(() => import(/* webpackChunkName: 'CampaignNewsItemDetailsPage' */ './js/common/pages/Campaign/CampaignNewsItemDetailsPage'));
 const CampaignNewsItemSend = React.lazy(() => import(/* webpackChunkName: 'CampaignNewsItemSend' */ './js/pages/CampaignNewsItemPublish/CampaignNewsItemSend'));
 const CampaignNewsItemShare = React.lazy(() => import(/* webpackChunkName: 'CampaignNewsItemShare' */ './js/pages/CampaignNewsItemPublish/CampaignNewsItemShare'));
 const CampaignNewsItemText = React.lazy(() => import(/* webpackChunkName: 'CampaignNewsItemText' */ './js/pages/CampaignNewsItemPublish/CampaignNewsItemText'));
@@ -37,7 +37,7 @@ const CampaignSupportEndorsement = React.lazy(() => import(/* webpackChunkName: 
 const CampaignSupportPayToPromote = React.lazy(() => import(/* webpackChunkName: 'CampaignSupportPayToPromote' */ './js/pages/CampaignSupport/CampaignSupportPayToPromote'));
 const CampaignSupportPayToPromoteProcess = React.lazy(() => import(/* webpackChunkName: 'CampaignSupportPayToPromoteProcess' */ './js/pages/CampaignSupport/CampaignSupportPayToPromoteProcess'));
 const CampaignSupportShare = React.lazy(() => import(/* webpackChunkName: 'CampaignSupportShare' */ './js/pages/CampaignSupport/CampaignSupportShare'));
-const CampaignUpdatesPage = React.lazy(() => import(/* webpackChunkName: 'CampaignNewsPage' */ './js/pages/CampaignNewsPage'));
+const CampaignUpdatesPage = React.lazy(() => import(/* webpackChunkName: 'CampaignNewsPage' */ './js/common/pages/Campaign/CampaignNewsPage'));
 const CompleteYourProfileMobile = React.lazy(() => import(/* webpackChunkName: 'CompleteYourProfileMobile' */ './js/pages/Settings/CompleteYourProfileMobile'));
 const Credits = React.lazy(() => import(/* webpackChunkName: 'Credits' */ './js/pages/Credits'));
 const FAQ = React.lazy(() => import(/* webpackChunkName: 'FAQ' */ './js/pages/FAQ'));

@@ -8,13 +8,13 @@ import CampaignSupporterActions from '../../common/actions/CampaignSupporterActi
 import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
 import historyPush from '../../common/utils/historyPush';
 import { renderLog } from '../../common/utils/logging';
-import CampaignShareChunk from '../../components/Campaign/CampaignShareChunk';
-import CampaignNewsItemPublishSteps from '../../components/Navigation/CampaignNewsItemPublishSteps';
-import ShareByCopyLink from '../../components/Share/ShareByCopyLink';
-import ShareByEmailButton from '../../components/Share/ShareByEmailButton';
-import SendFacebookDirectMessageButton from '../../components/Share/ShareByFacebookDirectMessageButton';
+import CampaignShareChunk from '../../common/components/Campaign/CampaignShareChunk';
+import CampaignNewsItemPublishSteps from '../../common/components/Navigation/CampaignNewsItemPublishSteps';
+import ShareByCopyLink from '../../common/components/CampaignShare/ShareByCopyLink';
+import ShareByEmailButton from '../../common/components/CampaignShare/ShareByEmailButton';
+import SendFacebookDirectMessageButton from '../../common/components/CampaignShare/ShareByFacebookDirectMessageButton';
 import { CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
-import { CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper, CampaignSupportImageWrapper, CampaignSupportImageWrapperText, CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper, CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
+import { CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper, CampaignSupportImageWrapper, CampaignSupportImageWrapperText, CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper, CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../common/components/Style/CampaignSupportStyles';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
 import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
 import CampaignStore from '../../common/stores/CampaignStore';
@@ -23,7 +23,7 @@ import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiers } f
 // import ShareOnFacebookButton from '../../components/Share/ShareOnFacebookButton';
 // import ShareOnTwitterButton from '../../components/Share/ShareOnTwitterButton';
 
-const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../../components/Campaign/CampaignRetrieveController'));
+const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../../common/components/Campaign/CampaignRetrieveController'));
 const RecommendedCampaignListRetrieveController = React.lazy(() => import(/* webpackChunkName: 'RecommendedCampaignListRetrieveController' */ '../../components/Campaign/RecommendedCampaignListRetrieveController'));
 const VoterFirstRetrieveController = loadable(() => import(/* webpackChunkName: 'VoterFirstRetrieveController' */ '../../components/Settings/VoterFirstRetrieveController'));
 

@@ -23,7 +23,7 @@ import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNe
 import initializejQuery from '../../common/utils/initializejQuery';
 
 
-const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../../components/Campaign/CampaignRetrieveController'));
+const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../../common/components/Campaign/CampaignRetrieveController'));
 
 
 class CampaignStartEditAll extends Component {
