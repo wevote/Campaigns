@@ -1,6 +1,6 @@
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import React, { Component, Suspense } from 'react';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import muiTheme from './js/common/components/Style/muiTheme';
 import DelayedLoad from './js/common/components/Widgets/DelayedLoad';

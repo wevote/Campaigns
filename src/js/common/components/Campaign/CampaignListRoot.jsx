@@ -1,9 +1,13 @@
+import { ArrowForwardIos } from '@mui/icons-material';
 import withStyles from '@mui/styles/withStyles';
 import { filter } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { HorizontallyScrollingContainer, ScrollingInnerWrapper, ScrollingOuterWrapper } from '../Style/ScrollingStyles';
+import {
+  CampaignsHorizontallyScrollingContainer, CampaignsScrollingInnerWrapper, CampaignsScrollingOuterWrapper,
+  RightArrowInnerWrapper, RightArrowOuterWrapper,
+} from '../Style/ScrollingStyles';
 import { convertStateCodeToStateText } from '../../utils/addressFunctions';
 import arrayContains from '../../utils/arrayContains';
 import { getTodayAsInteger, getYearFromUltimateElectionDate } from '../../utils/dateFormat';
@@ -225,7 +229,7 @@ class CampaignListRoot extends Component {
 
   render () {
     renderLog('CampaignListRoot');  // Set LOG_RENDER_EVENTS to log all renders
-    const { hideTitle, listModeFilters, searchText, titleTextIfCampaigns } = this.props;
+    const { classes, hideTitle, listModeFilters, searchText, titleTextForList } = this.props;
     const isSearching = searchText && searchText.length > 0;
     const { campaignList, campaignSearchResults, filteredCampaignList, timeStampOfChange } = this.state;
     const filteredCampaignListLength = (filteredCampaignList) ? filteredCampaignList.length : 0;
@@ -235,17 +239,17 @@ class CampaignListRoot extends Component {
     return (
       <CampaignListWrapper>
         {!!(!hideTitle &&
-            titleTextIfCampaigns &&
-            titleTextIfCampaigns.length &&
+            titleTextForList &&
+            titleTextForList.length &&
             campaignList) &&
         (
           <WhatIsHappeningTitle>
-            {titleTextIfCampaigns}
+            {titleTextForList}
           </WhatIsHappeningTitle>
         )}
-        <ScrollingOuterWrapper>
-          <ScrollingInnerWrapper>
-            <HorizontallyScrollingContainer>
+        <CampaignsScrollingOuterWrapper>
+          <CampaignsScrollingInnerWrapper>
+            <CampaignsHorizontallyScrollingContainer>
               <CampaignCardList
                 incomingCampaignList={(isSearching ? campaignSearchResults : filteredCampaignList)}
                 listModeFilters={listModeFilters}
@@ -254,14 +258,20 @@ class CampaignListRoot extends Component {
                 timeStampOfChange={timeStampOfChange}
                 verticalListOn
               />
-            </HorizontallyScrollingContainer>
-          </ScrollingInnerWrapper>
-        </ScrollingOuterWrapper>
+            </CampaignsHorizontallyScrollingContainer>
+          </CampaignsScrollingInnerWrapper>
+          <RightArrowOuterWrapper className="u-show-desktop-tablet">
+            <RightArrowInnerWrapper>
+              <ArrowForwardIos classes={{ root: classes.arrowRoot }} />
+            </RightArrowInnerWrapper>
+          </RightArrowOuterWrapper>
+        </CampaignsScrollingOuterWrapper>
       </CampaignListWrapper>
     );
   }
 }
 CampaignListRoot.propTypes = {
+  classes: PropTypes.object,
   hideTitle: PropTypes.bool,
   incomingList: PropTypes.array,
   incomingListTimeStampOfChange: PropTypes.number,
@@ -269,10 +279,13 @@ CampaignListRoot.propTypes = {
   listModeFiltersTimeStampOfChange: PropTypes.number,
   searchText: PropTypes.string,
   stateCode: PropTypes.string,
-  titleTextIfCampaigns: PropTypes.string,
+  titleTextForList: PropTypes.string,
 };
 
 const styles = () => ({
+  arrowRoot: {
+    fontSize: 24,
+  },
   iconButton: {
     padding: 8,
   },
