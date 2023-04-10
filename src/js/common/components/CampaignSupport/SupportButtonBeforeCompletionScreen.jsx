@@ -10,7 +10,9 @@ import AppObservableStore from '../../stores/AppObservableStore';
 import CampaignStore from '../../stores/CampaignStore';
 import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import VoterStore from '../../../stores/VoterStore';
+import webAppConfig from '../../../config';
 
+const nextReleaseFeaturesEnabled = webAppConfig.ENABLE_NEXT_RELEASE_FEATURES === undefined ? false : webAppConfig.ENABLE_NEXT_RELEASE_FEATURES;
 
 class SupportButtonBeforeCompletionScreen extends Component {
   constructor (props) {
@@ -163,12 +165,14 @@ class SupportButtonBeforeCompletionScreen extends Component {
 
   render () {
     renderLog('SupportButtonBeforeCompletionScreen');  // Set LOG_RENDER_EVENTS to log all renders
-    const { campaignSEOFriendlyPath, campaignXWeVoteId, classes, inCompressedMode } = this.props;
+    const { campaignSEOFriendlyPath, campaignXWeVoteId, classes, inButtonFullWidthMode, inCompressedMode } = this.props;
     const hideFooterBehindModal = false;
     let supportButtonClasses;
     const inWebApp = true; // isWebApp();
     if (inWebApp) {
-      if (inCompressedMode) {
+      if (inButtonFullWidthMode) {
+        supportButtonClasses = classes.buttonDefaultCordova;
+      } else if (inCompressedMode) {
         supportButtonClasses = classes.buttonCompressedMode;
       } else {
         supportButtonClasses = classes.buttonDefault;
@@ -177,7 +181,7 @@ class SupportButtonBeforeCompletionScreen extends Component {
       supportButtonClasses = classes.buttonDefaultCordova;
     }
     // console.log('SupportButtonBeforeCompletionScreen render campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
-    if (!campaignSEOFriendlyPath && !campaignXWeVoteId) {
+    if (!campaignSEOFriendlyPath && !campaignXWeVoteId && !nextReleaseFeaturesEnabled) {
       // console.log('SupportButtonBeforeCompletionScreen render voter NOT found');
       return <div className="undefined-campaign-state" />;
     }
@@ -202,7 +206,7 @@ class SupportButtonBeforeCompletionScreen extends Component {
               color="primary"
               id="keepHelpingButtonFooter"
               onClick={() => this.props.functionToUseToKeepHelping()}
-              variant={inCompressedMode ? 'outlined' : 'contained'}
+              variant={inButtonFullWidthMode || !inCompressedMode ? 'contained' : 'outline'}
             >
               I&apos;d like to keep helping!
             </Button>
@@ -212,15 +216,17 @@ class SupportButtonBeforeCompletionScreen extends Component {
               color="primary"
               id="supportButtonFooter"
               onClick={this.submitSupportButtonMobile}
-              variant={inCompressedMode ? 'outlined' : 'contained'}
+              variant={inButtonFullWidthMode || !inCompressedMode ? 'contained' : 'outline'}
             >
               {voterCanVoteForPoliticianInCampaign ? (
                 <span>
-                  Support with my vote
+                  {/* Support with my vote */}
+                  Help them win
                 </span>
               ) : (
                 <span>
-                  I support this campaign
+                  {/* I support this campaign */}
+                  Help them win
                 </span>
               )}
             </Button>
@@ -236,7 +242,10 @@ SupportButtonBeforeCompletionScreen.propTypes = {
   classes: PropTypes.object,
   functionToUseToKeepHelping: PropTypes.func.isRequired,
   functionToUseWhenProfileComplete: PropTypes.func.isRequired,
+  inButtonFullWidthMode: PropTypes.bool,
   inCompressedMode: PropTypes.bool,
+  politicianWeVoteId: PropTypes.string,
+  politicianSEOFriendlyPath: PropTypes.string,
 };
 
 const styles = () => ({
@@ -260,9 +269,9 @@ const styles = () => ({
     boxShadow: 'none !important',
     fontSize: 20,
     height: '35px !important',
-    padding: '0 12px',
+    // padding: '0 12px',
     textTransform: 'none',
-    width: '100%',
+    width: '280px',
   },
 });
 

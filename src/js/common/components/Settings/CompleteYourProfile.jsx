@@ -1,4 +1,3 @@
-import loadable from '@loadable/component';
 import { Button } from '@mui/material';
 import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
@@ -20,8 +19,9 @@ import VoterEmailInputField from './VoterEmailInputField';
 import VoterFirstNameInputField from './VoterFirstNameInputField';
 import VoterLastNameInputField from './VoterLastNameInputField';
 
-const SignInButton = loadable(() => import(/* webpackChunkName: 'SignInButton' */ '../Navigation/SignInButton'));
-const SignInModalController = loadable(() => import(/* webpackChunkName: 'SignInModalController' */ './SignInModalController'));
+const SignInButton = React.lazy(() => import(/* webpackChunkName: 'SignInButton' */ '../Navigation/SignInButton'));
+// const SignInModalController = React.lazy(() => import(/* webpackChunkName: 'SignInModalController' */ './SignInModalController'));
+// const SignInModal = React.lazy(() => import(/* webpackChunkName: 'SignInModal' */ '../SignIn/SignInModal'));
 
 class CompleteYourProfile extends Component {
   constructor (props) {
@@ -259,22 +259,20 @@ class CompleteYourProfile extends Component {
       if (voterCanVoteForPoliticianInCampaign) {
         buttonText = 'Support with my vote';
       } else {
-        buttonText = 'I support this campaign';
+        buttonText = 'Show your support';
       }
       introductionText = <span>Leading up to election day, WeVote.US will remind you to vote for all of the candidates you support. We keep your email secure and confidential.</span>;
     } else if (supportCampaignOnCampaignHome) {
       if (voterCanVoteForPoliticianInCampaign) {
         buttonText = 'Support with my vote';
       } else {
-        buttonText = 'I support this campaign';
+        buttonText = 'Show your support';
       }
       outerMarginsOff = true;
     }
     return (
       <Wrapper>
-        <Suspense fallback={<span>&nbsp;</span>}>
-          <SignInModalController />
-        </Suspense>
+        {/* <Suspense fallback={<span>&nbsp;</span>}><SignInModalController /></Suspense> */}
         <section>
           {!!(introductionText) && (
             <IntroductionText>
@@ -307,7 +305,7 @@ class CompleteYourProfile extends Component {
               <VisibleToPublicCheckbox campaignXWeVoteId={campaignXWeVoteId} />
             </CheckboxWrapper>
           )}
-          <ButtonWrapper outerMarginsOff={outerMarginsOff}>
+          <CompleteYourProfileButtonWrapper outerMarginsOff={outerMarginsOff}>
             <Button
               classes={{ root: classes.buttonDesktop }}
               color="primary"
@@ -317,7 +315,7 @@ class CompleteYourProfile extends Component {
             >
               {buttonText}
             </Button>
-          </ButtonWrapper>
+          </CompleteYourProfileButtonWrapper>
           <FinePrint outerMarginsOff={outerMarginsOff}>
             By continuing, you accept WeVote.US&apos;s
             {' '}
@@ -362,6 +360,8 @@ CompleteYourProfile.propTypes = {
   campaignXWeVoteId: PropTypes.string,
   classes: PropTypes.object,
   functionToUseWhenProfileComplete: PropTypes.func.isRequired,
+  politicianSEOFriendlyPath: PropTypes.string,
+  politicianWeVoteId: PropTypes.string,
   startCampaign: PropTypes.bool,
   supportCampaign: PropTypes.bool,
   supportCampaignOnCampaignHome: PropTypes.bool,
@@ -388,7 +388,7 @@ const AlreadyHaveAccount = styled('div')`
   margin-right: 2px;
 `;
 
-const ButtonWrapper = styled('div', {
+const CompleteYourProfileButtonWrapper = styled('div', {
   shouldForwardProp: (prop) => !['outerMarginsOff'].includes(prop),
 })(({ outerMarginsOff }) => (`
   background-color: #fff;

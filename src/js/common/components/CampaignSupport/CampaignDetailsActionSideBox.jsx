@@ -11,11 +11,13 @@ import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 import VoterStore from '../../../stores/VoterStore';
 import CampaignShareChunk from '../Campaign/CampaignShareChunk';
 import SupportButton from './SupportButton';
+import webAppConfig from '../../../config';
 
 const CompleteYourProfile = React.lazy(() => import(/* webpackChunkName: 'CompleteYourProfile' */ '../Settings/CompleteYourProfile'));
 const MostRecentCampaignSupport = React.lazy(() => import(/* webpackChunkName: 'MostRecentCampaignSupport' */ './MostRecentCampaignSupport'));
 const VisibleToPublicCheckbox = React.lazy(() => import(/* webpackChunkName: 'VisibleToPublicCheckbox' */ './VisibleToPublicCheckbox'));
 
+const nextReleaseFeaturesEnabled = webAppConfig.ENABLE_NEXT_RELEASE_FEATURES === undefined ? false : webAppConfig.ENABLE_NEXT_RELEASE_FEATURES;
 
 class CampaignDetailsActionSideBox extends Component {
   constructor (props) {
@@ -182,11 +184,13 @@ class CampaignDetailsActionSideBox extends Component {
 
   render () {
     renderLog('CampaignDetailsActionSideBox');  // Set LOG_RENDER_EVENTS to log all renders
-    const { campaignSEOFriendlyPath, campaignXWeVoteId, classes, inDraftMode } = this.props;
+    const { campaignSEOFriendlyPath, campaignXWeVoteId, classes, inDraftMode, politicianSEOFriendlyPath, politicianWeVoteId } = this.props;
     // console.log('CampaignDetailsActionSideBox render campaignXWeVoteId:', campaignXWeVoteId, ', campaignSEOFriendlyPath:', campaignSEOFriendlyPath);
-    if (!campaignSEOFriendlyPath && !campaignXWeVoteId) {
-      // console.log('CampaignDetailsActionSideBox render voter NOT found');
-      return <div className="undefined-campaign-state" />;
+    if (!nextReleaseFeaturesEnabled) {
+      if (!campaignSEOFriendlyPath && !campaignXWeVoteId) {
+        // console.log('CampaignDetailsActionSideBox render voter NOT found');
+        return <div className="undefined-campaign-state" />;
+      }
     }
 
     const {
@@ -279,6 +283,8 @@ class CampaignDetailsActionSideBox extends Component {
                           <CompleteYourProfile
                             campaignXWeVoteId={campaignXWeVoteId}
                             functionToUseWhenProfileComplete={this.props.functionToUseWhenProfileComplete}
+                            politicianSEOFriendlyPath={politicianSEOFriendlyPath}
+                            politicianWeVoteId={politicianWeVoteId}
                             supportCampaignOnCampaignHome
                           />
                         </Suspense>
@@ -300,6 +306,8 @@ CampaignDetailsActionSideBox.propTypes = {
   classes: PropTypes.object,
   functionToUseToKeepHelping: PropTypes.func.isRequired,
   functionToUseWhenProfileComplete: PropTypes.func.isRequired,
+  politicianSEOFriendlyPath: PropTypes.string,
+  politicianWeVoteId: PropTypes.string,
   inDraftMode: PropTypes.bool,
 };
 

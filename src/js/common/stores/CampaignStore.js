@@ -4,6 +4,8 @@ import anonymous from '../../../img/global/icons/avatar-generic.png';
 import arrayContains from '../utils/arrayContains';
 import VoterStore from '../../stores/VoterStore'; // eslint-disable-line import/no-cycle
 
+const SUPPORTERS_COUNT_NEXT_GOAL_DEFAULT = 10;
+
 class CampaignStore extends ReduceStore {
   getInitialState () {
     return {
@@ -232,6 +234,10 @@ class CampaignStore extends ReduceStore {
     return this.getState().allCachedCampaignXPoliticianLists[campaignXWeVoteId] || [];
   }
 
+  getCampaignXSupportersCountNextGoalDefault () {
+    return SUPPORTERS_COUNT_NEXT_GOAL_DEFAULT;
+  }
+
   getRecommendedCampaignXList (campaignXWeVoteId) {
     const recommendedCampaignXWeVoteIdList = this.getState().allCachedRecommendedCampaignXWeVoteIdLists[campaignXWeVoteId] || [];
     return this.getCampaignXListFromListOfWeVoteIds(recommendedCampaignXWeVoteIdList);
@@ -444,6 +450,12 @@ class CampaignStore extends ReduceStore {
           }
         });
         // console.log('allCachedCampaignXWeVoteIdsBySEOFriendlyPath:', allCachedCampaignXWeVoteIdsBySEOFriendlyPath);
+        /* TODO: Next time we are testing this area... this should work, is a better sample, and should run a bit faster
+        revisedState = { ...revisedState, allCachedCampaignXDicts, allCachedCampaignXOwnerPhotos, allCachedCampaignXOwners,
+          allCachedCampaignXPoliticianLists, allCachedCampaignXWeVoteIdsBySEOFriendlyPath, allCachedPoliticianWeVoteIdsByCampaignX,
+          allCachedRecommendedCampaignXWeVoteIdLists, voterCanSendUpdatesCampaignXWeVoteIds, voterOwnedCampaignXWeVoteIds,
+        };
+        */
         revisedState = { ...revisedState, allCachedCampaignXDicts };
         revisedState = { ...revisedState, allCachedCampaignXOwnerPhotos };
         revisedState = { ...revisedState, allCachedCampaignXOwners };

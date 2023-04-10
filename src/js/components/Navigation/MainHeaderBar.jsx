@@ -15,7 +15,7 @@ import TopNavigationAppBar from './TopNavigationAppBar';
 
 const HeaderBarLogo = loadable(() => import(/* webpackChunkName: 'HeaderBarLogo' */ './HeaderBarLogo'));
 const SignInButton = loadable(() => import(/* webpackChunkName: 'SignInButton' */ '../../common/components/Navigation/SignInButton'));
-const SignInModalController = loadable(() => import(/* webpackChunkName: 'SignInModalController' */ '../../common/components/Settings/SignInModalController'));
+// const SignInModalController = loadable(() => import(/* webpackChunkName: 'SignInModalController' */ '../../common/components/SignIn/SignInModalController'));
 // const TopNavigationDesktopController = loadable(() => import(/* webpackChunkName: 'TopNavigationDesktopController' */ './TopNavigationDesktopController'));
 const VoterNameAndPhoto = loadable(() => import(/* webpackChunkName: 'VoterNameAndPhoto' */ './VoterNameAndPhoto'));
 
@@ -166,9 +166,11 @@ export default function MainHeaderBar (displayHeader) {
             <Typography variant="h6" className={classes.title}>
               &nbsp;
             </Typography>
+            {/*
             <Suspense fallback={<span>&nbsp;</span>}>
               <SignInModalController />
             </Suspense>
+            */}
             <div className="u-show-desktop-tablet">
               <DelayedLoad waitBeforeShow={500}>
                 <Suspense fallback={<span>&nbsp;</span>}>

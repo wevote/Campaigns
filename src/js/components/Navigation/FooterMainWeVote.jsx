@@ -119,7 +119,7 @@ class FooterMainWeVote extends Component {
               {/* <Link id="footerLinkForPricing" className={classes.link} to="/pricing">Pricing</Link> */}
               <OpenExternalWebSite
                 linkIdAttribute="footerLinkSeeYourBallot"
-                url="https://WeVote.US/ballot"
+                url="https://WeVote.US/ready"
                 target="_blank"
                 body={(
                   <span>See Your Ballot</span>

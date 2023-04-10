@@ -11,7 +11,7 @@ class CampaignSupportThermometer extends React.Component {
     super(props);
     this.state = {
       finalElectionDateInPast: false,
-      supportersCountNextGoal: 0,
+      supportersCountNextGoal: CampaignStore.getCampaignXSupportersCountNextGoalDefault(),
       supportersCount: 0,
     };
   }
@@ -64,11 +64,12 @@ class CampaignSupportThermometer extends React.Component {
         supporters_count: supportersCount,
         supporters_count_next_goal: supportersCountNextGoal,
       } = campaignX;
+      const supportersCountNextGoalWithFloor = supportersCountNextGoal ||  CampaignStore.getCampaignXSupportersCountNextGoalDefault();
       if (campaignXWeVoteIdFromDict) {
         this.setState({
           finalElectionDateInPast,
           supportersCount,
-          supportersCountNextGoal,
+          supportersCountNextGoal: supportersCountNextGoalWithFloor,
         });
       }
     }
@@ -95,7 +96,7 @@ class CampaignSupportThermometer extends React.Component {
         supportersText = `${numberWithCommasText} supported.`;
       }
     } else if (supportersCount === 0) {
-      supportersText = '';
+      supportersText = 'Be the first.';
     } else if (supportersCount === 1) {
       supportersText = `${numberWithCommasText} supporter.`;
     } else {
@@ -114,7 +115,8 @@ class CampaignSupportThermometer extends React.Component {
               Let&apos;s get to
               {' '}
               {numberWithCommas(supportersCountNextGoal)}
-              !
+              {' '}
+              supporters!
             </GoalText>
           )}
         </TextWrapper>
