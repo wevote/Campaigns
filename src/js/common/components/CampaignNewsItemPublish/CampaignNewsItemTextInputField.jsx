@@ -4,10 +4,10 @@ import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import CampaignNewsItemActions from '../../actions/CampaignNewsItemActions';
-import { renderLog } from '../../common/utils/logging';
-import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
-import CampaignNewsItemStore from '../../common/stores/CampaignNewsItemStore';
-import CampaignStore from '../../common/stores/CampaignStore';
+import { renderLog } from '../../utils/logging';
+import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
+import CampaignNewsItemStore from '../../stores/CampaignNewsItemStore';
+import CampaignStore from '../../stores/CampaignStore';
 
 class CampaignNewsItemTextInputField extends Component {
   constructor (props) {

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import AppObservableStore from '../../common/stores/AppObservableStore';
-import initializejQuery from '../../common/utils/initializejQuery';
-import { renderLog } from '../../common/utils/logging';
-import VoterActions from '../../actions/VoterActions';
+import AppObservableStore from '../../stores/AppObservableStore';
+import initializejQuery from '../../utils/initializejQuery';
+import { renderLog } from '../../utils/logging';
+import VoterActions from '../../../actions/VoterActions';
 
 
 class VoterFirstRetrieveController extends Component {

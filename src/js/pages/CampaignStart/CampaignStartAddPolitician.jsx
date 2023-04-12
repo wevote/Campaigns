@@ -13,7 +13,7 @@ import { renderLog } from '../../common/utils/logging';
 import AddCandidateInputField from '../../components/CampaignStart/AddPoliticianInputField';
 import EditPoliticianList from '../../components/CampaignStart/EditPoliticianList';
 import CampaignStartSteps from '../../components/Navigation/CampaignStartSteps';
-import { CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
+import { CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../common/components/Style/CampaignProcessStyles';
 import { CampaignStartDesktopButtonPanel, CampaignStartDesktopButtonWrapper, CampaignStartMobileButtonPanel, CampaignStartMobileButtonWrapper, CampaignStartSection, CampaignStartSectionWrapper } from '../../components/Style/CampaignStartStyles';
 import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
 import CampaignStartStore from '../../stores/CampaignStartStore';

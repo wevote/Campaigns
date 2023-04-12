@@ -4,15 +4,15 @@ import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import VoterActions from '../../actions/VoterActions';
-import ShareActions from '../../common/actions/ShareActions';
-import { OuterWrapper, PageWrapper, StepNumberBordered, StepNumberPlaceholder } from '../../common/components/Style/stepDisplayStyles';
-import ShareStore from '../../common/stores/ShareStore';
-import historyPush from '../../common/utils/historyPush';
-import { renderLog } from '../../common/utils/logging';
-import { CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../common/components/Style/CampaignSupportStyles';
-import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../common/utils/campaignUtils';
-import initializejQuery from '../../common/utils/initializejQuery';
+import VoterActions from '../../../actions/VoterActions';
+import ShareActions from '../../actions/ShareActions';
+import { OuterWrapper, PageWrapper, StepNumberBordered, StepNumberPlaceholder } from '../../components/Style/stepDisplayStyles';
+import ShareStore from '../../stores/ShareStore';
+import historyPush from '../../utils/historyPush';
+import { renderLog } from '../../utils/logging';
+import { CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
+import initializejQuery from '../../utils/initializejQuery';
 
 
 class SuperSharingIntro extends Component {
