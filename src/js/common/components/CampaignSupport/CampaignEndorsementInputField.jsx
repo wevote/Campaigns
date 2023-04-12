@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import CampaignSupporterActions from '../../common/actions/CampaignSupporterActions';
-import { renderLog } from '../../common/utils/logging';
-import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
-import CampaignStore from '../../common/stores/CampaignStore';
-import CampaignSupporterStore from '../../common/stores/CampaignSupporterStore';
+import CampaignSupporterActions from '../../actions/CampaignSupporterActions';
+import { renderLog } from '../../utils/logging';
+import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
+import CampaignStore from '../../stores/CampaignStore';
+import CampaignSupporterStore from '../../stores/CampaignSupporterStore';
 
 class CampaignEndorsementInputField extends Component {
   constructor (props) {

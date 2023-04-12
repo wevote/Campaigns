@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import ShareActions from '../../common/actions/ShareActions';
-import ShareStore from '../../common/stores/ShareStore';
-import { renderLog } from '../../common/utils/logging';
-import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
-import CampaignStore from '../../common/stores/CampaignStore';
+import ShareActions from '../../actions/ShareActions';
+import ShareStore from '../../stores/ShareStore';
+import { renderLog } from '../../utils/logging';
+import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
+import CampaignStore from '../../stores/CampaignStore';
 import superSharingSuggestedEmailText from '../../utils/superSharingSuggestedEmailText';
 
 class SuperShareItemComposeInputField extends Component {

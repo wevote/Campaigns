@@ -2,13 +2,13 @@ import { Done } from '@mui/icons-material';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
-import { InnerWrapper, OuterWrapperPageTitle, OuterWrapperSteps, OuterWrapperStepsOff, PageTitle, StepCircle, StepNumber, StepWrapper } from '../../common/components/Style/stepDisplayStyles';
-import historyPush from '../../common/utils/historyPush';
-import { renderLog } from '../../common/utils/logging';
-import { messageService } from '../../common/stores/AppObservableStore';
-import CampaignStore from '../../common/stores/CampaignStore';
-import VoterStore from '../../stores/VoterStore';
+import commonMuiStyles from '../Style/commonMuiStyles';
+import { InnerWrapper, OuterWrapperPageTitle, OuterWrapperSteps, OuterWrapperStepsOff, PageTitle, StepCircle, StepNumber, StepWrapper } from '../Style/stepDisplayStyles';
+import historyPush from '../../utils/historyPush';
+import { renderLog } from '../../utils/logging';
+import { messageService } from '../../stores/AppObservableStore';
+import CampaignStore from '../../stores/CampaignStore';
+import VoterStore from '../../../stores/VoterStore';
 import { onStep1ClickPath, onStep2ClickPath, onStep3ClickPath, onStep4ClickPath } from '../../utils/superSharingStepPaths';
 
 

@@ -11,7 +11,7 @@ import standardBoxShadow from '../common/components/Style/standardBoxShadow';
 import { OuterWrapper, PageWrapper } from '../common/components/Style/stepDisplayStyles';
 import { renderLog } from '../common/utils/logging';
 import webAppConfig from '../config';
-import AddContactConsts from '../constants/AddContactConsts';
+import AddContactConsts from '../common/constants/AddContactConsts';
 import VoterStore from '../stores/VoterStore';
 
 

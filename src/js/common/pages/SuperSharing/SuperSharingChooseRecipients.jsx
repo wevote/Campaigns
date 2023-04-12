@@ -6,33 +6,33 @@ import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
-import VoterActions from '../../actions/VoterActions';
-import ShareActions from '../../common/actions/ShareActions';
-import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
-import { StepCircleGray } from '../../common/components/Style/stepDisplayStyles';
-import ShareStore from '../../common/stores/ShareStore';
-import arrayContains from '../../common/utils/arrayContains';
-import historyPush from '../../common/utils/historyPush';
-import { renderLog } from '../../common/utils/logging';
-import removeValueFromArray from '../../common/utils/removeValueFromArray';
-import shortenText from '../../common/utils/shortenText';
-import defaultVoterContactEmailSort from '../../common/utils/voterContactEmailSorting';
+import VoterActions from '../../../actions/VoterActions';
+import ShareActions from '../../actions/ShareActions';
+import commonMuiStyles from '../../components/Style/commonMuiStyles';
+import { StepCircleGray } from '../../components/Style/stepDisplayStyles';
+import ShareStore from '../../stores/ShareStore';
+import arrayContains from '../../utils/arrayContains';
+import historyPush from '../../utils/historyPush';
+import { renderLog } from '../../utils/logging';
+import removeValueFromArray from '../../utils/removeValueFromArray';
+import shortenText from '../../utils/shortenText';
+import defaultVoterContactEmailSort from '../../utils/voterContactEmailSorting';
 import SuperSharingSteps from '../../components/Navigation/SuperSharingSteps';
 import { CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
-import { CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper, CampaignSupportImageWrapper, CampaignSupportImageWrapperText, CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../common/components/Style/CampaignSupportStyles';
+import { CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper, CampaignSupportImageWrapper, CampaignSupportImageWrapperText, CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
-import LoadMoreItemsManually from '../../common/components/Widgets/LoadMoreItemsManually';
-import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
-import CampaignStore from '../../common/stores/CampaignStore';
-import VoterStore from '../../stores/VoterStore';
-import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../common/utils/campaignUtils';
-import initializejQuery from '../../common/utils/initializejQuery';
+import LoadMoreItemsManually from '../../components/Widgets/LoadMoreItemsManually';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import CampaignStore from '../../stores/CampaignStore';
+import VoterStore from '../../../stores/VoterStore';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
+import initializejQuery from '../../utils/initializejQuery';
 
 
 const NUMBER_OF_RECIPIENTS_TO_ADD_WHEN_MORE_CLICKED = 25;
 const STARTING_NUMBER_OF_RECIPIENTS_TO_DISPLAY = 15;
 
-const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../../common/components/Campaign/CampaignRetrieveController'));
+const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../../components/Campaign/CampaignRetrieveController'));
 const VoterFirstRetrieveController = loadable(() => import(/* webpackChunkName: 'VoterFirstRetrieveController' */ '../../components/Settings/VoterFirstRetrieveController'));
 
 

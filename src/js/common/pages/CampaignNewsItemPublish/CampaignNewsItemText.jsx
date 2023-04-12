@@ -1,36 +1,34 @@
 import loadable from '@loadable/component';
 import { Button } from '@mui/material';
-import styled from 'styled-components';
 import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 import React, { Component, Suspense } from 'react';
 import Helmet from 'react-helmet';
-import CampaignSupporterActions from '../../common/actions/CampaignSupporterActions';
-import VoterActions from '../../actions/VoterActions';
-import VoterPhotoUpload from '../../common/components/Settings/VoterPhotoUpload';
-import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../common/components/Style/adviceBoxStyles';
-import commonMuiStyles from '../../common/components/Style/commonMuiStyles';
-import historyPush from '../../common/utils/historyPush';
-import { renderLog } from '../../common/utils/logging';
-import politicianListToSentenceString from '../../common/utils/politicianListToSentenceString';
-import CampaignEndorsementInputField from '../../components/CampaignSupport/CampaignEndorsementInputField';
-import CampaignSupportSteps from '../../components/Navigation/CampaignSupportSteps';
+import CampaignNewsItemActions from '../../actions/CampaignNewsItemActions';
+import VoterActions from '../../../actions/VoterActions';
+import VoterPhotoUpload from '../../components/Settings/VoterPhotoUpload';
+import { AdviceBox, AdviceBoxText, AdviceBoxTitle, AdviceBoxWrapper } from '../../components/Style/adviceBoxStyles';
+import commonMuiStyles from '../../components/Style/commonMuiStyles';
+import historyPush from '../../utils/historyPush';
+import { renderLog } from '../../utils/logging';
+import politicianListToSentenceString from '../../utils/politicianListToSentenceString';
+import CampaignNewsItemTextInputField from '../../components/CampaignNewsItemPublish/CampaignNewsItemTextInputField';
+import CampaignNewsItemPublishSteps from '../../components/Navigation/CampaignNewsItemPublishSteps';
 import { CampaignImage, CampaignProcessStepIntroductionText, CampaignProcessStepTitle } from '../../components/Style/CampaignProcessStyles';
-import { CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper, CampaignSupportImageWrapper, CampaignSupportImageWrapperText, CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper, CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../common/components/Style/CampaignSupportStyles';
+import { CampaignSupportDesktopButtonPanel, CampaignSupportDesktopButtonWrapper, CampaignSupportImageWrapper, CampaignSupportImageWrapperText, CampaignSupportMobileButtonPanel, CampaignSupportMobileButtonWrapper, CampaignSupportSection, CampaignSupportSectionWrapper, SkipForNowButtonPanel, SkipForNowButtonWrapper } from '../../components/Style/CampaignSupportStyles';
 import { ContentInnerWrapperDefault, ContentOuterWrapperDefault, PageWrapperDefault } from '../../components/Style/PageWrapperStyles';
-import AppObservableStore, { messageService } from '../../common/stores/AppObservableStore';
-import CampaignStore from '../../common/stores/CampaignStore';
-import CampaignSupporterStore from '../../common/stores/CampaignSupporterStore';
-import VoterStore from '../../stores/VoterStore';
-import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../common/utils/campaignUtils';
-import initializejQuery from '../../common/utils/initializejQuery';
+import AppObservableStore, { messageService } from '../../stores/AppObservableStore';
+import CampaignNewsItemStore from '../../stores/CampaignNewsItemStore';
+import CampaignStore from '../../stores/CampaignStore';
+import VoterStore from '../../../stores/VoterStore';
+import { getCampaignXValuesFromIdentifiers, retrieveCampaignXFromIdentifiersIfNeeded } from '../../utils/campaignUtils';
+import initializejQuery from '../../utils/initializejQuery';
 
-const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../../common/components/Campaign/CampaignRetrieveController'));
-const VisibleToPublicCheckbox = React.lazy(() => import(/* webpackChunkName: 'VisibleToPublicCheckbox' */ '../../common/components/CampaignSupport/VisibleToPublicCheckbox'));
+const CampaignRetrieveController = React.lazy(() => import(/* webpackChunkName: 'CampaignRetrieveController' */ '../../components/Campaign/CampaignRetrieveController'));
 const VoterFirstRetrieveController = loadable(() => import(/* webpackChunkName: 'VoterFirstRetrieveController' */ '../../components/Settings/VoterFirstRetrieveController'));
 
 
-class CampaignSupportEndorsement extends Component {
+class CampaignNewsItemText extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -39,21 +37,25 @@ class CampaignSupportEndorsement extends Component {
       campaignTitle: '',
       campaignXWeVoteId: '',
       chosenWebsiteName: '',
-      payToPromoteStepTurnedOn: true,
     };
   }
 
   componentDidMount () {
-    // console.log('CampaignSupportEndorsement componentDidMount');
+    // console.log('CampaignNewsItemText componentDidMount');
     this.props.setShowHeaderFooter(false);
     this.onAppObservableStoreChange();
     this.appStateSubscription = messageService.getMessage().subscribe(() => this.onAppObservableStoreChange());
+    this.campaignNewsItemStoreListener = CampaignNewsItemStore.addListener(this.onCampaignNewsItemStoreChange.bind(this));
     this.onCampaignStoreChange();
     this.campaignStoreListener = CampaignStore.addListener(this.onCampaignStoreChange.bind(this));
     this.onVoterStoreChange();
     this.voterStoreListener = VoterStore.addListener(this.onVoterStoreChange.bind(this));
     const { match: { params } } = this.props;
-    const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
+    const {
+      campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams,
+      campaignXNewsItemWeVoteId,
+      campaignXWeVoteId: campaignXWeVoteIdFromParams,
+    } = params;
     // console.log('componentDidMount campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
     const {
       campaignPhotoLargeUrl,
@@ -63,6 +65,7 @@ class CampaignSupportEndorsement extends Component {
     } = getCampaignXValuesFromIdentifiers(campaignSEOFriendlyPathFromParams, campaignXWeVoteIdFromParams);
     this.setState({
       campaignPhotoLargeUrl,
+      campaignXNewsItemWeVoteId,
       campaignXPoliticianList,
     });
     if (campaignSEOFriendlyPath) {
@@ -75,10 +78,12 @@ class CampaignSupportEndorsement extends Component {
       });
     }
     if (campaignXWeVoteId) {
+      this.leaveIfNotAllowedToEdit(campaignXWeVoteId);
       this.setState({
         campaignXWeVoteId,
       });
     } else if (campaignXWeVoteIdFromParams) {
+      this.leaveIfNotAllowedToEdit(campaignXWeVoteIdFromParams);
       this.setState({
         campaignXWeVoteId: campaignXWeVoteIdFromParams,
       });
@@ -88,27 +93,33 @@ class CampaignSupportEndorsement extends Component {
     window.scrollTo(0, 0);
   }
 
+  componentDidUpdate () {
+    this.leaveIfNotAllowedToEdit();
+  }
+
   componentWillUnmount () {
     this.props.setShowHeaderFooter(true);
     this.appStateSubscription.unsubscribe();
+    this.campaignNewsItemStoreListener.remove();
     this.campaignStoreListener.remove();
     this.voterStoreListener.remove();
   }
 
   onAppObservableStoreChange () {
     const chosenWebsiteName = AppObservableStore.getChosenWebsiteName();
-    const inPrivateLabelMode = AppObservableStore.inPrivateLabelMode();
     // For now, we assume that paid sites with chosenSiteLogoUrl will turn off "Chip in"
-    const payToPromoteStepTurnedOn = !inPrivateLabelMode;
     this.setState({
       chosenWebsiteName,
-      payToPromoteStepTurnedOn,
     });
   }
 
   onCampaignStoreChange () {
     const { match: { params } } = this.props;
-    const { campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams, campaignXWeVoteId: campaignXWeVoteIdFromParams } = params;
+    const {
+      campaignSEOFriendlyPath: campaignSEOFriendlyPathFromParams,
+      campaignXNewsItemWeVoteId,
+      campaignXWeVoteId: campaignXWeVoteIdFromParams,
+    } = params;
     // console.log('onCampaignStoreChange campaignSEOFriendlyPathFromParams: ', campaignSEOFriendlyPathFromParams, ', campaignXWeVoteIdFromParams: ', campaignXWeVoteIdFromParams);
     const {
       campaignPhotoLargeUrl,
@@ -120,6 +131,7 @@ class CampaignSupportEndorsement extends Component {
     this.setState({
       campaignPhotoLargeUrl,
       campaignTitle,
+      campaignXNewsItemWeVoteId,
       campaignXPoliticianList,
     });
     if (campaignSEOFriendlyPath) {
@@ -132,13 +144,23 @@ class CampaignSupportEndorsement extends Component {
       });
     }
     if (campaignXWeVoteId) {
+      this.leaveIfNotAllowedToEdit(campaignXWeVoteId);
       this.setState({
         campaignXWeVoteId,
       });
     } else if (campaignXWeVoteIdFromParams) {
+      this.leaveIfNotAllowedToEdit(campaignXWeVoteIdFromParams);
       this.setState({
         campaignXWeVoteId: campaignXWeVoteIdFromParams,
       });
+    }
+  }
+
+  onCampaignNewsItemStoreChange () {
+    const { campaignXNewsItemWeVoteId } = this.state;
+    const mostRecentlySavedCampaignXNewsItemWeVoteId = CampaignNewsItemStore.getMostRecentlySavedCampaignXNewsItemWeVoteId();
+    if (mostRecentlySavedCampaignXNewsItemWeVoteId && mostRecentlySavedCampaignXNewsItemWeVoteId !== campaignXNewsItemWeVoteId) {
+      historyPush(`${this.getCampaignBasePath()}/u-preview/${mostRecentlySavedCampaignXNewsItemWeVoteId}`);
     }
   }
 
@@ -157,45 +179,34 @@ class CampaignSupportEndorsement extends Component {
     } else {
       campaignBasePath = `/id/${campaignXWeVoteId}`;
     }
-
     return campaignBasePath;
   }
 
-  goToNextStep = () => {
-    const { payToPromoteStepTurnedOn } = this.state;
-    if (payToPromoteStepTurnedOn) {
-      historyPush(`${this.getCampaignBasePath()}/pay-to-promote`);
+  clickCancel = () => {
+    const { campaignXNewsItemWeVoteId } = this.state;
+    initializejQuery(() => {
+      CampaignNewsItemActions.campaignNewsItemTextQueuedToSave(undefined);
+    });
+    if (campaignXNewsItemWeVoteId) {
+      // TODO: historyPush(`${this.getCampaignBasePath()}/update/${campaignXNewsItemWeVoteId}`);
+      historyPush(`${this.getCampaignBasePath()}/updates`);
     } else {
-      historyPush(`${this.getCampaignBasePath()}/share-campaign`);
+      historyPush(`${this.getCampaignBasePath()}/updates`);
     }
   }
 
-  submitSkipForNow = () => {
-    initializejQuery(() => {
-      CampaignSupporterActions.supporterEndorsementQueuedToSave(undefined);
-    });
-    this.goToNextStep();
-  }
-
-  submitSupporterEndorsement = () => {
-    const { campaignXWeVoteId } = this.state;
+  submitCampaignNewsItemText = () => {
+    const { campaignXNewsItemWeVoteId, campaignXWeVoteId } = this.state;
     if (campaignXWeVoteId) {
-      const supporterEndorsementQueuedToSave = CampaignSupporterStore.getSupporterEndorsementQueuedToSave();
-      const supporterEndorsementQueuedToSaveSet = CampaignSupporterStore.getSupporterEndorsementQueuedToSaveSet();
-      let visibleToPublic = CampaignSupporterStore.getVisibleToPublic();
-      const visibleToPublicChanged = CampaignSupporterStore.getVisibleToPublicQueuedToSaveSet();
-      if (visibleToPublicChanged) {
-        // If it has changed, use new value
-        visibleToPublic = CampaignSupporterStore.getVisibleToPublicQueuedToSave();
-      }
-      if (supporterEndorsementQueuedToSaveSet || visibleToPublicChanged) {
-        // console.log('CampaignSupportEndorsement, supporterEndorsementQueuedToSave:', supporterEndorsementQueuedToSave);
-        const saveVisibleToPublic = true;
-        initializejQuery(() => {
-          CampaignSupporterActions.supporterEndorsementSave(campaignXWeVoteId, supporterEndorsementQueuedToSave, visibleToPublic, saveVisibleToPublic);
-          CampaignSupporterActions.supporterEndorsementQueuedToSave(undefined);
-        });
-      }
+      const campaignNewsItemSubjectQueuedToSave = CampaignNewsItemStore.getCampaignNewsItemSubjectQueuedToSave();
+      const campaignNewsItemSubjectQueuedToSaveSet = CampaignNewsItemStore.getCampaignNewsItemSubjectQueuedToSaveSet();
+      const campaignNewsItemTextQueuedToSave = CampaignNewsItemStore.getCampaignNewsItemTextQueuedToSave();
+      const campaignNewsItemTextQueuedToSaveSet = CampaignNewsItemStore.getCampaignNewsItemTextQueuedToSaveSet();
+      // console.log('CampaignNewsItemText, campaignNewsItemTextQueuedToSave:', campaignNewsItemTextQueuedToSave);
+      initializejQuery(() => {
+        CampaignNewsItemActions.campaignNewsItemTextSave(campaignXWeVoteId, campaignXNewsItemWeVoteId, campaignNewsItemSubjectQueuedToSave, campaignNewsItemSubjectQueuedToSaveSet, campaignNewsItemTextQueuedToSave, campaignNewsItemTextQueuedToSaveSet);
+        CampaignNewsItemActions.campaignNewsItemTextQueuedToSave(undefined);
+      });
       const voterPhotoQueuedToSave = VoterStore.getVoterPhotoQueuedToSave();
       const voterPhotoQueuedToSaveSet = VoterStore.getVoterPhotoQueuedToSaveSet();
       if (voterPhotoQueuedToSaveSet) {
@@ -204,19 +215,34 @@ class CampaignSupportEndorsement extends Component {
           VoterActions.voterPhotoQueuedToSave(undefined);
         });
       }
-      this.goToNextStep();
+      initializejQuery(() => {
+        CampaignNewsItemActions.campaignNewsItemTextQueuedToSave(undefined);
+      });
+    }
+  }
+
+  leaveIfNotAllowedToEdit () {
+    const { campaignXWeVoteId } = this.state;
+    // const campaignIsLoaded = CampaignStore.campaignXIsLoaded(campaignXWeVoteId);
+    // console.log('leaveIfNotAllowedToEdit, campaignXWeVoteId:', campaignXWeVoteId, ', campaignIsLoaded:', campaignIsLoaded);
+    if (CampaignStore.campaignXIsLoaded(campaignXWeVoteId)) {
+      const voterCanEditThisCampaign = CampaignStore.getVoterCanEditThisCampaign(campaignXWeVoteId);
+      // console.log('voterCanEditThisCampaign:', voterCanEditThisCampaign);
+      if (!voterCanEditThisCampaign) {
+        historyPush(`${this.getCampaignBasePath()}/updates`);
+      }
     }
   }
 
   render () {
-    renderLog('CampaignSupportEndorsement');  // Set LOG_RENDER_EVENTS to log all renders
+    renderLog('CampaignNewsItemText');  // Set LOG_RENDER_EVENTS to log all renders
     const { classes } = this.props;
     const {
       campaignPhotoLargeUrl, campaignSEOFriendlyPath, campaignTitle,
-      campaignXPoliticianList, campaignXWeVoteId, chosenWebsiteName,
+      campaignXNewsItemWeVoteId, campaignXPoliticianList, campaignXWeVoteId, chosenWebsiteName,
       voterPhotoUrlLarge,
     } = this.state;
-    const htmlTitle = `Why do you support ${campaignTitle}? - ${chosenWebsiteName}`;
+    const htmlTitle = `Send update to supporters ${campaignTitle}? - ${chosenWebsiteName}`;
     let numberOfPoliticians = 0;
     if (campaignXPoliticianList && campaignXPoliticianList.length) {
       numberOfPoliticians = campaignXPoliticianList.length;
@@ -228,9 +254,10 @@ class CampaignSupportEndorsement extends Component {
         <PageWrapperDefault>
           <ContentOuterWrapperDefault>
             <ContentInnerWrapperDefault>
-              <CampaignSupportSteps
-                atStepNumber2
+              <CampaignNewsItemPublishSteps
+                atStepNumber1
                 campaignBasePath={this.getCampaignBasePath()}
+                campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId}
                 campaignXWeVoteId={campaignXWeVoteId}
               />
               <CampaignSupportImageWrapper>
@@ -243,40 +270,46 @@ class CampaignSupportEndorsement extends Component {
                 )}
               </CampaignSupportImageWrapper>
               <CampaignProcessStepTitle>
-                Why do you support
-                {' '}
-                {numberOfPoliticians > 1 ? (
-                  <>these candidates?</>
-                ) : (
-                  <>this candidate?</>
-                )}
+                Send update to campaign supporters
               </CampaignProcessStepTitle>
               <CampaignProcessStepIntroductionText>
-                People are more likely to support your campaign if it’s clear why you care. Explain how
+                Supporters
+                {numberOfPoliticians > 0 && (
+                  <>
+                    {' '}
+                    of
+                    {' '}
+                    {politicianListSentenceString}
+                  </>
+                )}
                 {' '}
-                {politicianListSentenceString}
+                would love to hear good news about
                 {' '}
-                winning will impact you, your family, or your community.
+                {numberOfPoliticians > 1 ? (
+                  <>these candidates&apos;</>
+                ) : (
+                  <>this candidate&apos;s</>
+                )}
+                {' '}
+                progress towards winning.
               </CampaignProcessStepIntroductionText>
               <CampaignSupportSectionWrapper>
                 <CampaignSupportSection>
-                  <CampaignEndorsementInputField campaignXWeVoteId={campaignXWeVoteId} />
+                  <CampaignNewsItemTextInputField
+                    campaignXWeVoteId={campaignXWeVoteId}
+                    campaignXNewsItemWeVoteId={campaignXNewsItemWeVoteId}
+                  />
                   { !voterPhotoUrlLarge && <VoterPhotoUpload /> }
-                  <VisibleToPublicCheckboxWrapper>
-                    <Suspense fallback={<span>&nbsp;</span>}>
-                      <VisibleToPublicCheckbox campaignXWeVoteId={campaignXWeVoteId} />
-                    </Suspense>
-                  </VisibleToPublicCheckboxWrapper>
                   <CampaignSupportDesktopButtonWrapper className="u-show-desktop-tablet">
                     <CampaignSupportDesktopButtonPanel>
                       <Button
                         classes={{ root: classes.buttonDesktop }}
                         color="primary"
-                        id="saveSupporterEndorsement"
-                        onClick={this.submitSupporterEndorsement}
+                        id="saveCampaignNewsItemText"
+                        onClick={this.submitCampaignNewsItemText}
                         variant="contained"
                       >
-                        Save and continue
+                        Save and preview
                       </Button>
                     </CampaignSupportDesktopButtonPanel>
                   </CampaignSupportDesktopButtonWrapper>
@@ -285,30 +318,34 @@ class CampaignSupportEndorsement extends Component {
                       <Button
                         classes={{ root: classes.buttonDefault }}
                         color="primary"
-                        id="saveSupporterEndorsementMobile"
-                        onClick={this.submitSupporterEndorsement}
+                        id="saveCampaignNewsItemTextMobile"
+                        onClick={this.submitCampaignNewsItemText}
                         variant="contained"
                       >
-                        Save and continue
+                        Save and preview
                       </Button>
                     </CampaignSupportMobileButtonPanel>
                   </CampaignSupportMobileButtonWrapper>
                   <AdviceBoxWrapper>
                     <AdviceBox>
                       <AdviceBoxTitle>
-                        Describe the people who will be affected if this candidate loses
+                        Supporters have already agreed to vote for your candidate(s)
                       </AdviceBoxTitle>
                       <AdviceBoxText>
-                        People are most likely to vote when they understand the consequences of this candidate not being elected, described in terms of the people impacted.
+                        Share good news to help people remember to vote, but don&apos;t overwhelm them with more reasons to support candidate(s) they already plan to vote for.
                       </AdviceBoxText>
                       <AdviceBoxText>
                         &nbsp;
                       </AdviceBoxText>
                       <AdviceBoxTitle>
-                        Describe the benefits of this candidate winning
+                        Don&apos;t ask for donations
                       </AdviceBoxTitle>
                       <AdviceBoxText>
-                        Explain why this candidate or candidates winning will bring positive change.
+                        Many people are turned away from politics by what they consider to be excessive requests for donations. Support
+                        {' '}
+                        {politicianListSentenceString}
+                        {' '}
+                        here with votes, and use other venues for fundraising.
                       </AdviceBoxText>
                       <AdviceBoxText>
                         &nbsp;
@@ -317,7 +354,7 @@ class CampaignSupportEndorsement extends Component {
                         Make it personal
                       </AdviceBoxTitle>
                       <AdviceBoxText>
-                        Voters are more likely to sign and support your campaign if it’s clear why you care.
+                        Make it clear why you care.
                       </AdviceBoxText>
                       <AdviceBoxText>
                         &nbsp;
@@ -335,10 +372,10 @@ class CampaignSupportEndorsement extends Component {
                       <Button
                         classes={{ root: classes.buttonSimpleLink }}
                         color="primary"
-                        id="skipSupporterEndorsementMobile"
-                        onClick={this.submitSkipForNow}
+                        id="cancelCampaignNewsItemText"
+                        onClick={this.clickCancel}
                       >
-                        Skip for now
+                        Cancel
                       </Button>
                     </SkipForNowButtonPanel>
                   </SkipForNowButtonWrapper>
@@ -357,15 +394,11 @@ class CampaignSupportEndorsement extends Component {
     );
   }
 }
-CampaignSupportEndorsement.propTypes = {
+CampaignNewsItemText.propTypes = {
   classes: PropTypes.object,
   match: PropTypes.object,
   setShowHeaderFooter: PropTypes.func,
 };
 
 
-const VisibleToPublicCheckboxWrapper = styled('div')`
-  min-height: 25px;
-`;
-
-export default withStyles(commonMuiStyles)(CampaignSupportEndorsement);
+export default withStyles(commonMuiStyles)(CampaignNewsItemText);
