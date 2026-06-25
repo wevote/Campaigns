@@ -1,8 +1,8 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable func-names */
+import { Dispatcher as FluxDispatcher } from 'flux';
 import { httpLog } from '../utils/logging';
 import $ajax from '../../utils/service';
-import { Dispatcher as FluxDispatcher } from 'flux';
 
 const Dispatcher = FluxDispatcher;
 
