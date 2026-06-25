@@ -1,7 +1,14 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
-    "sourceType": "module"
+    "sourceType": "module",
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": [
+        "@babel/preset-env",
+        "@babel/preset-react"
+      ]
+    }
   },
 
   "env": {
@@ -71,7 +78,9 @@
     "react-hooks/exhaustive-deps": "warn",         // Checks effect dependencies
     "space-before-function-paren": [1, {"anonymous": "always", "named": "always"}],
     "space-in-parens": [1],
-    "template-curly-spacing": ["warn", "never"]
+    "template-curly-spacing": ["warn", "never"],
+    "function-paren-newline": 0, // joe 6-25-26 disable lint rule around spacing
+    "function-call-argument-newline": 0 // joe 6-25-26 disable lint rule around spacing
   },
     "plugins": [
       "react",
