@@ -2,8 +2,9 @@
 /* eslint-disable func-names */
 import { httpLog } from '../utils/logging';
 import $ajax from '../../utils/service';
+import { Dispatcher as FluxDispatcher } from 'flux';
 
-const Dispatcher = require('flux').Dispatcher;
+const Dispatcher = FluxDispatcher;
 
 Dispatcher.prototype.$ajax = $ajax;
 
