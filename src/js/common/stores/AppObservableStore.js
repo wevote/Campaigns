@@ -734,7 +734,7 @@ export default {
 
   siteConfigurationUseDefault () {
     nonFluxState.siteConfigurationHasBeenRetrieved = true;
-    nonFluxState.onWeVoteRootUrl = false;
+    nonFluxState.onWeVoteRootUrl = true;
     nonFluxState.onWeVoteSubdomainUrl = true;
     messageService.sendMessage('state updated for siteConfigurationUseDefault');
   },
