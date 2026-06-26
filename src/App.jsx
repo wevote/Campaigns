@@ -80,9 +80,9 @@ class App extends Component {
         console.log('jQuery loaded since host is not campaigns.wevote.us, firing siteConfigurationRetrieve');
         AppObservableStore.siteConfigurationRetrieve(hostname);
       } else {
-        // Initialize Google Analytics ID with the default value from config.js
-        console.log('jQuery loaded for campaigns.wevote.us, init call to onAppObservableStore');
-        this.onAppObservableStoreChange();
+        // Use default config for campaigns.wevote.us site
+        console.log('jQuery loaded for campaigns.wevote.us, using default settings');
+        AppObservableStore.siteConfigurationUseDefault();
       }
     });
   }
