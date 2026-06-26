@@ -732,6 +732,13 @@ export default {
     return nonFluxState.siteConfigurationHasBeenRetrieved;
   },
 
+  siteConfigurationUseDefault () {
+    nonFluxState.siteConfigurationHasBeenRetrieved = true;
+    nonFluxState.onWeVoteRootUrl = true;
+    nonFluxState.onWeVoteSubdomainUrl = true;
+    messageService.sendMessage('state updated for siteConfigurationUseDefault');
+  },
+
   siteConfigurationRetrieve (hostname, externalVoterId = '', refresh_string = '') {
     $ajax({
       endpoint: 'siteConfigurationRetrieve',
